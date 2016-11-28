@@ -1,0 +1,103 @@
+Sreen 1:
+-------
+Logged in User, Teacher, Non-Editor
+Institute time table display
+	one tab per department
+	one tab per room
+	one tab per class
+Right upper corner login link
+
+Screen 2:
+-------
+Logged in User:
+Editor For a timetable
+
+Can click on any cell and update
+Cut-Copy-Paste
+
+Menu: 
+Add teacher
+Add Subject
+Add Classroom
+Add constraint
+Automatically readjust
+Export to xls/ods/pdf
+
+Screen:
+-------
+Logged in User, Teacher, Non-Editor
+
+See Own timetable
+See all classes timetable
+
+Menu: 
+Export to xls/ods/pdf 
+
+
+Screen:
+-------
+Logged in user, Editor
+On Automatically Readjust
+
+Shows a temporary copy of timetable
+Options: sync with master copy
+	or keep temporary copy & Save
+
+Screen 4: 
+Temporary editable timetable
+
+
+
+Database Tables
+-----------------
+Config
+id	daybegin	dayend	slotduration	DeptName	inchargeid
+
+User
+id	userid	password	
+
+Role
+id	rolename	userid
+
+Capability
+id	capid
+
+Teacher
+id	name	shortname	dept	minhrs	maxhrs
+
+Class
+id	name	shortname	count	
+
+Batch
+id	classid		name	count
+
+Room // includes lab and lecture room both
+id	name	count
+
+Subject // includes theory and practical both, no differentiation
+id	name	shortname	totalhours	oneslothours	coursecode
+
+Subject-Batches	//For practical 
+subjectid	batchid
+
+Subject-Teacher
+subjectid	techererid
+
+Class-Room
+classid-roomid
+
+Batch-Room
+batchid-roomid
+
+Timetable
+id	roomid	starttime	endtime		classid(compulsory)	batchid(optional)	teachrid	configid
+
+
+
+Detecting clashes in timetable
+-------------------------------
+endtime-starttime overlaps endtime2-starttime2, roomid no clash 
+endtime-starttime overlaps endtime2-starttime2, teacherid no clash 
+endtime-starttime overlaps endtime2-starttime2, classid	no clash (if batchid absent)
+endtime-starttime overlaps endtime2-starttime2, batchid no clash
+edtime-starttime overlaps endtime2-starttime2, batchid no clash
