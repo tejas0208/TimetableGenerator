@@ -1,4 +1,4 @@
-DROP DATABASE timetable;
+DROP DATABASE IF EXISTS timetable;
 CREATE DATABASE timetable;
 USE timetable;
 
@@ -119,4 +119,4 @@ subjectid int,
 teacherid	int,
 batchid	int,
 configid	int
-);
+);	
