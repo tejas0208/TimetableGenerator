@@ -1,0 +1,11 @@
+USE timeTable;
+INSERT INTO class(className, classShortName, semester) VALUES ( "S.Y. B.Tech. Computer Engineering", "SYBT-CE", 4);
+INSERT INTO class(className, classShortName, semester) VALUES ( "S.Y. B.Tech. Information Technology", "SYBT-IT", 4);
+INSERT INTO class(className, classShortName, semester) VALUES ( "T.Y. B.Tech. Computer Engineering", "TYBT-CE", 6);
+INSERT INTO class(className, classShortName, semester) VALUES ( "T.Y. B.Tech. Information Technology", "TYBT-IT", 6);
+INSERT INTO class(className, classShortName, semester) VALUES ( "B.Tech. Computer Engineering", "BT-CE", 8);
+INSERT INTO class(className, classShortName, semester) VALUES ( "B.Tech. Information Technology", "BT-IT", 8);
+INSERT INTO class(className, classShortName, semester) VALUES ( "First Year B.Tech.", "FYBT", 2);
+INSERT INTO class(className, classShortName, semester) VALUES ( "F.Y. M.Tech. Computer Engineering", "FYMT-CE", 2);
+INSERT INTO class(className, classShortName, semester) VALUES ( "F.Y. M.Tech. Information Security", "FYMT-IS", 2);
+INSERT INTO class(className, classShortName, semester) VALUES ( "S.Y. M.Tech. Computer Engineering", "SYMT-CE", 2);

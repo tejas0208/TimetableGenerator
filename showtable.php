@@ -17,10 +17,10 @@
 		$table = array();
 		$tablehtml = "";
 		while($row = $ttrows->fetch_assoc()) {
-			$table[$row["day"]][$row["slotno"]] = array("subject" => $row["subjectshortname"],
-									"room" => $row["roomname"],
-									"class" => $row["classshortname"],
-									"teacher" => $row["teachershortname"]);
+			$table[$row["day"]][$row["slotNo"]] = array("subject" => $row["subjectShortName"],
+									"room" => $row["roomShortName"],
+									"class" => $row["classShortName"],
+									"teacher" => $row["teacherShortName"]);
 		}
 		foreach($table as $dayno => $daysched) {
 			$day = $daynames[$dayno];
@@ -40,21 +40,21 @@
 								else
 								$tablehtml .= "<option value=\"".$short."\">".$short."</option>\n";
 							}
-							$tablehtml .= "</select>\t\t\t\t</td>\n"; 
+							$tablehtml .= "</select>\t\t\t\t</td></tr>\n"; 
 							//$tablehtml .= "\t\t\t\t</td>\n"; 
 							break;
 						case "room":
-							$tablehtml .= "\t\t\t\t<td>\n";
+							$tablehtml .= "\t\t\t\t<tr><td>\n";
 							$tablehtml .= "$value ";
 							$tablehtml .= "\t\t\t\t</td></tr>\n";
 							break;
 						case "class":
 							$tablehtml .= "\t\t\t<tr>\t\t\t\t<td>\n";
 							$tablehtml .= "$value ";
-							$tablehtml .= "\t\t\t\t</td>\n";
+							$tablehtml .= "\t\t\t\t</td></tr>\n";
 							break;
 						case "teacher":
-							$tablehtml .= "\t\t\t\t<td>\n";
+							$tablehtml .= "\t\t\t\t<tr><td>\n";
 							$tablehtml .= "$value ";
 							$tablehtml .= "\t\t\t\t</td> </tr>\n";
 							break;
@@ -73,11 +73,11 @@
 
 
 
-	$conn = new mysqli("localhost", "root", "root", "timetable");
+	$conn = new mysqli("localhost", "root", "root", "timeTable");
 	if($conn->error) {
 		die("connection error ". $conn->error . "<br>"); 
 	}
-	/*$stmt = $conn->prepare("INSERT INTO timetable (roomid, starttime, endtime, day, classid, subjectid, teacherid, batchid, configid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+	/*$stmt = $conn->prepare("INSERT INTO timeTable (roomId, starttime, endtime, day, classId, subjectId, teacherId, batchId, configId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
 	if($stmt === FALSE ) {
 		die "preparation failed ". $conn->error . "<br>"; 
 	} */
@@ -88,38 +88,45 @@
 		die("could not fetch config" . $conn->error. $ttconfig);
 	}
 	$config = $ttconfig->fetch_assoc();
-	//echo $config["daybegin"]. " ". $config["dayend"]. " " . $config["slotduration"]. "<br>";
-	echo "<table class=\"timetable\" border=\"2\">"; 
+	//echo $config["dayBegin"]. " ". $config["dayend"]. " " . $config["slotDuration"]. "<br>";
+	echo "<table class=\"timeTable\" border=\"2\">"; 
 	echo "<tr> <th> Day </th>\n"; 
-	$slottime=$config["daybegin"];
-	for($i = 0; $i < $config["nslots"]; $i++) {
-		echo "<th> $slottime ". gettype($slottime). " </th>\n";	
-		$slottime +=  $config["slotduration"];  
+	/*foreach($config as $key => $value) {
+		echo "key: $key value : $value type: ".gettype($value)."<br>";
+	} */
+	$slottime = strtotime($config["dayBegin"]);
+	//var_dump($slottime);
+	//$slottime += time();
+	for($i = 0; $i < $config["nSlots"]; $i++) {
+		//echo "<th> $slottime ". gettype($slottime). " </th>\n";	
+		//$slottime +=  $config["slotDuration"];  
+		echo "<th> ". date("H i s", $slottime). "</th>\n";
+		$slottime += $config["slotDuration"];
 	}
 	echo "</tr>\n"; 
 
-	$qfetchsub = "SELECT subjectid, subjectname, subjectshortname, coursecode FROM subject";
+	$qfetchsub = "SELECT subjectId, subjectName, subjectShortName FROM subject";
 	$ressubjects = $conn->query($qfetchsub);
 	$subjects = array();
 	while($row = $ressubjects->fetch_assoc()) {
-		$subjects[$row["subjectshortname"]]= $row["subjectname"];
+		$subjects[$row["subjectShortName"]]= $row["subjectName"];
 	}
 
-	$qfetchteacher = "SELECT teacherid, teachername, teachershortname, deptid FROM teacher";
+	$qfetchteacher = "SELECT teacherId, teacherName, teacherShortName, deptId FROM teacher";
 	$teachers = $conn->query($qfetchteacher);	
-	$qfetchroom = "SELECT roomid, roomname FROM room";
+	$qfetchroom = "SELECT roomId, roomShortName FROM room";
 	$rooms = $conn->query($qfetchroom );	
-	$qfetchclass = "SELECT classid, classname, classshortname FROM class";
+	$qfetchclass = "SELECT classId, className, classShortName FROM class";
 	$classes = $conn->query($qfetchclass);	
 
-	$qfetchtt = "SELECT tt.day, tt.slotno, s.subjectshortname, r.roomname, c.classshortname, t.teachershortname 
-			FROM timetable tt, teacher t, subject s, room r, class c
-			WHERE  tt.roomid = r.roomid
-			AND tt.classid = c.classid
-			AND tt.subjectid = s.subjectid
-			AND tt.teacherid = t.teacherid
+	$qfetchtt = "SELECT tt.day, tt.slotNo, s.subjectShortName, r.roomShortName, c.classShortName, t.teacherShortName 
+			FROM timeTable tt, teacher t, subject s, room r, class c
+			WHERE  tt.roomId = r.roomId
+			AND tt.classId = c.classId
+			AND tt.subjectId = s.subjectId
+			AND tt.teacherId = t.teacherId
 			ORDER BY tt.day ASC,
-			tt.slotno ASC";
+			tt.slotNo ASC";
 	$ttrows = $conn->query($qfetchtt);
 	$tthtml = maketable($ttrows , $config, $subjects, $teachers, $rooms, $classes);
 	echo $tthtml;
