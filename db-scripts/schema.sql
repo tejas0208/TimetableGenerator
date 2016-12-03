@@ -1,5 +1,5 @@
 DROP DATABASE IF EXISTS timeTable;
-CREATE DATABASE timeTable;
+CREATE DATABASE timeTable DEFAULT CHARSET=utf8;
 USE timeTable;
 
 CREATE TABLE config
@@ -100,6 +100,13 @@ FOREIGN KEY (batchId) REFERENCES batch(batchId),
 FOREIGN KEY (subjectId) REFERENCES subject(subjectId)
 );
 
+CREATE VIEW subjectBatchReadable AS
+SELECT s.subjectShortName,b.batchName from subject s, batch b, subjectBatch sb
+WHERE	sb.subjectId = s.subjectId AND
+	sb.batchid = b.batchId
+ORDER by subjectShortName;
+
+
 CREATE Table classSubject 
 (
 csId	int AUTO_INCREMENT PRIMARY KEY,
@@ -108,6 +115,12 @@ subjectId	int NOT NULL,
 FOREIGN KEY (classId) REFERENCES class(classId),
 FOREIGN KEY (subjectId) REFERENCES subject(subjectId)
 );
+
+CREATE VIEW classSubjectReadable AS
+SELECT s.subjectShortName, c.classShortName from subject s, class c, classSubject cb
+WHERE	cb.subjectId = s.subjectId AND
+	cb.classId = c.classId
+ORDER by subjectShortName;
 
 CREATE TABLE subjectTeacher
 (
@@ -118,6 +131,12 @@ FOREIGN KEY (teacherId) REFERENCES teacher(teacherId),
 FOREIGN KEY (subjectId) REFERENCES subject(subjectId)
 );
 
+CREATE VIEW subjectTeacherReadalbe AS
+SELECT s.subjectShortName, t.teacherShortName from subject s, teacher t, subjectTeacher st
+WHERE	s.subjectId = st.subjectId AND
+	t.teacherId = st.teacherId
+ORDER BY subjectShortName;
+
 CREATE TABLE classRoom
 (
 crId	int AUTO_INCREMENT PRIMARY KEY,
@@ -126,6 +145,12 @@ roomId	int NOT NULL,
 FOREIGN KEY (classId) REFERENCES class(classId),
 FOREIGN KEY (roomId) REFERENCES room(roomId)
 );
+
+CREATE VIEW classRoomReadable AS
+SELECT c.classShortName, r.roomname from class c, room r, classRoom cr
+WHERE	c.classId = cr.classId AND
+	r.roomId = cr.roomId
+ORDER BY classShortName;
 
 CREATE TABLE batchRoom
 (
@@ -136,6 +161,12 @@ FOREIGN KEY (batchId) REFERENCES batch(batchId),
 FOREIGN KEY (roomId) REFERENCES room(roomId)
 );
 
+CREATE VIEW batchRoomReadable AS 
+SELECT b.batchName, r.roomName from batch b, room r, batchRoom br
+WHERE	b.batchId = br.batchId AND
+	r.roomId = br.roomId
+ORDER BY batchName;
+	
 CREATE TABLE timeTable
 (
 ttId	int AUTO_INCREMENT PRIMARY KEY,
@@ -150,6 +181,12 @@ configId	int,
 isBreak	boolean
 );
 
+/*  Requirements
+same day slot teacher --> room same, subject same, class can be different (combined classes), batches can be different, no break
+break true --> room, subject NULL.  class not NULL. 
+same day slot class --> batch must be different, 
+
+*/
 /* create views */
 CREATE VIEW timeTableReadable AS
 SELECT tt.ttId, tt.day, tt.slotNo, r.roomShortName, c.classShortName, s.subjectShortName, t.teacherShortName, b.batchName, tt.isBreak
@@ -176,16 +213,3 @@ WHERE tt.isBreak = TRUE
 ORDER by ttId;
 
 
-
-CREATE VIEW subjectBatchReadable AS
-SELECT s.subjectShortName,b.batchName from subject s, batch b, subjectBatch sb
-WHERE	sb.subjectId = s.subjectId AND
-	sb.batchid = b.batchId
-ORDER by subjectShortName;
-
-
-CREATE VIEW classSubjectReadable AS
-SELECT s.subjectShortName, c.classShortName from subject s, class c, classSubject cb
-WHERE	cb.subjectId = s.subjectId AND
-	cb.classId = c.classId
-ORDER by subjectShortName;

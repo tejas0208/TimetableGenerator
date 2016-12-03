@@ -1,3 +1,7 @@
+Comments about DB
+-----
+* Possible that one teacher has mulitple day-slot entries for multiple classes/batches. Here subjectname,roomname should be same.
+
 Sreen 1:
 -------
 Logged in User, Teacher, Non-Editor

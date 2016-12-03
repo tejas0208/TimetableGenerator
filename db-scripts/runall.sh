@@ -2,6 +2,9 @@
 echo "---------------schema-----------------"
 mysql -u root -proot < schema.sql
 
+echo "---------------triggers-----------------"
+mysql -u root -proot <	triggers.sql 
+
 echo "---------------class-----------------"
 cat class.csv  | bash class.sh  > class.sql
 mysql -u root -proot < class.sql

@@ -44,7 +44,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
-			(2, 2, 
+			(1, 2, 
 			(SELECT roomId from room WHERE roomShortName="PL"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="PPL-Lab"),
@@ -54,7 +54,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
-			(2, 3, 
+			(1, 3, 
 			(SELECT roomId from room WHERE roomShortName="PL"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="PPL-Lab"),
@@ -64,7 +64,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
-			(2, 4, 
+			(1, 4, 
 			(SELECT roomId from room WHERE roomShortName="PL"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="PPL-Lab"),
@@ -74,7 +74,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
-			(2, 2, 
+			(1, 2, 
 			(SELECT roomId from room WHERE roomShortName="DSL"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="MPT-Lab"),
@@ -84,7 +84,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
-			(2, 3, 
+			(1, 3, 
 			(SELECT roomId from room WHERE roomShortName="DSL"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="MPT-Lab"),
@@ -94,7 +94,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
-			(2, 4, 
+			(1, 4, 
 			(SELECT roomId from room WHERE roomShortName="DSL"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="MPT-Lab"),
@@ -716,7 +716,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			(SELECT roomId from room WHERE roomShortName="PL"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="PPL-Lab"),
-			(SELECT teacherId from teacher WHERE teacherShortName="Vaibhav"), 
+			(SELECT teacherId from teacher WHERE teacherShortName="Uma"), 
 			(SELECT batchId from batch WHERE batchName="SYBT-IT-S1"), 
 			1,
 			FALSE);
@@ -726,7 +726,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			(SELECT roomId from room WHERE roomShortName="PL"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="PPL-Lab"),
-			(SELECT teacherId from teacher WHERE teacherShortName="Vaibhav"), 
+			(SELECT teacherId from teacher WHERE teacherShortName="Uma"), 
 			(SELECT batchId from batch WHERE batchName="SYBT-IT-S1"), 
 			1,
 			FALSE);
@@ -736,7 +736,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			(SELECT roomId from room WHERE roomShortName="PL"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="PPL-Lab"),
-			(SELECT teacherId from teacher WHERE teacherShortName="Vaibhav"), 
+			(SELECT teacherId from teacher WHERE teacherShortName="Uma"), 
 			(SELECT batchId from batch WHERE batchName="SYBT-IT-S1"), 
 			1,
 			FALSE);
