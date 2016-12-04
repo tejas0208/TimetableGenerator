@@ -1,4 +1,6 @@
 USE timeTable;
+INSERT INTO batch(batchName, batchCount) VALUES ("NONE", 0);
+INSERT INTO batchClass(batchId, classId) VALUES ((SELECT batchId FROM batch WHERE batchName="NONE"),(SELECT classId from class WHERE classShortName="NONE"));
 INSERT INTO batch(batchName, batchCount) VALUES ("FYBT-A1", 20);
 INSERT INTO batchClass(batchId, classId) VALUES ((SELECT batchId FROM batch WHERE batchName="FYBT-A1"),(SELECT classId from class WHERE classShortName="FYBT"));
 INSERT INTO batch(batchName, batchCount) VALUES ("FYBT-B1", 20);

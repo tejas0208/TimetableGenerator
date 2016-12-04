@@ -1,7 +1,7 @@
 USE timeTable;
-INSERT INTO room(roomName, roomShortName, roomCount) VALUES ( "AC 202", "AC 101", 100);
-INSERT INTO room(roomName, roomShortName, roomCount) VALUES ( "AC 203", "AC 102", 100);
-INSERT INTO room(roomName, roomShortName, roomCount) VALUES ( "AC 204", "AC 103", 100);
+INSERT INTO room(roomName, roomShortName, roomCount) VALUES ( "AC-202", "AC-202", 100);
+INSERT INTO room(roomName, roomShortName, roomCount) VALUES ( "AC-203", "AC-203", 100);
+INSERT INTO room(roomName, roomShortName, roomCount) VALUES ( "AC-204", "AC-204", 100);
 INSERT INTO room(roomName, roomShortName, roomCount) VALUES ( "SH ENTC EXTN", "SH", 80);
 INSERT INTO room(roomName, roomShortName, roomCount) VALUES ( "DBMS Lab", "DBMSL", 20);
 INSERT INTO room(roomName, roomShortName, roomCount) VALUES ( "FOSS Lab-1", "FOSS1", 25 );
@@ -16,6 +16,7 @@ INSERT INTO room(roomName, roomShortName, roomCount) VALUES ( "Information Secur
 INSERT INTO room(roomName, roomShortName, roomCount) VALUES ( "Cognizant Lab-1", "Cogni-1", 20);
 INSERT INTO room(roomName, roomShortName, roomCount) VALUES ( "Cognizant Lab-2", "Cogni-2", 20);
 INSERT INTO room(roomName, roomShortName, roomCount) VALUES ( "Cognizant Lab-3", "Cogni-3", 20);
+INSERT INTO room(roomName, roomShortName, roomCount) VALUES ( "Cognizant Lab-34", "Cogni-34", 20);
 INSERT INTO room(roomName, roomShortName, roomCount) VALUES ( "Cognizant Lab-4", "Cogni-4", 20);
 INSERT INTO room(roomName, roomShortName, roomCount) VALUES ( "Cognizant Lab-5", "Cogni-5", 20);
 INSERT INTO room(roomName, roomShortName, roomCount) VALUES ( "Data Mining Lab", "DML", 15);

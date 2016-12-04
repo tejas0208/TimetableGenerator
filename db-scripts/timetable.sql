@@ -10,37 +10,45 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, batchId, configId, isBreak) VALUES (1, 5, NULL, 1, TRUE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(1, 6, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(1, 6, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="PPL"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Vaibhav"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(1, 7, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(1, 7, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="DC"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Aparna"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(1, 8, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(1, 8, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="MPT"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Sawant"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(1, 9, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(1, 9, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="AB"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Appsci1"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
@@ -103,13 +111,15 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, batchId, configId, isBreak) VALUES (2, 5, NULL, 1, TRUE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(2, 6, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(2, 6, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="AB"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Appsci1"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
@@ -181,30 +191,36 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			(SELECT batchId from batch WHERE batchName="SYBT-CE-DSY"), 
 			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(3, 3, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(3, 3, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
-			(SELECT subjectId from subject WHERE subjectShortName="ILOE"),
+			(SELECT subjectId from subject WHERE subjectShortName="ILOE-Sem4"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Insti1"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(3, 4, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(3, 4, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="TCS"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Gauri"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, batchId, configId, isBreak) VALUES (3, 5, NULL, 1, TRUE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(3, 6, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(3, 6, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="MPT"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Sawant"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
@@ -276,30 +292,36 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			(SELECT batchId from batch WHERE batchName="SYBT-CE-DSY"), 
 			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(4, 3, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(4, 3, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
-			(SELECT subjectId from subject WHERE subjectShortName="ILOE"),
+			(SELECT subjectId from subject WHERE subjectShortName="ILOE-Sem4"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Insti1"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(4, 4, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(4, 4, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="MPT"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Sawant"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, batchId, configId, isBreak) VALUES (4, 5, NULL, 1, TRUE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(4, 6, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(4, 6, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="PPL"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Vaibhav"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
@@ -334,7 +356,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
 			(4, 7, 
-			(SELECT roomId from room WHERE roomShortName="FOSS-1"),
+			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="PPL-Lab"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Sheetal"), 
@@ -344,7 +366,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
 			(4, 8, 
-			(SELECT roomId from room WHERE roomShortName="FOSS-1"),
+			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="PPL-Lab"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Sheetal"), 
@@ -354,53 +376,63 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
 			(4, 9, 
-			(SELECT roomId from room WHERE roomShortName="FOSS-1"),
+			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="PPL-Lab"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Sheetal"), 
 			(SELECT batchId from batch WHERE batchName="SYBT-CE-S4"), 
 			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(5, 3, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(5, 3, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
-			(SELECT subjectId from subject WHERE subjectShortName="ILOE"),
+			(SELECT subjectId from subject WHERE subjectShortName="ILOE-Sem4"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Insti1"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(5, 4, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(5, 4, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="TCS"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Gauri"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, batchId, configId, isBreak) VALUES (5, 5, NULL, 1, TRUE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(5, 6, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(5, 6, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="PPL"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Vaibhav"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(5, 7, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(5, 7, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="DC"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Aparna"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(5, 8, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(5, 8, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="AB"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Appsci1"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
@@ -412,21 +444,25 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			(SELECT batchId from batch WHERE batchName="SYBT-IT-DSY"), 
 			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(1, 4, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(1, 4, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="PPL"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Vaibhav"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(1, 5, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(1, 5, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="DC"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Gaikwad"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, batchId, configId, isBreak) VALUES (1, 6, NULL, 1, TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
@@ -482,7 +518,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
 			(1, 9, 
-			(SELECT roomId from room WHERE roomShortName="DDS"),
+			(SELECT roomId from room WHERE roomShortName="DSL"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="MPT-Lab"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Kumbhar"), 
@@ -560,37 +596,45 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, batchId, configId, isBreak) VALUES (2, 6, NULL, 1, TRUE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(2, 7, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(2, 7, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="PPL"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Vaibhav"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(2, 8, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(2, 8, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="MPT"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Sawant"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(2, 9, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(2, 9, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="TCS"),
-			(SELECT teacherId from teacher WHERE teacherShortName="Shirish"), 
-			NULL, 1,
+			(SELECT teacherId from teacher WHERE teacherShortName="Gosavi"), 
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(2, 10, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(2, 10, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="AB"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Appsci1"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
@@ -602,54 +646,66 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			(SELECT batchId from batch WHERE batchName="SYBT-CE-DSY"), 
 			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(3, 3, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(3, 3, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
-			(SELECT subjectId from subject WHERE subjectShortName="ILOE"),
+			(SELECT subjectId from subject WHERE subjectShortName="ILOE-Sem4"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Insti1"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(3, 4, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(3, 4, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="PPL"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Vaibhav"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(3, 5, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(3, 5, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="AB"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Appsci1"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, batchId, configId, isBreak) VALUES (3, 6, NULL, 1, TRUE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(3, 7, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(3, 7, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="TCS"),
-			(SELECT teacherId from teacher WHERE teacherShortName="Shirish"), 
-			NULL, 1,
+			(SELECT teacherId from teacher WHERE teacherShortName="Gosavi"), 
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(3, 8, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(3, 8, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="MPT"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Sawant"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(3, 9, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(3, 9, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="DC"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Gaikwad"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
@@ -661,54 +717,66 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			(SELECT batchId from batch WHERE batchName="SYBT-CE-DSY"), 
 			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(4, 3, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(4, 3, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
-			(SELECT subjectId from subject WHERE subjectShortName="ILOE"),
+			(SELECT subjectId from subject WHERE subjectShortName="ILOE-Sem4"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Insti1"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(4, 5, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(4, 5, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="DC"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Gaikwad"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, batchId, configId, isBreak) VALUES (4, 6, NULL, 1, TRUE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(4, 7, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(4, 7, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="MPT"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Sawant"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(4, 8, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(4, 8, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="TCS"),
-			(SELECT teacherId from teacher WHERE teacherShortName="Shirish"), 
-			NULL, 1,
+			(SELECT teacherId from teacher WHERE teacherShortName="Gosavi"), 
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(5, 2, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(5, 2, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="AB"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Appsci1"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(5, 3, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(5, 3, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
-			(SELECT subjectId from subject WHERE subjectShortName="ILOE"),
+			(SELECT subjectId from subject WHERE subjectShortName="ILOE-Sem4"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Insti1"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
@@ -830,13 +898,15 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			(SELECT batchId from batch WHERE batchName="SYBT-IT-S3"), 
 			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(1, 1, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(1, 1, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="OS"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Nishchay"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
@@ -869,21 +939,25 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, batchId, configId, isBreak) VALUES (1, 3, NULL, 1, TRUE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(1, 4, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(1, 4, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="CASP"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Vandana"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(1, 5, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(1, 5, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="SE"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Tanuja"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
@@ -905,13 +979,15 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			(SELECT batchId from batch WHERE batchName="TYBT-CE-FOSS1"), 
 			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(2, 1, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(2, 1, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="OS"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Nishchay"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
@@ -1004,29 +1080,25 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, batchId, configId, isBreak) VALUES (2, 5, NULL, 1, TRUE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(2, 6, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(2, 6, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="SE"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Tanuja"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(2, 7, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(2, 7, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="CASP"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Vandana"), 
-			NULL, 1,
-			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(2, 8, 
-			(SELECT roomId from room WHERE roomShortName=""),
-			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
-			(SELECT subjectId from subject WHERE subjectShortName=""),
-			(SELECT teacherId from teacher WHERE teacherShortName=""), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
@@ -1048,13 +1120,15 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			(SELECT batchId from batch WHERE batchName="TYBT-CE-CBD1"), 
 			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(3, 1, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(3, 1, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="OS"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Nishchay"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
@@ -1089,7 +1163,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
 			(3, 2, 
-			(SELECT roomId from room WHERE roomShortName="FOSS-Lab1"),
+			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="OS-Lab"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Abhijit"), 
@@ -1099,7 +1173,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
 			(3, 3, 
-			(SELECT roomId from room WHERE roomShortName="FOSS-Lab1"),
+			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="OS-Lab"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Abhijit"), 
@@ -1109,7 +1183,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
 			(3, 4, 
-			(SELECT roomId from room WHERE roomShortName="FOSS-Lab1"),
+			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="OS-Lab"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Abhijit"), 
@@ -1147,18 +1221,20 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, batchId, configId, isBreak) VALUES (3, 5, NULL, 1, TRUE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(3, 6, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(3, 6, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="CASP"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Vandana"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
 			(3, 7, 
-			(SELECT roomId from room WHERE roomShortName="FOSS-Lab1"),
+			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="FOSS"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Abhijit"), 
@@ -1185,13 +1261,15 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			(SELECT batchId from batch WHERE batchName="TYBT-CE-CG1"), 
 			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(3, 9, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(3, 9, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="ILOE-Sem6"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Uma"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
@@ -1203,13 +1281,15 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			(SELECT batchId from batch WHERE batchName="TYBT-CE-CPES1"), 
 			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(4, 4, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(4, 4, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="SE"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Tanuja"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, batchId, configId, isBreak) VALUES (4, 5, NULL, 1, TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
@@ -1245,7 +1325,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
 			(4, 6, 
-			(SELECT roomId from room WHERE roomShortName="FOSS-Lab1"),
+			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="OS-Lab"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Abhijit"), 
@@ -1255,7 +1335,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
 			(4, 7, 
-			(SELECT roomId from room WHERE roomShortName="FOSS-Lab1"),
+			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="OS-Lab"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Abhijit"), 
@@ -1265,7 +1345,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
 			(4, 8, 
-			(SELECT roomId from room WHERE roomShortName="FOSS-Lab1"),
+			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="OS-Lab"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Abhijit"), 
@@ -1362,13 +1442,15 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			(SELECT batchId from batch WHERE batchName="TYBT-CE-T3"), 
 			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(4, 9, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(4, 9, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="ILOE-Sem6"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Uma"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
@@ -1383,7 +1465,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
 			(5, 1, 
-			(SELECT roomId from room WHERE roomShortName="FOSS-1"),
+			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="FOSS-Lab"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Abhijit"), 
@@ -1393,7 +1475,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
 			(5, 2, 
-			(SELECT roomId from room WHERE roomShortName="FOSS-1"),
+			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="FOSS-Lab"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Abhijit"), 
@@ -1403,7 +1485,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
 			(5, 3, 
-			(SELECT roomId from room WHERE roomShortName="FOSS-1"),
+			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="FOSS-Lab"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Abhijit"), 
@@ -1533,7 +1615,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
 			(5, 4, 
-			(SELECT roomId from room WHERE roomShortName="FOSS-1"),
+			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="DM"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Archana"), 
@@ -1624,7 +1706,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
 			(5, 6, 
-			(SELECT roomId from room WHERE roomShortName="FOSS-1"),
+			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="OS-Lab"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Abhijit"), 
@@ -1634,7 +1716,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
 			(5, 7, 
-			(SELECT roomId from room WHERE roomShortName="FOSS-1"),
+			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="OS-Lab"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Abhijit"), 
@@ -1644,7 +1726,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
 			(5, 8, 
-			(SELECT roomId from room WHERE roomShortName="FOSS-1"),
+			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="OS-Lab"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Abhijit"), 
@@ -1681,21 +1763,15 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			(SELECT batchId from batch WHERE batchName="TYBT-CE-T4"), 
 			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(5, 9, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(5, 9, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
-			(SELECT subjectId from subject WHERE subjectShortName="ILOE"),
+			(SELECT subjectId from subject WHERE subjectShortName="ILOE-Sem6"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Uma"), 
-			NULL, 1,
-			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(1, 1, 
-			(SELECT roomId from room WHERE roomShortName=""),
-			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
-			(SELECT subjectId from subject WHERE subjectShortName=""),
-			(SELECT teacherId from teacher WHERE teacherShortName=""), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
@@ -1727,21 +1803,25 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			(SELECT batchId from batch WHERE batchName="TYBT-IT-CBD1"), 
 			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(1, 3, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(1, 3, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="LP"),
 			(SELECT teacherId from teacher WHERE teacherShortName="SNG"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(1, 4, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(1, 4, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="SDP"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Snehal"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, batchId, configId, isBreak) VALUES (1, 5, NULL, 1, TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
@@ -1807,7 +1887,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
 			(1, 6, 
-			(SELECT roomId from room WHERE roomShortName="FOSS-2"),
+			(SELECT roomId from room WHERE roomShortName="FOSS2"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="DM-Lab"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Archana"), 
@@ -1817,7 +1897,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
 			(1, 7, 
-			(SELECT roomId from room WHERE roomShortName="FOSS-2"),
+			(SELECT roomId from room WHERE roomShortName="FOSS2"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="DM-Lab"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Archana"), 
@@ -1827,7 +1907,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
 			(1, 8, 
-			(SELECT roomId from room WHERE roomShortName="FOSS-2"),
+			(SELECT roomId from room WHERE roomShortName="FOSS2"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="DM-Lab"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Archana"), 
@@ -2055,14 +2135,6 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			(SELECT batchId from batch WHERE batchName="TYBT-IT-CBD1"), 
 			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(3, 1, 
-			(SELECT roomId from room WHERE roomShortName=""),
-			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
-			(SELECT subjectId from subject WHERE subjectShortName=""),
-			(SELECT teacherId from teacher WHERE teacherShortName=""), 
-			NULL, 1,
-			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
 			(3, 2, 
@@ -2183,19 +2255,21 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			(SELECT batchId from batch WHERE batchName="TYBT-IT-T4"), 
 			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(3, 5, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(3, 5, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="LP"),
 			(SELECT teacherId from teacher WHERE teacherShortName="SNG"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, batchId, configId, isBreak) VALUES (3, 6, NULL, 1, TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
 			(3, 7, 
-			(SELECT roomId from room WHERE roomShortName="FOSS-1"),
+			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="FOSS"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Abhijit"), 
@@ -2212,13 +2286,15 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			(SELECT batchId from batch WHERE batchName="TYBT-IT-DM1"), 
 			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(3, 9, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(3, 9, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="ILOE-Sem6"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Uma"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
@@ -2350,38 +2426,46 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			(SELECT batchId from batch WHERE batchName="TYBT-IT-T3"), 
 			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(4, 5, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(4, 5, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="SDP"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Snehal"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, batchId, configId, isBreak) VALUES (4, 6, NULL, 1, TRUE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(4, 7, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(4, 7, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="AnC"),
 			(SELECT teacherId from teacher WHERE teacherShortName="JVA"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(4, 8, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(4, 8, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="AnC"),
 			(SELECT teacherId from teacher WHERE teacherShortName="JVA"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(4, 9, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(4, 9, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="ILOE-Sem6"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Uma"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
@@ -2396,7 +2480,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
 			(5, 1, 
-			(SELECT roomId from room WHERE roomShortName="DML"),
+			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="FOSS-Lab"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Abhijit"), 
@@ -2406,7 +2490,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
 			(5, 2, 
-			(SELECT roomId from room WHERE roomShortName="DML"),
+			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="FOSS-Lab"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Abhijit"), 
@@ -2416,7 +2500,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
 			(5, 3, 
-			(SELECT roomId from room WHERE roomShortName="DML"),
+			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="FOSS-Lab"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Abhijit"), 
@@ -2523,79 +2607,97 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			(SELECT batchId from batch WHERE batchName="TYBT-IT-CPES1"), 
 			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(5, 5, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(5, 5, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="SDP"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Snehal"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, batchId, configId, isBreak) VALUES (5, 6, NULL, 1, TRUE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(5, 7, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(5, 7, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="AnC"),
 			(SELECT teacherId from teacher WHERE teacherShortName="JVA"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(5, 8, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(5, 8, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="LP"),
 			(SELECT teacherId from teacher WHERE teacherShortName="SNG"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(5, 9, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(5, 9, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
-			(SELECT subjectId from subject WHERE subjectShortName="ILOE"),
+			(SELECT subjectId from subject WHERE subjectShortName="ILOE-Sem6"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Uma"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, batchId, configId, isBreak) VALUES (1, 6, NULL, 1, TRUE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(1, 7, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(1, 7, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
-			(SELECT subjectId from subject WHERE subjectShortName="AC"),
+			(SELECT subjectId from subject WHERE subjectShortName="EC"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Rahul"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(1, 8, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(1, 8, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="ILOE-Sem8"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Insti2"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(1, 9, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(1, 9, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="ILOE-Sem8"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Insti2"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(1, 10, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(1, 10, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="WST"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Khadse"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(1, 11, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(1, 11, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="IPR"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Insti3"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, batchId, configId, isBreak) VALUES (2, 6, NULL, 1, TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
@@ -2618,13 +2720,15 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			(SELECT batchId from batch WHERE batchName="BT-CE-WST1"), 
 			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(2, 9, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(2, 9, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="ILOE-Sem8"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Insti2"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
@@ -2797,13 +2901,15 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			(SELECT batchId from batch WHERE batchName="BT-CE-EC2"), 
 			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(4, 5, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(4, 5, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="WST"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Khadse"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, batchId, configId, isBreak) VALUES (4, 6, NULL, 1, TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
@@ -2856,21 +2962,25 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			(SELECT batchId from batch WHERE batchName="BT-CE-NLP1"), 
 			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(4, 10, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(4, 10, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="EC"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Rahul"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(5, 5, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(5, 5, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="WST"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Khadse"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, batchId, configId, isBreak) VALUES (5, 6, NULL, 1, TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
@@ -2923,13 +3033,15 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			(SELECT batchId from batch WHERE batchName="BT-CE-NLP1"), 
 			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(5, 10, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(5, 10, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="EC"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Rahul"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, batchId, configId, isBreak) VALUES (1, 6, NULL, 1, TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
@@ -2942,38 +3054,46 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			(SELECT batchId from batch WHERE batchName="BT-IT-EC1"), 
 			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(1, 8, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(1, 8, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="ILOE-Sem8"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Insti2"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(1, 9, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(1, 9, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="ILOE-Sem8"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Insti2"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, batchId, configId, isBreak) VALUES (2, 6, NULL, 1, TRUE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(2, 8, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(2, 8, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="IPR"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Insti3"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(2, 9, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(2, 9, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="ILOE-Sem8"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Insti2"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
@@ -3086,13 +3206,15 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, batchId, configId, isBreak) VALUES (3, 6, NULL, 1, TRUE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(3, 7, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(3, 7, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="WST"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Jignesh"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
@@ -3175,13 +3297,15 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, batchId, configId, isBreak) VALUES (4, 6, NULL, 1, TRUE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(4, 7, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(4, 7, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="WST"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Jignesh"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
@@ -3213,13 +3337,15 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			(SELECT batchId from batch WHERE batchName="BT-IT-NLP1"), 
 			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(4, 10, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(4, 10, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="EC"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Rahul"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
@@ -3262,13 +3388,15 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, batchId, configId, isBreak) VALUES (5, 6, NULL, 1, TRUE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(5, 7, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(5, 7, 
 			(SELECT roomId from room WHERE roomShortName="ISL"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="WST-Lab"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Jignesh"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
@@ -3300,192 +3428,238 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 			(SELECT batchId from batch WHERE batchName="BT-IT-NLP1"), 
 			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(5, 10, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(5, 10, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="EC"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Rahul"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(1, 5, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(1, 5, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="CVBD"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Jibi"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, batchId, configId, isBreak) VALUES (1, 6, NULL, 1, TRUE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(1, 7, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(1, 7, 
 			(SELECT roomId from room WHERE roomShortName="DML"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="DMML"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Vahida"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(1, 8, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(1, 8, 
 			(SELECT roomId from room WHERE roomShortName="DML"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="SIC"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Mane"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(1, 9, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(1, 9, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="MOOC"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Insti4"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(2, 4, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(2, 4, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="ES"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Dixit"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, batchId, configId, isBreak) VALUES (2, 5, NULL, 1, TRUE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(2, 6, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(2, 6, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="AA"),
 			(SELECT teacherId from teacher WHERE teacherShortName="GSN"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(2, 7, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(2, 7, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="DMML"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Vahida"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(2, 9, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(2, 9, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="SIC"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Mane"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(3, 3, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(3, 3, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="MOOC"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Insti4"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(3, 4, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(3, 4, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="CVBD"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Jibi"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, batchId, configId, isBreak) VALUES (3, 5, NULL, 1, TRUE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(3, 6, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(3, 6, 
 			(SELECT roomId from room WHERE roomShortName="DML"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="PG-Lab-II"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Vahida"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(3, 7, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(3, 7, 
 			(SELECT roomId from room WHERE roomShortName="DML"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="PG-Lab-II"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Vahida"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(3, 8, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(3, 8, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="DMML"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Vahida"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(3, 9, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(3, 9, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="AA"),
 			(SELECT teacherId from teacher WHERE teacherShortName="GSN"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(4, 4, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(4, 4, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="ES"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Dixit"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, batchId, configId, isBreak) VALUES (4, 5, NULL, 1, TRUE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(4, 6, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(4, 6, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="MOOC"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Insti4"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(4, 7, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(4, 7, 
 			(SELECT roomId from room WHERE roomShortName="DML"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="SIC"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Mane"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(4, 8, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(4, 8, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="AA"),
 			(SELECT teacherId from teacher WHERE teacherShortName="GSN"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(5, 4, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(5, 4, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="ES"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Dixit"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, batchId, configId, isBreak) VALUES (5, 5, NULL, 1, TRUE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(5, 6, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(5, 6, 
 			(SELECT roomId from room WHERE roomShortName="DML"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="PG-Lab-II"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Vahida"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(5, 7, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(5, 7, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="PG-Lab-II"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Vahida"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) VALUES
-	 		(5, 8, 
+INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
+			VALUES 		
+			(5, 8, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="CVBD"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Jibi"), 
-			NULL, 1,
+			(SELECT batchId from batch WHERE batchName="NONE"), 
+			1,
 			FALSE);

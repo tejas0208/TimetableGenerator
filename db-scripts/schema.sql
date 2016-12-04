@@ -8,28 +8,31 @@ configId int AUTO_INCREMENT PRIMARY KEY,
 dayBegin time,
 slotDuration int,/* in seconds */	
 nSlots	int,
-dept	varchar(256),
+deptId	int,
 incharge	int
 );
 
 CREATE TABLE user
 (
 userid	int  AUTO_INCREMENT PRIMARY KEY,
-userName varchar(256) NOT NULL,
-password varchar(256) NOT NULL
+userName varchar(128) NOT NULL,
+password varchar(128) NOT NULL,
+CONSTRAINT c_userName UNIQUE(userName)
 );
 
 CREATE TABLE role
 (
 roleId	int  AUTO_INCREMENT PRIMARY KEY,
-roleName varchar(256) NOT NULL
+roleName varchar(128) NOT NULL,
+CONSTRAINT c_roleName UNIQUE(roleName)
 );
 
 CREATE TABLE capability
 (
 capId int  AUTO_INCREMENT PRIMARY KEY,
-capName	varchar(256) NOT NULL,
-roleId	int
+capName	varchar(128) NOT NULL,
+roleId	int,
+CONSTRAINT c_capName UNIQUE(capName)
 );
 
 CREATE TABLE teacher
@@ -39,13 +42,15 @@ teacherName	varchar(256) NOT NULL,
 teacherShortName	varchar(16) NOT NULL,
 minHrs	int,
 maxHrs int,
-deptId	int	
+deptId	int,
+CONSTRAINT c_teacherShortName UNIQUE(teacherShortName)
 );
 
 CREATE TABLE dept 
 (
 deptId	int  AUTO_INCREMENT PRIMARY KEY,
-deptName	varchar(256) NOT NULL
+deptName	varchar(128) NOT NULL,
+CONSTRAINT c_deptName UNIQUE(deptName)
 );
 
 CREATE TABLE class
@@ -53,14 +58,16 @@ CREATE TABLE class
 classId	int  AUTO_INCREMENT PRIMARY KEY,
 className	varchar(256) NOT NULL,
 classShortName	varchar(32) NOT NULL,
-semester	int	NOT NULL
+semester	int	NOT NULL,
+CONSTRAINT c_classShortName UNIQUE(classShortName)
 );
 
 CREATE TABLE batch
 (
 batchId	int AUTO_INCREMENT PRIMARY KEY,
 batchName	varchar(32) NOT NULL,
-batchCount	int
+batchCount	int,
+CONSTRAINT c_batchName UNIQUE(batchName)
 );
 
 CREATE TABLE batchClass 
@@ -72,12 +79,20 @@ FOREIGN KEY (batchId) REFERENCES batch(batchId),
 FOREIGN KEY (classId) REFERENCES class(classId)
 );
 
+CREATE VIEW batchClassReadable 
+AS
+SELECT b.batchName, c.classShortName 
+FROM batch b, class c, batchClass bc
+WHERE b.batchId = bc.batchId AND
+      c.classId = bc.classId;
+
 CREATE TABLE room
 (
 roomId	int AUTO_INCREMENT PRIMARY KEY,
 roomName	varchar(32) NOT NULL,
 roomShortName	varchar(16) NOT NULL,
-roomCount	int
+roomCount	int,
+CONSTRAINT c_roomShortName UNIQUE(roomShortName)
 );
 
 CREATE TABLE subject
@@ -88,7 +103,8 @@ subjectShortName	varchar(16) NOT NULL,
 totalHrs	int,
 eachSlot	int,
 /*courseCode	varchar(32) NOT NULL, */
-batches	boolean
+batches	boolean,
+CONSTRAINT c_subjectShortName UNIQUE(subjectShortName)
 );
 
 CREATE TABLE subjectBatch
@@ -181,11 +197,17 @@ configId	int,
 isBreak	boolean
 );
 
-/*  Requirements
-same day slot teacher --> room same, subject same, class can be different (combined classes), batches can be different, no break
-break true --> room, subject NULL.  class not NULL. 
-same day slot class --> batch must be different, 
+/*  Requirements on every new entry or an update
+same day slot teacher --> room same, subject same, class can be different (combined classes), batches can be different, break must be false
 
+
+same day slot class --> roomid same not allowed (duplicate entry) + different room must for different batch, subject same ok for lab course as batch will be scheduled + different subject also ok for a batch of different lab,   teacherid must be different, batchId must be different, break must be false
+
+same day slot subject --> must be a lab, batchId must be present, roomId must be different, classId can be different (different classe's batch scheduled), teacherId must be different, break must be false
+
+same day slot  batch --> not allowed. batch will be always in one place any given time.
+
+any day, any slot, break true --> room NULL, subject NULL,  class not NULL, teacher ??, batch may or may not be NULL, 
 */
 /* create views */
 CREATE VIEW timeTableReadable AS
