@@ -1,11 +1,11 @@
-NONE,NONE,0
-S.Y. B.Tech. Computer Engineering,SYBT-CE,4
-S.Y. B.Tech. Information Technology,SYBT-IT,4
-T.Y. B.Tech. Computer Engineering,TYBT-CE,6
-T.Y. B.Tech. Information Technology,TYBT-IT,6
-B.Tech. Computer Engineering,BT-CE,8
-B.Tech. Information Technology,BT-IT,8
-First Year B.Tech.,FYBT,2
-F.Y. M.Tech. Computer Engineering,FYMT-CE,2
-F.Y. M.Tech. Information Security,FYMT-IS,2
-S.Y. M.Tech. Computer Engineering,SYMT-CE,2
+NONE,NONE,0,0
+S.Y. B.Tech. Computer Engineering,SYBT-CE,4,80
+S.Y. B.Tech. Information Technology,SYBT-IT,4,80
+T.Y. B.Tech. Computer Engineering,TYBT-CE,6,80
+T.Y. B.Tech. Information Technology,TYBT-IT,6,80
+B.Tech. Computer Engineering,BT-CE,8,80
+B.Tech. Information Technology,BT-IT,8,80
+First Year B.Tech.,FYBT,2,80
+F.Y. M.Tech. Computer Engineering,FYMT-CE,2,80
+F.Y. M.Tech. Information Security,FYMT-IS,2,80
+S.Y. M.Tech. Computer Engineering,SYMT-CE,2,80

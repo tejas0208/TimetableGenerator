@@ -2570,16 +2570,6 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
 			(5, 4, 
-			(SELECT roomId from room WHERE roomShortName="DML"),
-			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
-			(SELECT subjectId from subject WHERE subjectShortName="FOSS"),
-			(SELECT teacherId from teacher WHERE teacherShortName="Abhijit"), 
-			(SELECT batchId from batch WHERE batchName="TYBT-IT-FOSS1"), 
-			1,
-			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
-			VALUES 		
-			(5, 4, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="CBD"),

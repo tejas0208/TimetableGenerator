@@ -59,6 +59,7 @@ classId	int  AUTO_INCREMENT PRIMARY KEY,
 className	varchar(256) NOT NULL,
 classShortName	varchar(32) NOT NULL,
 semester	int	NOT NULL,
+classCount	int NOT NULL,
 CONSTRAINT c_classShortName UNIQUE(classShortName)
 );
 
