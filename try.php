@@ -23,6 +23,13 @@ p.mixedhtmlphp {
 <body> 
 <p class="mysqlcode"> 
 <?php
+	$table[0][0][0][0] = array(1,2,3);
+	$table[0][0][0][1] = array(4,5,6);
+	var_dump($table);
+	$j = $table[0][0];
+	var_dump($j);
+?>
+<?php
 	$conn = new mysqli("localhost", "root", "root", "timetable");
 	if($conn->error) {
 		die("coonnection failed: " . $conn->error);
