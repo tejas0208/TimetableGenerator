@@ -1,33 +1,11 @@
-<html> 
-<head>
-<title> Test PHP Page </title>
-<meta charset="utf-8" /> 
-<script type="text/javascript" src="./jquery.js">
-</script>
-<style>
-.subjectentry {color:red}
-.teacherentry {color:blue}
-.batchentry {color:green}
-.roomentry {color:cyan}
-.classentry {color:magenta}
-</style>
-
-</head>
-
-<body> 
-<script>
-function see_timetable(type, id) {
-	window.location.replace("http://127.0.0.1/php/showtable.php?type="type"&id="id);
-}
-</script>
-<p class="showtable"> 
 <?php
+	require_once('config.php');
+	require_once('db.php');
+	require_once('common.php');
 	require_once('maketable.php');
 
-	$conn = new mysqli("localhost", "root", "root", "timeTable");
-	if($conn->error) {
-		die("connection error ". $conn->error . "<br>"); 
-	}
+	global $OUTPUT;
+	$conn = db_connect();
 	$configquery = "SELECT * FROM config";	
 	$ttconfig = $conn->query($configquery);
 	if($conn->error or $ttconfig === FALSE) {
@@ -35,9 +13,7 @@ function see_timetable(type, id) {
 	}
 	$config = $ttconfig->fetch_assoc();
 
-	/*$type = "batch"; $id = 22; // SYBT-CE-S1
-	$type = "class"; $id = 2; // SYBT-CE
-	$type = "room"; $id = 4; // SH */
+	$type = "class"; $id = "SYBT-CE"; //$id = 2; //Abhijit 
 	if($_SERVER["REQUEST_METHOD"] == "POST") {
 		if (isset($_POST['class'])) {
 			$type = "class";
@@ -51,19 +27,21 @@ function see_timetable(type, id) {
 		} else if(isset($_POST['teacher'])) {
 			$type = "teacher";
 			$id = $_POST['teacher'];
+		} else if(isset($_POST['batch'])) {
+			$type = "batch";
+			$id = $_POST['batch'];
+		} else {
+			$type = "class"; $id = "SYBT-CE"; //$id = 2; //Abhijit 
 		}
 	}
 	else if($_SERVER["REQUEST_METHOD"] == "GET") {
-		$type = $_GET['type'];
-		$id = $_GET['id'];
-	} else {
 		$type = "class"; $id = "SYBT-CE"; //$id = 2; //Abhijit 
-	}
+		//$type = $_GET['type'];
+		//$id = $_GET['id'];
+	} 
+	echo $OUTPUT->default_header();
+	echo $OUTPUT->default_scripts();
 	$tthtml = make_table($conn, $config, $type, $id);
 	echo $tthtml;
-	echo "</table>\n";
-
-	?>	
-</p>
-</body>
-</html>
+	echo $OUTPUT->default_footer();
+?>	

@@ -15,13 +15,13 @@ function make_query($type, $id) {
 			$condition = " AND r.roomShortName= \"$id\"";
 			//$condition = " AND tt.roomId = $id";
 			break;
-		case "batch":
-			//$condition = " AND tt.batchId = $id";
-			$condition = " AND b.batchName = \"$id\"";
-			break;
 		case "subject":
 			//$condition = " AND tt.subjectId = $id";
 			$condition = " AND s.subjectShortName = \"$id\"";
+			break;
+		case "batch":
+			//$condition = " AND tt.subjectId = $id";
+			$condition = " AND b.batchName = \"$id\"";
 			break;
 		default:
 			return "";	
@@ -47,14 +47,19 @@ function dump_rows($allrows) {
 		echo "<br>";
 	}
 }
-function make_header($subjects, $teachers, $rooms, $classes) {
+function make_header($subjects, $teachers, $rooms, $classes, $batches) {
 	$header = "";
-	$header .= "<table border=\"1\">";
-	$header .= "<tr> <td class=\"subjectentry\"> Select Subject </td> \n";
-	$header .= "<td class=\"classentry\"> Select Class </td>\n <td class=\"roomentry\"> Select Room </td> \n";
+	$header .= "<table class=\"menutable\">";
+	$header .= "<tr> ";
+	$header .= "<td class=\"subjectentry\"> Select Subject </td> \n";
+	$header .= "<td class=\"classentry\"> Select Class </td>\n ";
+	$header .= "<td class=\"roomentry\"> Select Room </td> \n";
 	$header .= "<td class=\"teacherentry\"> Select Teacher </td> \n";
+	$header .= "<td class=\"batchentry\"> Select Batch </td> \n";
+	$header .= "</tr>";
 
 	$header .= "<tr>\n";
+
 	$header .= "<td class=\"headercell\">\n";
 	$header .= "<form method=\"post\" action=\"showtable.php\">";
 	$header .= "<select class=\"selectsubject\" name=\"subject\" onchange=\"this.form.submit()\">\n";
@@ -105,6 +110,19 @@ function make_header($subjects, $teachers, $rooms, $classes) {
 	$header .= "</form>\n";
 	$header .= "</td>\n";
 
+	$header .= "<td class=\"headercell\">\n";
+	$header .= "<form method=\"post\" action=\"showtable.php\">";
+	$header .= "<select class=\"selectbatch\" name=\"batch\" onchange=\"this.form.submit()\">\n";
+	for($i = 0; $i < count($batches); $i++) {
+		if($batches[$i]["batchName"] == "NONE")
+			continue;
+		$header .= "<option value=\"". $batches[$i]["batchName"]."\">".
+			$batches[$i]["batchName"]."</option>\n";
+	}
+	$header .= "</select> ";
+	$header .= "</form>\n";
+	$header .= "</td>\n";
+
 	$header.= "</tr></table>\n";
 	//$header .= "<input type=\"submit\" value=\"submit option\">";
 	return $header;
@@ -135,8 +153,14 @@ function make_table($conn, $config, $type, $id) {
 	while($row = $resclasses->fetch_assoc()) 
 		$classes[$i++] = $row;
 
+	$qfetchbatch= "SELECT batchId, batchName, batchCount FROM batch";
+	$resbatches = $conn->query($qfetchbatch);	
+	$batches = array(); $i = 0;
+	while($row = $resbatches->fetch_assoc()) 
+		$batches[$i++] = $row;
+
 	$tablehtml = "";
-	$tablehtml .= make_header($subjects, $teachers, $rooms, $classes);
+	$tablehtml .= make_header($subjects, $teachers, $rooms, $classes, $batches);
 
 	$qfetchtt = make_query($type, $id);
 	//var_dump($qfetchtt);
@@ -247,6 +271,7 @@ function make_table($conn, $config, $type, $id) {
 				}
 			}
 	//var_dump($tablehtml); */
+	$tablehtml .= "</table>";
 	return $tablehtml;
 }
 
