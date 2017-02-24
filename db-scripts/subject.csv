@@ -11,7 +11,7 @@ Institute Level Open Elective Sem4,ILOE-Sem4,3,1,FALSE
 Microprocessor techniques lab,MPT-Lab,2,2,TRUE
 Principles of Programming language lab,PPL-Lab,4,2,TRUE
 Numerical Methods,NM,3,1,FALSE
-Liberal Learning Course – 1,LLC1,3,1,FALSE
+Liberal Learning Course-1,LLC1,3,1,FALSE
 Theory of Computer Science IT,TCS-IT,3,1,FALSE
 Microprocessor techniques IT,MPT-IT,3,1,FALSE
 Principles of Programming languages IT,PPL-IT,3,1,FALSE
@@ -19,7 +19,7 @@ Data Communication IT,DC-IT,3,1,FALSE
 Principles of Programming language lab IT,PPL-Lab-IT,4,2,TRUE
 Professional Science Course,PSC,3,1,FALSE
 Liberal Learning Course2,LLC2,3,1,FALSE
-open elective 3 yr – Information Systems,OE,3,1,FALSE
+open elective 3 yr-Information Systems,OE,3,1,FALSE
 Operating Systems,OS,3,1,FALSE
 Operating Systems Lab,OS-Lab,3,3,TRUE
 Computer Aided Signal Processing,CASP,3,1,FALSE
