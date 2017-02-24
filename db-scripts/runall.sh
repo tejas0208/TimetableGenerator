@@ -13,17 +13,21 @@ echo "---------------subject-----------------"
 cat subject.csv  | bash subject.sh  > subject.sql
 mysql -u root -proot < subject.sql
 
-echo "---------------class-subject-----------------"
-cat class-subject.csv  | bash class-subject.sh  > class-subject.sql
-mysql -u root -proot < class-subject.sql
+echo "----------------subject-class-teacher-----------------"
+cat subject-class-teacher.csv  | bash subject-class-teacher.sh  > subject-class-teacher.sql
+mysql -u root -proot < subject-class-teacher.sql
 
 echo "---------------batch-----------------"
 cat batch.csv  | bash batch.sh  > batch.sql
 mysql -u root -proot < batch.sql
 
-echo "---------------subject-batch-----------------"
-cat subject-batch.csv  | bash subject-batch.sh  > subject-batch.sql
-mysql -u root -proot < subject-batch.sql
+echo "---------------batch-can-overlap-----------------"
+cat batch-can-overlap.csv  | bash batch-can-overlap.sh  > batch-can-overlap.sql
+mysql -u root -proot < batch-can-overlap.sql
+
+echo "---------------subject-batch-teacher-----------------"
+cat subject-batch-teacher.csv  | bash subject-batch-teacher.sh  > subject-batch-teacher.sql
+mysql -u root -proot < subject-batch-teacher.sql
 
 echo "---------------teacher-----------------"
 cat teacher.csv  | bash teacher.sh  > teacher.sql

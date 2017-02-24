@@ -20,8 +20,8 @@ INSERT INTO teacher(teacherName, teacherShortName, minHrs, maxHrs, deptId) VALUE
 INSERT INTO teacher(teacherName, teacherShortName, minHrs, maxHrs, deptId) VALUES ( "Ms. A. B. Patil", "Archana", 16, 24, 1);
 INSERT INTO teacher(teacherName, teacherShortName, minHrs, maxHrs, deptId) VALUES ( "Ms. T. R. Pattanshetti", "Tanuja", 16, 24, 1);
 INSERT INTO teacher(teacherName, teacherShortName, minHrs, maxHrs, deptId) VALUES ( "Mr. S. T. Sawant", "Suraj", 0, 0, 1);
-INSERT INTO teacher(teacherName, teacherShortName, minHrs, maxHrs, deptId) VALUES ( "Ms. V. V. Kamble", "Vibhavari", 16, 24, 1);
-INSERT INTO teacher(teacherName, teacherShortName, minHrs, maxHrs, deptId) VALUES ( "Ms. A. Biswas", "Aparna", 16, 24, 1);
+INSERT INTO teacher(teacherName, teacherShortName, minHrs, maxHrs, deptId) VALUES ( "Ms. V. V. Kamble", "Vibhavari", 16, 24, 1);
+INSERT INTO teacher(teacherName, teacherShortName, minHrs, maxHrs, deptId) VALUES ( "Ms. A. Biswas", "Aparna", 16, 24, 1);
 INSERT INTO teacher(teacherName, teacherShortName, minHrs, maxHrs, deptId) VALUES ( "Mr. A. A. Sawant", "Sawant", 6, 24, 1);
 INSERT INTO teacher(teacherName, teacherShortName, minHrs, maxHrs, deptId) VALUES ( "Uma Gajendragadkar", "Uma", 3, 24, 1);
 INSERT INTO teacher(teacherName, teacherShortName, minHrs, maxHrs, deptId) VALUES ( "Ms. Rajni Moona", "Rajani", 15, 24, 1);

@@ -12,11 +12,6 @@ Microprocessor techniques lab,MPT-Lab,2,2,TRUE
 Principles of Programming language lab,PPL-Lab,4,2,TRUE
 Numerical Methods,NM,3,1,FALSE
 Liberal Learning Course-1,LLC1,3,1,FALSE
-Theory of Computer Science IT,TCS-IT,3,1,FALSE
-Microprocessor techniques IT,MPT-IT,3,1,FALSE
-Principles of Programming languages IT,PPL-IT,3,1,FALSE
-Data Communication IT,DC-IT,3,1,FALSE
-Principles of Programming language lab IT,PPL-Lab-IT,4,2,TRUE
 Professional Science Course,PSC,3,1,FALSE
 Liberal Learning Course2,LLC2,3,1,FALSE
 open elective 3 yr-Information Systems,OE,3,1,FALSE
@@ -26,18 +21,16 @@ Computer Aided Signal Processing,CASP,3,1,FALSE
 Software Engineering,SE,3,1,FALSE
 Computer Aided Signal Processing Laboratory,CASP-Lab,3,3,TRUE
 Software Engineering Laboratory,SE-Lab,3,3,TRUE
-Free and Open Source Software Development,FOSS,3,1,FALSE
-Free and Open Source Software Development Laboratory,FOSS-Lab,2,2,TRUE
-Concurrent Programming in Embedded Systems,CPES,3,1,FALSE
-Concurrent Programming in Embedded Systems  Laboratory,CPES-Lab,2,2,TRUE
-Computer Graphics,CG,3,1,FALSE
+Free and Open Source Software Development,FOSS,3,1,TRUE
+Computer Graphics,CG,3,1,TRUE
+Cloud and Big Data,CBD,3,1,TRUE
+Concurrent Programming in Embedded Systems,CPES,3,1,TRUE
+Data Mining,DM,3,1,TRUE
+Free and Open Source Software Development Laboratory,FOSS-Lab,3,3,TRUE
+Cloud and Big Data Laboratory,CBD-Lab,3,3,TRUE
+Concurrent Programming in Embedded Systems  Laboratory,CPES-Lab,3,3,TRUE
 Computer Graphics Laboratory,CG-Lab,3,3,TRUE
-Cloud and Big Data CE,CBD,3,1,FALSE
-Cloud and Big Data Laboratory CE,CBD-Lab,2,2,TRUE
-Data Mining,DM,3,1,FALSE
-Data Mining  Laboratory,DM-Lab,2,2,TRUE
-Cloud and Big Data Laboratory IT,CBD-IT,3,3,TRUE
-Data Mining Laboratory IT,DM-Lab-IT,2,2,TRUE
+Data Mining  Laboratory,DM-Lab,3,3,TRUE
 Open Elective Third Year,OE-TY,3,1,FALSE
 Language processors,LP,3,1,FALSE
 Algorithm and complexity,AnC,3,1,FALSE
@@ -67,3 +60,11 @@ PG lab II,PG-Lab-II,3,4,FALSE
 Institute Level Open Elective Sem6,ILOE-Sem6,3,1,FALSE
 Massively Open Onlie Course,MOOC,3,1,FALSE
 Institute Level Open Elective Sem8,ILOE-Sem8,3,1,FALSE
+Bioinformatics,BI,3,1,FALSE
+Internet of Things,IOT,3,1,FALSE
+Applied Cyber Security,ACS,3,1,FALSE
+Web Technology,WT,3,1,FALSE
+Wireless and Mobile Security,WMS,3,1,FALSE
+Network Security,NS,3,1,FALSE
+Advanced Database and Information Retrieval,ADIR,3,1,FALSE
+Cloud Computing and Security,CCS,3,1,FALSE

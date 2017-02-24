@@ -71,6 +71,22 @@ batchCount	int,
 CONSTRAINT c_batchName UNIQUE(batchName)
 );
 
+CREATE TABLE batchCanOverlap
+(
+bo int AUTO_INCREMENT PRIMARY KEY,
+batchId	int NOT NULL,
+batchOverlapId int NOT NULL,
+FOREIGN KEY(batchId) REFERENCES batch(batchId),
+FOREIGN KEY(batchOverlapId) REFERENCES batch(batchId)
+);
+
+CREATE VIEW batchCanOverlapReadable
+AS
+SELECT b.batchName as "b1Name", b1.batchName  as "b2Name"
+FROM batch b, batch b1, batchCanOverlap bo
+WHERE b.batchId  = bo.batchId AND
+	  b1.batchId = bo.batchOverlapId;
+
 CREATE TABLE batchClass 
 (
 bcId int AUTO_INCREMENT PRIMARY KEY,
@@ -99,7 +115,7 @@ CONSTRAINT c_roomShortName UNIQUE(roomShortName)
 CREATE TABLE subject
 (
 subjectId	int AUTO_INCREMENT PRIMARY KEY,
-subjectName	varchar(32) NOT NULL,
+subjectName	varchar(64) NOT NULL,
 subjectShortName	varchar(16) NOT NULL,
 totalHrs	int,
 eachSlot	int,
@@ -108,50 +124,42 @@ batches	boolean,
 CONSTRAINT c_subjectShortName UNIQUE(subjectShortName)
 );
 
-CREATE TABLE subjectBatch
+CREATE TABLE subjectBatchTeacher
 (
-sbId	int AUTO_INCREMENT PRIMARY KEY,
-subjectId	int,
-batchId	int NOT NULL,
-FOREIGN KEY (batchId) REFERENCES batch(batchId),
-FOREIGN KEY (subjectId) REFERENCES subject(subjectId)
-);
-
-CREATE VIEW subjectBatchReadable AS
-SELECT s.subjectShortName,b.batchName from subject s, batch b, subjectBatch sb
-WHERE	sb.subjectId = s.subjectId AND
-	sb.batchid = b.batchId
-ORDER by subjectShortName;
-
-
-CREATE Table classSubject 
-(
-csId	int AUTO_INCREMENT PRIMARY KEY,
-classId	int NOT NULL,
+sbtId	int AUTO_INCREMENT PRIMARY KEY,
 subjectId	int NOT NULL,
-FOREIGN KEY (classId) REFERENCES class(classId),
-FOREIGN KEY (subjectId) REFERENCES subject(subjectId)
+batchId	int NOT NULL,
+teacherId int,
+FOREIGN KEY (batchId) REFERENCES batch(batchId),
+FOREIGN KEY (subjectId) REFERENCES subject(subjectId),
+FOREIGN KEY (teacherId) REFERENCES teacher(teacherId)
 );
 
-CREATE VIEW classSubjectReadable AS
-SELECT s.subjectShortName, c.classShortName from subject s, class c, classSubject cb
-WHERE	cb.subjectId = s.subjectId AND
-	cb.classId = c.classId
+CREATE VIEW subjectBatchTeacherReadable AS
+SELECT s.subjectShortName,b.batchName, t.teacherShortName from subject s, batch b, subjectBatchTeacher sbt, teacher t
+WHERE	sbt.subjectId = s.subjectId AND
+	sbt.batchid = b.batchId AND
+	sbt.teacherId = t.teacherId
 ORDER by subjectShortName;
 
-CREATE TABLE subjectTeacher
+
+CREATE TABLE subjectClassTeacher 
 (
 stId	int AUTO_INCREMENT PRIMARY KEY,
 subjectId	int NOT NULL,
-teacherId	int NOT NULL,
-FOREIGN KEY (teacherId) REFERENCES teacher(teacherId),
-FOREIGN KEY (subjectId) REFERENCES subject(subjectId)
+classId		int NOT NULL,
+teacherId	int,
+FOREIGN KEY (subjectId) REFERENCES subject(subjectId),
+FOREIGN KEY (classId) REFERENCES class(classId),
+FOREIGN KEY (teacherId) REFERENCES teacher(teacherId)
 );
 
-CREATE VIEW subjectTeacherReadalbe AS
-SELECT s.subjectShortName, t.teacherShortName from subject s, teacher t, subjectTeacher st
-WHERE	s.subjectId = st.subjectId AND
-	t.teacherId = st.teacherId
+CREATE VIEW subjectClassTeacherReadable AS
+SELECT  c.classShortName, s.subjectShortName, t.teacherShortName 
+FROM subject s, class c, teacher t, subjectClassTeacher sct
+WHERE	s.subjectId = sct.subjectId AND
+	t.teacherId = sct.teacherId AND
+	c.classId = sct.classId 
 ORDER BY subjectShortName;
 
 CREATE TABLE classRoom
