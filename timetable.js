@@ -542,7 +542,7 @@ function classChange(){
 	div.style.display = "none";
 	div.appendChild(table);
 	tdTimetable.appendChild(div);
-	$("#timeTable").slideDown("slow");
+	$("#timeTable").slideDown("fast");
 	$(".animateButton").click(function(){
 					var text = this.innerHTML;
 					var id = this.parentElement.id;

@@ -57,6 +57,17 @@
 							<option value = "EMPTY"> </option>
 						</select>
 					</div>
+					<div class = "selection-menu">
+						<form action="export.php" method="POST">
+						Save as Spreadsheet<br>
+						<select name="type" class= "select-menu" onchange="this.form.submit()">
+							<option value = "" selected></option>
+							<option value = "ODS">Save as ODS</option>
+							<option value = "Excel">Save as Excel </option>
+							<option value = "Excelx">Save as Excelx</option>
+						</select>
+						</form>
+					</div>
 				</td>
 			</tr>
 			<tr  >
