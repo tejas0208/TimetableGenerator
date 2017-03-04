@@ -44,6 +44,8 @@ mysql -u root -proot < subject-batch-teacher.sql
 echo "---------------config-----------------"
 mysql -u root -proot < config.sql
 
+echo "---------------snapshot ----------------"
+mysql -u root -proot < snapshot.sql
 
 echo "---------------timetable-----------------"
 cat timetable.csv  | bash timetable.sh  > timetable.sql

@@ -191,7 +191,17 @@ SELECT b.batchName, r.roomName from batch b, room r, batchRoom br
 WHERE	b.batchId = br.batchId AND
 	r.roomId = br.roomId
 ORDER BY batchName;
-	
+
+CREATE TABLE snapshot 
+(
+snapshotId	int AUTO_INCREMENT PRIMARY KEY,
+snapshotName	varchar(128),
+snapshotCreator	int, 
+FOREIGN KEY (snapshotCreator) REFERENCES user(userId),
+createTime	time,
+modifyTime	time
+);
+
 CREATE TABLE timeTable
 (
 ttId	int AUTO_INCREMENT PRIMARY KEY,
@@ -203,6 +213,7 @@ subjectId int,
 teacherId	int,
 batchId	int,
 configId	int,
+snapShotId int,
 isBreak	boolean
 );
 
