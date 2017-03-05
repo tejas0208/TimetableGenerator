@@ -125,6 +125,7 @@ This is pure html.
 <p class="purephp">
 <?php 
 	echo "This is from php <br>"
+	echo "adding dummy line< br>"
 ?>
 </p>
 
