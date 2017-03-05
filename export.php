@@ -23,7 +23,7 @@ function find($allrows, $day, $slotNo) {
 	return $result;
 }
 /* Generates one worksheet for teacher=teacherShortName, class=classShortName, etc. */
-function generate_worksheet($currTableName, $searchParam, $sheetCount, $allrows2, $nSlots) {
+function generate_timetable_worksheet($currTableName, $searchParam, $sheetCount, $allrows2, $nSlots) {
 	global $objPHPExcel;
 	$myWorkSheet = new PHPExcel_Worksheet($objPHPExcel, $currTableName."_".$searchParam);
 	$objPHPExcel->addSheet($myWorkSheet, $sheetCount);
@@ -121,7 +121,7 @@ function generate_worksheet($currTableName, $searchParam, $sheetCount, $allrows2
 		}
 	}
 }
-function generate_spreadsheet() {
+function generate_timetable_spreadsheet() {
 	$tableNames = array("teacher", "teacherShortName", "class", "classShortName", 
 				"batch", "batchName", "room", "roomShortName");
 	$query = "SELECT * from config where configId = 1";
@@ -142,7 +142,7 @@ function generate_spreadsheet() {
 			$query = "SELECT * FROM timeTableReadable where  $currParam = \"$searchParam \"";
 			$allrows2 = sql_getallrows($query);
 
-			generate_worksheet($currTableName, $searchParam, $sheetCount, $allrows2, $nSlots);
+			generate_timetable_worksheet($currTableName, $searchParam, $sheetCount, $allrows2, $nSlots);
 
 			# print information about subject shortcut names, subject-teacher mapping	
 
@@ -150,6 +150,80 @@ function generate_spreadsheet() {
 		}
 	}
 }	
+function generate_data_worksheet($currTableName, $sheetCount) {
+	global $objPHPExcel;
+
+	$myWorkSheet = new PHPExcel_Worksheet($objPHPExcel, $currTableName);
+	$objPHPExcel->addSheet($myWorkSheet, $sheetCount);
+	$objPHPExcel->setActiveSheetIndex($sheetCount);
+	
+	$query = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS ". 
+			" WHERE TABLE_SCHEMA='timeTable' AND TABLE_NAME='".$currTableName."';";
+	$colNames = sql_getallrows($query);
+	$query = "SELECT * FROM $currTableName;";
+	$allrows = sql_getallrows($query);
+	$colLabels = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 
+						'K', 'L', 'M', 'N', 'O','P','Q','R','S');
+	/* print header row */
+	for($j = 0; $j < count($colNames); $j++) {
+		$row = 1;
+		$col = $colLabels[$j];
+		$objRichText = new PHPExcel_RichText();
+		$currText = $objRichText->createTextRun($colNames[$j]);
+		$currText->getFont()->setBold(true);
+		$currText->getFont()->setColor( new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKGREEN ) );
+		$objPHPExcel->getActiveSheet()->getCell($col.$row)->setValue($objRichText);
+		# need to work lot more on setting height, width and formatting of 4 entries
+		$height = 12.75;//12.75 * count($thisSlotEntries);
+		$objPHPExcel->getActiveSheet()->getRowDimension($row)->setRowHeight($height);
+		$width = 12.75;
+		$objPHPExcel->getActiveSheet()->getColumnDimension($col)->setWidth($width);
+		$objPHPExcel->getActiveSheet()->getStyle($col.$row)->getAlignment()->
+								setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+		$objPHPExcel->getActiveSheet()->getStyle($col.$row)->getAlignment()->
+								setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+
+	}
+	/* print data */
+	for($i = 0; $i < count($allrows); $i++) {
+		for($j = 0; $j < count($colNames); $j++) {
+			$row = $i + 2;
+			$col = $colLabels[$j];
+
+			$objRichText = new PHPExcel_RichText();
+			$currText = $objRichText->createTextRun($allrows[$i][$colNames[$j]["COLUMN_NAME"]]);
+			$currText->getFont()->setBold(true);
+			$currText->getFont()->setColor( new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_BLACK) );
+			$objPHPExcel->getActiveSheet()->getCell($col.$row)->setValue($objRichText);
+			# need to work lot more on setting height, width and formatting of 4 entries
+			$height = 12.75;//12.75 * count($thisSlotEntries);
+			$objPHPExcel->getActiveSheet()->getRowDimension($row)->setRowHeight($height);
+			$width = 12.75;
+			$objPHPExcel->getActiveSheet()->getColumnDimension($col)->setWidth($width);
+			$objPHPExcel->getActiveSheet()->getStyle($col.$row)->getAlignment()->
+									setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			$objPHPExcel->getActiveSheet()->getStyle($col.$row)->getAlignment()->
+									setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+
+		}
+	}
+}
+function generate_data_spreadsheet() {
+	$tableNames = array("teacherReadable", "class", "batch","batchClassReadable","class",
+						"batchCanOverlapReadable", "subjectClassTeacherReadable", 
+						"subjectBatchTeacherReadable", "config"); 
+
+	$sheetCount = 0;
+	for($i = 0; $i < count($tableNames); $i += 1) { 
+		# Generate worksheets for each table: teachers, classes, batches, rooms
+		$currTable = $tableNames[$i];
+		generate_data_worksheet($currTable, $sheetCount);
+
+		# print information about subject shortcut names, subject-teacher mapping	
+		$sheetCount++;	
+	}
+
+}
 function saveFile() {
 	global $_POST, $objPHPExcel; 
 	if($_POST["type"] == "ODS") {
@@ -165,7 +239,7 @@ function saveFile() {
 	echo "type = ".$_POST["type"]." format = $format";
 	$objPHPWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $format);
 	$filename = str_replace('php',$replace, basename(__FILE__));
-	$objPHPWriter->save(str_replace('php',$replace, basename(__FILE__)));
+	$objPHPWriter->save($filename); //str_replace('php',$replace, basename(__FILE__)));
 	return $filename; 
 	# need to work more on the filename part, also just set the output type 
 	# of this file to be xls and include this in timetable.php
@@ -173,7 +247,6 @@ function saveFile() {
 	//$objPHPWriter->save($filename);
 
 }
-
 
 $objPHPExcel = new PHPExcel();
 $objPHPExcel->getProperties()->setCreator("Abhijit A.M.")
@@ -187,7 +260,12 @@ echo "<html>";
 echo "<head></head>";
 echo "<body>";
 
-generate_spreadsheet();
+if($_POST["whichTable"] = "data") {
+	generate_data_spreadsheet();
+} else {
+	//generate_timetable_spreadsheet();
+	generate_data_spreadsheet();
+}
 $filename = saveFile();
 
 echo "<br> Download file <a href=\"$filename\">click here</a> ";

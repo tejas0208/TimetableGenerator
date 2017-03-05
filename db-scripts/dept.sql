@@ -1,4 +1,4 @@
 USE timeTable;
-INSERT INTO dept(deptName) VALUE ("Computer Engineering and I.T.");
-INSERT INTO dept(deptName) VALUE ("Electronics and Telecommunication Engineering");
-INSERT INTO dept(deptName) VALUE ("Instrumentationn Engineering");
+INSERT INTO dept(deptName, deptShortName) VALUE ("Computer Engineering and I.T.", "CEIT");
+INSERT INTO dept(deptName, deptShortName) VALUE ("Electronics and Telecommunication Engineering","ENTC");
+INSERT INTO dept(deptName, deptShortName) VALUE ("Instrumentationn Engineering","INSTRU");

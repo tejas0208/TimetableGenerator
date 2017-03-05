@@ -5,7 +5,7 @@ USE timeTable;
 CREATE TABLE config
 (
 configId int AUTO_INCREMENT PRIMARY KEY,
-dayBegin time,
+dayBegin time	COMMENT 'Day Begins At',
 slotDuration int,/* in seconds */	
 nSlots	int,
 deptId	int,
@@ -35,6 +35,15 @@ roleId	int,
 CONSTRAINT c_capName UNIQUE(capName)
 );
 
+CREATE TABLE dept 
+(
+deptId	int  AUTO_INCREMENT PRIMARY KEY,
+deptName	varchar(128) NOT NULL,
+deptShortName	varchar(32) NOT NULL,
+CONSTRAINT c_deptName UNIQUE(deptName)
+);
+
+
 CREATE TABLE teacher
 (
 teacherId	int  AUTO_INCREMENT PRIMARY KEY,
@@ -46,12 +55,12 @@ deptId	int,
 CONSTRAINT c_teacherShortName UNIQUE(teacherShortName)
 );
 
-CREATE TABLE dept 
-(
-deptId	int  AUTO_INCREMENT PRIMARY KEY,
-deptName	varchar(128) NOT NULL,
-CONSTRAINT c_deptName UNIQUE(deptName)
-);
+CREATE VIEW teacherReadable
+AS
+SELECT  t.teacherId, t.teacherName, t.teacherShortName,t.minHrs, t.maxHrs, d.deptShortName
+FROM teacher t, dept d 
+WHERE t.deptId = d.deptId;
+
 
 CREATE TABLE class
 (
