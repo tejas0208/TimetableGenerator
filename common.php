@@ -1,7 +1,7 @@
 <?php	
 
 	class renderer {
-		function default_style() {
+		function defaultStyle() {
 			return "<style>
 			.subjectentry {color:red}
 			.teacherentry {color:blue}
@@ -14,8 +14,8 @@
 
 		}
 
-		function default_header() {
-			$j = $this->default_style();
+		function defaultHeader() {
+			$j = $this->defaultStyle();
 			return "<html> 
 			<head>
 			<title> Test PHP Page </title>
@@ -24,7 +24,7 @@
 			</script>
 			</head>".$j; 
 		}
-		function default_scripts() {
+		function defaultScripts() {
 			return "<script>
 			function see_timetable(type, id) {
 				window.location.replace(\"http://127.0.0.1/php/showtable.php?type=\"type\"&id=\"id);
@@ -32,11 +32,18 @@
 			</script>";
 
 		}
-		function default_footer() {
+		function defaultFooter() {
 			return " </body> </html>";
 		}
 	}
-
+	function getArgument($arg) {
+		if(isset($_POST[$arg]))
+				return $_POST[$arg];
+		else if(isset($_GET[$arg]))
+				return $_GET[$arg];
+		else
+			return ""; 
+	}
 	$OUTPUT = new renderer();
 	global $OUTPUT;
 ?>

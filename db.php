@@ -1,6 +1,6 @@
 <?php
 	require_once('config.php');
-	function db_connect() {
+	function dbConnect() {
 		global $CFG;
 		$conn = new mysqli($CFG->server, $CFG->db_user, $CFG->db_pass, $CFG->db_database);
 		if($conn->error) {
@@ -9,10 +9,10 @@
 		$CFG->conn = $conn;
 		return $conn;
 	}
-	function sql_getallrows($query) {
+	function sqlGetAllRows($query) {
 		global $CFG;
 		if($CFG->conn === false) 
-			$conn = db_connect();
+			$conn = dbConnect();
 		else
 			$conn = $CFG->conn;
 		$result = $conn->query($query);
