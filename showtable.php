@@ -2,7 +2,7 @@
 	require_once('config.php');
 	require_once('db.php');
 	require_once('common.php');
-	require_once('maketable.php');
+	require_once('display.php');
 
 	global $OUTPUT;
 	$conn = db_connect();
@@ -44,4 +44,5 @@
 	$tthtml = make_table($conn, $config, $type, $id);
 	echo $tthtml;
 	echo $OUTPUT->default_footer();
+	$conn->close();
 ?>	

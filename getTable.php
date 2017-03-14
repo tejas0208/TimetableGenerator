@@ -11,7 +11,7 @@
 	
 	for($i = 0; $i < $length; $i++) {
 		$query = "SELECT * FROM ".$tablenames[$i];/*TimeTable*/
-		$outp = sqlGetAllRows($query);
+		$outp = sql_getallrows($query);
 		$tables[$tablenames[$i]] = $outp;
 	}
 	echo json_encode($tables);
