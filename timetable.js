@@ -172,9 +172,9 @@ function getData() {/*Loads data from server asynchronously*/
 				alert("Class and subject relation's information not found");
 		}
 	};
-	xhttp.open("POST", "getTable.php", false);
+	xhttp.open("POST", "timetable.php", false);
 	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	xhttp.send();
+	xhttp.send("allDataRequest=true");
 }
 
 function createOptionTag(value, textString) {
