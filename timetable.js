@@ -588,6 +588,7 @@ function getEligibleSubjects(i, j, k) {
 				var existingEntries = searchMultipleRows(timeTable, 
 										"subjectId", currSubject["subjectId"], 
 										searchOn, lists[l][m][searchOn]);
+				var ttt = existingEntries;
 				if(existingEntries !== -1) {
 					existingEntries = existingEntries.length;
 				}
@@ -599,20 +600,21 @@ function getEligibleSubjects(i, j, k) {
 				//Checking whether there is time left for subject(1)
 				
 				//console.log((existingEntries )+ " === "+maxEntriesForSubject);
-				if(existingEntries * timeIntervalInHours == maxEntriesForSubject) {
-					console.log("maxEntriesFor subject equal");
-					alert("maxEntriesFor subject equal");
+				//if(existingEntries * timeIntervalInHours == maxEntriesForSubject) {
+				if(existingEntries == maxEntriesForSubject) {
+					console.log("maxEntriesFor subject " + currSubject["subjectShortName"]);
+					//alert("maxEntriesFor subject equal");
 					continue;
 				}
 				//if c > n, errror
 				
-				if(existingEntries * timeIntervalInHours > maxEntriesForSubject)
-					alert("More than desired entries for " + currSubject["subjectShortName"] + "+");
+				//if(existingEntries * timeIntervalInHours > maxEntriesForSubject)
+				if(existingEntries > maxEntriesForSubject)
+					console.log("More than desired entries for " + currSubject["subjectShortName"] + JSON.stringify(ttt) + searchOn);
 				//if j+subject->eachSlot > nSlots, i.e. if this entry will exceed totalSlots of day
 								//continue(3)
 				if(j + parseInt(currSubject["eachSlot"]) -1  > nSlotsPerDay - 1) {
 					console.log("Skipping .. out of day busy");
-					
 					continue;
 				}
 				//t = teacher for this subject-class
@@ -630,8 +632,8 @@ function getEligibleSubjects(i, j, k) {
 				}
 				if(((allocatedTimeForTeacher + parseInt(currSubject["eachSlot"])) 
 							* timeIntervalInHours) > parseInt(currTeacher["maxHrs"])) {/*(5)*/
-					console.log("teachers max hr exceeded");
-					alert("teachers max hr exceeded");
+					console.log("teachers max hr exceeded for " + currTeacher["teacherShortName"]);
+					//alert("teachers max hr exceeded");
 					continue;						
 				}
 				//console.log("day " + i + " slot " + j + " currsubject " + JSON.stringify(currSubject));
@@ -687,7 +689,7 @@ function getEligibleSubjects(i, j, k) {
 						
 						
 				}
-				console.log("validSubj==================>"+validSubj);
+				//console.log("validSubj==================>"+validSubj);
 				if(validSubj === 0) {
 					alert("Invalid subj");
 					continue;
