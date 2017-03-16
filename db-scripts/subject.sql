@@ -1,5 +1,5 @@
 USE timeTable;
-INSERT INTO subject(subjectName, subjectShortName, totalHrs, eachSlot, batches) VALUES ( "Fundamentals of Mathematics-II", "FM-II", 3, 1, TRUE );
+INSERT INTO subject(subjectName, subjectShortName, totalHrs, eachSlot, batches) VALUES ( "Fundamentals of Mathematics-II", "FM-II", 3, 1, TRUE);
 INSERT INTO subject(subjectName, subjectShortName, totalHrs, eachSlot, batches) VALUES ( "Electronics and Computer Workshop", "ECW", 3, 1, FALSE);
 INSERT INTO subject(subjectName, subjectShortName, totalHrs, eachSlot, batches) VALUES ( "Fundamentals of Computer Programming", "FCP", 3, 1, FALSE);
 INSERT INTO subject(subjectName, subjectShortName, totalHrs, eachSlot, batches) VALUES ( "Fundamentals of Computer Programming Laboratory", "FCP-Lab", 4, 2, TRUE);
@@ -9,8 +9,8 @@ INSERT INTO subject(subjectName, subjectShortName, totalHrs, eachSlot, batches) 
 INSERT INTO subject(subjectName, subjectShortName, totalHrs, eachSlot, batches) VALUES ( "Principles of Programming language", "PPL", 3, 1, FALSE);
 INSERT INTO subject(subjectName, subjectShortName, totalHrs, eachSlot, batches) VALUES ( "Data Communication", "DC", 3, 1, FALSE);
 INSERT INTO subject(subjectName, subjectShortName, totalHrs, eachSlot, batches) VALUES ( "Institute Level Open Elective Sem4", "ILOE-Sem4", 3, 1, FALSE);
-INSERT INTO subject(subjectName, subjectShortName, totalHrs, eachSlot, batches) VALUES ( "Microprocessor techniques lab", "MPT-Lab", 2, 2, TRUE);
-INSERT INTO subject(subjectName, subjectShortName, totalHrs, eachSlot, batches) VALUES ( "Principles of Programming language lab", "PPL-Lab", 4, 2, TRUE);
+INSERT INTO subject(subjectName, subjectShortName, totalHrs, eachSlot, batches) VALUES ( "Microprocessor techniques lab", "MPT-Lab", 3, 3, TRUE);
+INSERT INTO subject(subjectName, subjectShortName, totalHrs, eachSlot, batches) VALUES ( "Principles of Programming language lab", "PPL-Lab", 3, 3, TRUE);
 INSERT INTO subject(subjectName, subjectShortName, totalHrs, eachSlot, batches) VALUES ( "Numerical Methods", "NM", 3, 1, FALSE);
 INSERT INTO subject(subjectName, subjectShortName, totalHrs, eachSlot, batches) VALUES ( "Liberal Learning Course-1", "LLC1", 3, 1, FALSE);
 INSERT INTO subject(subjectName, subjectShortName, totalHrs, eachSlot, batches) VALUES ( "Professional Science Course", "PSC", 3, 1, FALSE);
