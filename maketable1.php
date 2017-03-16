@@ -127,6 +127,16 @@ function make_header($subjects, $teachers, $rooms, $classes, $batches) {
 	//$header .= "<input type=\"submit\" value=\"submit option\">";
 	return $header;
 }
+
+function getOptions($conn, $id) {
+	$text = "<option value =\"empty\">--SELECT SUBJECT--</option>";
+	$qsubjects = "SELECT subjectShortName FROM classSubjectReadable WHERE classShortName=\"$id\"";
+	$subjects = $conn->query($qsubjects);
+	while($subject = $subjects->fetch_assoc()) {
+		$text .= "<option value = \"".$subject["subjectShortName"]."\">".$subject["subjectShortName"]."</option>";
+	}
+	return $text;
+}
 function make_table($conn, $config, $type, $id) {
 	global $daynames;
 	$qfetchsub = "SELECT subjectId, subjectName, subjectShortName, totalHrs, eachSlot FROM subject";
@@ -206,59 +216,8 @@ function make_table($conn, $config, $type, $id) {
 			$cell = $table[$i][$j];				
 			$count = count($cell);
 			$tablehtml .= "<td class=\"cell\">";
-			for($k = 0; $k < $count; $k++) {
-				$tablehtml .= "<table class=\"slottable\"><div>\n";
-				$entry = $cell[$k];
-				$batchflag = 0;
-				foreach($entry as $key => $value) {
-					if($key == $type)/*Do not display what is selected*/
-						continue;
-					switch($key) {
-						case "subject":
-							$tablehtml .= "<tr><td class=\"subjectentry\">";
-							/*$tablehtml .= "<select class=\"selectsubject\" id=\"a1\">\n";
-							foreach($subjects as $short => $full) {
-								if($short == $value) 
-								$tablehtml .= "<option value=\"".$short."\" selected>".$short."</option>\n";
-								else
-								$tablehtml .= "<option value=\"".$short."\">".$short."</option>\n";
-							} 
-							$tablehtml .= "</select></td></tr>\n";  */
-							$tablehtml .= "$value ";
-							$tablehtml .= "</td></tr>\n"; 
-							break;
-						case "room":
-							$tablehtml .= "<tr><td class=\"roomentry\">";
-							$tablehtml .= "$value ";
-							$tablehtml .= "</td></tr>\n";
-							break;
-						case "class":
-							if($batchflag == 0) {
-								$tablehtml .= "<tr><td class=\"classentry\">";
-								$tablehtml .= "$value ";
-								$tablehtml .= "</td></tr>\n";
-							}
-							break;
-						case "teacher":
-							$tablehtml .= "<tr><td class=\"teacherentry\">";
-							$tablehtml .= "$value ";
-							$tablehtml .= "</td> </tr>\n";
-							break;
-						case "batch":
-							if($value != "NONE") {
-								$tablehtml .= "<tr><td class=\"batchentry\">";
-								$tablehtml .= "$value";
-								$tablehtml .= "</td> </tr>\n";
-								$batchflag = 1;
-							}
-							break;
-						default:
-							$tablehtml .= "!!Junk!!";
-							break;
-					}
-				}
-				$tablehtml .= "</div></table>\n";
-			}
+			if($type =="class")
+			$tablehtml .= "<select>".getOptions($conn, $id)."</select>";
 			$tablehtml .= "</td>";
 		}
 		$tablehtml .= "</tr>\n"; 

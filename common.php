@@ -10,6 +10,9 @@
 			.classentry {color:magenta}
 			.slottable {border:1}
 			.menutable {border:1}
+			.cell {width:200px; height:100px;}
+			.cell:hover {background-color: #f5f5f5}
+			.dayname {width:100px; height:100px;}
 			</style>";
 
 		}
