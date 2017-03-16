@@ -125,7 +125,7 @@ function generate_timetable_spreadsheet() {
 	$tableNames = array("teacher", "teacherShortName", "class", "classShortName", 
 				"batch", "batchName", "room", "roomShortName");
 	$query = "SELECT * from config where configId = 1";
-	$allrows = sql_getallrows($query);
+	$allrows = sqlGetAllRows($query);
 	# consider having a timetable class with derived classes 
 	# on teacherTT, classTT, batchTT, etc. and have a specific code in each.
 	$nSlots = $allrows[0]["nSlots"];
@@ -135,12 +135,12 @@ function generate_timetable_spreadsheet() {
 		$currTableName = $tableNames[$i];
 		$currParam = $tableNames[$i + 1];
 		$query = "SELECT * FROM $currTableName";
-		$allrows = sql_getallrows($query);
+		$allrows = sqlGetAllRows($query);
 		for($j = 0; $j < count($allrows); $j++) { 
 			# Generate worksheets for each room/class/teacher/batch in each table
 			$searchParam = $allrows[$j][$currParam];
 			$query = "SELECT * FROM timeTableReadable where  $currParam = \"$searchParam \"";
-			$allrows2 = sql_getallrows($query);
+			$allrows2 = sqlGetAllRows($query);
 
 			generate_timetable_worksheet($currTableName, $searchParam, $sheetCount, $allrows2, $nSlots);
 
@@ -159,9 +159,9 @@ function generate_data_worksheet($currTableName, $sheetCount) {
 	
 	$query = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS ". 
 			" WHERE TABLE_SCHEMA='timeTable' AND TABLE_NAME='".$currTableName."';";
-	$colNames = sql_getallrows($query);
+	$colNames = sqlGetAllRows($query);
 	$query = "SELECT * FROM $currTableName;";
-	$allrows = sql_getallrows($query);
+	$allrows = sqlGetAllRows($query);
 	$colLabels = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 
 						'K', 'L', 'M', 'N', 'O','P','Q','R','S');
 	/* print header row */
