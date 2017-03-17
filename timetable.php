@@ -50,12 +50,12 @@ $page = "
 			</tr>
 			<tr id = \"selection-menu\">
 				<td >
-					<div class = \"selection-menu\">
+					<!--div class = \"selection-menu\">
 						Select Subject<br>
 						<select id = \"subject-menu\" class= \"select-menu\">
 							<option value = \"EMPTY\"> </option>
 						</select>
-					</div>
+					</div-->
 					<div class = \"selection-menu\">
 						Select Class<br>
 						<select id = \"class-menu\" class= \"select-menu\">
@@ -82,12 +82,15 @@ $page = "
 					</div>
 					<div class = \"selection-menu\">
 						<form action=\"export.php\" method=\"POST\">
-						Save as Spreadsheet<br>
+						Export Data<br>
 						<select name=\"type\" class= \"select-menu\" onchange=\"this.form.submit()\">
 							<option value = \"\" selected></option>
-							<option value = \"ODS\">Save as ODS</option>
-							<option value = \"Excel\">Save as Excel </option>
-							<option value = \"Excelx\">Save as Excelx</option>
+							<option value = \"ODS\">Timetabble as ODS</option>
+							<option value = \"Excel\">Timetable as Excel </option>
+							<option value = \"Excelx\">Timetable as Excelx</option>
+							<option value = \"DODS\">Data as ODS</option>
+							<option value = \"DExcel\">Data as Excel </option>
+							<option value = \"DExcelx\">Data as Excelx</option>
 						</select>
 						</form>
 					</div>

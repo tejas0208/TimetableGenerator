@@ -224,12 +224,12 @@ function generate_data_spreadsheet() {
 	}
 
 }
-function saveFile() {
+function saveFile($savefilename) {
 	global $_POST, $objPHPExcel; 
-	if($_POST["type"] == "ODS") {
+	if(substr($_POST["type"],1) == "ODS") {
 		$format = 'OpenDocument';
 		$replace = 'ods';
-	} else if ($_POST["type"] == "Excel") {
+	} else if (substr($_POST["type"],1) == "Excel") {
 		$format = 'Excel5';
 		$replace = 'xls'; 
 	} else {
@@ -238,7 +238,8 @@ function saveFile() {
 	}
 	echo "type = ".$_POST["type"]." format = $format";
 	$objPHPWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $format);
-	$filename = str_replace('php',$replace, basename(__FILE__));
+	//$filename = str_replace('php',$replace, basename(__FILE__));
+	$filename = str_replace('EXT', $replace, $savefilename); 
 	$objPHPWriter->save($filename); //str_replace('php',$replace, basename(__FILE__)));
 	return $filename; 
 	# need to work more on the filename part, also just set the output type 
@@ -260,13 +261,16 @@ echo "<html>";
 echo "<head></head>";
 echo "<body>";
 
-if($_POST["whichTable"] = "data") {
+if(substr($_POST["type"],0,1) == "D") {
+	echo "data requested <br>";
 	generate_data_spreadsheet();
+	$savefilename = "data.EXT";
 } else {
-	//generate_timetable_spreadsheet();
-	generate_data_spreadsheet();
+	generate_timetable_spreadsheet();
+	$savefilename = "timetable.EXT";
+	//generate_data_spreadsheet();
 }
-$filename = saveFile();
+$filename = saveFile($savefilename);
 
 echo "<br> Download file <a href=\"$filename\">click here</a> ";
 echo "</body>";
