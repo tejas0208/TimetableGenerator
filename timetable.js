@@ -721,8 +721,8 @@ function getEligibleSubjects(i, j, k) {
 }
 
 function subjectChange(){
-	var index = document.getElementById("subject-menu").selectedIndex;
-	var subjectShortName = document.getElementById("subject-menu").options[index].text;
+	//var index = document.getElementById("subject-menu").selectedIndex;
+	//var subjectShortName = document.getElementById("subject-menu").options[index].text;
 	document.getElementById("teacher-menu").selectedIndex = "-1";
 	document.getElementById("room-menu").selectedIndex = "-1";
 	document.getElementById("class-menu").selectedIndex = "-1";
@@ -783,7 +783,7 @@ function classChange(createNewTable){
 	id = classShortName;
 	document.getElementById("teacher-menu").selectedIndex = "-1";
 	document.getElementById("room-menu").selectedIndex = "-1";
-	document.getElementById("subject-menu").selectedIndex = "-1";
+	//document.getElementById("subject-menu").selectedIndex = "-1";
 	document.getElementById("batch-menu").selectedIndex = "-1";
 	getSupportObject();//fills supportObject correctly depending on type and id;
 	var configrow = search(config, "configId", configId);
@@ -1010,7 +1010,7 @@ function classChange(createNewTable){
 
 function roomChange(){
 	document.getElementById("teacher-menu").selectedIndex = "-1";
-	document.getElementById("subject-menu").selectedIndex = "-1";
+	//document.getElementById("subject-menu").selectedIndex = "-1";
 	document.getElementById("class-menu").selectedIndex = "-1";
 	document.getElementById("batch-menu").selectedIndex = "-1";
 }
@@ -1019,11 +1019,11 @@ function batchChange(){
 	document.getElementById("teacher-menu").selectedIndex = "-1";
 	document.getElementById("room-menu").selectedIndex = "-1";
 	document.getElementById("class-menu").selectedIndex = "-1";
-	document.getElementById("subject-menu").selectedIndex = "-1";
+	//document.getElementById("subject-menu").selectedIndex = "-1";
 }
 
 function teacherChange(){
-	document.getElementById("subject-menu").selectedIndex = "-1";
+	//document.getElementById("subject-menu").selectedIndex = "-1";
 	document.getElementById("room-menu").selectedIndex = "-1";
 	document.getElementById("class-menu").selectedIndex = "-1";
 	document.getElementById("batch-menu").selectedIndex = "-1";
@@ -1049,13 +1049,15 @@ function sortSelect(selElem) {
 function load() {
 	var i;
 	getData();/*Load whole database*/
-	var selectTag = document.getElementById("subject-menu");/*Filling all select tags Menu*/
+	/*var selectTag = document.getElementById("subject-menu");
+	//Filling all select tags Menu
 	for (i in subject) {
 		selectTag.appendChild(createOptionTag(subject[i]["subjectShortName"], 
 							subject[i]["subjectShortName"], "subjectChange()"));		
 	}
 	selectTag.setAttribute("onchange", "subjectChange()");
-	sortSelect(selectTag);
+	sortSelect(selectTag); 
+	*/
 	selectTag = document.getElementById("teacher-menu");
 	for (i in teacher) {
 		selectTag.appendChild(createOptionTag(teacher[i]["teacherShortName"], 
