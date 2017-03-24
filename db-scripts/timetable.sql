@@ -3286,7 +3286,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchI
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, batchId, configId, isBreak) 
 			VALUES 		
 			(5, 7, 
-			(SELECT roomId from room WHERE roomShortName="AC-203"),
+			(SELECT roomId from room WHERE roomShortName="DML"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="PG-Lab-II"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Vahida"), 
