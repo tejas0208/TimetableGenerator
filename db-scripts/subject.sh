@@ -1,6 +1,6 @@
 echo "USE timeTable;"
 IFS=,
-while read -e name sname hrs slot batches
+while read -e name sname eachslot nslots batches
 do
-echo "INSERT INTO subject(subjectName, subjectShortName, totalHrs, eachSlot, batches) VALUES (" \"$name\", \"$sname\", $hrs, $slot, $batches");";
+echo "INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches) VALUES (" \"$name\", \"$sname\", $eachslot, $nslots, $batches");";
 done

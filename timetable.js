@@ -340,7 +340,7 @@ function getEligibleBatches(i, j, k, subjectRow) {
 			for(var y = 0; y < sbtRows.length; y++) {
 				console.log(sbtRows[y]);
 				var currTeacher = search(teacher, "teacherId", sbtRows[y]["teacherId"]);
-				var maxEntriesForSubject = subjectRow["totalHrs"];
+				var maxEntriesForSubject = subjectRow["nSlots"];
 				
 				//c = # entries in tt for this batch-subject
 				var existingEntries = searchMultipleRows(timeTable, 
@@ -355,8 +355,10 @@ function getEligibleBatches(i, j, k, subjectRow) {
 				
 				//Checking whether there is time left for subject(1) , batch
 				
-				if(existingEntries * timeIntervalInHours >= maxEntriesForSubject) {
+				if(existingEntries = maxEntriesForSubject) {
 					continue outerloop;
+				} else if(existingEntries > maxEntriesForSubject) {
+					alert("More than "+maxEntriesForSubject+" Entries for Subject "+subjectRow["subjectShortName"]);
 				}
 				/*Maxhr for teacher exceeded or not(1)*/
 				var allocatedTimeForTeacher = searchMultipleRows(timeTable, "teacherId", currTeacher["teacherId"]);
@@ -366,9 +368,9 @@ function getEligibleBatches(i, j, k, subjectRow) {
 				else {
 					 allocatedTimeForTeacher = 0;
 				}
-				if(((allocatedTimeForTeacher + eachSlot) 
-							* timeIntervalInHours) > parseInt(currTeacher["maxHrs"])) {/*(5)*/
-					console.log("teachers max hr exceeded");
+				if((allocatedTimeForTeacher + eachSlot) 
+							 > parseInt(currTeacher["maxHrs"])) {/*(5)*/
+					console.log("teacher " + currTeacher["teacherShortName"] +" max hr exceeded");
 					continue outerloop;						
 				}
 				/*overlapping batches for curr batch*/
@@ -582,38 +584,33 @@ function getEligibleSubjects(i, j, k) {
 				else
 					currentBatchOrClass = search(classTable, searchOn, lists[l][m][searchOn]);*/
 				//n = possible #entries for this subject
-				var maxEntriesForSubject = currSubject["totalHrs"];
+				var maxEntriesForSubject = currSubject["nSlots"];
 				
 				//c = # entries in tt for this batch-subject
 				var existingEntries = searchMultipleRows(timeTable, 
 										"subjectId", currSubject["subjectId"], 
 										searchOn, lists[l][m][searchOn]);
-				var ttt = existingEntries;
 				if(existingEntries !== -1) {
-					existingEntries = existingEntries.length;
+					lenExistingEntries = existingEntries.length;
 				}
 				else {
-					existingEntries = 0;
+					lenExistingEntries = 0;
 				}
 				//alert("Current: " + JSON.stringify(currSubject));
-				//if c = n, continue
 				//Checking whether there is time left for subject(1)
 				
-				//console.log((existingEntries )+ " === "+maxEntriesForSubject);
-				//if(existingEntries * timeIntervalInHours == maxEntriesForSubject) {
-				if(existingEntries == maxEntriesForSubject) {
+				if(lenExistingEntries == maxEntriesForSubject) {
 					console.log("maxEntriesFor subject " + currSubject["subjectShortName"]);
 					//alert("maxEntriesFor subject equal");
 					continue;
 				}
-				//if c > n, errror
 				
-				//if(existingEntries * timeIntervalInHours > maxEntriesForSubject)
-				if(existingEntries > maxEntriesForSubject)
-					console.log("More than desired entries for " + currSubject["subjectShortName"] + JSON.stringify(ttt) + searchOn);
-				//if j+subject->eachSlot > nSlots, i.e. if this entry will exceed totalSlots of day
-								//continue(3)
-				if(j + parseInt(currSubject["eachSlot"]) -1  > nSlotsPerDay - 1) {
+				if(lenExistingEntries > maxEntriesForSubject)
+					console.log("More than desired entries for " + 
+								currSubject["subjectShortName"] + 
+								JSON.stringify(existingEntries) + searchOn);
+
+				if(j + parseInt(currSubject["eachSlot"]) - 1  > nSlotsPerDay - 1) {
 					console.log("Skipping .. out of day busy");
 					continue;
 				}
@@ -630,8 +627,8 @@ function getEligibleSubjects(i, j, k) {
 				else {
 					 allocatedTimeForTeacher = 0;
 				}
-				if(((allocatedTimeForTeacher + parseInt(currSubject["eachSlot"])) 
-							* timeIntervalInHours) > parseInt(currTeacher["maxHrs"])) {/*(5)*/
+				if((allocatedTimeForTeacher + parseInt(currSubject["eachSlot"])) 
+							 > parseInt(currTeacher["maxHrs"])) {/*(5)*/
 					console.log("teachers max hr exceeded for " + currTeacher["teacherShortName"]);
 					//alert("teachers max hr exceeded");
 					continue;						

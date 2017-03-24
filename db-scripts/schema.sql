@@ -126,8 +126,8 @@ CREATE TABLE subject
 subjectId	int AUTO_INCREMENT PRIMARY KEY,
 subjectName	varchar(64) NOT NULL,
 subjectShortName	varchar(16) NOT NULL,
-totalHrs	int,
 eachSlot	int,
+nSlots	int,
 /*courseCode	varchar(32) NOT NULL, */
 batches	boolean,
 CONSTRAINT c_subjectShortName UNIQUE(subjectShortName)
