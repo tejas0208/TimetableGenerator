@@ -351,7 +351,7 @@ function getEligibleBatches(i, j, k, subjectRow) {
 										"subjectId", subjectRow["subjectId"], 
 										"batchId", sbtRows[y]["batchId"]);
 				if(existingEntries !== -1) {
-					lenExistingEntries = existingEntries.length;
+					lenExistingEntries = (existingEntries.length / subjectRow["eachSlot"]);/*<==Changed this*/
 				}
 				else {
 					lenExistingEntries = 0;
@@ -361,7 +361,7 @@ function getEligibleBatches(i, j, k, subjectRow) {
 				
 				if(lenExistingEntries == maxEntriesForSubject) {
 					continue outerloop;
-				// TODO: following needs a fix for batchable subjects.
+				// Done: following needs a fix for batchable subjects.
 				} else if(lenExistingEntries > maxEntriesForSubject) {
 					alert("More than "+maxEntriesForSubject+" Entries for Subject "+subjectRow["subjectShortName"]);
 				}
