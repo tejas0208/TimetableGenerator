@@ -1088,6 +1088,36 @@ function load() {
 	sortSelect(selectTag);	
 	$("#mainTimeTable").append("<center><B>No TimeTable loaded </B><br>"+
 								"Please select option from above catgories</center>");			
+	/* Settings for saving the snapshot */
+
+	$("#save-snapshot").submit(function (event) {
+		// stop form from normal submission.
+		//event.preventDefault();
+		var snapshotName = prompt("Enter snapshot Name","snapshot");
+		if(snapshotName != null) {
+				//var form = $(this);
+				//url = form.attr("action");
+				var xhttp;
+				if (window.XMLHttpRequest) {
+					xhttp = new XMLHttpRequest();
+				} 
+				else { // code for IE6, IE5
+					xhttp = new ActiveXObject("Microsoft.XMLHTTP");
+				}
+				xhttp.onreadystatechange = function() {
+						if (this.readyState == 4 && this.status == 200) {
+								alert("done");
+						}
+				}
+				xhttp.open("POST", "snapshot.php", false);
+				xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				sn = { "snapname": snapshotName };
+				xhttp.send("snapname="+JSON.stringify(sn));
+				//var posting = $.post(url, { sn: snapshotName});
+				//posting.done(function(data) { alert("done" + snapshotName); });
+		}
+	});
 }
 
 window.onload = load;
+

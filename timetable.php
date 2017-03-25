@@ -20,7 +20,7 @@ function getTables() {
 	return json_encode($tables);
 }
 
-$page = "
+$header = "
 <html>
 	<head>
 		<title> TimeTable </title>
@@ -30,6 +30,8 @@ $page = "
 		<link rel=\"stylesheet\" type=\"text/css\" href=\"timetable.css\"/>
 	</head>
 	<body>
+";
+$table= "
 		<table border = \"0\" padding = \"0\" style = \"width:100%;\">
 			<tr>
 				<td style = \"height:100px;\">
@@ -94,6 +96,11 @@ $page = "
 						</select>
 						</form>
 					</div>
+					<div class=\"selection-menu\"> 
+						<form action=\"snapshot.php\" method=\"POST\" id=\"save-snapshot\">
+						<input type=submit value=\"Save Snapshot\">  
+						</form>
+					</div>
 				</td>
 			</tr>
 			<tr  >
@@ -101,9 +108,22 @@ $page = "
 				</td>
 			</tr>
 		</table>
-	</body>
-</html>";
+	";
+$footer = "</body> </html>";
+
 $tableRequest = getArgument("allDataRequest");
+$save = getArgument("snapname");
+$savemessage = "";
+if($save != "" ) {
+	$savemessage = "<div> Saving $save <br> </div>";
+} /*else if($tableRequest === ""){
+	var_dump($save);
+	var_dump($tableRequest);	
+	var_dump($_POST);
+}  */
+
+$page = $header.$table.$savemessage.$footer;
+
 if($tableRequest != "") {
 	echo getTables();
 } else {
