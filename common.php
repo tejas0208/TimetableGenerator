@@ -40,7 +40,7 @@
 		}
 	}
 	function getArgument($arg) {
-		echo "in getArgument arg = $arg <br>";
+		//echo "in getArgument arg = $arg <br>";
 		if(isset($_POST[$arg]))
 				return $_POST[$arg];
 		else if(isset($_GET[$arg]))

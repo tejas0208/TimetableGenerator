@@ -2,7 +2,7 @@ var selectedCell ;
 var prevBorder;
 var copyCell;
 var timeTable, teacher, dept, classTable, batch, batchCanOverlap; 
-var room, subject, config, batchClass, subjectBatchTeacher, subjectClassTeacher;
+var room, subject, config, batchClass, subjectBatchTeacher, subjectClassTeacher, snapshot;
 var database;
 var configId = 1;
 var type = "class";
@@ -11,7 +11,7 @@ var daysName = ["Sun", "Mon", "Tues", "Wed", "Thur", "Fri", "Sat"];
 var enabledSlots = [];
 var enabledRows = [];
 var supportObject;
-
+var dirtyTimeTable = 0;
 
 function search(table) {/*Searches and return the row, Otherwise returns -1*/
 	var i;
@@ -108,59 +108,107 @@ function paste() {
 		selectedCell.appendChild(clone);
 	}
 }
-function getData() {/*Loads data from server asynchronously*/
+function getTimetable(snapshotName) {/*Loads data from server asynchronously*/
 	var xhttp;
-	if (window.XMLHttpRequest) {
-		xhttp = new XMLHttpRequest();
-	} 
-	else {
-				    // code for IE6, IE5
-		xhttp = new ActiveXObject("Microsoft.XMLHTTP");
-	}
+	xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
-			database = JSON.parse(this.responseText);
-			timeTable = database.timeTable;//<====================================Change this
-			if(typeof timeTable == "undefined")
+			//alert("getTimeTable: " + this.responseText);
+			var db = JSON.parse(this.responseText);
+			timeTable = db.timeTable;
+			if(typeof timeTable == "undefined") {
 				timeTable = [];
-			teacher = database.teacher;
-			if(typeof teacher == "undefined")
-				alert("Teacher's information not found");
-			dept = database.dept;
-			if(typeof dept == "undefined")
-				alert("Department's information not found");
-			classTable = database.class;
-			if(typeof classTable == "undefined")
-				alert("Class's information not found");
-			batch = database.batch;
-			if(typeof batch == "undefined")
-				alert("Batch's information not found");
-			batchCanOverlap = database.batchCanOverlap;
-			if(typeof batchCanOverlap == "undefined")
-				alert("Batch Can Overlap's information not found");
-			room = database.room;
-			if(typeof room == "undefined")
-				alert("Room's information not found");
-			subject = database.subject;
-			if(typeof subject == "undefined")
-				alert("Subject's information not found");
-			config = database.config;
-			if(typeof config == "undefined")
-				alert("Configuration's information not found");
-			batchClass = database.batchClass;
-			if(typeof batchClass == "undefined")
-				alert("Batch and class relation's information not found");
-			subjectBatchTeacher = database.subjectBatchTeacher; // subjectBatch
-			if(typeof subjectBatchTeacher == "undefined")
-				alert("Batch, subject and Teacher relation's information not found");
-			subjectClassTeacher = database.subjectClassTeacher;
-			if(typeof subjectClassTeacher == "undefined")
-				alert("Class, subject and Teachers relation's information not found");
+			}
 		}
 	};
 	xhttp.open("POST", "timetable.php", false);
 	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	xhttp.send("allDataRequest=true");
+	xhttp.send("reqType=getTimetable&snapshotName=\""+snapshotName+"\"");
+	currSnapshotName = snapshotName; 
+	//classChange(true);
+}
+function getOneTable(tName, asynchronousOrNot) {/*Loads data from server asynchronously*/
+	var xhttp;
+	xhttp = new XMLHttpRequest();
+	if(asynchronousOrNot == true) {
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				//alert("getOneTable: " + this.responseText);
+				var db = JSON.parse(this.responseText);
+				return db; 
+			}
+		};
+	}
+	xhttp.open("POST", "timetable.php", asynchronousOrNot);
+	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xhttp.send("reqType=getOneTable&tableName="+tName);
+	if(asynchronousOrNot == false) {
+		var db = JSON.parse(xhttp.responseText);
+		return db;  /* JS variables are pass by value */
+	}
+}
+
+
+function getAllData() {/*Loads data from server asynchronously*/
+	var xhttp;
+	xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			//alert("getAllData:" + this.responseText);
+			database = JSON.parse(this.responseText);
+
+			teacher = database.teacher;
+			if(typeof teacher == "undefined")
+				alert("Teacher's information not found");
+
+			dept = database.dept;
+			if(typeof dept == "undefined")
+				alert("Department's information not found");
+
+			classTable = database.class;
+			if(typeof classTable == "undefined")
+				alert("Class's information not found");
+
+			batch = database.batch;
+			if(typeof batch == "undefined")
+				alert("Batch's information not found");
+
+			batchCanOverlap = database.batchCanOverlap;
+			if(typeof batchCanOverlap == "undefined")
+				alert("Batch Can Overlap's information not found");
+
+			room = database.room;
+			if(typeof room == "undefined")
+				alert("Room's information not found");
+
+			subject = database.subject;
+			if(typeof subject == "undefined")
+				alert("Subject's information not found");
+
+			config = database.config;
+			if(typeof config == "undefined")
+				alert("Configuration's information not found");
+
+			batchClass = database.batchClass;
+			if(typeof batchClass == "undefined")
+				alert("Batch and class relation's information not found");
+
+			subjectBatchTeacher = database.subjectBatchTeacher; // subjectBatch
+			if(typeof subjectBatchTeacher == "undefined")
+				alert("Batch, subject and Teacher relation's information not found");
+
+			subjectClassTeacher = database.subjectClassTeacher;
+			if(typeof subjectClassTeacher == "undefined")
+				alert("Class, subject and Teachers relation's information not found");
+
+			snapshot = database.snapshot;
+			if(typeof snapshot == "undefined")
+				alert("snapshot's information not found");
+		}
+	};
+	xhttp.open("POST", "timetable.php", true);
+	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xhttp.send("reqType=getAllData");
 }
 
 function createOptionTag(value, textString) {
@@ -282,6 +330,7 @@ function createTimeTableEntry(day, slotNo, roomId, classId, subjectId,
 		this.ttId =  1;
 	else
 		this.ttId = ""+(parseInt(timeTable[timeTable.length - 1]["ttId"]) + 1);
+	dirtyTimeTable = 1;
 }
 
 function roomSelected(selecttag) {
@@ -755,6 +804,7 @@ function deleteEntry(Span) {
 				if(index != -1)
 					timeTable.splice(index, 1);/*Delete entry from table*/
 			}
+			dirtyTimeTable = 1;
 			classChange(true);
 			break;
 	}
@@ -824,8 +874,6 @@ function classChange(createNewTable){
 							$(".animate"+id).fadeOut();
 						}
 		});
-		
-
 	}
 	
 	/*Filling the table*/
@@ -1007,7 +1055,22 @@ function classChange(createNewTable){
 	}
 
 }
-
+var currSnapshotName;
+function snapshotChange() {
+	var index = document.getElementById("fetch-snapshot-menu").selectedIndex;
+	var snapshotName = document.getElementById("fetch-snapshot-menu").options[index].text;
+	if(snapshotName == currSnapshotName)
+		return;
+	if(dirtyTimeTable) {
+			save = confirm("Timetable Modified. Your changes will be lost if not saved. Save current timeTable?");
+			if(save == "yes")
+				jsSaveSnapshot();
+	}
+	getTimetable(snapshotName);	
+	currSnapshotName = snapshotName;
+	dirtyTimeTable = 0;
+	classChange(true);
+}
 function roomChange(){
 	document.getElementById("teacher-menu").selectedIndex = "-1";
 	//document.getElementById("subject-menu").selectedIndex = "-1";
@@ -1048,7 +1111,8 @@ function sortSelect(selElem) {
 
 function load() {
 	var i;
-	getData();/*Load whole database*/
+	getAllData();/*Load whole database*/
+	getTimetable("default");
 	/*var selectTag = document.getElementById("subject-menu");
 	//Filling all select tags Menu
 	for (i in subject) {
@@ -1065,6 +1129,7 @@ function load() {
 	}
 	selectTag.setAttribute("onchange", "teacherChange()");
 	sortSelect(selectTag);
+
 	var selectTag = document.getElementById("class-menu");
 	for (i in classTable) {
 		selectTag.appendChild(createOptionTag(classTable[i]["classShortName"], 
@@ -1072,6 +1137,7 @@ function load() {
 	}
 	selectTag.setAttribute("onchange", "classChange(true)");
 	sortSelect(selectTag);
+
 	var selectTag = document.getElementById("batch-menu");
 	for (i in batch) {
 		selectTag.appendChild(createOptionTag(batch[i]["batchName"], 
@@ -1079,6 +1145,7 @@ function load() {
 	}
 	selectTag.setAttribute("onchange", "batchChange()");
 	sortSelect(selectTag);
+
 	var selectTag = document.getElementById("room-menu");
 	for (i in room) {
 		selectTag.appendChild(createOptionTag(room[i]["roomShortName"], 
@@ -1086,38 +1153,79 @@ function load() {
 	}
 	selectTag.setAttribute("onchange", "roomChange()");
 	sortSelect(selectTag);	
+
+	loadSnapshotMenu("default");
 	$("#mainTimeTable").append("<center><B>No TimeTable loaded </B><br>"+
-								"Please select option from above catgories</center>");			
+								"Please select option from above catgories</center>");
 	/* Settings for saving the snapshot */
-
-	$("#save-snapshot").submit(function (event) {
-		// stop form from normal submission.
-		//event.preventDefault();
-		var snapshotName = prompt("Enter snapshot Name","snapshot");
-		if(snapshotName != null) {
-				//var form = $(this);
-				//url = form.attr("action");
-				var xhttp;
-				if (window.XMLHttpRequest) {
-					xhttp = new XMLHttpRequest();
-				} 
-				else { // code for IE6, IE5
-					xhttp = new ActiveXObject("Microsoft.XMLHTTP");
-				}
-				xhttp.onreadystatechange = function() {
-						if (this.readyState == 4 && this.status == 200) {
-								alert("done");
-						}
-				}
-				xhttp.open("POST", "snapshot.php", false);
-				xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-				sn = { "snapname": snapshotName };
-				xhttp.send("snapname="+JSON.stringify(sn));
-				//var posting = $.post(url, { sn: snapshotName});
-				//posting.done(function(data) { alert("done" + snapshotName); });
-		}
-	});
 }
-
+function loadSnapshotMenu(selectedName) {
+	//alert("loadSnapshotMenu: here");
+	var selectTag = document.getElementById("fetch-snapshot-menu");
+	while(selectTag.hasChildNodes()) {
+		selectTag.removeChild(selectTag.childNodes[0]);
+	}
+	for (i in snapshot) {
+		option = createOptionTag(snapshot[i]["snapshotName"], 
+								snapshot[i]["snapshotName"], "snapshotChange()");
+		if(snapshot[i]["snapshotName"] === selectedName) {
+			option.selected = true;
+			//alert("default" + option.text);
+		}
+		selectTag.appendChild(option);
+		
+	}
+	selectTag.setAttribute("onchange", "snapshotChange()");
+	document.getElementById("saveNewSnapshot").disabled =  false;
+	document.getElementById("saveSnapshot").disabled = false;
+	//sortSelect(selectTag);	
+}
+function jsSaveNewSnapshot() {
+	var snapshotName = prompt("Enter snapshot Name","snapshot");
+	if(snapshotName != null) {
+			var xhttp;
+			xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+					if (this.readyState == 4 && this.status == 200) {
+							//alert("snapshot response: " + this.responseText);
+							alert("snapshot " + snapshotName + " Saved. Press OK to continue");
+							document.getElementById("saveNewSnapshot").value = "Save New Snapshot"
+							document.getElementById("saveNewSnapshot").disabled =  false;
+							// JS variables are pass by vale, so snapshot can be changed here only
+							snapshot = getOneTable("snapshot", false).snapshot;
+							loadSnapshotMenu(snapshotName);
+							currSnapshotName = snapshotName;
+					}
+			}
+			document.getElementById("saveNewSnapshot").value = "Saving New snapshot ...wait";
+			document.getElementById("saveNewSnapshot").disabled =  true;
+			xhttp.open("POST", "timetable.php", true); // asynchronous
+			xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			xhttp.send("reqType=saveNewSnapshot&snapname="+snapshotName+"&ttdata="+JSON.stringify(timeTable));
+	}
+	
+}
+function jsSaveSnapshot() {
+	var snapshotName = currSnapshotName; 
+	if(snapshotName != null) {
+			var xhttp;
+			xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+					if (this.readyState == 4 && this.status == 200) {
+							//alert("snapshot response: " + this.responseText);
+							alert("snapshot " + snapshotName + " Saved. Press OK to continue");
+							document.getElementById("saveSnapshot").value = "Save snapshot";
+							document.getElementById("saveSnapshot").disabled =  false;
+					}
+			}
+			xhttp.open("POST", "timetable.php", true); // asynchronous
+			document.getElementById("saveSnapshot").value = "Saving snapshot ...wait";
+			document.getElementById("saveSnapshot").disabled =  true;
+			xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			xhttp.send("reqType=saveSnapshot&snapname="+snapshotName+"&ttdata="+JSON.stringify(timeTable));
+	} else {
+		alert("jsSaveSnapshot: can't find currSnapshotName");
+	}
+}
 window.onload = load;
 

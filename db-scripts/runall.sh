@@ -49,4 +49,4 @@ mysql -u root -proot < snapshot.sql
 
 echo "---------------timetable-----------------"
 cat timetable.csv  | bash timetable.sh  > timetable.sql
-#mysql -u root -proot < timetable.sql
+mysql -u root -proot < timetable.sql
