@@ -698,7 +698,7 @@ function getEligibleSubjects(i, j, k) {
 				//for k = 0; k < sc->eachSlot; k++
 				
 				var validSubj = 1;		
-				for(var n = 0; n < currSubject["eachSlot"] - 1; n++); {
+				for(var n = 0; n < currSubject["eachSlot"] - 1; n++) {
 						
 						var nEntriesForTeacher = search(timeTable, "day", i, "slotNo", j + n,
 										 "teacherId", currTeacher["teacherId"]);
