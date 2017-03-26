@@ -208,7 +208,8 @@ snapshotName	varchar(128),
 snapshotCreator	int, 
 FOREIGN KEY (snapshotCreator) REFERENCES user(userId),
 createTime	time,
-modifyTime	time
+modifyTime	time,
+CONSTRAINT c_snapshotName UNIQUE(snapshotName)
 );
 
 CREATE TABLE timeTable
@@ -222,7 +223,7 @@ subjectId int,
 teacherId	int,
 batchId	int,
 configId	int,
-snapShotId int,
+snapshotId int,
 isBreak	boolean
 );
 
@@ -240,27 +241,31 @@ any day, any slot, break true --> room NULL, subject NULL,  class not NULL, teac
 */
 /* create views */
 CREATE VIEW timeTableReadable AS
-SELECT tt.ttId, tt.day, tt.slotNo, r.roomShortName, c.classShortName, s.subjectShortName, t.teacherShortName, b.batchName, tt.isBreak
-FROM  timeTable tt, room r, class c, subject s, teacher t, batch b
+SELECT tt.ttId, tt.day, tt.slotNo, r.roomShortName, c.classShortName, 
+		s.subjectShortName, t.teacherShortName, b.batchName, sn.snapshotName, tt.isBreak
+FROM  timeTable tt, room r, class c, subject s, teacher t, batch b, snapshot sn
 WHERE tt.classId = c.classId AND
 	tt.subjectId = s.subjectId AND
 	tt.batchId = b.batchId AND 
 	tt.roomId = r.roomId AND
 	tt.teacherId = t.teacherId AND
+	tt.snapshotId = sn.snapshotId AND
 	tt.isBreak = FALSE
 UNION 
-SELECT tt.ttId, tt.day, tt.slotNo, r.roomShortName, c.classShortName, s.subjectShortName, t.teacherShortName, null, tt.isBreak
-FROM  timeTable tt, room r, class c, subject s, teacher t, batch b
+SELECT tt.ttId, tt.day, tt.slotNo, r.roomShortName, c.classShortName, 
+			s.subjectShortName, t.teacherShortName, null, sn.snapshotName, tt.isBreak
+FROM  timeTable tt, room r, class c, subject s, teacher t, batch b, snapshot sn
 WHERE tt.classId = c.classId AND
 	tt.subjectId = s.subjectId AND
 	tt.roomId = r.roomId AND
 	tt.teacherId = t.teacherId AND
 	tt.batchid = null AND
+	tt.snapshotId = sn.snapshotId AND
 	tt.isBreak = FALSE
 UNION 
-SELECT tt.ttId, tt.day, tt.slotNo, null, null, null, null, null, TRUE 
-FROM  timeTable tt
-WHERE tt.isBreak = TRUE
+SELECT tt.ttId, tt.day, tt.slotNo, null, c.classShortName, null, null, null, sn.snapshotName, TRUE 
+FROM  timeTable tt, class c, snapshot sn
+WHERE tt.isBreak = TRUE AND
+	  tt.classId = c.classId AND
+	  tt.snapshotId = sn.snapshotId
 ORDER by ttId;
-
-

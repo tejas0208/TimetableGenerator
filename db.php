@@ -23,4 +23,35 @@
 		$allrows = $result->fetch_all(MYSQLI_ASSOC);
 		return $allrows;
 	}
+	function sqlGetOneRow($query) {
+		global $CFG;
+		if($CFG->conn === false) 
+			$conn = dbConnect();
+		else
+			$conn = $CFG->conn;
+		$result = $conn->query($query);
+		if($result === false)  {
+			die("Query $query returned false <br>");
+		}
+		$allrows = array();
+		$allrows = $result->fetch_all(MYSQLI_ASSOC);
+		if(count($allrows) != 1) {
+			die("sqlGetOneRow: $query returned ".count($allrows)." rows");
+		}
+		return $allrows;
+	}
+
+	function sqlUpdate($query) {
+		global $CFG;
+		if($CFG->conn === false)
+			$conn = dbConnect();
+		else
+			$conn = $CFG->conn;
+		$result = $conn->query($query);
+		if($result === false) {
+			//die("Query $query returned false <br>");	
+			return $result;
+		}
+		return true;
+	}
 ?>
