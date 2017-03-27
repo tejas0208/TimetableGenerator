@@ -161,18 +161,55 @@ function getAllData() {/*Loads data from server asynchronously*/
 			teacher = database.teacher;
 			if(typeof teacher == "undefined")
 				alert("Teacher's information not found");
+			teacher.sort(function(a, b) {
+				var x = a.teacherShortName.toLowerCase();
+				var y = b.teacherShortName.toLowerCase();
+				if(x < y)
+					return -1;
+				if(x > y)
+					return 1;
+				return 0;
+			});
 
 			dept = database.dept;
 			if(typeof dept == "undefined")
 				alert("Department's information not found");
+			dept.sort(function(a, b) {
+				var x = a.deptShortName.toLowerCase();
+				var y = b.deptShortName.toLowerCase();
+				if(x < y)
+					return -1;
+				if(x > y)
+					return 1;
+				return 0;
+			});
+
 
 			classTable = database.class;
 			if(typeof classTable == "undefined")
 				alert("Class's information not found");
+			classTable.sort(function(a, b) {
+				var x = a.classShortName.toLowerCase();
+				var y = b.classShortName.toLowerCase();
+				if(x < y)
+					return -1;
+				if(x > y)
+					return 1;
+				return 0;
+			});
 
 			batch = database.batch;
 			if(typeof batch == "undefined")
 				alert("Batch's information not found");
+			batch.sort(function(a, b) {
+				var x = a.batchName.toLowerCase();
+				var y = b.batchName.toLowerCase();
+				if(x < y)
+					return -1;
+				if(x > y)
+					return 1;
+				return 0;
+			});
 
 			batchCanOverlap = database.batchCanOverlap;
 			if(typeof batchCanOverlap == "undefined")
@@ -181,10 +218,28 @@ function getAllData() {/*Loads data from server asynchronously*/
 			room = database.room;
 			if(typeof room == "undefined")
 				alert("Room's information not found");
+			room.sort(function(a, b) {
+				var x = a.roomShortName.toLowerCase();
+				var y = b.roomShortName.toLowerCase();
+				if(x < y)
+					return -1;
+				if(x > y)
+					return 1;
+				return 0;
+			});
 
 			subject = database.subject;
 			if(typeof subject == "undefined")
 				alert("Subject's information not found");
+			subject.sort(function(a, b) {
+				var x = a.subjectShortName.toLowerCase();
+				var y = b.subjectShortName.toLowerCase();
+				if(x < y)
+					return -1;
+				if(x > y)
+					return 1;
+				return 0;
+			});
 
 			config = database.config;
 			if(typeof config == "undefined")
@@ -1129,7 +1184,7 @@ function load() {
 								teacher[i]["teacherShortName"], "classChange()"));		
 	}
 	selectTag.setAttribute("onchange", "teacherChange()");
-	sortSelect(selectTag);
+	//sortSelect(selectTag);
 
 	var selectTag = document.getElementById("class-menu");
 	for (i in classTable) {
@@ -1137,7 +1192,7 @@ function load() {
 								classTable[i]["classShortName"], "classChange()"));		
 	}
 	selectTag.setAttribute("onchange", "classChange(true)");
-	sortSelect(selectTag);
+	//sortSelect(selectTag);
 
 	var selectTag = document.getElementById("batch-menu");
 	for (i in batch) {
@@ -1145,7 +1200,7 @@ function load() {
 								batch[i]["batchName"], "batchChange()"));		
 	}
 	selectTag.setAttribute("onchange", "batchChange()");
-	sortSelect(selectTag);
+	//sortSelect(selectTag);
 
 	var selectTag = document.getElementById("room-menu");
 	for (i in room) {
@@ -1153,11 +1208,12 @@ function load() {
 								room[i]["roomShortName"], "roomChange()"));		
 	}
 	selectTag.setAttribute("onchange", "roomChange()");
-	sortSelect(selectTag);	
+	//sortSelect(selectTag);	
 
 	loadSnapshotMenu("default");
 	$("#mainTimeTable").append("<center><B>No TimeTable loaded </B><br>"+
 								"Please select option from above catgories</center>");
+	$("#inputTeacherForm").submit(teacherFormSubmit);
 	/* Settings for saving the snapshot */
 }
 function loadSnapshotMenu(selectedName) {
@@ -1227,6 +1283,60 @@ function jsSaveSnapshot() {
 	} else {
 		alert("jsSaveSnapshot: can't find currSnapshotName");
 	}
+}
+function teacherFormSubmit(ev) {
+	ev.preventDefault();	
+	alert("submitting");
+	var teacherName = document.getElementById("tf.teacherName").value;
+	var teacherShortName = document.getElementById("tf.teacherShortName").value;
+	var minHrs = document.getElementById("tf.minHrs").value;
+	var maxHrs = document.getElementById("tf.maxHrs").value;
+	var dept = document.getElementById("tf.dept").value;
+	//alert(teacherShortName);
+	var result = search(teacher, "teacherShortName", teacherShortName);
+	if(result != -1) {
+		//alert("duplicate");
+		document.getElementById("tf.teacherShortNameText").innerHTML = "Short Name:<i class=\"warning\">Duplicate</i>";
+	} else {
+		document.getElementById("tf.teacherShortNameText").innerHTML = "Short Name:";
+	}
+	var result = search(teacher, "teacherName", teacherName);
+	if(result != -1) {
+		//alert("duplicate");
+		document.getElementById("tf.teacherNameText").innerHTML = "Full Name:<i class=\"warning\">Duplicate</i>";
+	} else {
+		document.getElementById("tf.teacherNameText").innerHTML = "Full Name:";
+	}
+	var xhttp = new XMLHttpRequest();
+	alert("submitting2");
+	xhttp.onreadystatechange = function () {
+		if(this.readyState == 4 && this.status == 200) {
+			resp = this.responseText;
+			response = JSON.parse(resp);
+			alert("teacherFormSubmit: " + JSON.stringify(response));
+		}
+	}
+	xhttp.open("POST", "timetable.php", true); // asynchronous;
+	xhttp.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+	xhttp.send("reqType=insertTeacher&teacherName="+teacherName+
+					"&teacherShortName="+teacherShortName+
+					"&minHrs="+minHrs+"&maxHrs="+maxHrs+"&dept="+dept);
+	alert("submitting3");
+	teacherFormClose();	
+	
+}
+function teacherFormClose() {
+    document.getElementById("inputTeacherForm").style.height = "0%";
+    //document.getElementById("inputTeacherForm").style.display= "none";
+}
+function addNewTeacher() {
+    document.getElementById("inputTeacherForm").style.height = "100%";
+	var selectTag = document.getElementById("tf.dept");
+	for (i in dept) {
+		selectTag.appendChild(createOptionTag(dept[i]["deptShortName"], 
+								dept[i]["deptShortName"], ""));		
+	}
+    //document.getElementById("inputTeacherForm").style.display = "block";
 }
 window.onload = load;
 

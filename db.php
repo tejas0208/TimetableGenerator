@@ -49,7 +49,7 @@
 			$conn = $CFG->conn;
 		$result = $conn->query($query);
 		if($result === false) {
-			//die("Query $query returned false <br>");	
+			error_log("sqlUpdate"."Query $query returned false\n",0);	
 			return $result;
 		}
 		return true;
