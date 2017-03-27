@@ -51,7 +51,7 @@ function saveSnapshot() {
 	$result = sqlGetOneRow($snapshotFindQuery);	
 	$snapshotId = $result[0]["snapshotId"];
 
-	$snapshotDeleteQuery = "DELETE from timetable where snapshotId = $snapshotId";	
+	$snapshotDeleteQuery = "DELETE from timeTable where snapshotId = $snapshotId";	
 	$result = sqlUpdate($snapshotDeleteQuery);
 
 	for($k = 0; $k < count($ttdata); $k++) {
