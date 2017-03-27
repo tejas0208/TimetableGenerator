@@ -48,15 +48,16 @@ option, select{
 	box-shadow: 5px 5px 5px #888888;		
 }
 .inputForm{
-	background-color:#ccc;
-	width: 25%;
+	background-color:#bbb;
+	width: auto;
 	height:0%;
 	z-index: 1;
 	text-align: left;
 	transition: 0.5s;
 	border:2px solid #333;
 	/*display:none;*/
-	overflow-y:hidden;
+	overflow-y:scroll;
+	overflow: auto;
 }
 .inputFormField {
 	text-align: left;	
@@ -65,4 +66,12 @@ option, select{
 }
 .warning {
 	color: red;		
+}
+.inputFormTable {
+	border: 1px solid black;
+	padding: 3;
+	color: blue;
+	font-size: 13px;		
+	font-family: courier;
+	float:left;
 }

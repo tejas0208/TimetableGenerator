@@ -1,31 +1,9 @@
 <?php
 require_once('db.php');
 require_once('common.php');
+require_once('teacher.php');
+require_once('snapshot.php');
 
-function getAllData() {
-	header("Content-Type: application/json; charset=UTF-8");
-	/* List of tables to be returned */	
-	$tableNames = array("teacher", "class", "batch", 
-						"batchCanOverlap", "dept", "room", "config", 
-						"subject", "batchClass", "subjectBatchTeacher", 
-						"subjectClassTeacher", "snapshot");
-	$length = count($tableNames);
-	
-	for($i = 0; $i < $length; $i++) {
-		$query = "SELECT * FROM ".$tableNames[$i];/*TimeTable*/
-		$outp = sqlGetAllRows($query);
-		$tables[$tableNames[$i]] = $outp;
-	}
-	//error_log(json_encode($tables), 0);
-	return json_encode($tables);
-}
-function getOneTable($tableName) {
-	header("Content-Type: application/json; charset=UTF-8");
-	$query = "SELECT * FROM $tableName";
-	$outp = sqlGetAllRows($query);
-	$tables[$tableName] = $outp;
-	return json_encode($tables);
-}
 function getTimeTable() {
 	header("Content-Type: application/json; charset=UTF-8");
 	$snapshotName = getArgument("snapshotName");
@@ -39,111 +17,6 @@ function getTimeTable() {
 	return json_encode($tables);
 }
 
-function saveSnapshot() {
-	$resString = "";
-	header("Content-Type: application/json: charset=UTF-8");
-	$snapshotName = getArgument("snapname");
-	$user = getArgument("userid");
-	$ttd = getArgument("ttdata");
-	$ttdata = json_decode($ttd, true);	
-	$snapshotFindQuery = "SELECT snapshotId FROM snapshot WHERE snapshotName = \"$snapshotName\"";
-
-	$result = sqlGetOneRow($snapshotFindQuery);	
-	$snapshotId = $result[0]["snapshotId"];
-
-	$snapshotDeleteQuery = "DELETE from timeTable where snapshotId = $snapshotId";	
-	$result = sqlUpdate($snapshotDeleteQuery);
-
-	for($k = 0; $k < count($ttdata); $k++) {
-			$currRow = $ttdata[$k];
-			$classId = $currRow["classId"];
-			if($currRow["isBreak"] == 1) {
-				$ttInsertQuery = "INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, 
-								teacherId, batchId, configId, snapshotId, isBreak) VALUES (".
-								$currRow["day"].",".$currRow["slotNo"].",".
-								"null, null, null, ".
-								//"(SELECT classId from class where classShortName=\"$className\"),".
-								$classId.",".
-								"null, null,".
-								$snapshotId.",".
-								$currRow["isBreak"].");";
-			} else {
-				$ttInsertQuery = "INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, 
-								teacherId, batchId, configId, snapshotId, isBreak) VALUES (".
-								$currRow["day"].",".$currRow["slotNo"].",".
-								$currRow["roomId"].",".$currRow["classId"].",".
-								$currRow["subjectId"].",".$currRow["teacherId"].",".
-								$currRow["batchId"].",".$currRow["configId"].",".
-								$snapshotId.",".
-								$currRow["isBreak"].");";
-			}
-			$result = sqlUpdate($ttInsertQuery);
-			if($result != true ) {
-					$resString .= "Failed insert on $ttInsertQuery. Error = $result->conn \n";			
-			}
-	}
-	return $resString;
-}
-
-function saveNewSnapshot() {
-	$resString = "";
-	header("Content-Type: application/json: charset=UTF-8");
-	$snapshotName = getArgument("snapname");
-	$user = getArgument("userid");
-	$ttd = getArgument("ttdata");
-	$ttdata = json_decode($ttd, true);	
-	$snapshotCreateQuery = "INSERT INTO snapshot (snapshotName, snapshotCreator, createTime, modifyTime) VALUES (\"".
-							$snapshotName."\",1,1000,2000);";
-	$result = sqlUpdate($snapshotCreateQuery);	
-
-	for($k = 0; $k < count($ttdata); $k++) {
-			$currRow = $ttdata[$k];
-			$classId = $currRow["classId"];
-			if($currRow["isBreak"] == 1) {
-				$ttInsertQuery = "INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, 
-								teacherId, batchId, configId, snapshotId, isBreak) VALUES (".
-								$currRow["day"].",".$currRow["slotNo"].",".
-								"null, null, null, ".
-								//"(SELECT classId from class where classShortName=\"$className\"),".
-								$classId.",".
-								"null, null,".
-								"(SELECT snapshotId from snapshot where snapshotName = \"$snapshotName\"),".
-								$currRow["isBreak"].");";
-			} else {
-				$ttInsertQuery = "INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, 
-								teacherId, batchId, configId, snapshotId, isBreak) VALUES (".
-								$currRow["day"].",".$currRow["slotNo"].",".
-								$currRow["roomId"].",".$currRow["classId"].",".
-								$currRow["subjectId"].",".$currRow["teacherId"].",".
-								$currRow["batchId"].",".$currRow["configId"].",".
-								"(SELECT snapshotId from snapshot where snapshotName = \"$snapshotName\"),".
-								$currRow["isBreak"].");";
-			}
-			$result = sqlUpdate($ttInsertQuery);
-			if($result != true ) {
-					$resString .= "Failed insert on $ttInsertQuery. Error = $result->conn \n";			
-			}
-	}
-	return $resString;
-}
-function insertTeacher() {
-	$resString = json_encode("result: true");
-	header("Content-Type: application/json: charset=UTF-8");
-	$teacherName = getArgument("teacherName");
-	$teacherShortName = getArgument("teacherShortName");
-	$minHrs = getArgument("minHrs");
-	$maxHrs = getArgument("maxHrs");
-	$deptName = getArgument("dept");
-	$query = "INSERT INTO teacher (teacherName, teacherShortName, minHrs, maxHrs, deptId)".
-				"VALUES (\"$teacherName\", \"$teacherShortName\", $minHrs, $maxHrs,".
-				"(SELECT deptId from dept where deptShortName=\"$deptName\"))";
-	$result = sqlUpdate($query);	
-	error_log("insertTeacher\n".json_encode($result), 0);
-	if($result != true) {
-			//$resString .= json_encode({"result": "false", "query": $query, "error": $result});
-	}
-	return $resString;
-}
 $header = "
 <html>
 	<head>
@@ -182,7 +55,7 @@ $table= "
 						Settings
 						<select id=\"insert-data-menu\" class=\"select-menu\">
 							<option value = \"\" selected> </option>
-							<option value = \"Add Teacher\" onclick=\"addNewTeacher()\">Add Teacher</option>
+							<option value = \"Teacher\" onclick=\"teacherForm()\">Teacher</option>
 							<option value = \"Add Class\" onclick=\"addNewClass()\">Add Class</option>
 							<option value = \"Add Subject\" onclick=\"addNewSubject()\">Add Subject</option>
 							<option value = \"Add Batch\" onclick=\"addNewBatch()\">Add Batch</option>
@@ -292,42 +165,6 @@ $table= "
 ;
 $footer = "</body> </html>";
 
-$teacherForm = "
-<div class=\"inputForm\" id=\"inputTeacherForm\">
-		<form id=\"teacherInputForm\">
-		<p class=\"inputFormField\" id=\"teacherFormTitle\"> 
-			Insert New Teacher Information  
-			<a href=\"javascript:void(0)\" class=\"closebtn\" 
-			onclick=\"teacherFormClose()\">Close Form&times;</a> 
-		</p>
-		<p class=\"inputFormField\" id=\"tf.teacherNameText\">
-			Full Name: <br>
-		</p>
-			<input type=\"text\" id=\"tf.teacherName\" placeholder=\"Insert Full Name\"> 
-		<p class=\"inputFormField\" id=\"tf.teacherShortNameText\">
-			Short Name: <br>
-		</p>
-			<input type=\"text\" id=\"tf.teacherShortName\" placeholder=\"Insert Short Name\">
-		<p class=\"inputFormField\" id=\"tf.minHrsText\">
-			Minimum Workload: <br>
-		</p>
-			<input id=\"tf.minHrs\" type=\"number\" min=\"0\" max=\"30\" step=\"1\" value=\"16\">
-		<p class=\"inputFormField\" id=\"tf.maxHrsText\">
-			Maximum Workload: <br>
-		</p>
-			<input id=\"tf.maxHrs\" type=\"number\" min=\"1\" max=\"30\" step=\"1\" value=\"24\">
-		<p class=\"inputFormField\" id=\"tf.deptText\">
-			Department: <br>
-		</p>
-			<select  id=\"tf.dept\"> </select> 
-		<p class=\"inputFormField\">
-			<input type=\"submit\" id=\"tf.submit\" value=\"Submit\" onclick=teacherFormSubmit()> 
-			<input type=\"reset\" id=\"tf.reset\">
-		</p>
-		</form>
-</div>
-";
-
 $page = $header.
 		$bodystart.
 		$teacherForm.
@@ -355,8 +192,15 @@ switch($reqType) {
 		$tableName = getArgument("tableName");
 		echo getOneTable($tableName);	
 		return;
-	case "insertTeacher":
-		echo insertTeacher();
+	case "teacherUpdate":
+		echo updateTeacher("update");
+		break;
+	case "teacherDelete":
+		echo updateTeacher("delete");
+		break;
+	case "teacherInsert":
+		echo updateTeacher("insert");
+		break;
 	default:
 		echo $page;
 		break;
