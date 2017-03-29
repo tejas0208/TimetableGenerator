@@ -85,8 +85,8 @@ CREATE TABLE batchCanOverlap
 bo int AUTO_INCREMENT PRIMARY KEY,
 batchId	int NOT NULL,
 batchOverlapId int NOT NULL,
-FOREIGN KEY(batchId) REFERENCES batch(batchId),
-FOREIGN KEY(batchOverlapId) REFERENCES batch(batchId)
+FOREIGN KEY(batchId) REFERENCES batch(batchId) ON DELETE CASCADE,
+FOREIGN KEY(batchOverlapId) REFERENCES batch(batchId) ON DELETE CASCADE
 );
 
 CREATE VIEW batchCanOverlapReadable
@@ -101,8 +101,9 @@ CREATE TABLE batchClass
 bcId int AUTO_INCREMENT PRIMARY KEY,
 batchId int NOT NULL, 
 classId int NOT NULL,
-FOREIGN KEY (batchId) REFERENCES batch(batchId),
-FOREIGN KEY (classId) REFERENCES class(classId)
+FOREIGN KEY (batchId) REFERENCES batch(batchId) ON DELETE CASCADE,
+FOREIGN KEY (classId) REFERENCES class(classId) ON DELETE CASCADE,
+CONSTRAINT c_batchClass UNIQUE(batchId, classId)
 );
 
 CREATE VIEW batchClassReadable 
@@ -139,9 +140,10 @@ sbtId	int AUTO_INCREMENT PRIMARY KEY,
 subjectId	int NOT NULL,
 batchId	int NOT NULL,
 teacherId int,
-FOREIGN KEY (batchId) REFERENCES batch(batchId),
-FOREIGN KEY (subjectId) REFERENCES subject(subjectId),
-FOREIGN KEY (teacherId) REFERENCES teacher(teacherId)
+FOREIGN KEY (batchId) REFERENCES batch(batchId) ON DELETE CASCADE,
+FOREIGN KEY (subjectId) REFERENCES subject(subjectId) ON DELETE CASCADE,
+FOREIGN KEY (teacherId) REFERENCES teacher(teacherId) ON DELETE CASCADE,
+CONSTRAINT c_subjectBatchTeacheer UNIQUE(subjectId, batchId, teacherId)
 );
 
 CREATE VIEW subjectBatchTeacherReadable AS
@@ -158,9 +160,10 @@ stId	int AUTO_INCREMENT PRIMARY KEY,
 subjectId	int NOT NULL,
 classId		int NOT NULL,
 teacherId	int,
-FOREIGN KEY (subjectId) REFERENCES subject(subjectId),
-FOREIGN KEY (classId) REFERENCES class(classId),
-FOREIGN KEY (teacherId) REFERENCES teacher(teacherId)
+FOREIGN KEY (subjectId) REFERENCES subject(subjectId) ON DELETE CASCADE,
+FOREIGN KEY (classId) REFERENCES class(classId) ON DELETE CASCADE,
+FOREIGN KEY (teacherId) REFERENCES teacher(teacherId) ON DELETE CASCADE,
+CONSTRAINT c_subjectClassTeacheer UNIQUE(subjectId, classId, teacherId)
 );
 
 CREATE VIEW subjectClassTeacherReadable AS
@@ -176,8 +179,8 @@ CREATE TABLE classRoom
 crId	int AUTO_INCREMENT PRIMARY KEY,
 classId	int NOT NULL,
 roomId	int NOT NULL,
-FOREIGN KEY (classId) REFERENCES class(classId),
-FOREIGN KEY (roomId) REFERENCES room(roomId)
+FOREIGN KEY (classId) REFERENCES class(classId) ON DELETE CASCADE,
+FOREIGN KEY (roomId) REFERENCES room(roomId) ON DELETE CASCADE
 );
 
 CREATE VIEW classRoomReadable AS
@@ -191,8 +194,8 @@ CREATE TABLE batchRoom
 brId	int AUTO_INCREMENT PRIMARY KEY,
 batchId	int NOT NULL,
 roomId	int NOT NULL,
-FOREIGN KEY (batchId) REFERENCES batch(batchId),
-FOREIGN KEY (roomId) REFERENCES room(roomId)
+FOREIGN KEY (batchId) REFERENCES batch(batchId) ON DELETE CASCADE,
+FOREIGN KEY (roomId) REFERENCES room(roomId) ON DELETE CASCADE
 );
 
 CREATE VIEW batchRoomReadable AS 
@@ -206,7 +209,7 @@ CREATE TABLE snapshot
 snapshotId	int AUTO_INCREMENT PRIMARY KEY,
 snapshotName	varchar(128),
 snapshotCreator	int, 
-FOREIGN KEY (snapshotCreator) REFERENCES user(userId),
+FOREIGN KEY (snapshotCreator) REFERENCES user(userId) ON DELETE CASCADE,
 createTime	time,
 modifyTime	time,
 CONSTRAINT c_snapshotName UNIQUE(snapshotName)
@@ -224,7 +227,14 @@ teacherId	int,
 batchId	int,
 configId	int,
 snapshotId int,
-isBreak	boolean
+isBreak	boolean,
+FOREIGN KEY (roomId) REFERENCES room(roomId) ON DELETE CASCADE,
+FOREIGN KEY (classId) REFERENCES class(classId) ON DELETE CASCADE,
+FOREIGN KEY (batchId) REFERENCES batch(batchId) ON DELETE CASCADE,
+FOREIGN KEY (subjectId) REFERENCES subject(subjectId) ON DELETE CASCADE,
+FOREIGN KEY (teacherId) REFERENCES teacher(teacherId) ON DELETE CASCADE,
+FOREIGN KEY (configId) REFERENCES config(configId) ON DELETE CASCADE,
+FOREIGN KEY (snapshotId) REFERENCES snapshot(snapshotId) ON DELETE CASCADE
 );
 
 /*  Requirements on every new entry or an update

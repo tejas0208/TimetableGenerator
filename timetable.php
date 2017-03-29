@@ -2,6 +2,9 @@
 require_once('db.php');
 require_once('common.php');
 require_once('teacher.php');
+require_once('subject.php');
+require_once('class.php');
+require_once('batch.php');
 require_once('snapshot.php');
 
 function getTimeTable() {
@@ -14,6 +17,7 @@ function getTimeTable() {
 				from snapshot where snapshotName = $snapshotName)"; 
 	$outp = sqlGetAllRows($query);
 	$tables["timeTable"] = $outp;
+	error_log("getTimeTable: returning table: ".json_encode($tables));
 	return json_encode($tables);
 }
 
@@ -24,6 +28,10 @@ $header = "
 		<meta charset=\"utf-8\" /> 
 		<script type=\"text/javascript\" src=\"./jquery.js\"></script>
 		<script src = \"timetable.js\"></script>
+		<script src = \"teacherForm.js\"></script>
+		<script src = \"subjectForm.js\"></script>
+		<script src = \"classForm.js\"></script>
+		<script src = \"batchForm.js\"></script>
 		<link rel=\"stylesheet\" type=\"text/css\" href=\"timetable.css\"/>
 ";
 $bodystart="
@@ -31,9 +39,9 @@ $bodystart="
 	<body>
 ";
 $table= "
-	<table border = \"0\" padding = \"0\" style = \"width:100%;\">
+	<table border = \"0\" padding = \"0\" style = \"width:100%;\" id=\"outerTable\">
 		<tr> <td style = \"height:100px;\">
-			<table border = \"0\" padding = \"0\" style = \"height:100px; width:100%;\">
+			<table border = \"0\" padding = \"0\" style = \"height:100px; width:100%;\" id=\"menuTable\">
 			<tr> <td style = \"width:50%;\">
 				 <h1> COEP Timetable </h1>
 				</td>
@@ -52,25 +60,25 @@ $table= "
 									onclick=\"jsSaveNewSnapshot()\" > 
 					</div-->
 					<div class=\"selection-menu\">
-						Settings
+						Configuration	
 						<select id=\"insert-data-menu\" class=\"select-menu\">
 							<option value = \"\" selected> </option>
-							<option value = \"Teacher\" onclick=\"teacherForm()\">Teacher</option>
-							<option value = \"Add Class\" onclick=\"addNewClass()\">Add Class</option>
-							<option value = \"Add Subject\" onclick=\"addNewSubject()\">Add Subject</option>
-							<option value = \"Add Batch\" onclick=\"addNewBatch()\">Add Batch</option>
-							<option value = \"Add Dept\" onclick=\"addNewDept()\">Add Dept</option>
-							<option value = \"Add Room\" onclick=\"addNewRoom()\">Add Room</option>
-							<option value = \"Subject-Class Mapping\" onclick=\"addNewSCT()\">
-									Subject-Class Mapping</option>
-							<option value = \"Subject-Batch Mapping\" onclick=\"addNewSBT()\">
-									Subject-Batch Mapping</option>
-							<option value = \"Add Batch-Overlap\" onclick=\"addNewBatchCanOverlap()\">
+							<option value = \"Teacher\" onclick=\"teacherForm()\">Teachers</option>
+							<option value = \"Subjects\" onclick=\"subjectForm()\">Subjects</option>
+							<option value = \"Classes\" onclick=\"classForm()\">Classes</option>
+							<option value = \"Batchs\" onclick=\"batchForm()\">Batches</option>
+							<option value = \"Rooms\" onclick=\"roomForm()\">Rooms</option>
+							<option value = \"Dept\" onclick=\"deptForm()\">Depts</option>
+							<option value = \"Subject-Class Mapping\" onclick=\"sctForm()\">
+									Subject-Class-Teacher Mapping</option>
+							<option value = \"Subject-Batch Mapping\" onclick=\"sbtForm()\">
+									Subject-Batch-Teacher Mapping</option>
+							<option value = \"Add Batch-Overlap\" onclick=\"batchCanOverlapForm()\">
 										Batch Overlap Mapping</option>
-							<option value = \"Add Config\" onclick=\"addNewConfig()\">Add Config</option>
-							<option value = \"Add User\" onclick=\"addNewUser()\">Add User</option>
-							<option value = \"Add Class-Room\" onclick=\"addNewClassRoom()\">Add Class-Room</option>
-							<option value = \"Add Batch-Room\" onclick=\"addNewBatchRoom()\">Add Batch-Room</option>
+							<option value = \"Class-Room Mapping\" onclick=\"classRoomForm()\">Class-Room Mapping</option>
+							<option value = \"Batch-Room Mapping\" onclick=\"batchRoomForm()\">Batch-Room Mapping</option>
+							<option value = \"Configure TT\" onclick=\"configForm()\">Configure TT</option>
+							<option value = \"Users\" onclick=\"userForm()\">Users</option>
 						</select>
 					</div>
 					<div class=\"selection-menu\">
@@ -135,9 +143,9 @@ $table= "
 					<option value = \"ODS\">Timetable as ODS</option>
 					<option value = \"Excel\">Timetable as Excel </option>
 					<option value = \"Excelx\">Timetable as Excelx</option>
-					<option value = \"DODS\">Data as ODS</option>
-					<option value = \"DExcel\">Data as Excel </option>
-					<option value = \"DExcelx\">Data as Excelx</option>
+					<option value = \"DODS\">Configuration as ODS</option>
+					<option value = \"DExcel\">Configuration as Excel </option>
+					<option value = \"DExcelx\">Configuration as Excelx</option>
 				</select>
 				</form>
 			</div>
@@ -149,9 +157,9 @@ $table= "
 					<option value = \"ODS\">Timetable as ODS</option>
 					<option value = \"Excel\">Timetable as Excel </option>
 					<option value = \"Excelx\">Timetable as Excelx</option>
-					<option value = \"DODS\">Data as ODS</option>
-					<option value = \"DExcel\">Data as Excel </option>
-					<option value = \"DExcelx\">Data as Excelx</option>
+					<option value = \"DODS\">Configuration as ODS</option>
+					<option value = \"DExcel\">Configuration as Excel </option>
+					<option value = \"DExcelx\">Configuration as Excelx</option>
 				</select>
 				</form>
 			</div>
@@ -167,7 +175,7 @@ $footer = "</body> </html>";
 
 $page = $header.
 		$bodystart.
-		$teacherForm.
+		$teacherForm.  $subjectForm.  $classForm. $batchForm. $SCTForm.
 		$table.
 		$footer;
 
@@ -200,6 +208,36 @@ switch($reqType) {
 		break;
 	case "teacherInsert":
 		echo updateTeacher("insert");
+		break;
+	case "subjectUpdate":
+		echo updateSubject("update");
+		break;
+	case "subjectDelete":
+		echo updateSubject("delete");
+		break;
+	case "subjectInsert":
+		echo updateSubject("insert");
+		break;
+	case "classUpdate":
+		echo updateClass("update");
+		break;
+	case "classDelete":
+		echo updateClass("delete");
+		break;
+	case "classInsert":
+		echo updateClass("insert");
+		break;
+	case "batchUpdate":
+		echo updateBatch("update");
+		break;
+	case "batchDelete":
+		echo updateBatch("delete");
+		break;
+	case "batchInsert":
+		echo updateBatch("insert");
+		break;
+	case "batchClassUpdate":
+		echo updateBatchClass("");
 		break;
 	default:
 		echo $page;
