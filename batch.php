@@ -1,18 +1,47 @@
 <?php
 $batchForm = "
 	<div class=\"inputForm\" id=\"inputBatchForm\">
-	<table> <tr> 
-			<td align=\"center\" width=\"50%\"> Batch Configuration
+	<table width=\"60%\"> <tr> 
+			<td align=\"center\" > Batch Configuration
 			</td> 
-			<td width=\"50%\" align=\"right\"> <a href=\"javascript:void(0)\" 
+			<td  align=\"right\"> <a href=\"javascript:void(0)\" 
 					class=\"closebtn\" onclick=\"batchFormClose()\"> 
 					Close &times; </a> 
 			</td> 
 	</table>
-	<table id=\"batchTable\" class=\"inputFormTable\">	
+	<table width=\"60%\" id=\"batchTable\" class=\"inputFormTable\">	
 	</table>
 	</div>	
 ";
+$batchRoomForm = "
+	<div class=\"inputForm\" id=\"inputBatchRoomForm\">
+	<table width=\"60%\"> <tr> 
+			<td align=\"center\" >Room Preferences for Batches 
+			</td> 
+			<td  align=\"right\"> <a href=\"javascript:void(0)\" 
+					class=\"closebtn\" onclick=\"batchRoomFormClose()\"> 
+					Close &times; </a> 
+			</td> 
+	</table>
+	<table width=\"60%\" id=\"batchRoomTable\" class=\"inputFormTable\">	
+	</table>
+	</div>	
+";
+$batchCanOverlapForm = "
+	<div class=\"inputForm\" id=\"inputBatchCanOverlapForm\">
+	<table width=\"60%\"> <tr> 
+			<td align=\"center\" >Overlapping Batches Configuration
+			</td> 
+			<td  align=\"right\"> <a href=\"javascript:void(0)\" 
+					class=\"closebtn\" onclick=\"batchCanOverlapFormClose()\"> 
+					Close &times; </a> 
+			</td> 
+	</table>
+	<table width=\"60%\" id=\"batchCanOverlapTable\" class=\"inputFormTable\">	
+	</table>
+	</div>	
+";
+
 function updateBatchClass() {
 	global $CFG;
 	header("Content-Type: application/JSON: charset=UTF-8");
@@ -115,4 +144,78 @@ function updateBatch($type) {
 	return $resString;
 
 }
+function batchCanOverlapDelete() {
+	global $CFG;
+	header("Content-Type: application/JSON: charset=UTF-8");
+
+	$batchesJSON = getArgument("batches");
+	$batches = json_decode($batchesJSON);
+	error_log("batchCanOverlapDelete: received batches for deletion: ".$batches." and ".$batchesJSON);
+	$query = "DELETE FROM batchCanOverlap WHERE";
+	$query .= " batchId = ".$batches[0]." OR batchOverlapId = ".$batches[0]." ";
+	for($i = 1; $i < count($batches); $i++) { // 0 special case, to match the "OR" in query
+			$query .= "OR batchId = ".$batches[$i]." OR batchOverlapId = ".$batches[$i]." ";
+	}
+	$query .= ";";
+	error_log("batchCanOverlapDelete: Query: ".$query, 0);
+
+	$result = sqlUpdate($query);	
+	error_log("updateBatch: Result: ".json_encode($result), 0);
+
+	if($result == false) {
+		$resString = "{\"Success\": \"False\",";
+		$resString .= "\"Error\" : ".json_encode($CFG->conn->error)."}";
+		error_log("batchCanOverlapDelete: resString: ".$resString);
+		return $resString;
+	} else {
+		$resString = "{\"Success\": \"True\"}";
+	}
+	error_log("batchCanOverlapDelete: resString: ".$resString);
+	return $resString;
+}
+function batchCanOverlapInsert() {
+	global $CFG;
+	header("Content-Type: application/JSON: charset=UTF-8");
+
+	$batchesString = getArgument("batches");
+	$batches = [];
+	$tok = strtok($batchesString, ",");
+	$batches[count($batches)] = $tok;
+	while($tok !== false) {
+		$tok = strtok(",");
+		if($tok !== false)
+			$batches[count($batches)] = $tok;
+	} 
+	error_log("batchCanOverlapDelete: received batches for deletion: ".json_encode($batches));
+	$query = "INSERT INTO batchCanOverlap (batchId, batchOverlapId) VALUES ";
+	for($i = 0; $i < count($batches); $i++) { // 0 special case, to match the "OR" in query
+			for($j = 0; $j < count($batches); $j++) {
+				if($j == $i)
+					continue;
+				/* all this just to avoid the , on the last entry */
+				if(($i == (count($batches) - 1)) && ($j == (count($batches) -2)))
+					$query .= "(".$batches[$i].", ".$batches[$j].")";
+				else
+					$query .= "(".$batches[$i].", ".$batches[$j]."), ";
+			}
+	}
+	$query .= ";"; // remove the last comma  
+	error_log("batchCanOverlapDelete: Query: ".$query, 0);
+
+	$result = sqlUpdate($query);	
+	error_log("updateBatch: Result: ".json_encode($result), 0);
+
+	if($result == false) {
+		$resString = "{\"Success\": \"False\",";
+		$resString .= "\"Error\" : ".json_encode($CFG->conn->error)."}";
+		error_log("batchCanOverlapInsert: resString: ".$resString);
+		return $resString;
+	} else {
+		$resString = "{\"Success\": \"True\"}";
+	}
+	error_log("batchCanOverlapInsert: resString: ".$resString);
+	return $resString;
+}
+
+
 ?>

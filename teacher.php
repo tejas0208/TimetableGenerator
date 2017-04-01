@@ -1,15 +1,15 @@
 <?php
 $teacherForm = "
 	<div class=\"inputForm\" id=\"inputTeacherForm\">
-	<table> <tr> 
-			<td align=\"center\" width=\"50%\"> Teachers Configuration  
+	<table width=\"60%\"> <tr> 
+			<td align=\"center\" > Teachers Configuration  
 			</td> 
-			<td width=\"50%\" align=\"right\">  <a href=\"javascript:void(0)\" 
+			<td  align=\"right\">  <a href=\"javascript:void(0)\" 
 					class=\"closebtn\" onclick=\"teacherFormClose()\"> 
 					Close &times; </a> 
 			</td> 
 	</table>
-	<table id=\"teacherTable\" class=\"inputFormTable\">	
+	<table width=\"60%\" id=\"teacherTable\" class=\"inputFormTable\">	
 	</table>
 	</div>	
 ";

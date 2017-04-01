@@ -56,7 +56,8 @@ function getAllData() {
 	$tableNames = array("teacher", "class", "batch", 
 					"batchCanOverlap", "dept", "room", "config", 
 					"subject", "batchClass", "subjectBatchTeacher", 
-					"subjectClassTeacher", "snapshot");
+					"subjectClassTeacher", "snapshot", 
+					"classRoom", "batchRoom", "subjectRoom");
 	$length = count($tableNames);
 
 	for($i = 0; $i < $length; $i++) {

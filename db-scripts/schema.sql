@@ -86,7 +86,8 @@ bo int AUTO_INCREMENT PRIMARY KEY,
 batchId	int NOT NULL,
 batchOverlapId int NOT NULL,
 FOREIGN KEY(batchId) REFERENCES batch(batchId) ON DELETE CASCADE,
-FOREIGN KEY(batchOverlapId) REFERENCES batch(batchId) ON DELETE CASCADE
+FOREIGN KEY(batchOverlapId) REFERENCES batch(batchId) ON DELETE CASCADE,
+CONSTRAINT c_overlaps UNIQUE(batchId, batchOverlapId)
 );
 
 CREATE VIEW batchCanOverlapReadable
@@ -119,7 +120,8 @@ roomId	int AUTO_INCREMENT PRIMARY KEY,
 roomName	varchar(32) NOT NULL,
 roomShortName	varchar(16) NOT NULL,
 roomCount	int,
-CONSTRAINT c_roomShortName UNIQUE(roomShortName)
+CONSTRAINT c_roomShortName UNIQUE(roomShortName),
+CONSTRAINT c_roomName UNIQUE(roomName)
 );
 
 CREATE TABLE subject
@@ -156,14 +158,14 @@ ORDER by subjectShortName;
 
 CREATE TABLE subjectClassTeacher 
 (
-stId	int AUTO_INCREMENT PRIMARY KEY,
+sctId	int AUTO_INCREMENT PRIMARY KEY,
 subjectId	int NOT NULL,
 classId		int NOT NULL,
 teacherId	int,
 FOREIGN KEY (subjectId) REFERENCES subject(subjectId) ON DELETE CASCADE,
 FOREIGN KEY (classId) REFERENCES class(classId) ON DELETE CASCADE,
 FOREIGN KEY (teacherId) REFERENCES teacher(teacherId) ON DELETE CASCADE,
-CONSTRAINT c_subjectClassTeacheer UNIQUE(subjectId, classId, teacherId)
+CONSTRAINT c_subjectClassTeacheer UNIQUE(subjectId, classId)
 );
 
 CREATE VIEW subjectClassTeacherReadable AS
@@ -180,7 +182,8 @@ crId	int AUTO_INCREMENT PRIMARY KEY,
 classId	int NOT NULL,
 roomId	int NOT NULL,
 FOREIGN KEY (classId) REFERENCES class(classId) ON DELETE CASCADE,
-FOREIGN KEY (roomId) REFERENCES room(roomId) ON DELETE CASCADE
+FOREIGN KEY (roomId) REFERENCES room(roomId) ON DELETE CASCADE,
+CONSTRAINT c_classRoom UNIQUE(classId)
 );
 
 CREATE VIEW classRoomReadable AS
@@ -195,7 +198,8 @@ brId	int AUTO_INCREMENT PRIMARY KEY,
 batchId	int NOT NULL,
 roomId	int NOT NULL,
 FOREIGN KEY (batchId) REFERENCES batch(batchId) ON DELETE CASCADE,
-FOREIGN KEY (roomId) REFERENCES room(roomId) ON DELETE CASCADE
+FOREIGN KEY (roomId) REFERENCES room(roomId) ON DELETE CASCADE,
+CONSTRAINT c_batchRoom UNIQUE(batchId)
 );
 
 CREATE VIEW batchRoomReadable AS 
@@ -203,6 +207,23 @@ SELECT b.batchName, r.roomName from batch b, room r, batchRoom br
 WHERE	b.batchId = br.batchId AND
 	r.roomId = br.roomId
 ORDER BY batchName;
+
+CREATE TABLE subjectRoom
+(
+srId	int AUTO_INCREMENT PRIMARY KEY,
+subjectId	int NOT NULL,
+roomId	int NOT NULL,
+FOREIGN KEY (subjectId) REFERENCES subject(subjectId) ON DELETE CASCADE,
+FOREIGN KEY (roomId) REFERENCES room(roomId) ON DELETE CASCADE,
+CONSTRAINT c_subjectRoom UNIQUE(subjectId)
+);
+
+CREATE VIEW subjectRoomReadable AS 
+SELECT s.subjectShortName, r.roomName from subject s, room r, subjectRoom sr
+WHERE	s.subjectId = sr.subjectId AND
+	r.roomId = sr.roomId
+ORDER BY subjectShortName;
+
 
 CREATE TABLE snapshot 
 (

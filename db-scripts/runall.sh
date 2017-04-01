@@ -5,6 +5,13 @@ mysql -u root -proot < schema.sql
 echo "---------------triggers-----------------"
 mysql -u root -proot <	triggers.sql 
 
+echo "---------------dept -----------------"
+mysql -u root -proot < dept.sql 
+
+#this one, config needs changes, as it used deptId
+echo "---------------config-----------------"
+mysql -u root -proot < config.sql
+
 echo "---------------class-----------------"
 cat class.csv  | bash class.sh  > class.sql
 mysql -u root -proot < class.sql
@@ -20,9 +27,6 @@ mysql -u root -proot < teacher.sql
 echo "---------------room-----------------"
 cat room.csv  | bash room.sh  > room.sql
 mysql -u root -proot < room.sql
-
-echo "---------------dept -----------------"
-mysql -u root -proot < dept.sql 
 
 echo "---------------batch-----------------"
 cat batch.csv  | bash batch.sh  > batch.sql
@@ -40,9 +44,17 @@ echo "---------------subject-batch-teacher-----------------"
 cat subject-batch-teacher.csv  | bash subject-batch-teacher.sh  > subject-batch-teacher.sql
 mysql -u root -proot < subject-batch-teacher.sql
 
-#this one, config needs changes, as it used deptId
-echo "---------------config-----------------"
-mysql -u root -proot < config.sql
+echo "---------------classRoom-----------------"
+cat classRoom.csv  | bash classRoom.sh  > classRoom.sql
+mysql -u root -proot < classRoom.sql
+
+echo "---------------batchRoom-----------------"
+cat batchRoom.csv  | bash batchRoom.sh  > batchRoom.sql
+mysql -u root -proot < batchRoom.sql
+
+echo "---------------subjectRoom-----------------"
+cat subjectRoom.csv  | bash subjectRoom.sh  > subjectRoom.sql
+mysql -u root -proot < subjectRoom.sql
 
 echo "---------------snapshot ----------------"
 mysql -u root -proot < snapshot.sql

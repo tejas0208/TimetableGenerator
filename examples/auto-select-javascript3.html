@@ -1,0 +1,21 @@
+
+<input id="search_input" placeholder="Type to filter">
+<select id="theList" class="List" multiple="multiple">
+
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    //copy options
+    var options = $('#theList option').clone();
+    //react on keyup in textbox
+    $('#search_input').keyup(function () {
+      var val = $(this).val();
+      $('#theList').empty();
+      //take only the options containing your filter text or all if empty
+      options.filter(function (idx, el) {
+        return val === '' || $(el).text().indexOf(val) >= 0;
+      }).appendTo('#theList');//add it to list
+     });
+  });
+</script>
+

@@ -5,7 +5,13 @@ require_once('teacher.php');
 require_once('subject.php');
 require_once('class.php');
 require_once('batch.php');
+require_once('room.php');
+require_once('classRoom.php');
+require_once('batchRoom.php');
+require_once('subjectRoom.php');
 require_once('snapshot.php');
+require_once('sct.php');
+require_once('sbt.php');
 
 function getTimeTable() {
 	header("Content-Type: application/json; charset=UTF-8");
@@ -17,7 +23,7 @@ function getTimeTable() {
 				from snapshot where snapshotName = $snapshotName)"; 
 	$outp = sqlGetAllRows($query);
 	$tables["timeTable"] = $outp;
-	error_log("getTimeTable: returning table: ".json_encode($tables));
+	//error_log("getTimeTable: returning table: ".json_encode($tables));
 	return json_encode($tables);
 }
 
@@ -26,13 +32,29 @@ $header = "
 	<head>
 		<title> TimeTable </title>
 		<meta charset=\"utf-8\" /> 
+		<link href=\"./select2-4.0.3/dist/css/select2.min.css\" rel=\"stylesheet\"/>
+		<link rel=\"stylesheet\" type=\"text/css\" href=\"timetable.css\"/>
 		<script type=\"text/javascript\" src=\"./jquery.js\"></script>
+		<script src=\"./select2-4.0.3/dist/js/select2.min.js\"></script>
 		<script src = \"timetable.js\"></script>
 		<script src = \"teacherForm.js\"></script>
 		<script src = \"subjectForm.js\"></script>
 		<script src = \"classForm.js\"></script>
 		<script src = \"batchForm.js\"></script>
-		<link rel=\"stylesheet\" type=\"text/css\" href=\"timetable.css\"/>
+		<script src = \"roomForm.js\"></script>
+		<script src = \"classRoomForm.js\"></script>
+		<script src = \"batchRoomForm.js\"></script>
+		<script src = \"subjectRoomForm.js\"></script>
+		<script src = \"sctForm.js\"></script>
+		<script src = \"sbtForm.js\"></script>
+		<script>
+			function deptForm() {
+				alert(\"Departments not supported yet\");
+			}
+			function userForm() {
+				alert(\"Users not supported yet\");
+			}
+		</script>
 ";
 $bodystart="
 	</head>
@@ -69,15 +91,13 @@ $table= "
 							<option value = \"Batchs\" onclick=\"batchForm()\">Batches</option>
 							<option value = \"Rooms\" onclick=\"roomForm()\">Rooms</option>
 							<option value = \"Dept\" onclick=\"deptForm()\">Depts</option>
-							<option value = \"Subject-Class Mapping\" onclick=\"sctForm()\">
-									Subject-Class-Teacher Mapping</option>
-							<option value = \"Subject-Batch Mapping\" onclick=\"sbtForm()\">
-									Subject-Batch-Teacher Mapping</option>
-							<option value = \"Add Batch-Overlap\" onclick=\"batchCanOverlapForm()\">
-										Batch Overlap Mapping</option>
-							<option value = \"Class-Room Mapping\" onclick=\"classRoomForm()\">Class-Room Mapping</option>
-							<option value = \"Batch-Room Mapping\" onclick=\"batchRoomForm()\">Batch-Room Mapping</option>
-							<option value = \"Configure TT\" onclick=\"configForm()\">Configure TT</option>
+							<option value = \"Subject-Class Mapping\" onclick=\"sctForm()\"> Class-Subject-Teacher Mapping</option>
+							<option value = \"Subject-Batch Mapping\" onclick=\"sbtForm()\"> Batch-Subject-Teacher Mapping</option>
+							<option value = \"Add Batch-Overlap\" onclick=\"batchCanOverlapForm()\"> Batches: Alloweed Overlaps</option>
+							<option value = \"Class-Room Mapping\" onclick=\"classRoomForm()\"> Room Preference for Classes</option>
+							<option value = \"Batch-Room Mapping\" onclick=\"batchRoomForm()\"> Room Preference for Batches</option>
+							<option value = \"Subject-Room Mapping\" onclick=\"subjectRoomForm()\"> Room Preference for Subjects</option>
+							<option value = \"Configure TT\" onclick=\"configForm()\"> Configure Timetable</option>
 							<option value = \"Users\" onclick=\"userForm()\">Users</option>
 						</select>
 					</div>
@@ -175,7 +195,10 @@ $footer = "</body> </html>";
 
 $page = $header.
 		$bodystart.
-		$teacherForm.  $subjectForm.  $classForm. $batchForm. $SCTForm.
+		$teacherForm.  $subjectForm.  $classForm. 
+		$batchForm. $batchRoomForm. $batchCanOverlapForm.
+		$roomForm. $classRoomForm. $batchRoomForm. $subjectRoomForm.
+		$sctForm. $sbtForm.
 		$table.
 		$footer;
 
@@ -238,6 +261,66 @@ switch($reqType) {
 		break;
 	case "batchClassUpdate":
 		echo updateBatchClass("");
+		break;
+	case "sctDelete":
+		echo updateSCT("delete");
+		break;
+	case "sctInsert":
+		echo updateSCT("insert");
+		break;
+	case "sctUpdate":
+		echo updateSCT("update");
+		break;
+	case "sbtDelete":
+		echo updateSBT("delete");
+		break;
+	case "sbtInsert":
+		echo updateSBT("insert");
+		break;
+	case "sbtUpdate":
+		echo updateSBT("update");
+		break;
+	case "roomDelete":
+		echo updateRoom("delete");
+		break;
+	case "roomInsert":
+		echo updateRoom("insert");
+		break;
+	case "roomUpdate":
+		echo updateRoom("update");
+		break;
+	case "batchCanOverlapDelete":
+		echo batchCanOverlapDelete("");
+		break;
+	case "batchCanOverlapInsert":
+		echo batchCanOverlapInsert("");
+		break;
+	case "classRoomDelete":
+		echo updateClassRoom("delete");
+		break;
+	case "classRoomInsert":
+		echo updateClassRoom("insert");
+		break;
+	case "classRoomUpdate":
+		echo updateClassRoom("update");
+		break;
+	case "batchRoomDelete":
+		echo updateBatchRoom("delete");
+		break;
+	case "batchRoomInsert":
+		echo updateBatchRoom("insert");
+		break;
+	case "batchRoomUpdate":
+		echo updateBatchRoom("update");
+		break;
+	case "subjectRoomDelete":
+		echo updateSubjectRoom("delete");
+		break;
+	case "subjectRoomInsert":
+		echo updateSubjectRoom("insert");
+		break;
+	case "subjectRoomUpdate":
+		echo updateSubjectRoom("update");
 		break;
 	default:
 		echo $page;

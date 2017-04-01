@@ -114,11 +114,11 @@ function subjectForm() {
 		cell = row.insertCell(-1);
 		var button = document.createElement("button");
 		cell.appendChild(button);
-		button.value = "Delete"; button.name = "sDeleteeButton_"+count;
+		button.value = "Delete"; button.name = "sDeleteButton_"+count;
 		var textNode = document.createTextNode("Delete");
 		button.appendChild(textNode);
 		button.setAttribute("onclick","subjecsDelete("+count+")");
-		button.setAttribute("id","sDeleteeButton_"+count);
+		button.setAttribute("id","sDeleteButton_"+count);
 
 		count++;
 	}
@@ -168,7 +168,7 @@ function subjecsUpdate(i) {
 	nSlots = document.getElementById("nSlots_"+row).value;	
 	batches = document.getElementById("batches_"+row).value;	
 	document.getElementById("sUpdateButton_"+row).childNodes[0].nodeValue = "Updating";
-	document.getElementById("sDeleteeButton_"+row).disabled = true;
+	document.getElementById("sDeleteButton_"+row).disabled = true;
 	document.getElementById("sUpdateButton_"+row).disabled = true;
 
 	row = i - 2;
@@ -180,7 +180,7 @@ function subjecsUpdate(i) {
 			response = JSON.parse(this.responseText);
 			if(response["Success"] == "True") {
 				document.getElementById("sUpdateButton_"+i).childNodes[0].nodeValue = "Updated";
-				document.getElementById("sDeleteeButton_"+i).disabled = false;
+				document.getElementById("sDeleteButton_"+i).disabled = false;
 				document.getElementById("sUpdateButton_"+i).disabled = false;
 				subject[row]["subjectName"] = subjectName;
 				subject[row]["subjectShortName"] = subjectShortName;
@@ -192,7 +192,7 @@ function subjecsUpdate(i) {
 			else {
 				document.getElementById("sUpdateButton_"+i).childNodes[0].nodeValue = "Update";
 				alert("Subject " + subjectShortName + ": Update Failed.\nError:\n" + response["Error"]);
-				document.getElementById("sDeleteeButton_"+i).disabled = false;
+				document.getElementById("sDeleteButton_"+i).disabled = false;
 				document.getElementById("sUpdateButton_"+i).disabled = false;
 				subjectForm();
 			}
@@ -215,21 +215,21 @@ function subjecsDelete(i) {
 	if(sure != true)
 		return;
 	subjectShortName = document.getElementById("subjectShortName_"+row).value;
-	document.getElementById("sDeleteeButton_"+row).childNodes[0].nodeValue = "Deleting";
-	document.getElementById("sDeleteeButton_"+row).disabled = true;
+	document.getElementById("sDeleteButton_"+row).childNodes[0].nodeValue = "Deleting";
+	document.getElementById("sDeleteButton_"+row).disabled = true;
 	document.getElementById("sUpdateButton_"+row).disabled = true;
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function () {
 		if(this.readyState == 4 && this.status == 200) {
 			if(response["Success"] == "True") {
-				document.getElementById("sDeleteeButton_"+row).value = "Delete"
+				document.getElementById("sDeleteButton_"+row).value = "Delete"
 				subject.splice(i - 2, 1);
 				subjectForm();
 			} else {
 				alert("Subject " + subjectShortName + ": Deletion Failed.\nError:\n" + response["Error"]);
-				document.getElementById("sDeleteeButton_"+row).value = "Delete"
+				document.getElementById("sDeleteButton_"+row).value = "Delete"
 				document.getElementById("sUpdateButton_"+row).disabled = false;
-				document.getElementById("sDeleteeButton_"+row).childNodes[0].nodeValue = "Can't Delete";
+				document.getElementById("sDeleteButton_"+row).childNodes[0].nodeValue = "Can't Delete";
 			}
 		}
 	}

@@ -1,15 +1,15 @@
 <?php
 $subjectForm = "
 	<div class=\"inputForm\" id=\"inputSubjectForm\">
-	<table> <tr> 
-			<td align=\"center\" width=\"50%\"> Subjects Configuration  
+	<table width=\"60%\"> <tr> 
+			<td align=\"center\" > Subjects Configuration  
 			</td> 
-			<td width=\"50%\" align=\"right\">  <a href=\"javascript:void(0)\" 
+			<td  align=\"right\">  <a href=\"javascript:void(0)\" 
 					class=\"closebtn\" onclick=\"subjectFormClose()\"> 
 					Close &times; </a> 
 			</td> 
 	</table>
-	<table id=\"subjectTable\" class=\"inputFormTable\">	
+	<table width=\"60%\" id=\"subjectTable\" class=\"inputFormTable\">	
 	</table>
 	</div>	
 ";

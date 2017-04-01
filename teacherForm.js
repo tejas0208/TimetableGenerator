@@ -117,11 +117,11 @@ function teacherForm() {
 		cell = row.insertCell(-1);
 		var button = document.createElement("button");
 		cell.appendChild(button);
-		button.value = "Delete"; button.name = "tDeleteeButton_"+count;
+		button.value = "Delete"; button.name = "tDeleteButton_"+count;
 		var textNode = document.createTextNode("Delete");
 		button.appendChild(textNode);
 		button.setAttribute("onclick","teacherDelete("+count+")");
-		button.setAttribute("id","tDeleteeButton_"+count);
+		button.setAttribute("id","tDeleteButton_"+count);
 
 		count++;
 	}
@@ -181,7 +181,7 @@ function teacherUpdate(i) {
 	maxHrs = document.getElementById("maxHrs_"+row).value;	
 	dept = document.getElementById("dept_"+row).value;	
 	document.getElementById("tUpdateButton_"+row).childNodes[0].nodeValue = "Updating";
-	document.getElementById("tDeleteeButton_"+row).disabled = true;
+	document.getElementById("tDeleteButton_"+row).disabled = true;
 	document.getElementById("tUpdateButton_"+row).disabled = true;
 
 	row = i - 2;
@@ -194,7 +194,7 @@ function teacherUpdate(i) {
 			response = JSON.parse(this.responseText);
 			if(response["Success"] == "True") {
 				document.getElementById("tUpdateButton_"+i).childNodes[0].nodeValue = "Updated";
-				document.getElementById("tDeleteeButton_"+i).disabled = false;
+				document.getElementById("tDeleteButton_"+i).disabled = false;
 				document.getElementById("tUpdateButton_"+i).disabled = false;
 				teacher[row]["teacherName"] = teacherName;
 				teacher[row]["teacherShortName"] = teacherShortName;
@@ -206,7 +206,7 @@ function teacherUpdate(i) {
 			else {
 				document.getElementById("tUpdateButton_"+i).childNodes[0].nodeValue = "Update";
 				alert("Teacher " + teacherShortName + ": Update Failed.\nError:\n" + response["Error"]);
-				document.getElementById("tDeleteeButton_"+i).disabled = false;
+				document.getElementById("tDeleteButton_"+i).disabled = false;
 				document.getElementById("tUpdateButton_"+i).disabled = false;
 				teacherForm();
 			}
@@ -229,22 +229,22 @@ function teacherDelete(i) {
 	if(sure != true)
 		return;
 	teacherShortName = document.getElementById("teacherShortName_"+row).value;
-	document.getElementById("tDeleteeButton_"+row).childNodes[0].nodeValue = "Deleting";
-	document.getElementById("tDeleteeButton_"+row).disabled = true;
+	document.getElementById("tDeleteButton_"+row).childNodes[0].nodeValue = "Deleting";
+	document.getElementById("tDeleteButton_"+row).disabled = true;
 	document.getElementById("tUpdateButton_"+row).disabled = true;
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function () {
 		if(this.readyState == 4 && this.status == 200) {
 			response = JSON.parse(this.responseText);
 			if(response["Success"] == "True") {
-				document.getElementById("tDeleteeButton_"+row).value = "Delete"
+				document.getElementById("tDeleteButton_"+row).value = "Delete"
 				teacher.splice(i - 2, 1);
 				teacherForm();
 			} else {
 				alert("Teacher " + teacherShortName + ": Deletion Failed.\nError:\n" + response["Error"]);
-				document.getElementById("tDeleteeButton_"+row).value = "Delete"
+				document.getElementById("tDeleteButton_"+row).value = "Delete"
 				document.getElementById("tUpdateButton_"+row).disabled = false;
-				document.getElementById("tDeleteeButton_"+row).childNodes[0].nodeValue = "Can't Delete";
+				document.getElementById("tDeleteButton_"+row).childNodes[0].nodeValue = "Can't Delete";
 			}
 		}
 	}

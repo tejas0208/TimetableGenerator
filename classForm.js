@@ -88,11 +88,11 @@ function classForm() {
 		cell = row.insertCell(-1);
 		var button = document.createElement("button");
 		cell.appendChild(button);
-		button.value = "Delete"; button.name = "cDeleteeButton_"+count;
+		button.value = "Delete"; button.name = "cDeleteButton_"+count;
 		var textNode = document.createTextNode("Delete");
 		button.appendChild(textNode);
 		button.setAttribute("onclick","classDelete("+count+")");
-		button.setAttribute("id","cDeleteeButton_"+count);
+		button.setAttribute("id","cDeleteButton_"+count);
 
 		count++;
 	}
@@ -139,7 +139,7 @@ function classUpdate(i) {
 	semester = document.getElementById("semester_"+row).value;	
 	classCount = document.getElementById("classCount_"+row).value;	
 	document.getElementById("cUpdateButton_"+row).childNodes[0].nodeValue = "Updating";
-	document.getElementById("cDeleteeButton_"+row).disabled = true;
+	document.getElementById("cDeleteButton_"+row).disabled = true;
 	document.getElementById("cUpdateButton_"+row).disabled = true;
 
 	row = i - 2;
@@ -151,7 +151,7 @@ function classUpdate(i) {
 			if(response["Success"] == "True") {
 			//alert("class Row " + row + "Updated");		
 				document.getElementById("cUpdateButton_"+i).childNodes[0].nodeValue = "Updated";
-				document.getElementById("cDeleteeButton_"+i).disabled = false;
+				document.getElementById("cDeleteButton_"+i).disabled = false;
 				document.getElementById("cUpdateButton_"+i).disabled = false;
 				classTable[row]["className"] = className;
 				classTable[row]["classShortName"] = classShortName;
@@ -162,7 +162,7 @@ function classUpdate(i) {
 			else {
 				document.getElementById("cUpdateButton_"+i).childNodes[0].nodeValue = "Update";
 				alert("Class " + classShortName + ": Update Failed.\nError:\n" + response["Error"]);
-				document.getElementById("cDeleteeButton_"+i).disabled = false;
+				document.getElementById("cDeleteButton_"+i).disabled = false;
 				document.getElementById("cUpdateButton_"+i).disabled = false;
 				classForm();
 			}
@@ -185,22 +185,22 @@ function classDelete(i) {
 	if(sure != true)
 		return;
 	classShortName = document.getElementById("classShortName_"+row).value;
-	document.getElementById("cDeleteeButton_"+row).childNodes[0].nodeValue = "Deleting";
-	document.getElementById("cDeleteeButton_"+row).disabled = true;
+	document.getElementById("cDeleteButton_"+row).childNodes[0].nodeValue = "Deleting";
+	document.getElementById("cDeleteButton_"+row).disabled = true;
 	document.getElementById("cUpdateButton_"+row).disabled = true;
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function () {
 		if(this.readyState == 4 && this.status == 200) {
 			response = JSON.parse(this.responseText);
 			if(response["Success"] == "True") {
-				document.getElementById("cDeleteeButton_"+row).value = "Delete"
+				document.getElementById("cDeleteButton_"+row).value = "Delete"
 				classTable.splice(i - 2, 1);
 				classForm();
 			} else {
 				alert("Class " + classShortName + ": Deletion Failed.\nError:\n" + response["Error"]);
-				document.getElementById("cDeleteeButton_"+row).value = "Delete"
+				document.getElementById("cDeleteButton_"+row).value = "Delete"
 				document.getElementById("cUpdateButton_"+row).disabled = false;
-				document.getElementById("cDeleteeButton_"+row).childNodes[0].nodeValue = "Can't Delete";
+				document.getElementById("cDeleteButton_"+row).childNodes[0].nodeValue = "Can't Delete";
 			}
 		}
 	}
