@@ -16,6 +16,10 @@ INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFix
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
+INSERT INTO fixedEntry(ttId, fixedText) VALUES
+				((SELECT ttId FROM timeTable WHERE day = 1 AND slotNo = 5 AND 
+				classId = (SELECT classId from class WHERE classShortName="SYBT-CE")  
+				AND isFixed = TRUE), "LUNCH");
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
 						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 9, 
@@ -33,6 +37,10 @@ INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFix
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
+INSERT INTO fixedEntry(ttId, fixedText) VALUES
+				((SELECT ttId FROM timeTable WHERE day = 2 AND slotNo = 5 AND 
+				classId = (SELECT classId from class WHERE classShortName="SYBT-CE")  
+				AND isFixed = TRUE), "LUNCH");
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
 						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 6, 
@@ -83,6 +91,10 @@ INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFix
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
+INSERT INTO fixedEntry(ttId, fixedText) VALUES
+				((SELECT ttId FROM timeTable WHERE day = 3 AND slotNo = 5 AND 
+				classId = (SELECT classId from class WHERE classShortName="SYBT-CE")  
+				AND isFixed = TRUE), "LUNCH");
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
 						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 7, 
@@ -188,6 +200,10 @@ INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFix
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
+INSERT INTO fixedEntry(ttId, fixedText) VALUES
+				((SELECT ttId FROM timeTable WHERE day = 4 AND slotNo = 5 AND 
+				classId = (SELECT classId from class WHERE classShortName="SYBT-CE")  
+				AND isFixed = TRUE), "LUNCH");
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
 						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 7, 
@@ -282,6 +298,10 @@ INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFix
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
+INSERT INTO fixedEntry(ttId, fixedText) VALUES
+				((SELECT ttId FROM timeTable WHERE day = 5 AND slotNo = 5 AND 
+				classId = (SELECT classId from class WHERE classShortName="SYBT-CE")  
+				AND isFixed = TRUE), "LUNCH");
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
 						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 6, 
@@ -343,6 +363,10 @@ INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFix
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
+INSERT INTO fixedEntry(ttId, fixedText) VALUES
+				((SELECT ttId FROM timeTable WHERE day = 1 AND slotNo = 6 AND 
+				classId = (SELECT classId from class WHERE classShortName="SYBT-IT")  
+				AND isFixed = TRUE), "LUNCH");
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
 						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 7, 
@@ -481,6 +505,10 @@ INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFix
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
+INSERT INTO fixedEntry(ttId, fixedText) VALUES
+				((SELECT ttId FROM timeTable WHERE day = 2 AND slotNo = 6 AND 
+				classId = (SELECT classId from class WHERE classShortName="SYBT-IT")  
+				AND isFixed = TRUE), "LUNCH");
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
 						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 7, 
@@ -575,6 +603,10 @@ INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFix
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
+INSERT INTO fixedEntry(ttId, fixedText) VALUES
+				((SELECT ttId FROM timeTable WHERE day = 3 AND slotNo = 6 AND 
+				classId = (SELECT classId from class WHERE classShortName="SYBT-IT")  
+				AND isFixed = TRUE), "LUNCH");
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
 						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 7, 
@@ -625,6 +657,10 @@ INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFix
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
+INSERT INTO fixedEntry(ttId, fixedText) VALUES
+				((SELECT ttId FROM timeTable WHERE day = 4 AND slotNo = 6 AND 
+				classId = (SELECT classId from class WHERE classShortName="SYBT-IT")  
+				AND isFixed = TRUE), "LUNCH");
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
 						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 7, 
@@ -840,6 +876,10 @@ INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFix
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
+INSERT INTO fixedEntry(ttId, fixedText) VALUES
+				((SELECT ttId FROM timeTable WHERE day = 1 AND slotNo = 3 AND 
+				classId = (SELECT classId from class WHERE classShortName="TYBT-CE")  
+				AND isFixed = TRUE), "LUNCH");
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
 						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 5, 
@@ -923,6 +963,10 @@ INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFix
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
+INSERT INTO fixedEntry(ttId, fixedText) VALUES
+				((SELECT ttId FROM timeTable WHERE day = 2 AND slotNo = 5 AND 
+				classId = (SELECT classId from class WHERE classShortName="TYBT-CE")  
+				AND isFixed = TRUE), "LUNCH");
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
 						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 6, 
@@ -1050,6 +1094,10 @@ INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFix
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
+INSERT INTO fixedEntry(ttId, fixedText) VALUES
+				((SELECT ttId FROM timeTable WHERE day = 3 AND slotNo = 5 AND 
+				classId = (SELECT classId from class WHERE classShortName="TYBT-CE")  
+				AND isFixed = TRUE), "LUNCH");
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
 						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 6, 
@@ -1133,6 +1181,10 @@ INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFix
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
+INSERT INTO fixedEntry(ttId, fixedText) VALUES
+				((SELECT ttId FROM timeTable WHERE day = 4 AND slotNo = 5 AND 
+				classId = (SELECT classId from class WHERE classShortName="TYBT-CE")  
+				AND isFixed = TRUE), "LUNCH");
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
 						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 6, 
@@ -1491,6 +1543,10 @@ INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFix
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
+INSERT INTO fixedEntry(ttId, fixedText) VALUES
+				((SELECT ttId FROM timeTable WHERE day = 5 AND slotNo = 5 AND 
+				classId = (SELECT classId from class WHERE classShortName="TYBT-CE")  
+				AND isFixed = TRUE), "LUNCH");
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
 						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 6, 
@@ -1695,6 +1751,10 @@ INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFix
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
+INSERT INTO fixedEntry(ttId, fixedText) VALUES
+				((SELECT ttId FROM timeTable WHERE day = 1 AND slotNo = 5 AND 
+				classId = (SELECT classId from class WHERE classShortName="TYBT-IT")  
+				AND isFixed = TRUE), "LUNCH");
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
 						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 6, 
@@ -1899,6 +1959,10 @@ INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFix
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
+INSERT INTO fixedEntry(ttId, fixedText) VALUES
+				((SELECT ttId FROM timeTable WHERE day = 2 AND slotNo = 5 AND 
+				classId = (SELECT classId from class WHERE classShortName="TYBT-IT")  
+				AND isFixed = TRUE), "LUNCH");
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
 						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 6, 
@@ -2191,6 +2255,10 @@ INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFix
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
+INSERT INTO fixedEntry(ttId, fixedText) VALUES
+				((SELECT ttId FROM timeTable WHERE day = 3 AND slotNo = 6 AND 
+				classId = (SELECT classId from class WHERE classShortName="TYBT-IT")  
+				AND isFixed = TRUE), "LUNCH");
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
 						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 7, 
@@ -2384,6 +2452,10 @@ INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFix
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
+INSERT INTO fixedEntry(ttId, fixedText) VALUES
+				((SELECT ttId FROM timeTable WHERE day = 4 AND slotNo = 6 AND 
+				classId = (SELECT classId from class WHERE classShortName="TYBT-IT")  
+				AND isFixed = TRUE), "LUNCH");
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
 						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 7, 
@@ -2577,6 +2649,10 @@ INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFix
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
+INSERT INTO fixedEntry(ttId, fixedText) VALUES
+				((SELECT ttId FROM timeTable WHERE day = 5 AND slotNo = 6 AND 
+				classId = (SELECT classId from class WHERE classShortName="TYBT-IT")  
+				AND isFixed = TRUE), "LUNCH");
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
 						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 7, 
@@ -2616,6 +2692,10 @@ INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFix
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
+INSERT INTO fixedEntry(ttId, fixedText) VALUES
+				((SELECT ttId FROM timeTable WHERE day = 1 AND slotNo = 6 AND 
+				classId = (SELECT classId from class WHERE classShortName="BT-CE")  
+				AND isFixed = TRUE), "LUNCH");
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
 						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 7, 
@@ -2677,6 +2757,10 @@ INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFix
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
+INSERT INTO fixedEntry(ttId, fixedText) VALUES
+				((SELECT ttId FROM timeTable WHERE day = 2 AND slotNo = 6 AND 
+				classId = (SELECT classId from class WHERE classShortName="BT-CE")  
+				AND isFixed = TRUE), "LUNCH");
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
 						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 7, 
@@ -2815,6 +2899,10 @@ INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFix
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
+INSERT INTO fixedEntry(ttId, fixedText) VALUES
+				((SELECT ttId FROM timeTable WHERE day = 3 AND slotNo = 6 AND 
+				classId = (SELECT classId from class WHERE classShortName="BT-CE")  
+				AND isFixed = TRUE), "LUNCH");
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
 						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 7, 
@@ -2920,6 +3008,10 @@ INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFix
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
+INSERT INTO fixedEntry(ttId, fixedText) VALUES
+				((SELECT ttId FROM timeTable WHERE day = 4 AND slotNo = 6 AND 
+				classId = (SELECT classId from class WHERE classShortName="BT-CE")  
+				AND isFixed = TRUE), "LUNCH");
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
 						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 7, 
@@ -3003,6 +3095,10 @@ INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFix
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
+INSERT INTO fixedEntry(ttId, fixedText) VALUES
+				((SELECT ttId FROM timeTable WHERE day = 5 AND slotNo = 6 AND 
+				classId = (SELECT classId from class WHERE classShortName="BT-CE")  
+				AND isFixed = TRUE), "LUNCH");
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
 						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 7, 
@@ -3075,6 +3171,10 @@ INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFix
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
+INSERT INTO fixedEntry(ttId, fixedText) VALUES
+				((SELECT ttId FROM timeTable WHERE day = 1 AND slotNo = 6 AND 
+				classId = (SELECT classId from class WHERE classShortName="BT-IT")  
+				AND isFixed = TRUE), "LUNCH");
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
 						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 7, 
@@ -3114,6 +3214,10 @@ INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFix
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
+INSERT INTO fixedEntry(ttId, fixedText) VALUES
+				((SELECT ttId FROM timeTable WHERE day = 2 AND slotNo = 6 AND 
+				classId = (SELECT classId from class WHERE classShortName="BT-IT")  
+				AND isFixed = TRUE), "LUNCH");
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
 						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 8, 
@@ -3263,6 +3367,10 @@ INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFix
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
+INSERT INTO fixedEntry(ttId, fixedText) VALUES
+				((SELECT ttId FROM timeTable WHERE day = 3 AND slotNo = 6 AND 
+				classId = (SELECT classId from class WHERE classShortName="BT-IT")  
+				AND isFixed = TRUE), "LUNCH");
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
 						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 7, 
@@ -3368,6 +3476,10 @@ INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFix
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
+INSERT INTO fixedEntry(ttId, fixedText) VALUES
+				((SELECT ttId FROM timeTable WHERE day = 4 AND slotNo = 6 AND 
+				classId = (SELECT classId from class WHERE classShortName="BT-IT")  
+				AND isFixed = TRUE), "LUNCH");
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
 						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 7, 
@@ -3473,6 +3585,10 @@ INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFix
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
+INSERT INTO fixedEntry(ttId, fixedText) VALUES
+				((SELECT ttId FROM timeTable WHERE day = 5 AND slotNo = 6 AND 
+				classId = (SELECT classId from class WHERE classShortName="BT-IT")  
+				AND isFixed = TRUE), "LUNCH");
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
 						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 7, 
@@ -3545,6 +3661,10 @@ INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFix
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
+INSERT INTO fixedEntry(ttId, fixedText) VALUES
+				((SELECT ttId FROM timeTable WHERE day = 1 AND slotNo = 6 AND 
+				classId = (SELECT classId from class WHERE classShortName="FYMT-CE")  
+				AND isFixed = TRUE), "LUNCH");
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
 						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 7, 
@@ -3595,6 +3715,10 @@ INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFix
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
+INSERT INTO fixedEntry(ttId, fixedText) VALUES
+				((SELECT ttId FROM timeTable WHERE day = 2 AND slotNo = 5 AND 
+				classId = (SELECT classId from class WHERE classShortName="FYMT-CE")  
+				AND isFixed = TRUE), "LUNCH");
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
 						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 6, 
@@ -3656,6 +3780,10 @@ INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFix
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
+INSERT INTO fixedEntry(ttId, fixedText) VALUES
+				((SELECT ttId FROM timeTable WHERE day = 3 AND slotNo = 5 AND 
+				classId = (SELECT classId from class WHERE classShortName="FYMT-CE")  
+				AND isFixed = TRUE), "LUNCH");
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
 						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 6, 
@@ -3717,6 +3845,10 @@ INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFix
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
+INSERT INTO fixedEntry(ttId, fixedText) VALUES
+				((SELECT ttId FROM timeTable WHERE day = 4 AND slotNo = 5 AND 
+				classId = (SELECT classId from class WHERE classShortName="FYMT-CE")  
+				AND isFixed = TRUE), "LUNCH");
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
 						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 6, 
@@ -3767,6 +3899,10 @@ INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFix
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
+INSERT INTO fixedEntry(ttId, fixedText) VALUES
+				((SELECT ttId FROM timeTable WHERE day = 5 AND slotNo = 5 AND 
+				classId = (SELECT classId from class WHERE classShortName="FYMT-CE")  
+				AND isFixed = TRUE), "LUNCH");
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
 						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 6, 

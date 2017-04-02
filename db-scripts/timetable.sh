@@ -10,6 +10,10 @@ do
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName=\"default\"),
 				$isFixed);";
+		echo	"INSERT INTO fixedEntry(ttId, fixedText) VALUES
+				((SELECT ttId FROM timeTable WHERE day = $day AND slotNo = $slot AND 
+				classId = (SELECT classId from class WHERE classShortName=\"$class\")  
+				AND isFixed = $isFixed), \"LUNCH\");";
 
 	else
 		if [ -z $batch ]

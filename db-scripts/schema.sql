@@ -321,9 +321,9 @@ WHERE tt.isFixed = TRUE AND
 	  tt.snapshotId = sn.snapshotId
 ORDER by ttId;
 
-CREATE TABLE fixedEntries(
+CREATE TABLE fixedEntry (
 feId int AUTO_INCREMENT PRIMARY KEY,
 ttId int NOT NULL UNIQUE,
-feText	varchar(128),
+fixedText	varchar(128),
 FOREIGN KEY (ttId) REFERENCES timeTable(ttId) ON DELETE CASCADE
 );
