@@ -209,7 +209,7 @@ function dropHandler(e) {
 				timeTable.push(new createTimeTableEntry(i, (j + r), srcSlotEntry["roomId"],
 					srcSlotEntry["classId"], srcSlotEntry["subjectId"], srcSlotEntry["teacherId"],
 					srcSlotEntry["batchId"], srcSlotEntry["configId"], srcSlotEntry["snapshotId"], 
-					srcSlotEntry["isBreak"]));
+					srcSlotEntry["isFixed"]));
 			}
 			
 				
@@ -638,7 +638,7 @@ function sort(table) {
 }
 
 function createTimeTableEntry(day, slotNo, roomId, classId, subjectId, 
-			teacherId, batchId, configId, snapshotId, isBreak) {
+			teacherId, batchId, configId, snapshotId, isFixed) {
 	this.day = "" +day;
 	this.slotNo = ""+slotNo;
 	this.roomId = ""+roomId;
@@ -647,7 +647,7 @@ function createTimeTableEntry(day, slotNo, roomId, classId, subjectId,
 	this.teacherId = ""+teacherId;
 	this.batchId = ""+batchId;
 	this.configId = ""+configId;
-	this.isBreak = ""+isBreak;
+	this.isFixed = ""+isFixed;
 	this.snapshotId = ""+snapshotId;
 	if(timeTable.length == 0)
 		this.ttId =  1;

@@ -47,8 +47,8 @@ BEGIN
 	CLOSE teacher_slots;
 END;
 $$
-/*insert into timeTable (day,slotNo,roomId,classId,subjectId,teacherId,batchId,configId,isBreak)  values (1,11,1,1,1,1,1,1,0); 
-insert into timeTable (day,slotNo,roomId,classId,subjectId,teacherId,batchId,configId,isBreak)  values (1,10,1,1,1,1,1,1,0); */
+/*insert into timeTable (day,slotNo,roomId,classId,subjectId,teacherId,batchId,configId,isFixed)  values (1,11,1,1,1,1,1,1,0); 
+insert into timeTable (day,slotNo,roomId,classId,subjectId,teacherId,batchId,configId,isFixed)  values (1,10,1,1,1,1,1,1,0); */
 $$
 select * from slots;
 $$

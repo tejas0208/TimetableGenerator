@@ -18,25 +18,25 @@ function saveSnapshot() {
 	for($k = 0; $k < count($ttdata); $k++) {
 			$currRow = $ttdata[$k];
 			$classId = $currRow["classId"];
-			if($currRow["isBreak"] == 1) {
+			if($currRow["isFixed"] == 1) {
 				$ttInsertQuery = "INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, 
-								teacherId, batchId, configId, snapshotId, isBreak) VALUES (".
+								teacherId, batchId, configId, snapshotId, isFixed) VALUES (".
 								$currRow["day"].",".$currRow["slotNo"].",".
 								"null, null, null, ".
 								//"(SELECT classId from class where classShortName=\"$className\"),".
 								$classId.",".
 								"null, null,".
 								$snapshotId.",".
-								$currRow["isBreak"].");";
+								$currRow["isFixed"].");";
 			} else {
 				$ttInsertQuery = "INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, 
-								teacherId, batchId, configId, snapshotId, isBreak) VALUES (".
+								teacherId, batchId, configId, snapshotId, isFixed) VALUES (".
 								$currRow["day"].",".$currRow["slotNo"].",".
 								$currRow["roomId"].",".$currRow["classId"].",".
 								$currRow["subjectId"].",".$currRow["teacherId"].",".
 								$currRow["batchId"].",".$currRow["configId"].",".
 								$snapshotId.",".
-								$currRow["isBreak"].");";
+								$currRow["isFixed"].");";
 			}
 			$result = sqlUpdate($ttInsertQuery);
 			if($result != true ) {
@@ -60,25 +60,25 @@ function saveNewSnapshot() {
 	for($k = 0; $k < count($ttdata); $k++) {
 			$currRow = $ttdata[$k];
 			$classId = $currRow["classId"];
-			if($currRow["isBreak"] == 1) {
+			if($currRow["isFixed"] == 1) {
 				$ttInsertQuery = "INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, 
-								teacherId, batchId, configId, snapshotId, isBreak) VALUES (".
+								teacherId, batchId, configId, snapshotId, isFixed) VALUES (".
 								$currRow["day"].",".$currRow["slotNo"].",".
 								"null, null, null, ".
 								//"(SELECT classId from class where classShortName=\"$className\"),".
 								$classId.",".
 								"null, null,".
 								"(SELECT snapshotId from snapshot where snapshotName = \"$snapshotName\"),".
-								$currRow["isBreak"].");";
+								$currRow["isFixed"].");";
 			} else {
 				$ttInsertQuery = "INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, 
-								teacherId, batchId, configId, snapshotId, isBreak) VALUES (".
+								teacherId, batchId, configId, snapshotId, isFixed) VALUES (".
 								$currRow["day"].",".$currRow["slotNo"].",".
 								$currRow["roomId"].",".$currRow["classId"].",".
 								$currRow["subjectId"].",".$currRow["teacherId"].",".
 								$currRow["batchId"].",".$currRow["configId"].",".
 								"(SELECT snapshotId from snapshot where snapshotName = \"$snapshotName\"),".
-								$currRow["isBreak"].");";
+								$currRow["isFixed"].");";
 			}
 			$result = sqlUpdate($ttInsertQuery);
 			if($result != true ) {

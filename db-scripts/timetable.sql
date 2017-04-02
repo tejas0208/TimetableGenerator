@@ -1,6 +1,6 @@
 USE timeTable;
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 2, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
@@ -10,14 +10,14 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			1,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
-INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isBreak) VALUES 
+INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFixed) VALUES 
 				(1, 5, 
 				(SELECT classId from class where classShortName="SYBT-CE"),
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 9, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
@@ -27,14 +27,14 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			1,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
-INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isBreak) VALUES 
+INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFixed) VALUES 
 				(2, 5, 
 				(SELECT classId from class where classShortName="SYBT-CE"),
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 6, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
@@ -45,7 +45,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 2, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
@@ -56,7 +56,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 3, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
@@ -67,7 +67,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 4, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
@@ -77,14 +77,14 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			1,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
-INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isBreak) VALUES 
+INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFixed) VALUES 
 				(3, 5, 
 				(SELECT classId from class where classShortName="SYBT-CE"),
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 7, 
 			(SELECT roomId from room WHERE roomShortName="PL"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
@@ -95,7 +95,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 8, 
 			(SELECT roomId from room WHERE roomShortName="PL"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
@@ -106,7 +106,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 9, 
 			(SELECT roomId from room WHERE roomShortName="PL"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
@@ -117,7 +117,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 7, 
 			(SELECT roomId from room WHERE roomShortName="DSL"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
@@ -128,7 +128,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 8, 
 			(SELECT roomId from room WHERE roomShortName="DSL"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
@@ -139,7 +139,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 9, 
 			(SELECT roomId from room WHERE roomShortName="DSL"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
@@ -150,7 +150,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 2, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
@@ -161,7 +161,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 3, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
@@ -172,7 +172,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 4, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
@@ -182,14 +182,14 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			1,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
-INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isBreak) VALUES 
+INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFixed) VALUES 
 				(4, 5, 
 				(SELECT classId from class where classShortName="SYBT-CE"),
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 7, 
 			(SELECT roomId from room WHERE roomShortName="DSL"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
@@ -200,7 +200,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 8, 
 			(SELECT roomId from room WHERE roomShortName="DSL"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
@@ -211,7 +211,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 9, 
 			(SELECT roomId from room WHERE roomShortName="DSL"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
@@ -222,7 +222,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 7, 
 			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
@@ -233,7 +233,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 8, 
 			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
@@ -244,7 +244,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 9, 
 			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
@@ -255,7 +255,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 3, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
@@ -266,7 +266,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 4, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
@@ -276,14 +276,14 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			1,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
-INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isBreak) VALUES 
+INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFixed) VALUES 
 				(5, 5, 
 				(SELECT classId from class where classShortName="SYBT-CE"),
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 6, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
@@ -294,7 +294,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 8, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
@@ -305,7 +305,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 2, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -316,7 +316,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 4, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -327,7 +327,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 5, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -337,14 +337,14 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			1,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
-INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isBreak) VALUES 
+INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFixed) VALUES 
 				(1, 6, 
 				(SELECT classId from class where classShortName="SYBT-IT"),
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 7, 
 			(SELECT roomId from room WHERE roomShortName="PL"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -355,7 +355,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 8, 
 			(SELECT roomId from room WHERE roomShortName="PL"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -366,7 +366,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 9, 
 			(SELECT roomId from room WHERE roomShortName="PL"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -377,7 +377,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 7, 
 			(SELECT roomId from room WHERE roomShortName="DSL"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -388,7 +388,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 8, 
 			(SELECT roomId from room WHERE roomShortName="DSL"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -399,7 +399,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 9, 
 			(SELECT roomId from room WHERE roomShortName="DSL"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -410,7 +410,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 3, 
 			(SELECT roomId from room WHERE roomShortName="DSL"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -421,7 +421,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 4, 
 			(SELECT roomId from room WHERE roomShortName="DSL"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -432,7 +432,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 5, 
 			(SELECT roomId from room WHERE roomShortName="DSL"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -443,7 +443,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 3, 
 			(SELECT roomId from room WHERE roomShortName="PL"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -454,7 +454,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 4, 
 			(SELECT roomId from room WHERE roomShortName="PL"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -465,7 +465,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 5, 
 			(SELECT roomId from room WHERE roomShortName="PL"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -475,14 +475,14 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			1,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
-INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isBreak) VALUES 
+INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFixed) VALUES 
 				(2, 6, 
 				(SELECT classId from class where classShortName="SYBT-IT"),
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 7, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -493,7 +493,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 8, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -504,7 +504,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 9, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -515,7 +515,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 10, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -526,7 +526,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 2, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -537,7 +537,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 3, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -548,7 +548,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 4, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -559,7 +559,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 5, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -569,14 +569,14 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			1,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
-INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isBreak) VALUES 
+INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFixed) VALUES 
 				(3, 6, 
 				(SELECT classId from class where classShortName="SYBT-IT"),
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 7, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -587,7 +587,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 8, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -598,7 +598,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 2, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -609,7 +609,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 3, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -619,14 +619,14 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			1,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
-INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isBreak) VALUES 
+INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFixed) VALUES 
 				(4, 6, 
 				(SELECT classId from class where classShortName="SYBT-IT"),
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 7, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -637,7 +637,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 8, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -648,7 +648,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 2, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -659,7 +659,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 3, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -670,7 +670,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 4, 
 			(SELECT roomId from room WHERE roomShortName="PL"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -681,7 +681,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 5, 
 			(SELECT roomId from room WHERE roomShortName="PL"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -692,7 +692,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 6, 
 			(SELECT roomId from room WHERE roomShortName="PL"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -703,7 +703,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 4, 
 			(SELECT roomId from room WHERE roomShortName="DSL"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -714,7 +714,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 5, 
 			(SELECT roomId from room WHERE roomShortName="DSL"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -725,7 +725,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 6, 
 			(SELECT roomId from room WHERE roomShortName="DSL"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -736,7 +736,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 7, 
 			(SELECT roomId from room WHERE roomShortName="PL"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -747,7 +747,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 8, 
 			(SELECT roomId from room WHERE roomShortName="PL"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -758,7 +758,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 9, 
 			(SELECT roomId from room WHERE roomShortName="PL"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -769,7 +769,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 7, 
 			(SELECT roomId from room WHERE roomShortName="DSL"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -780,7 +780,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 8, 
 			(SELECT roomId from room WHERE roomShortName="DSL"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -791,7 +791,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 9, 
 			(SELECT roomId from room WHERE roomShortName="DSL"),
 			(SELECT classId from class WHERE classShortName="SYBT-IT"), 
@@ -802,7 +802,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 2, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -813,7 +813,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 2, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -824,7 +824,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 2, 
 			(SELECT roomId from room WHERE roomShortName="GML"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -834,14 +834,14 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			1,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
-INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isBreak) VALUES 
+INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFixed) VALUES 
 				(1, 3, 
 				(SELECT classId from class where classShortName="TYBT-CE"),
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 5, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -852,7 +852,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 2, 
 			(SELECT roomId from room WHERE roomShortName="DBMSL"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -863,7 +863,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 3, 
 			(SELECT roomId from room WHERE roomShortName="DBMSL"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -874,7 +874,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 4, 
 			(SELECT roomId from room WHERE roomShortName="DBMSL"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -885,7 +885,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 2, 
 			(SELECT roomId from room WHERE roomShortName="PL"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -896,7 +896,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 3, 
 			(SELECT roomId from room WHERE roomShortName="PL"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -907,7 +907,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 4, 
 			(SELECT roomId from room WHERE roomShortName="PL"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -917,14 +917,14 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			1,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
-INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isBreak) VALUES 
+INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFixed) VALUES 
 				(2, 5, 
 				(SELECT classId from class where classShortName="TYBT-CE"),
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 6, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -935,7 +935,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 7, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -946,7 +946,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 9, 
 			(SELECT roomId from room WHERE roomShortName="GML"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -957,7 +957,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 10, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -968,7 +968,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 1, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -979,7 +979,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 2, 
 			(SELECT roomId from room WHERE roomShortName="DBMSL"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -990,7 +990,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 3, 
 			(SELECT roomId from room WHERE roomShortName="DBMSL"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1001,7 +1001,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 4, 
 			(SELECT roomId from room WHERE roomShortName="DBMSL"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1012,7 +1012,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 2, 
 			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1023,7 +1023,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 3, 
 			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1034,7 +1034,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 4, 
 			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1044,14 +1044,14 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			1,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
-INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isBreak) VALUES 
+INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFixed) VALUES 
 				(3, 5, 
 				(SELECT classId from class where classShortName="TYBT-CE"),
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 6, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1062,7 +1062,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 7, 
 			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1073,7 +1073,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 7, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1084,7 +1084,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 8, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1095,7 +1095,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 9, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1106,7 +1106,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 10, 
 			(SELECT roomId from room WHERE roomShortName="GML"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1117,7 +1117,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 4, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1127,14 +1127,14 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			1,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
-INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isBreak) VALUES 
+INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFixed) VALUES 
 				(4, 5, 
 				(SELECT classId from class where classShortName="TYBT-CE"),
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 6, 
 			(SELECT roomId from room WHERE roomShortName="DBMSL"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1145,7 +1145,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 7, 
 			(SELECT roomId from room WHERE roomShortName="DBMSL"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1156,7 +1156,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 8, 
 			(SELECT roomId from room WHERE roomShortName="DBMSL"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1167,7 +1167,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 6, 
 			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1178,7 +1178,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 7, 
 			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1189,7 +1189,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 8, 
 			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1200,7 +1200,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 6, 
 			(SELECT roomId from room WHERE roomShortName="PL"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1211,7 +1211,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 7, 
 			(SELECT roomId from room WHERE roomShortName="PL"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1222,7 +1222,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 8, 
 			(SELECT roomId from room WHERE roomShortName="PL"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1233,7 +1233,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 6, 
 			(SELECT roomId from room WHERE roomShortName="GML"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1244,7 +1244,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 7, 
 			(SELECT roomId from room WHERE roomShortName="GML"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1255,7 +1255,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 8, 
 			(SELECT roomId from room WHERE roomShortName="GML"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1266,7 +1266,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 9, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1277,7 +1277,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 10, 
 			(SELECT roomId from room WHERE roomShortName="GML"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1288,7 +1288,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 1, 
 			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1299,7 +1299,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 2, 
 			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1310,7 +1310,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 3, 
 			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1321,7 +1321,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 1, 
 			(SELECT roomId from room WHERE roomShortName="ASL"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1332,7 +1332,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 2, 
 			(SELECT roomId from room WHERE roomShortName="ASL"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1343,7 +1343,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 3, 
 			(SELECT roomId from room WHERE roomShortName="ASL"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1354,7 +1354,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 1, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-5"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1365,7 +1365,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 2, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-5"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1376,7 +1376,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 3, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-5"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1387,7 +1387,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 1, 
 			(SELECT roomId from room WHERE roomShortName="GML"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1398,7 +1398,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 2, 
 			(SELECT roomId from room WHERE roomShortName="GML"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1409,7 +1409,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 3, 
 			(SELECT roomId from room WHERE roomShortName="GML"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1420,7 +1420,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 1, 
 			(SELECT roomId from room WHERE roomShortName="SSL"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1431,7 +1431,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 2, 
 			(SELECT roomId from room WHERE roomShortName="SSL"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1442,7 +1442,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 3, 
 			(SELECT roomId from room WHERE roomShortName="SSL"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1453,7 +1453,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 4, 
 			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1464,7 +1464,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 4, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1475,7 +1475,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 4, 
 			(SELECT roomId from room WHERE roomShortName="ASL"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1485,14 +1485,14 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			1,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
-INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isBreak) VALUES 
+INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFixed) VALUES 
 				(5, 5, 
 				(SELECT classId from class where classShortName="TYBT-CE"),
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 6, 
 			(SELECT roomId from room WHERE roomShortName="DBMSL"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1503,7 +1503,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 7, 
 			(SELECT roomId from room WHERE roomShortName="DBMSL"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1514,7 +1514,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 8, 
 			(SELECT roomId from room WHERE roomShortName="DBMSL"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1525,7 +1525,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 6, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-3"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1536,7 +1536,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 7, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-3"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1547,7 +1547,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 8, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-3"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1558,7 +1558,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 6, 
 			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1569,7 +1569,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 7, 
 			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1580,7 +1580,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 8, 
 			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1591,7 +1591,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 6, 
 			(SELECT roomId from room WHERE roomShortName="SSL"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1602,7 +1602,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 7, 
 			(SELECT roomId from room WHERE roomShortName="SSL"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1613,7 +1613,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 8, 
 			(SELECT roomId from room WHERE roomShortName="SSL"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1624,7 +1624,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 9, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-CE"), 
@@ -1635,7 +1635,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 2, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -1646,7 +1646,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 2, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -1657,7 +1657,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 2, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -1668,7 +1668,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 3, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -1679,7 +1679,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 4, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -1689,14 +1689,14 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			1,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
-INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isBreak) VALUES 
+INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFixed) VALUES 
 				(1, 5, 
 				(SELECT classId from class where classShortName="TYBT-IT"),
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 6, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -1707,7 +1707,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 6, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -1718,7 +1718,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 7, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -1729,7 +1729,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 6, 
 			(SELECT roomId from room WHERE roomShortName="ASL"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -1740,7 +1740,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 7, 
 			(SELECT roomId from room WHERE roomShortName="ASL"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -1751,7 +1751,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 8, 
 			(SELECT roomId from room WHERE roomShortName="ASL"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -1762,7 +1762,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 6, 
 			(SELECT roomId from room WHERE roomShortName="FOSS2"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -1773,7 +1773,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 7, 
 			(SELECT roomId from room WHERE roomShortName="FOSS2"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -1784,7 +1784,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 8, 
 			(SELECT roomId from room WHERE roomShortName="FOSS2"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -1795,7 +1795,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 2, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-34"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -1806,7 +1806,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 3, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-34"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -1817,7 +1817,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 4, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-34"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -1828,7 +1828,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 2, 
 			(SELECT roomId from room WHERE roomShortName="GML"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -1839,7 +1839,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 3, 
 			(SELECT roomId from room WHERE roomShortName="GML"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -1850,7 +1850,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 4, 
 			(SELECT roomId from room WHERE roomShortName="GML"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -1861,7 +1861,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 2, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-3"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -1872,7 +1872,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 3, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-3"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -1883,7 +1883,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 4, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-3"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -1893,14 +1893,14 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			1,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
-INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isBreak) VALUES 
+INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFixed) VALUES 
 				(2, 5, 
 				(SELECT classId from class where classShortName="TYBT-IT"),
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 6, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-34"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -1911,7 +1911,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 7, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-34"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -1922,7 +1922,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 8, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-34"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -1933,7 +1933,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 6, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-3"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -1944,7 +1944,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 7, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-3"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -1955,7 +1955,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 8, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-3"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -1966,7 +1966,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 6, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-4"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -1977,7 +1977,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 7, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-4"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -1988,7 +1988,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 8, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-4"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -1999,7 +1999,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 6, 
 			(SELECT roomId from room WHERE roomShortName="GML"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2010,7 +2010,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 7, 
 			(SELECT roomId from room WHERE roomShortName="GML"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2021,7 +2021,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 8, 
 			(SELECT roomId from room WHERE roomShortName="GML"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2032,7 +2032,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 9, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2043,7 +2043,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 2, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-34"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2054,7 +2054,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 3, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-34"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2065,7 +2065,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 4, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-34"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2076,7 +2076,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 2, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-4"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2087,7 +2087,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 3, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-4"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2098,7 +2098,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 4, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-4"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2109,7 +2109,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 2, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-3"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2120,7 +2120,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 3, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-3"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2131,7 +2131,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 4, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-3"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2142,7 +2142,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 2, 
 			(SELECT roomId from room WHERE roomShortName="GML"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2153,7 +2153,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 3, 
 			(SELECT roomId from room WHERE roomShortName="GML"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2164,7 +2164,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 4, 
 			(SELECT roomId from room WHERE roomShortName="GML"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2175,7 +2175,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 5, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2185,14 +2185,14 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			1,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
-INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isBreak) VALUES 
+INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFixed) VALUES 
 				(3, 6, 
 				(SELECT classId from class where classShortName="TYBT-IT"),
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 7, 
 			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2203,7 +2203,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 7, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2214,7 +2214,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 9, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2225,7 +2225,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 10, 
 			(SELECT roomId from room WHERE roomShortName="GML"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2236,7 +2236,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 2, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-34"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2247,7 +2247,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 3, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-34"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2258,7 +2258,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 4, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-34"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2269,7 +2269,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 2, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-3"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2280,7 +2280,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 3, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-3"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2291,7 +2291,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 4, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-3"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2302,7 +2302,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 2, 
 			(SELECT roomId from room WHERE roomShortName="GML"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2313,7 +2313,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 3, 
 			(SELECT roomId from room WHERE roomShortName="GML"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2324,7 +2324,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 4, 
 			(SELECT roomId from room WHERE roomShortName="GML"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2335,7 +2335,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 2, 
 			(SELECT roomId from room WHERE roomShortName="PL"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2346,7 +2346,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 3, 
 			(SELECT roomId from room WHERE roomShortName="PL"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2357,7 +2357,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 4, 
 			(SELECT roomId from room WHERE roomShortName="PL"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2368,7 +2368,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 5, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2378,14 +2378,14 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			1,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
-INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isBreak) VALUES 
+INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFixed) VALUES 
 				(4, 6, 
 				(SELECT classId from class where classShortName="TYBT-IT"),
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 7, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2396,7 +2396,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 8, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2407,7 +2407,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 9, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2418,7 +2418,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 10, 
 			(SELECT roomId from room WHERE roomShortName="GML"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2429,7 +2429,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 1, 
 			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2440,7 +2440,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 2, 
 			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2451,7 +2451,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 3, 
 			(SELECT roomId from room WHERE roomShortName="FOSS1"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2462,7 +2462,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 1, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-5"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2473,7 +2473,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 2, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-5"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2484,7 +2484,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 3, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-5"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2495,7 +2495,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 1, 
 			(SELECT roomId from room WHERE roomShortName="PL"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2506,7 +2506,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 2, 
 			(SELECT roomId from room WHERE roomShortName="PL"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2517,7 +2517,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 3, 
 			(SELECT roomId from room WHERE roomShortName="PL"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2528,7 +2528,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 4, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2539,7 +2539,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 4, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2550,7 +2550,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 4, 
 			(SELECT roomId from room WHERE roomShortName="ASL"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2561,7 +2561,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 5, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2571,14 +2571,14 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			1,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
-INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isBreak) VALUES 
+INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFixed) VALUES 
 				(5, 6, 
 				(SELECT classId from class where classShortName="TYBT-IT"),
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 7, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2589,7 +2589,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 8, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2600,7 +2600,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 9, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
@@ -2610,14 +2610,14 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			1,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
-INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isBreak) VALUES 
+INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFixed) VALUES 
 				(1, 6, 
 				(SELECT classId from class where classShortName="BT-CE"),
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 7, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
@@ -2628,7 +2628,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 8, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
@@ -2639,7 +2639,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 9, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
@@ -2650,7 +2650,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 10, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
@@ -2661,7 +2661,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 11, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
@@ -2671,14 +2671,14 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			1,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
-INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isBreak) VALUES 
+INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFixed) VALUES 
 				(2, 6, 
 				(SELECT classId from class where classShortName="BT-CE"),
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 7, 
 			(SELECT roomId from room WHERE roomShortName="ISL"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
@@ -2689,7 +2689,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 8, 
 			(SELECT roomId from room WHERE roomShortName="ISL"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
@@ -2700,7 +2700,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 9, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
@@ -2711,7 +2711,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 10, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
@@ -2722,7 +2722,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 10, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
@@ -2733,7 +2733,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 10, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
@@ -2744,7 +2744,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 2, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-5"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
@@ -2755,7 +2755,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 3, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-5"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
@@ -2766,7 +2766,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 2, 
 			(SELECT roomId from room WHERE roomShortName="ASL"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
@@ -2777,7 +2777,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 3, 
 			(SELECT roomId from room WHERE roomShortName="ASL"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
@@ -2788,7 +2788,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 4, 
 			(SELECT roomId from room WHERE roomShortName="PL"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
@@ -2799,7 +2799,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 5, 
 			(SELECT roomId from room WHERE roomShortName="PL"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
@@ -2809,14 +2809,14 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			1,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
-INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isBreak) VALUES 
+INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFixed) VALUES 
 				(3, 6, 
 				(SELECT classId from class where classShortName="BT-CE"),
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 7, 
 			(SELECT roomId from room WHERE roomShortName="ISL"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
@@ -2827,7 +2827,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 8, 
 			(SELECT roomId from room WHERE roomShortName="ISL"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
@@ -2838,7 +2838,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 9, 
 			(SELECT roomId from room WHERE roomShortName="ISL"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
@@ -2849,7 +2849,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 10, 
 			(SELECT roomId from room WHERE roomShortName="ISL"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
@@ -2860,7 +2860,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 3, 
 			(SELECT roomId from room WHERE roomShortName="SSL"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
@@ -2871,7 +2871,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 4, 
 			(SELECT roomId from room WHERE roomShortName="SSL"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
@@ -2882,7 +2882,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 3, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-5"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
@@ -2893,7 +2893,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 4, 
 			(SELECT roomId from room WHERE roomShortName="Cogni-5"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
@@ -2904,7 +2904,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 5, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
@@ -2914,14 +2914,14 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			1,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
-INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isBreak) VALUES 
+INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFixed) VALUES 
 				(4, 6, 
 				(SELECT classId from class where classShortName="BT-CE"),
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 7, 
 			(SELECT roomId from room WHERE roomShortName="ISL"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
@@ -2932,7 +2932,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 8, 
 			(SELECT roomId from room WHERE roomShortName="ISL"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
@@ -2943,7 +2943,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 9, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
@@ -2954,7 +2954,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 9, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
@@ -2965,7 +2965,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 9, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
@@ -2976,7 +2976,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 10, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
@@ -2987,7 +2987,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 5, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
@@ -2997,14 +2997,14 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			1,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
-INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isBreak) VALUES 
+INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFixed) VALUES 
 				(5, 6, 
 				(SELECT classId from class where classShortName="BT-CE"),
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 7, 
 			(SELECT roomId from room WHERE roomShortName="ISL"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
@@ -3015,7 +3015,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 8, 
 			(SELECT roomId from room WHERE roomShortName="ISL"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
@@ -3026,7 +3026,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 9, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
@@ -3037,7 +3037,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 9, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
@@ -3048,7 +3048,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 9, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
@@ -3059,7 +3059,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 10, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
@@ -3069,14 +3069,14 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			1,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
-INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isBreak) VALUES 
+INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFixed) VALUES 
 				(1, 6, 
 				(SELECT classId from class where classShortName="BT-IT"),
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 7, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
@@ -3087,7 +3087,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 8, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
@@ -3098,7 +3098,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 9, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
@@ -3108,14 +3108,14 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			1,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
-INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isBreak) VALUES 
+INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFixed) VALUES 
 				(2, 6, 
 				(SELECT classId from class where classShortName="BT-IT"),
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 8, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
@@ -3126,7 +3126,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 9, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
@@ -3137,7 +3137,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 10, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
@@ -3148,7 +3148,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 10, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
@@ -3159,7 +3159,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 10, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
@@ -3170,7 +3170,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 2, 
 			(SELECT roomId from room WHERE roomShortName="ISL"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
@@ -3181,7 +3181,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 3, 
 			(SELECT roomId from room WHERE roomShortName="ISL"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
@@ -3192,7 +3192,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 4, 
 			(SELECT roomId from room WHERE roomShortName="PL"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
@@ -3203,7 +3203,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 5, 
 			(SELECT roomId from room WHERE roomShortName="PL"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
@@ -3214,7 +3214,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 4, 
 			(SELECT roomId from room WHERE roomShortName="ASL"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
@@ -3225,7 +3225,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 5, 
 			(SELECT roomId from room WHERE roomShortName="ASL"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
@@ -3236,7 +3236,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 4, 
 			(SELECT roomId from room WHERE roomShortName="ISL"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
@@ -3247,7 +3247,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 5, 
 			(SELECT roomId from room WHERE roomShortName="ISL"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
@@ -3257,14 +3257,14 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			1,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
-INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isBreak) VALUES 
+INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFixed) VALUES 
 				(3, 6, 
 				(SELECT classId from class where classShortName="BT-IT"),
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 7, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
@@ -3275,7 +3275,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 8, 
 			(SELECT roomId from room WHERE roomShortName="GML"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
@@ -3286,7 +3286,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 9, 
 			(SELECT roomId from room WHERE roomShortName="GML"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
@@ -3297,7 +3297,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 8, 
 			(SELECT roomId from room WHERE roomShortName="SSL"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
@@ -3308,7 +3308,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 9, 
 			(SELECT roomId from room WHERE roomShortName="Ssl"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
@@ -3319,7 +3319,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 2, 
 			(SELECT roomId from room WHERE roomShortName="ISL"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
@@ -3330,7 +3330,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 3, 
 			(SELECT roomId from room WHERE roomShortName="ISL"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
@@ -3341,7 +3341,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 4, 
 			(SELECT roomId from room WHERE roomShortName="ISL"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
@@ -3352,7 +3352,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 5, 
 			(SELECT roomId from room WHERE roomShortName="ISL"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
@@ -3362,14 +3362,14 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			1,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
-INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isBreak) VALUES 
+INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFixed) VALUES 
 				(4, 6, 
 				(SELECT classId from class where classShortName="BT-IT"),
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 7, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
@@ -3380,7 +3380,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 9, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
@@ -3391,7 +3391,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 9, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
@@ -3402,7 +3402,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 9, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
@@ -3413,7 +3413,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 10, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
@@ -3424,7 +3424,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 2, 
 			(SELECT roomId from room WHERE roomShortName="ISL"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
@@ -3435,7 +3435,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 3, 
 			(SELECT roomId from room WHERE roomShortName="ISL"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
@@ -3446,7 +3446,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 4, 
 			(SELECT roomId from room WHERE roomShortName="ISL"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
@@ -3457,7 +3457,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 5, 
 			(SELECT roomId from room WHERE roomShortName="ISL"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
@@ -3467,14 +3467,14 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			1,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
-INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isBreak) VALUES 
+INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFixed) VALUES 
 				(5, 6, 
 				(SELECT classId from class where classShortName="BT-IT"),
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 7, 
 			(SELECT roomId from room WHERE roomShortName="ISL"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
@@ -3485,7 +3485,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 9, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
@@ -3496,7 +3496,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 9, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
@@ -3507,7 +3507,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 9, 
 			(SELECT roomId from room WHERE roomShortName="SH"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
@@ -3518,7 +3518,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 10, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
@@ -3529,7 +3529,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 5, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
@@ -3539,14 +3539,14 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			1,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
-INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isBreak) VALUES 
+INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFixed) VALUES 
 				(1, 6, 
 				(SELECT classId from class where classShortName="FYMT-CE"),
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 7, 
 			(SELECT roomId from room WHERE roomShortName="DML"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
@@ -3557,7 +3557,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 8, 
 			(SELECT roomId from room WHERE roomShortName="DML"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
@@ -3568,7 +3568,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(1, 9, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
@@ -3579,7 +3579,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 4, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
@@ -3589,14 +3589,14 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			1,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
-INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isBreak) VALUES 
+INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFixed) VALUES 
 				(2, 5, 
 				(SELECT classId from class where classShortName="FYMT-CE"),
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 6, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
@@ -3607,7 +3607,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 7, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
@@ -3618,7 +3618,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(2, 9, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
@@ -3629,7 +3629,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 3, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
@@ -3640,7 +3640,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 4, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
@@ -3650,14 +3650,14 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			1,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
-INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isBreak) VALUES 
+INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFixed) VALUES 
 				(3, 5, 
 				(SELECT classId from class where classShortName="FYMT-CE"),
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 6, 
 			(SELECT roomId from room WHERE roomShortName="DML"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
@@ -3668,7 +3668,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 7, 
 			(SELECT roomId from room WHERE roomShortName="DML"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
@@ -3679,7 +3679,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 8, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
@@ -3690,7 +3690,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(3, 9, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
@@ -3701,7 +3701,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 4, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
@@ -3711,14 +3711,14 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			1,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
-INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isBreak) VALUES 
+INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFixed) VALUES 
 				(4, 5, 
 				(SELECT classId from class where classShortName="FYMT-CE"),
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 6, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
@@ -3729,7 +3729,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 7, 
 			(SELECT roomId from room WHERE roomShortName="DML"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
@@ -3740,7 +3740,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(4, 8, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
@@ -3751,7 +3751,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 4, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
@@ -3761,14 +3761,14 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			1,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
-INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isBreak) VALUES 
+INSERT INTO timeTable(day, slotNo, classId, batchId, configId, snapshotId, isFixed) VALUES 
 				(5, 5, 
 				(SELECT classId from class where classShortName="FYMT-CE"),
 				NULL, 1, 
 				(SELECT snapshotId from snapshot where snapshotName="default"),
 				TRUE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 6, 
 			(SELECT roomId from room WHERE roomShortName="DML"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
@@ -3779,7 +3779,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 7, 
 			(SELECT roomId from room WHERE roomShortName="DML"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 
@@ -3790,7 +3790,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, configId, snapshotId, isBreak) VALUES 		
+						batchId, configId, snapshotId, isFixed) VALUES 		
 			(5, 8, 
 			(SELECT roomId from room WHERE roomShortName="AC-203"),
 			(SELECT classId from class WHERE classShortName="FYMT-CE"), 

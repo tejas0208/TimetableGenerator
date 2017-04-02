@@ -267,7 +267,7 @@ teacherId	int,
 batchId	int,
 configId	int,
 snapshotId int,
-isBreak	boolean,
+isFixed boolean,
 FOREIGN KEY (roomId) REFERENCES room(roomId) ON DELETE CASCADE,
 FOREIGN KEY (classId) REFERENCES class(classId) ON DELETE CASCADE,
 FOREIGN KEY (batchId) REFERENCES batch(batchId) ON DELETE CASCADE,
@@ -276,6 +276,7 @@ FOREIGN KEY (teacherId) REFERENCES teacher(teacherId) ON DELETE CASCADE,
 FOREIGN KEY (configId) REFERENCES config(configId) ON DELETE CASCADE,
 FOREIGN KEY (snapshotId) REFERENCES snapshot(snapshotId) ON DELETE CASCADE
 );
+
 
 /*  Requirements on every new entry or an update
 same day slot teacher --> room same, subject same, class can be different (combined classes), batches can be different, break must be false
@@ -292,7 +293,7 @@ any day, any slot, break true --> room NULL, subject NULL,  class not NULL, teac
 /* create views */
 CREATE VIEW timeTableReadable AS
 SELECT tt.ttId, tt.day, tt.slotNo, r.roomShortName, c.classShortName, 
-		s.subjectShortName, t.teacherShortName, b.batchName, sn.snapshotName, tt.isBreak
+		s.subjectShortName, t.teacherShortName, b.batchName, sn.snapshotName, tt.isFixed
 FROM  timeTable tt, room r, class c, subject s, teacher t, batch b, snapshot sn
 WHERE tt.classId = c.classId AND
 	tt.subjectId = s.subjectId AND
@@ -300,10 +301,10 @@ WHERE tt.classId = c.classId AND
 	tt.roomId = r.roomId AND
 	tt.teacherId = t.teacherId AND
 	tt.snapshotId = sn.snapshotId AND
-	tt.isBreak = FALSE
+	tt.isFixed = FALSE
 UNION 
 SELECT tt.ttId, tt.day, tt.slotNo, r.roomShortName, c.classShortName, 
-			s.subjectShortName, t.teacherShortName, null, sn.snapshotName, tt.isBreak
+			s.subjectShortName, t.teacherShortName, null, sn.snapshotName, tt.isFixed
 FROM  timeTable tt, room r, class c, subject s, teacher t, batch b, snapshot sn
 WHERE tt.classId = c.classId AND
 	tt.subjectId = s.subjectId AND
@@ -311,11 +312,18 @@ WHERE tt.classId = c.classId AND
 	tt.teacherId = t.teacherId AND
 	tt.batchid = null AND
 	tt.snapshotId = sn.snapshotId AND
-	tt.isBreak = FALSE
+	tt.isFixed = FALSE
 UNION 
 SELECT tt.ttId, tt.day, tt.slotNo, null, c.classShortName, null, null, null, sn.snapshotName, TRUE 
 FROM  timeTable tt, class c, snapshot sn
-WHERE tt.isBreak = TRUE AND
+WHERE tt.isFixed = TRUE AND
 	  tt.classId = c.classId AND
 	  tt.snapshotId = sn.snapshotId
 ORDER by ttId;
+
+CREATE TABLE fixedEntries(
+feId int AUTO_INCREMENT PRIMARY KEY,
+ttId int NOT NULL UNIQUE,
+feText	varchar(128),
+FOREIGN KEY (ttId) REFERENCES timeTable(ttId) ON DELETE CASCADE
+);
