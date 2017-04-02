@@ -133,15 +133,6 @@ function batchRoomForm() {
 		count++;
 	}
 }
-function getDeptId(deptShortName) {
-	count = 1;
-	for (i in dept) {
-		if(dept[i]["deptShortName"] == deptShortName)
-			return count;
-		count++;
-	}
-	return -1;
-}
 function batchRoomInsert() {
 	var batchId, roomId,  brId;
 	batchId = document.getElementById("crBatchAdd").value;	

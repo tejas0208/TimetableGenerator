@@ -171,15 +171,6 @@ function sctForm() {
 		count++;
 	}
 }
-function getDeptId(deptShortName) {
-	count = 1;
-	for (i in dept) {
-		if(dept[i]["deptShortName"] == deptShortName)
-			return count;
-		count++;
-	}
-	return -1;
-}
 function sctInsert() {
 	var classId, subjectId, teacheId, sctId;
 	classId = document.getElementById("classAdd").value;	

@@ -12,6 +12,7 @@ require_once('subjectRoom.php');
 require_once('snapshot.php');
 require_once('sct.php');
 require_once('sbt.php');
+require_once('overlappingSBT.php');
 
 function getTimeTable() {
 	header("Content-Type: application/json; charset=UTF-8");
@@ -47,6 +48,7 @@ $header = "
 		<script src = \"subjectRoomForm.js\"></script>
 		<script src = \"sctForm.js\"></script>
 		<script src = \"sbtForm.js\"></script>
+		<script src = \"overlappingSBTForm.js\"></script>
 		<script>
 			function deptForm() {
 				alert(\"Departments not supported yet\");
@@ -94,6 +96,7 @@ $table= "
 							<option value = \"Subject-Class Mapping\" onclick=\"sctForm()\"> Class-Subject-Teacher Mapping</option>
 							<option value = \"Subject-Batch Mapping\" onclick=\"sbtForm()\"> Batch-Subject-Teacher Mapping</option>
 							<option value = \"Add Batch-Overlap\" onclick=\"batchCanOverlapForm()\"> Batches: Alloweed Overlaps</option>
+							<option value = \"Overlapping Subject-Batches\" onclick=\"overlappingSBTForm()\"> Overlapping Subject-Batches</option>
 							<option value = \"Class-Room Mapping\" onclick=\"classRoomForm()\"> Room Preference for Classes</option>
 							<option value = \"Batch-Room Mapping\" onclick=\"batchRoomForm()\"> Room Preference for Batches</option>
 							<option value = \"Subject-Room Mapping\" onclick=\"subjectRoomForm()\"> Room Preference for Subjects</option>
@@ -199,6 +202,7 @@ $page = $header.
 		$batchForm. $batchRoomForm. $batchCanOverlapForm.
 		$roomForm. $classRoomForm. $batchRoomForm. $subjectRoomForm.
 		$sctForm. $sbtForm.
+		$overlappingSBTForm.
 		$table.
 		$footer;
 
@@ -321,6 +325,15 @@ switch($reqType) {
 		break;
 	case "subjectRoomUpdate":
 		echo updateSubjectRoom("update");
+		break;
+	case "overlappingSBTDelete":
+		echo updateOverlappingSBT("delete");
+		break;
+	case "overlappingSBTInsert":
+		echo updateOverlappingSBT("insert");
+		break;
+	case "overlappingSBTUpdate":
+		echo updateOverlappingSBT("update");
 		break;
 	default:
 		echo $page;

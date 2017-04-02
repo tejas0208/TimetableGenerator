@@ -514,6 +514,9 @@ function getAllData() {/*Loads data from server asynchronously*/
 			if(typeof subjectRoom == "undefined") 
 				subjectRoom = [];
 			
+			overlappingSBT = database.overlappingSBT;
+			if(typeof overlappingSBT == "undefined") 
+				overlappingSBT = [];
 		}
 	};
 	xhttp.open("POST", "timetable.php", false);

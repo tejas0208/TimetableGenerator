@@ -133,15 +133,6 @@ function classRoomForm() {
 		count++;
 	}
 }
-function getDeptId(deptShortName) {
-	count = 1;
-	for (i in dept) {
-		if(dept[i]["deptShortName"] == deptShortName)
-			return count;
-		count++;
-	}
-	return -1;
-}
 function classRoomInsert() {
 	var classId, roomId,  crId;
 	classId = document.getElementById("crClassAdd").value;	

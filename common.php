@@ -57,7 +57,7 @@ function getAllData() {
 					"batchCanOverlap", "dept", "room", "config", 
 					"subject", "batchClass", "subjectBatchTeacher", 
 					"subjectClassTeacher", "snapshot", 
-					"classRoom", "batchRoom", "subjectRoom");
+					"classRoom", "batchRoom", "subjectRoom", "overlappingSBT");
 	$length = count($tableNames);
 
 	for($i = 0; $i < $length; $i++) {

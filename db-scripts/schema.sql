@@ -155,7 +155,26 @@ WHERE	sbt.subjectId = s.subjectId AND
 	sbt.teacherId = t.teacherId
 ORDER by subjectShortName;
 
+CREATE TABLE overlappingSBT
+(
+osbtId int AUTO_INCREMENT PRIMARY KEY,
+sbtId1	int NOT NULL,
+sbtId2	int NOT NULL,
+FOREIGN KEY (sbtId1) REFERENCES subjectBatchTeacher(sbtId) ON DELETE CASCADE ON UPDATE CASCADE,
+FOREIGN KEY (sbtId2) REFERENCES subjectBatchTeacher(sbtId) ON DELETE CASCADE ON UPDATE CASCADE,
+CONSTRAINT c_overlappingSBT	UNIQUE(sbtId1, sbtId2)
+);
 
+CREATE VIEW overlappingSBTReadable AS
+SELECT s1.subjectShortName as subject1, b1.batchName as batch1, t1.teacherShortName as teacher1,
+		s2.subjectShortName as subject2, b2.batchName as batch2, t2.teacherShortName as teacher2 
+FROM
+		subject s1, subject s2, batch b1, batch b2, teacher t1, teacher t2,  
+		overlappingSBT sbto, subjectBatchTeacher sbt1, subjectBatchTeacher sbt2 
+WHERE	sbto.sbtId1 = sbt1.sbtId AND sbto.sbtId2 = sbt2.sbtId AND
+		sbt1.subjectId = s1.subjectId AND sbt1.batchId = b1.batchId AND sbt1.teacherId = t1.teacherId AND
+		sbt2.subjectId = s2.subjectId AND sbt2.batchId = b2.batchId AND sbt2.teacherId = t2.teacherId;
+	 
 CREATE TABLE subjectClassTeacher 
 (
 sctId	int AUTO_INCREMENT PRIMARY KEY,
