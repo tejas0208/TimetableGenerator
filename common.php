@@ -51,7 +51,7 @@ function getArgument($arg) {
 		return ""; 
 }
 function getAllData() {
-	header("Content-Type: application/json; charset=UTF-8");
+	header("Content-Type: application/JSON; charset=UTF-8");
 	/* List of tables to be returned */	
 	$tableNames = array("teacher", "class", "batch", 
 					"batchCanOverlap", "dept", "room", "config", 
@@ -70,7 +70,7 @@ function getAllData() {
 	return json_encode($tables);
 }
 function getOneTable($tableName) {
-	header("Content-Type: application/json; charset=UTF-8");
+	header("Content-Type: application/JSON; charset=UTF-8");
 	$query = "SELECT * FROM $tableName";
 	$outp = sqlGetAllRows($query);
 	$tables[$tableName] = $outp;

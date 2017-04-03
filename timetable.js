@@ -2096,49 +2096,66 @@ function loadSnapshotMenu(selectedName) {
 function jsSaveNewSnapshot() {
 	var snapshotName = prompt("Enter snapshot Name","snapshot");
 	if(snapshotName != null) {
-			var xhttp;
-			xhttp = new XMLHttpRequest();
-			xhttp.onreadystatechange = function() {
-					if (this.readyState == 4 && this.status == 200) {
-							//alert("snapshot response: " + this.responseText);
-							alert("snapshot " + snapshotName + " Saved. Press OK to continue");
-							document.getElementById("saveNewSnapshot").value = "Save New Snapshot"
-							document.getElementById("saveNewSnapshot").disabled =  false;
-							// JS variables are pass by vale, so snapshot can be changed here only
-							snapshot = getOneTable("snapshot", false).snapshot;
-							loadSnapshotMenu(snapshotName);
-							currSnapshotName = snapshotName;
-							getTimetable(snapshotName);
-					}
+		var xhttp;
+		xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				//alert("snapshot response: " + this.responseText);
+				response = JSON.parse(this.responseText);
+				alert("response: " + JSON.stringify(response));
+				if(response["Success"] == "True") {
+					alert("snapshot " + snapshotName + " Saved. Press OK to continue");
+					document.getElementById("saveNewSnapshot").value = "Save New Snapshot"
+					document.getElementById("saveNewSnapshot").disabled =  false;
+					// JS variables are pass by vale, so snapshot can be changed here only
+					snapshot = getOneTable("snapshot", false).snapshot;
+					loadSnapshotMenu(snapshotName);
+					currSnapshotName = snapshotName;
+					getTimetable(snapshotName);
+				} else{
+					alert("Saving New Snapshot Failed. Error: " + response["Error"]);
+					loadSnapshotMenu(currSnapshotName);
+					document.getElementById("saveNewSnapshot").value = "Save New Snapshot";
+					document.getElementById("saveNewSnapshot").disabled =  false;
+				}
 			}
-			document.getElementById("saveNewSnapshot").value = "Saving New snapshot ...wait";
-			document.getElementById("saveNewSnapshot").disabled =  true;
-			xhttp.open("POST", "timetable.php", true); // asynchronous
-			xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-			xhttp.send("reqType=saveNewSnapshot&snapname="+snapshotName+"&ttdata="+JSON.stringify(timeTable));
+		}
+		document.getElementById("saveNewSnapshot").value = "Saving New snapshot ...wait";
+		document.getElementById("saveNewSnapshot").disabled =  true;
+		xhttp.open("POST", "timetable.php", true); // asynchronous
+		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xhttp.send("reqType=saveNewSnapshot&snapname="+snapshotName+"&configId="+snapshot[0]["configId"]+
+					"&ttData="+JSON.stringify(timeTable));
 	}
-	
 }
 function jsSaveSnapshot() {
 	var snapshotName = currSnapshotName; 
 	if(snapshotName != null) {
-			var xhttp;
-			xhttp = new XMLHttpRequest();
-			xhttp.onreadystatechange = function() {
-					if (this.readyState == 4 && this.status == 200) {
-							//alert("snapshot response: " + this.responseText);
-							alert("snapshot " + snapshotName + " Saved. Press OK to continue");
-							document.getElementById("saveSnapshot").value = "Save snapshot";
-							document.getElementById("saveSnapshot").disabled =  false;
-					}
+		var xhttp;
+		xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				response = JSON.parse(this.responseText);
+				if(response["Success"] == "True") {
+					//alert("snapshot response: " + this.responseText);
+					alert("snapshot " + snapshotName + " Saved. Press OK to continue");
+					document.getElementById("saveSnapshot").value = "Save snapshot";
+					document.getElementById("saveSnapshot").disabled =  false;
+				} else {
+					alert("Saving snapshot failed. Error = " + response["Error"]);
+					document.getElementById("saveSnapshot").value = "Save snapshot";
+					document.getElementById("saveSnapshot").disabled =  false;
+				}
 			}
-			xhttp.open("POST", "timetable.php", true); // asynchronous
-			document.getElementById("saveSnapshot").value = "Saving snapshot ...wait";
-			document.getElementById("saveSnapshot").disabled =  true;
-			xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-			xhttp.send("reqType=saveSnapshot&snapname="+snapshotName+"&ttdata="+JSON.stringify(timeTable));
+		}
+		xhttp.open("POST", "timetable.php", true); // asynchronous
+		document.getElementById("saveSnapshot").value = "Saving snapshot ...wait";
+		document.getElementById("saveSnapshot").disabled =  true;
+		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xhttp.send("reqType=saveSnapshot&snapname="+snapshotName+"&ttData="+JSON.stringify(timeTable));
 	} else {
 		alert("jsSaveSnapshot: can't find currSnapshotName");
 	}
 }
+
 window.onload = load;

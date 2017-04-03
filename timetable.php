@@ -1,6 +1,7 @@
 <?php
 require_once('db.php');
 require_once('common.php');
+require_once('configForm.php');
 require_once('teacher.php');
 require_once('subject.php');
 require_once('class.php');
@@ -15,7 +16,7 @@ require_once('sbt.php');
 require_once('overlappingSBT.php');
 
 function getTimeTable() {
-	header("Content-Type: application/json; charset=UTF-8");
+	header("Content-Type: application/JSON; charset=UTF-8");
 	$snapshotName = getArgument("snapshotName");
 	if($snapshotName == "")
 			$snapshotName = "default";
@@ -38,6 +39,7 @@ $header = "
 		<script type=\"text/javascript\" src=\"./jquery.js\"></script>
 		<script src=\"./select2-4.0.3/dist/js/select2.min.js\"></script>
 		<script src = \"timetable.js\"></script>
+		<script src = \"configForm.js\"></script>
 		<script src = \"teacherForm.js\"></script>
 		<script src = \"subjectForm.js\"></script>
 		<script src = \"classForm.js\"></script>
@@ -197,7 +199,8 @@ $table= "
 $footer = "</body> </html>";
 
 $page = $header.
-		$bodystart.
+		$bodystart. 
+		$configForm.
 		$teacherForm.  $subjectForm.  $classForm. 
 		$batchForm. $batchRoomForm. $batchCanOverlapForm.
 		$roomForm. $classRoomForm. $batchRoomForm. $subjectRoomForm.
@@ -210,23 +213,21 @@ $reqType = getArgument("reqType");
 switch($reqType) {
 	case "getAllData":
 		echo getAllData();
-		return;
 		break;
 	case "getTimetable":
 		$snapname = getArgument("snapname");
 		echo getTimeTable();
-		return;
 		break;
 	case "saveSnapshot":
-		return saveSnapshot();
+		echo saveSnapshot();
 		break;
 	case "saveNewSnapshot":
-		return saveNewSnapshot();
+		echo saveNewSnapshot();
 		break;
 	case "getOneTable":
 		$tableName = getArgument("tableName");
 		echo getOneTable($tableName);	
-		return;
+		break;
 	case "teacherUpdate":
 		echo updateTeacher("update");
 		break;
@@ -334,6 +335,15 @@ switch($reqType) {
 		break;
 	case "overlappingSBTUpdate":
 		echo updateOverlappingSBT("update");
+		break;
+	case "configDelete":
+		echo updateConfig("delete");
+		break;
+	case "configInsert":
+		echo updateConfig("insert");
+		break;
+	case "configUpdate":
+		echo updateConfig("update");
 		break;
 	default:
 		echo $page;
