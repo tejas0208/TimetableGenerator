@@ -108,7 +108,7 @@ function subjectForm() {
 		button.value = "Update"; button.name = "sUpdateButton_"+count;
 		var textNode = document.createTextNode("Update");
 		button.appendChild(textNode);
-		button.setAttribute("onclick","subjecsUpdate("+count+")");
+		button.setAttribute("onclick","subjectUpdate("+count+")");
 		button.setAttribute("id","sUpdateButton_"+count);
 
 		cell = row.insertCell(-1);
@@ -117,7 +117,7 @@ function subjectForm() {
 		button.value = "Delete"; button.name = "sDeleteButton_"+count;
 		var textNode = document.createTextNode("Delete");
 		button.appendChild(textNode);
-		button.setAttribute("onclick","subjecsDelete("+count+")");
+		button.setAttribute("onclick","subjectDelete("+count+")");
 		button.setAttribute("id","sDeleteButton_"+count);
 
 		count++;
@@ -159,7 +159,7 @@ function subjectInsert() {
 	
 }
 
-function subjecsUpdate(i) {
+function subjectUpdate(i) {
 	var row = i;
 	var subjectName, subjectShortName, eachSlot, nSlots, batches;
 	subjectName = document.getElementById("subjectName_"+row).value;	
@@ -205,7 +205,7 @@ function subjecsUpdate(i) {
 				"&subjectOrigShortName="+subjectOrigShortName);
 	
 }
-function subjecsDelete(i) {
+function subjectDelete(i) {
 	var row = i;
 	var subjectName, subjectShortName, eachSlot, nSlots, batches;
 	var sure = confirm("Warning: Deleting Subject will delete all related "+

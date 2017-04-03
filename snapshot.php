@@ -1,26 +1,30 @@
 <?php
 
 function saveSnapshot() {
-	$resString = "";
-	header("Content-Type: application/json: charset=UTF-8");
+	header("Content-Type: application/JSON: charset=UTF-8");
+	global $CFG;
+	$resString = "{\"Success\": \"True\"}";
+
 	$snapshotName = getArgument("snapname");
-	$user = getArgument("userid");
-	$ttd = getArgument("ttdata");
-	$ttdata = json_decode($ttd, true);	
+	$user = getArgument("userId");
+	$ttd = getArgument("ttData");
+	$ttData = json_decode($ttd, true);	
 	$snapshotFindQuery = "SELECT snapshotId FROM snapshot WHERE snapshotName = \"$snapshotName\"";
+	error_log("saveSnapShot: query: $snapshotFindQuery", 0);
 
 	$result = sqlGetOneRow($snapshotFindQuery);	
 	$snapshotId = $result[0]["snapshotId"];
 
 	$snapshotDeleteQuery = "DELETE from timeTable where snapshotId = $snapshotId";	
 	$result = sqlUpdate($snapshotDeleteQuery);
-
-	for($k = 0; $k < count($ttdata); $k++) {
-			$currRow = $ttdata[$k];
+	error_log("saveSnapShot: query: $snapshotDeleteQuery", 0);
+	error_log("saveSnapShot: ttData: ".json_encode($ttData), 0);
+	for($k = 0; $k < count($ttData); $k++) {
+			$currRow = $ttData[$k];
 			$classId = $currRow["classId"];
 			if($currRow["isFixed"] == 1) {
-				$ttInsertQuery = "INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, 
-								teacherId, batchId, configId, snapshotId, isFixed) VALUES (".
+				$ttInsertQuery = "INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, ".
+								"teacherId, batchId, configId, snapshotId, isFixed) VALUES (".
 								$currRow["day"].",".$currRow["slotNo"].",".
 								"null, null, null, ".
 								//"(SELECT classId from class where classShortName=\"$className\"),".
@@ -29,8 +33,8 @@ function saveSnapshot() {
 								$snapshotId.",".
 								$currRow["isFixed"].");";
 			} else {
-				$ttInsertQuery = "INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, 
-								teacherId, batchId, configId, snapshotId, isFixed) VALUES (".
+				$ttInsertQuery = "INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, ".
+								"teacherId, batchId, configId, snapshotId, isFixed) VALUES (".
 								$currRow["day"].",".$currRow["slotNo"].",".
 								$currRow["roomId"].",".$currRow["classId"].",".
 								$currRow["subjectId"].",".$currRow["teacherId"].",".
@@ -39,26 +43,34 @@ function saveSnapshot() {
 								$currRow["isFixed"].");";
 			}
 			$result = sqlUpdate($ttInsertQuery);
+			error_log("saveSnapShot: query: $ttInsertQuery", 0);
 			if($result != true ) {
-					$resString .= "Failed insert on $ttInsertQuery. Error = $result->conn \n";			
+				$resString = "{\"Success\": \"False\",";
+				$resString .= "\"Error\" : ".json_encode($CFG->conn->error)."}";
+				return $resString;
 			}
 	}
+	$resString = "{\"Success\": \"True\"}";
+	error_log("saveSnapShot: Success True".  $resString, 0);
 	return $resString;
 }
 
 function saveNewSnapshot() {
-	$resString = "";
-	header("Content-Type: application/json: charset=UTF-8");
-	$snapshotName = getArgument("snapname");
-	$user = getArgument("userid");
-	$ttd = getArgument("ttdata");
-	$ttdata = json_decode($ttd, true);	
-	$snapshotCreateQuery = "INSERT INTO snapshot (snapshotName, snapshotCreator, createTime, modifyTime) VALUES (\"".
-							$snapshotName."\",1,1000,2000);";
-	$result = sqlUpdate($snapshotCreateQuery);	
+	header("Content-Type: application/JSON: charset=UTF-8");
 
-	for($k = 0; $k < count($ttdata); $k++) {
-			$currRow = $ttdata[$k];
+	$snapshotName = getArgument("snapname");
+	$user = getArgument("userId");
+	$ttd = getArgument("ttData");
+	$configId = getArgument("configId");
+	$ttData = json_decode($ttd, true);	
+	$snapshotCreateQuery = "INSERT INTO snapshot (snapshotName, snapshotCreator, createTime, modifyTime, configId) ".
+							"VALUES (\"".
+							$snapshotName."\",1,1000,2000, $configId);";
+	$result = sqlUpdate($snapshotCreateQuery);	
+	error_log("saveNewSnapshot: query: " + $result);
+
+	for($k = 0; $k < count($ttData); $k++) {
+			$currRow = $ttData[$k];
 			$classId = $currRow["classId"];
 			if($currRow["isFixed"] == 1) {
 				$ttInsertQuery = "INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, 
@@ -81,10 +93,16 @@ function saveNewSnapshot() {
 								$currRow["isFixed"].");";
 			}
 			$result = sqlUpdate($ttInsertQuery);
+			error_log("saveNewSnapshot: query: " + $ttInsertQuery);
 			if($result != true ) {
-					$resString .= "Failed insert on $ttInsertQuery. Error = $result->conn \n";			
+				$resString = "{\"Success\": \"False\",";
+				$resString .= "\"Error\" : ".json_encode($CFG->conn->error)."}";
+			} else {
+				$resString = "{\"Success\": \"True\"}";
 			}
 	}
+	$resString = "{\"Success\": \"True\"}";
+	error_log("saveNewSnapShot: Success True".  $resString, 0);
 	return $resString;
 }
 

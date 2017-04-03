@@ -5,6 +5,7 @@ USE timeTable;
 CREATE TABLE config
 (
 configId int AUTO_INCREMENT PRIMARY KEY,
+configName	varchar(128) NOT NULL,
 dayBegin time	COMMENT 'Day Begins At',
 slotDuration int,/* in seconds */	
 nSlots	int,
@@ -249,9 +250,11 @@ CREATE TABLE snapshot
 snapshotId	int AUTO_INCREMENT PRIMARY KEY,
 snapshotName	varchar(128),
 snapshotCreator	int, 
-FOREIGN KEY (snapshotCreator) REFERENCES user(userId) ON DELETE CASCADE,
 createTime	time,
 modifyTime	time,
+configId	int,
+FOREIGN KEY (snapshotCreator) REFERENCES user(userId) ON DELETE CASCADE,
+FOREIGN KEY (configId) REFERENCES config(configId) ON DELETE CASCADE,
 CONSTRAINT c_snapshotName UNIQUE(snapshotName)
 );
 
@@ -265,7 +268,7 @@ classId	int,
 subjectId int,
 teacherId	int,
 batchId	int,
-configId	int,
+configId	int NOT NULL,
 snapshotId int,
 isFixed boolean,
 FOREIGN KEY (roomId) REFERENCES room(roomId) ON DELETE CASCADE,
