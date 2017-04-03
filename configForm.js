@@ -50,11 +50,11 @@ function configForm() {
 	cell = row.insertCell(-1);
 	cell.innerHTML = "<input type=\"text\" id=\"dayBeginAdd\" size=\"8\" placeholder=\"day Begin\"> </input>";
 	cell = row.insertCell(-1);
-	cell.innerHTML = "<input type=\"text\" id=\"eachSlotAdd\" size=\"3\" placeholder=\"Each Slot\"> </input>";
+	cell.innerHTML = "<input type=\"text\" id=\"slotDurationAdd\" size=\"3\" placeholder=\"Each Slot\"> </input>";
 	cell = row.insertCell(-1);
 	cell.innerHTML = "<input type=\"text\" id=\"nSlotsAdd\" size=\"3\" placeholder=\"N Slots\"> </input>";
 	cell = row.insertCell(-1);
-	cell.innerHTML = "<input type=\"text\" id=\"deptAdd\" size=\"3\" placeholder=\"Department\"> </input>";
+	cell.innerHTML = "<input type=\"text\" id=\"deptIdAdd\" size=\"3\" placeholder=\"Department\"> </input>";
 	cell = row.insertCell(-1);
 	cell.innerHTML = "<input type=\"text\" id=\"inchargeAdd\" size=\"3\" placeholder=\"Incharge\"> </input>";
 
@@ -74,15 +74,21 @@ function configForm() {
 
 	for (i in config) {
 		currConfig = config[i];	
+		JSON.stringify(currConfig);
 		var row = table.insertRow(count);
 		var cell = row.insertCell(0);
-		cell.innerHTML = "<center> " + (count - 1) + "</center>";
+		var centerTag = document.createElement("center");
+		centerTag.setAttribute("id", "center_"+count);
+		var centerText = document.createTextNode(currConfig["configId"]);
+		centerTag.appendChild(centerText);
+		cell.appendChild(centerTag);
+
 		cell = row.insertCell(-1);
 		cell.innerHTML = "<input type=\"text\" id=\"configName_"+count+"\" size=\"32\" value=\""+currConfig["configName"]+"\"> </input>";
 		cell = row.insertCell(-1);
 		cell.innerHTML = "<input type=\"text\" id=\"dayBegin_"+count+"\" size=\"8\" value=\""+currConfig["dayBegin"]+"\"> </input>";
 		cell = row.insertCell(-1);
-		cell.innerHTML = "<input type=\"text\" id=\"eachSlot_"+count+"\" size=\"3\" value=\""+currConfig["eachSlot"]+"\"> </input>";
+		cell.innerHTML = "<input type=\"text\" id=\"slotDuration_"+count+"\" size=\"3\" value=\""+currConfig["slotDuration"]+"\"> </input>";
 		cell = row.insertCell(-1);
 		cell.innerHTML = "<input type=\"text\" id=\"nSlots_"+count+"\" size=\"3\" value=\""+currConfig["nSlots"]+"\"> </input>";
 		cell = row.insertCell(-1);
@@ -112,11 +118,10 @@ function configForm() {
 	}
 }
 function configInsert() {
-	var row = i;
-	var configName, dayBegin, eachSlot, nSlots, deptId, incharge;
+	var configName, dayBegin, slotDuration, nSlots, deptId, incharge;
 	configName = document.getElementById("configNameAdd").value;	
 	dayBegin = document.getElementById("dayBeginAdd").value;	
-	eachSlot = document.getElementById("eachSlotAdd").value;	
+	slotDuration = document.getElementById("slotDurationAdd").value;	
 	nSlots = document.getElementById("nSlotsAdd").value;	
 	deptId = document.getElementById("deptIdAdd").value;	
 	incharge = document.getElementById("inchargeAdd").value;	
@@ -130,9 +135,10 @@ function configInsert() {
 				newconfig = {};
 				newconfig["configName"] = configName;
 				newconfig["dayBegin"] = dayBegin;
-				newconfig["eachSlot"] = eachSlot;
+				newconfig["slotDuration"] = slotDuration;
 				newconfig["nSlots"] = nSlots;
 				newconfig["deptId"] = deptId;
+				newconfig["incharge"] = incharge;
 				newconfig["configId"] = response["configId"];
 				config.unshift(newconfig);
 				configForm();
@@ -144,24 +150,25 @@ function configInsert() {
 	xhttp.open("POST", "timetable.php", false); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhttp.send("reqType=configInsert&configName="+configName+"&dayBegin="+
-			dayBegin+"&eachSlot="+eachSlot+"&nSlots="+nSlots+"&deptId="+deptId+"&incharge="+incharge);
+			dayBegin+"&slotDuration="+slotDuration+"&nSlots="+nSlots+"&deptId="+deptId+"&incharge="+incharge);
 	
 }
 
 function configUpdate(i) {
 	var row = i;
-	var configName, dayBegin, eachSlot, nSlots, deptId;
+	var configName, dayBegin, slotDuration, nSlots, deptId;
 	configName = document.getElementById("configName_"+row).value;	
 	dayBegin = document.getElementById("dayBegin_"+row).value;	
-	eachSlot = document.getElementById("eachSlot_"+row).value;	
+	slotDuration = document.getElementById("slotDuration_"+row).value;	
 	nSlots = document.getElementById("nSlots_"+row).value;	
 	deptId = document.getElementById("deptId_"+row).value;	
+	incharge = document.getElementById("inchargeAdd").value;	
 	document.getElementById("configUpdateButton_"+row).childNodes[0].nodeValue = "Updating";
 	document.getElementById("configDeleteButton_"+row).disabled = true;
 	document.getElementById("configUpdateButton_"+row).disabled = true;
 
 	row = i - 2;
-	var configOrigShortName = config[row]["dayBegin"];
+	var configOrigName = config[row]["configName"];
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function () {
 		if(this.readyState == 4 && this.status == 200) {
@@ -173,9 +180,10 @@ function configUpdate(i) {
 				document.getElementById("configUpdateButton_"+i).disabled = false;
 				config[row]["configName"] = configName;
 				config[row]["dayBegin"] = dayBegin;
-				config[row]["eachSlot"] = eachSlot;
+				config[row]["slotDuration"] = slotDuration;
 				config[row]["nSlots"] = nSlots;
 				config[row]["deptId"] = deptId;
+				config[row]["incharge"] = incharge;
 				configForm();
 			}
 			else {
@@ -190,32 +198,33 @@ function configUpdate(i) {
 	xhttp.open("POST", "timetable.php", false); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhttp.send("reqType=configUpdate&configName="+configName+"&dayBegin="+
-				dayBegin+"&eachSlot="+eachSlot+"&nSlots="+nSlots+"&deptId="+deptId+
-				"&configOrigShortName="+configOrigShortName);
+				dayBegin+"&slotDuration="+slotDuration+"&nSlots="+nSlots+"&deptId="+deptId+
+				"&configOrigName="+configOrigName+"&incharge="+incharge);
 	
 }
 function configDelete(i) {
 	var row = i;
-	var configName, dayBegin, eachSlot, nSlots, deptId;
+	var configName, dayBegin, slotDuration, nSlots, deptId;
 	var sure = confirm("Warning: Deleting Config will delete all related "+
 						  "config-teacher mappings, timetable entries, etc.\n"+
 						  "This can not be undone. \n"+
 						  "Are you sure?");
 	if(sure != true)
 		return;
-	dayBegin = document.getElementById("dayBegin_"+row).value;
+	var configId = document.getElementById("center_"+row).childNodes[0].nodeValue;
 	document.getElementById("configDeleteButton_"+row).childNodes[0].nodeValue = "Deleting";
 	document.getElementById("configDeleteButton_"+row).disabled = true;
 	document.getElementById("configUpdateButton_"+row).disabled = true;
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function () {
 		if(this.readyState == 4 && this.status == 200) {
+			response = JSON.parse(this.responseText);
 			if(response["Success"] == "True") {
 				document.getElementById("configDeleteButton_"+row).value = "Delete"
 				config.splice(i - 2, 1);
 				configForm();
 			} else {
-				alert("Config " + dayBegin + ": Deletion Failed.\nError:\n" + response["Error"]);
+				alert("Config " + configId + ": Deletion Failed.\nError:\n" + response["Error"]);
 				document.getElementById("configDeleteButton_"+row).value = "Delete"
 				document.getElementById("configUpdateButton_"+row).disabled = false;
 				document.getElementById("configDeleteButton_"+row).childNodes[0].nodeValue = "Can't Delete";
@@ -224,5 +233,5 @@ function configDelete(i) {
 	}
 	xhttp.open("POST", "timetable.php", true); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("reqType=configDelete&dayBegin="+dayBegin);
+	xhttp.send("reqType=configDelete&configId="+configId);
 }

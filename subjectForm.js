@@ -124,7 +124,6 @@ function subjectForm() {
 	}
 }
 function subjectInsert() {
-	var row = i;
 	var subjectName, subjectShortName, eachSlot, nSlots, batches;
 	subjectName = document.getElementById("subjectNameAdd").value;	
 	subjectShortName = document.getElementById("subjectShortNameAdd").value;	
@@ -221,6 +220,7 @@ function subjectDelete(i) {
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function () {
 		if(this.readyState == 4 && this.status == 200) {
+			response = JSON.parse(this.responseText);
 			if(response["Success"] == "True") {
 				document.getElementById("sDeleteButton_"+row).value = "Delete"
 				subject.splice(i - 2, 1);
