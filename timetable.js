@@ -2,7 +2,7 @@ var selectedCell ;
 var prevBorder;
 var copyCell;
 var timeTable, teacher, dept, classTable, batch, batchCanOverlap, currentSnapshotId, classRoom, subjectRoom, batchRoom; 
-var room, subject, config, batchClass, subjectBatchTeacher, subjectClassTeacher, snapshot;
+var room, subject, config, batchClass, subjectBatchTeacher, subjectClassTeacher, snapshot, overlappingSBT;
 var database;
 var configId = 1;
 var type = "class";
@@ -13,7 +13,7 @@ var helperTable = [];
 var supportObject;
 var dirtyTimeTable = 0;
 var dragSrcEl = null;
-var srcI;
+var srcI, NoOfSlots = 11;
 var srcSlotEntry;
 
 function dragStartHandler(e) {
@@ -49,22 +49,13 @@ function dragLeaveHandler(e) {
 }
 
 /*i, j of destn slot and source object*/
-function checkValidity(i, j, source, checkMaxEntry) {
+/*There is no need to check for max entry of subject*/
+function checkValidity(i, j, source) {
 	var subjectRow = search(subject, "subjectId", source["subjectId"]);
 	var bco = searchMultipleRows(batchCanOverlap, "batchId", source["batchId"]);
-	if(checkMaxEntry) {
-		var len;
-		var subjEntry = searchMultipleRows(timeTable, "classId", source["classId"], 
-				"subjectId", subjectRow["subjectId"], "snapshotId", currentSnapshotId);
-		if(subjEntry == -1)
-			len = 0;
-		else
-			len = subjEntry.length/subjectRow["eachSlot"];
-
-		if(len >= subjectRow["nSlots"]) {
-			alert("Operation Not Possible\nReason: Maximum entry of Subject for the class is FULL");
-			return false;
-		}
+	if((j + parseInt(subjectRow["eachSlot"])) > parseInt(NoOfSlots)) {
+		alert("Operation Not Possible.\nReason: The subject entry is exceeding the timetable boundary.");
+		return false;
 	}
 	var valid = true;
 	next: for(var p = 0; p < subjectRow["eachSlot"]; p++) {
@@ -137,6 +128,7 @@ function dropHandler(e) {
 	var i = parseInt(id.substring(0, 1));
 	var j = parseInt(id.substring(1, id.length - 1));
 	var k = parseInt(id.substring(id.length - 1, id.length));
+	var slotNo = parseInt(srcSlotEntry["slotNo"]);
 	//console.log("i -1"+ (i - 1));
 	var destSlotEntry = helperTable[i - 1][j][k];
 	//alert(destSlotEntry);
@@ -148,26 +140,25 @@ function dropHandler(e) {
 		var temp2 = [];/*for src*/
 		var destSubjectRow = search(subject, "subjectId", destSlotEntry["subjectId"]);
 		for(var r = 0; r < destSubjectRow["eachSlot"]; r++) {
-			temp1[r] = search(timeTable, "day", i, "slotNo", (j + r),//<==This needs to be changed
+			temp1[r] = search(timeTable, "day", i, "slotNo", (j + r), "batchId", srcSlotEntry["batchId"],
 					 "subjectId", destSubjectRow["subjectId"], "classId", destSlotEntry["classId"]);
 			temp1[r]["day"] = "-1";/*equivalent to removing*/
 			temp1[r]["slotNo"] = "-1";
 		}
-		var valid1 = checkValidity(i, j, srcSlotEntry, false);
+		var valid1 = checkValidity(i, j, srcSlotEntry);
 		var valid2= false;
-		var slotNo = parseInt(srcSlotEntry["slotNo"]);
 		//destn valid in source
 		if(valid1) {
 			
 			for(var r = 0; r < srcSubjectRow["eachSlot"]; r++) {/*Remove previous entry*/
-				temp2[r] = search(timeTable, "day", srcI,//<==This needs to be changed
-					 "slotNo", (slotNo + r),
+				temp2[r] = search(timeTable, "day", srcI,
+					 "slotNo", (slotNo + r), "batchId", srcSlotEntry["batchId"],
 					 "subjectId", srcSubjectRow["subjectId"], "classId", srcSlotEntry["classId"]);
 				temp2[r]["day"] = "-1";
 				temp2[r]["slotNo"] = "-1";				
 			}
 			valid2 = checkValidity(parseInt(srcSlotEntry["day"]), slotNo,
-						 destSlotEntry, false);
+						 destSlotEntry);
 			
 		}
 		if(!valid2 || !valid1) {
@@ -199,17 +190,18 @@ function dropHandler(e) {
 			dragSrcEl.style.opacity = 1;
 		}
 	}
-	else if(destSlotEntry === null || destSlotEntry == 0) {
+	else if(destSlotEntry === null || destSlotEntry == 0) {/*Dest is blank*/
 		//alert("Came here");
-		var valid = checkValidity(i, j, srcSlotEntry, true);
+		var valid = checkValidity(i, j, srcSlotEntry);
 		if(valid) {
 			//srcSlotEntry["day"] = ""+i;
 			//srcSlotEntry["slotNo"] = ""+j;
 			for(var r = 0; r < srcSubjectRow["eachSlot"]; r++) {
-				timeTable.push(new createTimeTableEntry(i, (j + r), srcSlotEntry["roomId"],
-					srcSlotEntry["classId"], srcSlotEntry["subjectId"], srcSlotEntry["teacherId"],
-					srcSlotEntry["batchId"], srcSlotEntry["configId"], srcSlotEntry["snapshotId"], 
-					srcSlotEntry["isFixed"]));
+				var slot = search(timeTable, "day", srcI,"slotNo", (slotNo + r), 
+				"batchId", srcSlotEntry["batchId"], "subjectId", srcSubjectRow["subjectId"], 
+				"classId", srcSlotEntry["classId"]);
+				slot["day"] = ""+i;
+				slot["slotNo"] = "" + (j + r);
 			}
 			
 				
@@ -221,6 +213,7 @@ function dropHandler(e) {
 	srcSlotEntry = null;
 	fillTable2(true);
 }
+
 
 function dragEndHandler(e) {
 	dragSrcEl.style.opacity = 1;
@@ -682,6 +675,48 @@ function createSubjectRoomEntry(subjectId, roomId) {
 	else
 		this.srId = ""+(parseInt(subjectRoom[subjectRoom.length - 1]["srId"]) + 1);
 }
+function makeTimeTableEntry(day, slotNo, roomId, classId, subjectId, 
+		teacherId, batchId, configId, currentSnapshotId, isFixed, eachSlot) {
+	for(var i = 0; i < eachSlot; i++) {
+		var newEntry = new createTimeTableEntry(day, (parseInt(slotNo) + i), 
+							roomId, classId, 
+							subjectId, teacherId, 
+							batchId, configId, currentSnapshotId, isFixed);
+		timeTable.push(newEntry);
+		console.log("makeTimeTableEntry: newEntry = " + JSON.stringify(newEntry));
+	}
+	if(batchId != "1") {/*For overlapping sbt*/
+		var sbt = search(subjectBatchTeacher, "subjectId", subjectId,
+							 "batchId", batchId);
+		//alert("batchsubj");
+		//alert(JSON.stringify(sbt));
+		var osbt;
+		if(sbt !== -1) {
+			var osbt = searchMultipleRows(overlappingSBT, "sbtId1", sbt["sbtId"]);
+			//console.log(osbt);
+			//alert(JSON.stringify(osbt));
+			if(osbt === -1)
+				 return;
+			for(var i in osbt) {
+				var batchId = search(subjectBatchTeacher, "sbtId", osbt[i]["sbtId2"])["batchId"];
+				//alert("batch"+batchId);
+				var classId = search(batchClass, "batchId", batchId)["classId"];
+				//alert("class:"+classId)
+				for(var j = 0; j < eachSlot; j++) {
+					var newEntry = new createTimeTableEntry(day, (parseInt(slotNo) + j), 
+							roomId, classId, 
+							subjectId, teacherId, 
+							batchId, configId, currentSnapshotId, isFixed);
+					timeTable.push(newEntry);
+					console.log("makeTimeTableEntry: newEntry = " + JSON.stringify(newEntry));
+					//alert("Entered");
+				}
+			}
+		}
+	}	
+}
+
+
 function roomSelected(selecttag) {
 	
 	var Id = selecttag.getAttribute("id");
@@ -723,14 +758,16 @@ function roomSelected(selecttag) {
 	if(type == "batch") {
 		batchId = supportObject["batchId"];
 	}
-	for(var i = 0; i < parseInt(subjectRow["eachSlot"]); i++) {
+	/*for(var i = 0; i < parseInt(subjectRow["eachSlot"]); i++) {
 		var newEntry = new createTimeTableEntry(iid, (parseInt(jid) + i), 
 							roomRow["roomId"], classId, 
 							subjectRow["subjectId"], teacherId, 
 							batchId, configId, currentSnapshotId, 0);
 		timeTable.push(newEntry);
 		console.log("roomEntry: newEntry = " + JSON.stringify(newEntry));
-	}
+	}*/
+	makeTimeTableEntry(iid, jid, roomRow["roomId"], classId, subjectRow["subjectId"], 
+		teacherId, batchId, configId, currentSnapshotId, 0, parseInt(subjectRow["eachSlot"]));
 	var crEntry = new createClassRoomEntry(classId, roomRow["roomId"]);
 	var brEntry = new createBatchRoomEntry(batchId, roomRow["roomId"]);
 	var srEntry = new createSubjectRoomEntry(subjectRow["subjectId"], roomRow["roomId"]);
@@ -744,7 +781,7 @@ function roomSelected(selecttag) {
 	if(search(subjectRoom, "subjectId", subjectRow["subjectId"]) === -1)
 		subjectRoom.push(srEntry);
 	//alert(JSON.stringify(classRoom)+"\n"+JSON.stringify(batchRoom)+"\n"+JSON.stringify(subjectRoom)+"\n");
-	fillTable2(false);
+	fillTable2(true);
 }
 
 function getEligibleBatches(i, j, k, subjectRow) {
@@ -926,14 +963,16 @@ function classSelected(selecttag) {/*Final stage for room type*/
 	var subjectRow = search(subject, "subjectShortName", subjectShortName);
 	var teacherRow = search(subjectClassTeacher, "subjectId", subjectRow["subjectId"], 
 				"classId", classRow["classId"]);
-	for(var i = 0; i < parseInt(subjectRow["eachSlot"]); i++) {
+	/*for(var i = 0; i < parseInt(subjectRow["eachSlot"]); i++) {
 		var newEntry = new createTimeTableEntry(iid, (parseInt(jid) + i), 
 							supportObject["roomId"], classRow["classId"], 
 							subjectRow["subjectId"], teacherRow["teacherId"], 
 							1,configId, currentSnapshotId, 0);
 		timeTable.push(newEntry);
 		console.log("roomEntry: newEntry = " + JSON.stringify(newEntry));
-	}
+	}*/
+	makeTimeTableEntry(iid, jid, supportObject["roomId"], classRow["classId"], subjectRow["subjectId"], 
+		teacherRow["teacherId"], 1, configId, currentSnapshotId, 0, parseInt(subjectRow["eachSlot"]));
 	fillTable2(false);
 }
 
@@ -1034,14 +1073,16 @@ function batchSelected(selecttag) {
 			var teacherId = search(subjectBatchTeacher, "subjectId", subjectRow["subjectId"], 
 						"batchId", batchRow["batchId"])["teacherId"];
 			var classId = search(batchClass, "batchId", batchRow["batchId"])["classId"];
-			for(var i = 0; i < subjectRow["eachSlot"]; i++) {
+			/*for(var i = 0; i < subjectRow["eachSlot"]; i++) {
 				var newEntry = new createTimeTableEntry(iid, (parseInt(jid) + i), 
 							supportObject["roomId"], classId, 
 							subjectRow["subjectId"], teacherId, 
 							batchRow["batchId"],configId, currentSnapshotId, 0);
 				timeTable.push(newEntry);
 				console.log("roomEntry: newEntry = " + JSON.stringify(newEntry));
-			}
+			}*/
+			makeTimeTableEntry(iid, jid, supportObject["roomId"], classId, subjectRow["subjectId"], 
+			teacherId, batchRow["batchId"], configId, currentSnapshotId, 0, parseInt(subjectRow["eachSlot"]));
 			fillTable2(false);
 			return;
 			break;		
@@ -1230,6 +1271,10 @@ function getEligibleSubjects(i, j, k) {
 				sbtlist = searchMultipleRows(subjectBatchTeacher, "teacherId", 
 								supportObject["teacherId"]);
 			}
+		case "batch":
+			if(type == "batch") {
+				sbtlist = searchMultipleRows(subjectBatchTeacher, "batchId", supportObject["batchId"]);
+			}
 			//for sub in sbtlist
 			lists = [sctlist, sbtlist];
 			//console.log(lists);
@@ -1260,10 +1305,7 @@ function getEligibleSubjects(i, j, k) {
 					}
 						//alert("Current: " + JSON.stringify(currSubject));
 						//Checking whether there is time left for subject(1)
-			
-						// TODO: For batches, we need to add the check for batch. 
-						//Otherwise one entry for a sub-batch
-						// will make the subject disappear.	
+				
 					if(lenExistingEntries == maxEntriesForSubject /*&& lists[l] != sbtlist*/) {
 						console.log("eligibleSubjects:  maxEntriesFor subject " + 
 								currSubject["subjectShortName"] + 
@@ -1290,7 +1332,7 @@ function getEligibleSubjects(i, j, k) {
 							alert("Problem");
 						}*/
 						/*teacher allocated time + time for this subject < maxhrs for teacher*/
-					var allocatedTimeForTeacher = searchMultipleRows(timeTable, "teacherId", 
+					/*var allocatedTimeForTeacher = searchMultipleRows(timeTable, "teacherId", 
 											currTeacher["teacherId"]);
 					if(allocatedTimeForTeacher !== -1) {
 						 allocatedTimeForTeacher =  allocatedTimeForTeacher.length;
@@ -1299,12 +1341,12 @@ function getEligibleSubjects(i, j, k) {
 						 allocatedTimeForTeacher = 0;
 					}
 					if((allocatedTimeForTeacher + parseInt(currSubject["eachSlot"])) 
-								 > parseInt(currTeacher["maxHrs"])) {/*(5)*/
+								 > parseInt(currTeacher["maxHrs"])) {
 						console.log("getEligibleSubjects: teachers max hr exceeded for " + 
 									currTeacher["teacherShortName"]);
 							//alert("teachers max hr exceeded");
 							continue next;						
-						}
+						}*/
 						//console.log("day " + i + " slot " + j + " currsubject " + JSON.stringify(currSubject));
 						//for k = 0; k < sc->eachSlot; k++
 			
@@ -1331,13 +1373,21 @@ function getEligibleSubjects(i, j, k) {
 									validSubj = 0;
 									continue next;
 								}
+								
+								var classId = lists[l][m]["classId"];
+								if(typeof classId == "undefined") {
+									classId = search(batchClass, "batchId", lists[l][m]["batchId"])
+													["classId"];
+								}
+								var slotEntries = searchMultipleRows(timeTable, "day", i, "slotNo", (j + n),
+								"classId", classId, "snapshotId", currentSnapshotId);
 								//if non-practical subj(considered) and prac subj is in this slot already
 									//continue;
 								if(currSubject["batches"] == "0") {
-									var currentSlotEntry = search(timeTable, "day", i, "slotNo", j + n,
+									/*var currentSlotEntry = search(timeTable, "day", i, "slotNo", j + n,
 													"classId", lists[l][m]["classId"],
-													 "snapshotId", currentSnapshotId);
-									if(currentSlotEntry !== -1) {
+													 "snapshotId", currentSnapshotId);*/
+									if(slotEntries !== -1) {
 										console.log("getEligibleSubject: Batched-subject " + 
 													supportObject["classShortName"] +
 											 " in slot");
@@ -1348,38 +1398,61 @@ function getEligibleSubjects(i, j, k) {
 								else {
 									/*Batch Must be free*/
 									//console.log(currSubject);
-									var classId = search(batchClass, "batchId", lists[l][m]["batchId"])
+									/*var classId = search(batchClass, "batchId", lists[l][m]["batchId"])
 													["classId"];
 									var currentSlotEntry = search(timeTable, "day", i, "slotNo", j + n,
 													"classId", classId,
 													"batchId", lists[l][m]["batchId"],
-													 "snapshotId", currentSnapshotId);
+													 "snapshotId", currentSnapshotId);*/
+									var bco = searchMultipleRows(batchCanOverlap, 
+										"batchId", lists[l][m]["batchId"]);
+									for(var q in slotEntries) {
+										if(slotEntries[q]["batchId"] == "1") {
+											console.log("getEligibleSubject:  " 
+											+currSubject["subjectShortName"]+
+												 supportObject["classShortName"] 
+														+ " subject for whole class");
+											
+											validSubj = 0;
+											//alert(validSubj);
+											continue next;
+										}
+										/*batch subj but in this slot subj for whole class present*/
+										/*currentSlotEntry = search(timeTable, "day",
+										 i, "slotNo", (j + n),
+														"classId", classId,
+														"batchId", 1,  
+													"snapshotId", currentSnapshotId);*/
+										//console.log("currSlotEntry:"+currentSlotEntry);
 									
-									if(currentSlotEntry !== -1) {
-										console.log("getEligibleSubject: " + 
-										lists[l][m]["batchShortName"] + " batch not free");
-										validSubj = 0;
-										//alert(validSubj);
-										continue next;
-									}
-									/*batch subj but in this slot subj for whole class present*/
-									currentSlotEntry = search(timeTable, "day", i, "slotNo", (j + n),
-													"classId", classId,
-													"batchId", 1,  
-												"snapshotId", currentSnapshotId);
-									//console.log("currSlotEntry:"+currentSlotEntry);
-									
-									if(currentSlotEntry !== -1) {
-										console.log("getEligibleSubject:  " 
-										+currSubject["subjectShortName"]+
-											 supportObject["classShortName"] 
-													+ " subject for whole class");
-										validSubj = 0;
-										continue next;
+										if(slotEntries[q]["batchId"] == lists[l][m]["batchId"]) {
+											console.log("getEligibleSubject: " + 
+											lists[l][m]["batchShortName"] + " batch not free");
+											validSubj = 0;
+											continue next;
+										}
+										if(bco !== -1) {
+											if(search(bco, "batchOverlapId", 
+												slotEntries[q]["batchId"]) === -1) {
+												console.log("BatchCannot overlap");
+												continue next;
+											}
+										}
+										
 									}
 								}
 						
 						
+						}
+						if(currSubject["batches"] == "1") {
+							var osbt = searchMultipleRows(overlappingSBT, "sbtId1",
+											lists[l][m]["sbtId"]);
+							if(osbt !== -1)
+								for(var q in osbt) {
+									if(!overlappingPossible(i, j, osbt[q], currSubject))
+										continue next;
+								}
+			
 						}
 						//console.log("validSubj==================>"+validSubj);
 						if(validSubj === 0) {
@@ -1391,55 +1464,7 @@ function getEligibleSubjects(i, j, k) {
 					}
 				}
 				break;
-		case "batch":
-			var classId = search(batchClass, "batchId", supportObject["batchId"])["classId"];
-			var sbt = searchMultipleRows(subjectBatchTeacher, "batchId", supportObject["batchId"]);
-			var bco	= searchMultipleRows(batchCanOverlap, "batchId", supportObject["batchId"]);
-	next_subject : for(var n in sbt) {
-				var lenExistingEntries;
-				var currSubject = search(subject, "subjectId", sbt[n]["subjectId"]);
-				/*MaxHrs exceeded*/
-				var maxEntriesForSubject = currSubject["nSlots"];
-				var existingEntries = searchMultipleRows(timeTable, 
-								"subjectId", currSubject["subjectId"], 
-								"batchId", supportObject["batchId"]);
-				if(existingEntries !== -1) {
-				// This is because, for a subject with eachSlot=2, we enter two entries in timetable
-					lenExistingEntries = (existingEntries.length / currSubject["eachSlot"]);
-				}
-				else {
-					lenExistingEntries = 0;
-				}
-				if(lenExistingEntries >= maxEntriesForSubject) {
-					console.log("eligibleSubjects:  maxEntriesFor subject " + currSubject["subjectShortName"]);
-					continue next_subject;
-				}
-				for(var p = 0; p < currSubject["eachSlot"]; p++) {
-					var entry = searchMultipleRows(timeTable, "day", i, "slotNo", (j + p), "classId", classId,
-								 "snapshotId", currentSnapshotId);
-					for(var q in entry) {/*class Subject present in this slot*/
-						if(entry[q]["batchId"] == "1") {
-							console.log("getEligibleSubject: class Subject Present:"+
-									currSubject["subjectName"]);
-							continue next_subject;
-						}/*batch that cannot be overlapped*/
-						if(search(bco, "batchId", supportObject["batchId"],
-							 "batchOverlapId", entry[q]["batchId"]) === -1) {
-							console.log("getEligibleSubject: batch cannt overlap:"+
-									currSubject["subjectName"]);
-							continue next_subject;
-						}
-					}
-					entry = search(timeTable, "day", i, "slotNo", (j + p), 
-							"teacherId", sbt[n]["teacherId"], "snapshotId", currentSnapshotId);
-					if(entry !== -1) {
-						console.log("teacher Busy:"+currSubject["subjectName"]);
-						continue next_subject;
-					}
-				}
-				subjectsList.push(currSubject);	
-			}
-			break;
+		
 	}
 	if(subjectsList.length == 0) {
 		return "";
@@ -1448,9 +1473,38 @@ function getEligibleSubjects(i, j, k) {
 		var subj = subjectsList[r]["subjectShortName"];
 		select += "<option value =\""+ subj +"\">" + subj + "</option>";		
 	}
+	//select += "<option class=fixedSlot value = \"FixedEntry\">Insert Lunch/<br/>Fixed slot</font><option>";
 	select += "</select>";
 	return select;
 }
+
+/*Checks the must overlapping subject in its own class timeTable
+Returns true if there is no problem in overlapping
+Otherwise false*/
+function overlappingPossible(i, j, osbt, subjectRow) {
+	var sbt = search(subjectBatchTeacher, "sbtId", osbt["sbtId2"]);
+	var classId = search(batchClass, "batchId", sbt["batchId"])["classId"];
+	var bco = searchMultipleRows(batchCanOverlap, "batchId", sbt["batchId"]);
+	for(var p = 0; p < subjectRow["eachSlot"]; p++) {
+		var slotEntries = searchMultipleRows(timeTable, "day", i, "slotNo", (j + p),
+					"classId", classId, "snapshotId", currentSnapshotId);
+		for(var q in slotEntries) {
+			if(slotEntries[q]["batchId"] == "1") {/*Class entry present*/
+				return false;
+			}
+			if(slotEntries[q]["batchId"] == sbt["batchId"]) {/*Batch is already having smthng*/
+				return false;
+			}
+			if(bco !== -1) {
+				if(search(bco, "batchOverlapId", slotEntries[q]["batchId"]) === -1) {
+					return false;
+				}
+			}
+		}
+	}
+	return true;
+}
+
 
 
 /*For deleting an entry from timeTable*/
@@ -1501,11 +1555,43 @@ function deleteEntry(Span) {
 		var index = timeTable.indexOf(
 					search(timeTable, "day", day, "slotNo", (parseInt(SlotNo) + i), 
 					"subjectId", subjRow["subjectId"], "batchId", batchId,
-					"classId", classId, "teacherId", teacherId, "roomId", roomId,
-					 "snapshotId", currentSnapshotId) );
+					"classId", classId, "snapshotId", currentSnapshotId) );
 				
 		if(index != -1)
 			timeTable.splice(index, 1);/*Delete entry from table*/
+	}
+	if(batchId != "1") {/*For overlapping sbt*/
+		var sbt = search(subjectBatchTeacher, "subjectId", subjRow["subjectId"],
+							 "batchId", batchId);
+		//alert("batchsubj");
+		//alert(JSON.stringify(sbt));
+		var osbt;
+		if(sbt !== -1) {
+			var osbt = searchMultipleRows(overlappingSBT, "sbtId1", sbt["sbtId"]);
+			//console.log(osbt);
+			//alert(JSON.stringify(osbt));
+			if(osbt === -1) {
+				fillTable2(true);
+				return;
+			}
+			for(var i in osbt) {
+				var batchId = search(subjectBatchTeacher, "sbtId", osbt[i]["sbtId2"])["batchId"];
+				//alert("batch"+batchId);
+				var classId = search(batchClass, "batchId", batchId)["classId"];
+				//alert("class:"+classId)
+				for(var j = 0; j < subjRow["eachSlot"]; j++) {
+					var index = timeTable.indexOf(
+						search(timeTable, "day", day, "slotNo", (parseInt(SlotNo) + j), 
+						"subjectId", subjRow["subjectId"], "batchId", batchId,
+						"classId", classId, "snapshotId", currentSnapshotId) );
+				
+					if(index != -1)
+						timeTable.splice(index, 1);
+					//console.log("makeTimeTableEntry: newEntry = " + JSON.stringify(newEntry));
+					//alert("Entered");
+				}
+			}
+		}
 	}
 	dirtyTimeTable = 1;
 	fillTable2(true);
@@ -1538,6 +1624,8 @@ function getPosition(i, j, rowEntry, eachSlot) {
 	for(var k = 0; k < helperTable[i - 1][j].length; k++) {
 		var valid = true;
 		for(var n = 0; n < eachSlot; n++) {
+			if((j + n) > 10)
+				return null;
 			var temp = helperTable[i - 1][j + n][k];
 			if(temp == null)
 				continue;
@@ -1587,7 +1675,7 @@ function getPosition(i, j, rowEntry, eachSlot) {
 
 function fillTable2(createNewTable) {
 	var configrow = search(config, "configId", configId);
-	var NoOfSlots = configrow["nSlots"];
+	NoOfSlots = configrow["nSlots"];
 	var days = 6;
 	var slottablePerDay = 1;
 	if(type == "class") {
@@ -1631,7 +1719,7 @@ function fillTable2(createNewTable) {
 		
 
 	}
-	initializeEnableRowArray(6, 11, slottablePerDay, 0);
+	initializeEnableRowArray(6, parseInt(NoOfSlots), slottablePerDay, 0);
 	//console.log(helperTable);
 	for(var i = 1; i <= days; i++) { /*daywise*/
 		for(var j = 0; j < NoOfSlots; j++) { /*slotwise*/
@@ -1729,7 +1817,7 @@ function fillTable2(createNewTable) {
 							document.getElementById("cell"+ i + (j + p)+ position).style.display = "none";
 							//enabledSlots[i - 1][j + p] = k + 1;
 						}
-						document.getElementById("cell"+ i + j + k).setAttribute("colspan", eachSlot);	
+						document.getElementById("cell"+ i + j + position).setAttribute("colspan", eachSlot);	
 					}
  					// Note: inside i=days * j=NoOfSlots loop
 					
