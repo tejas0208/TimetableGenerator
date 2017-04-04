@@ -75,6 +75,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#87e0fd', end
 	padding: 2px;
 	font-family: Courier;
 	font-size: 14px;
+	display: none;
 }
 
 .over {

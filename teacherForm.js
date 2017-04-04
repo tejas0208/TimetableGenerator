@@ -18,7 +18,7 @@ function teacherForm() {
 	var tr = document.createElement("tr"); table.appendChild(tr);
 
 	var th = document.createElement("th"); tr.appendChild(th);
-	var tc = document.createTextNode("SN"); th.appendChild(tc);
+	var tc = document.createTextNode("Id"); th.appendChild(tc);
 
 	th = document.createElement("th"); tr.appendChild(th);
 	tc = document.createTextNode("Full Name"); th.appendChild(tc);
@@ -81,8 +81,14 @@ function teacherForm() {
 	for (i in teacher) {
 		currTeacher = teacher[i];	
 		var row = table.insertRow(count);
+
 		var cell = row.insertCell(0);
-		cell.innerHTML = "<center> " + (count - 1) + "</center>";
+		var centerTag = document.createElement("center");
+		centerTag.setAttribute("id", "center_"+count);
+		var centerText = document.createTextNode(currTeacher["teacherId"]);
+		centerTag.appendChild(centerText);
+		cell.appendChild(centerTag);
+	
 		cell = row.insertCell(-1);
 		cell.innerHTML = "<input type=\"text\" id=\"teacherName_"+count+"\" value=\""+currTeacher["teacherName"]+"\"> </input>";
 		cell = row.insertCell(-1);
@@ -155,9 +161,10 @@ function teacherInsert() {
 				newteacher["teacherName"] = teacherName;
 				newteacher["teacherShortName"] = teacherShortName;
 				newteacher["minHrs"] = minHrs;
-				newteacher["teacheId"] = response["teacherId"];
+				newteacher["teacherId"] = response["teacherId"];
 				newteacher["maxHrs"] = maxHrs;
 				newteacher["deptId"] = deptId;
+				newteacher["snapshotId"] = currentSnapshotId;
 				teacher.unshift(newteacher);
 				loadTeacherMenu();
 				teacherForm();
@@ -169,13 +176,14 @@ function teacherInsert() {
 	xhttp.open("POST", "timetable.php", false); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhttp.send("reqType=teacherInsert&teacherName="+teacherName+"&teacherShortName="+
-			teacherShortName+"&minHrs="+minHrs+"&maxHrs="+maxHrs+"&deptId="+deptId);
+			teacherShortName+"&minHrs="+minHrs+"&maxHrs="+maxHrs+"&deptId="+deptId+"&snapshotId="+currentSnapshotId);
 	
 }
 
 function teacherUpdate(i) {
 	var row = i;
-	var teacherName, teacherShortName, minHrs, maxHrs, dept;
+	var teacherName, teacherShortName, minHrs, maxHrs, dept, teacherId;
+	teacherId = document.getElementById("center_"+row).childNodes[0].nodeValue;
 	teacherName = document.getElementById("teacherName_"+row).value;	
 	teacherShortName = document.getElementById("teacherShortName_"+row).value;	
 	minHrs = document.getElementById("minHrs_"+row).value;	
@@ -186,7 +194,7 @@ function teacherUpdate(i) {
 	document.getElementById("tUpdateButton_"+row).disabled = true;
 
 	row = i - 2;
-	var teacherOrigShortName = teacher[row]["teacherShortName"];
+	//var teacherOrigShortName = teacher[row]["teacherShortName"];
 	var deptId = getDeptId(dept);
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function () {
@@ -218,7 +226,7 @@ function teacherUpdate(i) {
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhttp.send("reqType=teacherUpdate&teacherName="+teacherName+"&teacherShortName="+
 			teacherShortName+"&minHrs="+minHrs+"&maxHrs="+maxHrs+"&deptId="+deptId+
-			"&teacherOrigShortName="+teacherOrigShortName);
+			"&teacherId="+teacherId);
 	
 }
 function teacherDelete(i) {
@@ -230,7 +238,8 @@ function teacherDelete(i) {
 				  "Are you sure?");
 	if(sure != true)
 		return;
-	teacherShortName = document.getElementById("teacherShortName_"+row).value;
+	teacherId = document.getElementById("center_"+row).childNodes[0].nodeValue;
+	//teacherShortName = document.getElementById("teacherShortName_"+row).value;
 	document.getElementById("tDeleteButton_"+row).childNodes[0].nodeValue = "Deleting";
 	document.getElementById("tDeleteButton_"+row).disabled = true;
 	document.getElementById("tUpdateButton_"+row).disabled = true;
@@ -254,5 +263,5 @@ function teacherDelete(i) {
 	}
 	xhttp.open("POST", "timetable.php", true); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("reqType=teacherDelete&teacherShortName="+teacherShortName);
+	xhttp.send("reqType=teacherDelete&teacherId="+teacherId);
 }

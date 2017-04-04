@@ -65,8 +65,14 @@ function classForm() {
 	for (i in classTable) {
 		currClass = classTable[i];	
 		var row = table.insertRow(count);
+
 		var cell = row.insertCell(0);
-		cell.innerHTML = "<center> " + (count - 1) + "</center>";
+		var centerTag = document.createElement("center");
+		centerTag.setAttribute("id", "center_"+count);
+		var centerText = document.createTextNode(currClass["classId"]);
+		centerTag.appendChild(centerText);
+		cell.appendChild(centerTag);
+
 		cell = row.insertCell(-1);
 		cell.innerHTML = "<input type=\"text\" id=\"className_"+count+"\" size=\"32\" value=\""+currClass["className"]+"\"> </input>";
 		cell = row.insertCell(-1);
@@ -116,6 +122,7 @@ function classInsert() {
 				newclass["classShortName"] = classShortName;
 				newclass["semester"] = semester;
 				newclass["classCount"] = classCount;
+				newclass["snapshotId"] = currentSnapshotId;
 				newclass["classId"] = response["classId"];
 				classTable.unshift(newclass);
 				loadClassMenu();
@@ -128,14 +135,15 @@ function classInsert() {
 	}
 	xhttp.open("POST", "timetable.php", false); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("reqType=classInsert&className="+className+"&classShortName="+
-			classShortName+"&semester="+semester+"&classCount="+classCount);
+	xhttp.send("reqType=classInsert&className="+className+"&classShortName="+classShortName+
+			"&semester="+semester+"&classCount="+classCount+"&snapshotId="+currentSnapshotId);
 	
 }
 
 function classUpdate(i) {
 	var row = i;
 	var className, classShortName, semester, classCount;
+	classId = document.getElementById("center_"+row).childNodes[0].nodeValue;
 	className = document.getElementById("className_"+row).value;	
 	classShortName = document.getElementById("classShortName_"+row).value;	
 	semester = document.getElementById("semester_"+row).value;	
@@ -176,7 +184,7 @@ function classUpdate(i) {
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhttp.send("reqType=classUpdate&className="+className+"&classShortName="+
 			classShortName+"&semester="+semester+"&classCount="+classCount+
-			"&classOrigShortName="+classOrigShortName);
+			"&classId="+classId);
 	
 }
 function classDelete(i) {
@@ -188,7 +196,8 @@ function classDelete(i) {
 				  "Are you sure?");
 	if(sure != true)
 		return;
-	classShortName = document.getElementById("classShortName_"+row).value;
+	//classShortName = document.getElementById("classShortName_"+row).value;
+	classId = document.getElementById("center_"+row).childNodes[0].nodeValue;
 	document.getElementById("cDeleteButton_"+row).childNodes[0].nodeValue = "Deleting";
 	document.getElementById("cDeleteButton_"+row).disabled = true;
 	document.getElementById("cUpdateButton_"+row).disabled = true;
@@ -212,5 +221,5 @@ function classDelete(i) {
 	}
 	xhttp.open("POST", "timetable.php", true); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("reqType=classDelete&classShortName="+classShortName);
+	xhttp.send("reqType=classDelete&classId="+classId);
 }

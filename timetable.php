@@ -65,7 +65,8 @@ $bodystart="
 	</head>
 	<body>
 ";
-$table= "
+$table= file_get_contents("./menuoptions.html");
+/*"
 	<table border = \"0\" padding = \"0\" style = \"width:100%;\" id=\"outerTable\">
 		<tr> <td style = \"height:100px;\">
 			<table border = \"0\" padding = \"0\" style = \"height:100px; width:100%;\" id=\"menuTable\">
@@ -88,7 +89,7 @@ $table= "
 					</div-->
 					<div class=\"selection-menu\">
 						Configuration	
-						<select id=\"insert-data-menu\" class=\"select-menu\">
+						<select id=\"configuration-menu\" class=\"select-menu\">
 							<option id = \"selectOne\" value = \"selectOne\" selected></option>
 							<option value = \"teachers\" onclick=\"teacherForm()\">Teachers</option>
 							<option value = \"subjects\" onclick=\"subjectForm()\">Subjects</option>
@@ -203,8 +204,7 @@ $table= "
 		</tr>
 		<tr > <td id = \"mainTimeTable\"> </td>
 	</tr>
-</table>"
-;
+</table>" ; */
 $footer = "</body> </html>";
 
 $page = $header.
@@ -215,8 +215,8 @@ $page = $header.
 
 $reqType = getArgument("reqType");
 switch($reqType) {
-	case "getAllData":
-		echo getAllData();
+	case "getDataTables":
+		echo getDataTables();
 		break;
 	case "getTimetable":
 		$snapname = getArgument("snapname");
