@@ -1,10 +1,17 @@
 var selectedCell ;
 var prevBorder;
 var copyCell;
-var timeTable, teacher, dept, classTable, batch, batchCanOverlap, currentSnapshotId, classRoom, subjectRoom, batchRoom; 
-var room, subject, config, batchClass, subjectBatchTeacher, subjectClassTeacher, snapshot, overlappingSBT;
+
 var database;
-var configId = 1;
+var dept, user, config, snapshot;
+var teacher, classTable, batch, batchCanOverlap, batchClass;  
+var room, classRoom, batchRoom, subjectRoom;
+var subject, subjectBatchTeacher, subjectClassTeacher, overlappingSBT; 
+var fixedEntry;
+
+var currentSnapshotId;
+/* In future give a menu option to select a Config, and then a snapshot in that config */
+var currConfigId = 1;
 var type = "class";
 var id = "SYBT-CE";
 var daysName = ["Sun", "Mon", "Tues", "Wed", "Thur", "Fri", "Sat"];
@@ -214,7 +221,6 @@ function dropHandler(e) {
 	fillTable2(true);
 }
 
-
 function dragEndHandler(e) {
 	dragSrcEl.style.opacity = 1;
 }
@@ -392,22 +398,11 @@ function getAllData() {/*Loads data from server asynchronously*/
 		if (this.readyState == 4 && this.status == 200) {
 			database = JSON.parse(this.responseText);
 
-			teacher = database.teacher;
-			if(typeof teacher == "undefined")
-				alert("Teacher's information not found");
-			teacher.sort(function(a, b) {
-				var x = a.teacherShortName.toLowerCase();
-				var y = b.teacherShortName.toLowerCase();
-				if(x < y)
-					return -1;
-				if(x > y)
-					return 1;
-				return 0;
-			});
-
 			dept = database.dept;
-			if(typeof dept == "undefined")
-				alert("Department's information not found");
+			if(typeof dept == "undefined") {
+				alert("Table: dept not found. Check your Error Logs");
+				return false;
+			}
 			dept.sort(function(a, b) {
 				var x = a.deptShortName.toLowerCase();
 				var y = b.deptShortName.toLowerCase();
@@ -419,9 +414,45 @@ function getAllData() {/*Loads data from server asynchronously*/
 			});
 
 
+			user = database.user;
+			if(typeof user == "undefined") {
+				alert("Table: user not found. Check your Error Logs");
+				return false;
+			}
+
+			config = database.config;
+			if(typeof config == "undefined") {
+				alert("Table: config not found. Check your Error Logs");
+				return false;
+			}
+
+			snapshot = database.snapshot;
+			if(typeof snapshot == "undefined") {
+				alert("Table: snapshot not found. Check your Error Logs");
+				return false;
+			}
+
+					
+			teacher = database.teacher;
+			if(typeof teacher == "undefined") {
+				alert("Table: teacher not found. Check your Error Logs");
+				return false;
+			}
+			teacher.sort(function(a, b) {
+				var x = a.teacherShortName.toLowerCase();
+				var y = b.teacherShortName.toLowerCase();
+				if(x < y)
+					return -1;
+				if(x > y)
+					return 1;
+				return 0;
+			});
+
 			classTable = database.class;
-			if(typeof classTable == "undefined")
-				alert("Class's information not found");
+			if(typeof classTable == "undefined") {
+				alert("Table: class not found. Check your Error Logs");
+				return false;
+			}
 			classTable.sort(function(a, b) {
 				var x = a.classShortName.toLowerCase();
 				var y = b.classShortName.toLowerCase();
@@ -433,8 +464,10 @@ function getAllData() {/*Loads data from server asynchronously*/
 			});
 
 			batch = database.batch;
-			if(typeof batch == "undefined")
-				alert("Batch's information not found");
+			if(typeof batch == "undefined") {
+				alert("Table: batch not found. Check your Error Logs");
+				return false;
+			}
 			batch.sort(function(a, b) {
 				var x = a.batchName.toLowerCase();
 				var y = b.batchName.toLowerCase();
@@ -446,12 +479,16 @@ function getAllData() {/*Loads data from server asynchronously*/
 			});
 
 			batchCanOverlap = database.batchCanOverlap;
-			if(typeof batchCanOverlap == "undefined")
-				alert("Batch Can Overlap's information not found");
+			if(typeof batchCanOverlap == "undefined") {
+				alert("Table: batchCanOverlap not found. Check your Error Logs");
+				return false;
+			}
 
 			room = database.room;
-			if(typeof room == "undefined")
-				alert("Room's information not found");
+			if(typeof room == "undefined") {
+				alert("Table: room not found. Check your Error Logs");
+				return false;
+			}
 			room.sort(function(a, b) {
 				var x = a.roomShortName.toLowerCase();
 				var y = b.roomShortName.toLowerCase();
@@ -462,9 +499,17 @@ function getAllData() {/*Loads data from server asynchronously*/
 				return 0;
 			});
 
+			batchClass = database.batchClass;
+			if(typeof batchClass == "undefined") {
+				alert("Table: batchClass not found. Check your Error Logs");
+				return false;
+			}
+
 			subject = database.subject;
-			if(typeof subject == "undefined")
-				alert("Subject's information not found");
+			if(typeof subject == "undefined") {
+				alert("Table: subject not found. Check your Error Logs");
+				return false;
+			}
 			subject.sort(function(a, b) {
 				var x = a.subjectShortName.toLowerCase();
 				var y = b.subjectShortName.toLowerCase();
@@ -475,26 +520,18 @@ function getAllData() {/*Loads data from server asynchronously*/
 				return 0;
 			});
 
-			config = database.config;
-			if(typeof config == "undefined")
-				alert("Configuration's information not found");
-
-			batchClass = database.batchClass;
-			if(typeof batchClass == "undefined")
-				alert("Batch and class relation's information not found");
-
 			subjectBatchTeacher = database.subjectBatchTeacher; // subjectBatch
-			if(typeof subjectBatchTeacher == "undefined")
-				alert("Batch, subject and Teacher relation's information not found");
+			if(typeof subjectBatchTeacher == "undefined") {
+				alert("Table: subjectBatchTeacher not found. Check your Error Logs");
+				return false;
+			}
 
 			subjectClassTeacher = database.subjectClassTeacher;
-			if(typeof subjectClassTeacher == "undefined")
-				alert("Class, subject and Teachers relation's information not found");
+			if(typeof subjectClassTeacher == "undefined") {
+				alert("Table: subjectClassTeacher not found. Check your Error Logs");
+				return false;
+			}
 
-			snapshot = database.snapshot;
-			if(typeof snapshot == "undefined")
-				alert("snapshot's information not found");
-					
 			classRoom = database.classRoom;
 			if(typeof classRoom == "undefined")
 				classRoom = [];
@@ -631,7 +668,7 @@ function sort(table) {
 }
 
 function createTimeTableEntry(day, slotNo, roomId, classId, subjectId, 
-			teacherId, batchId, configId, snapshotId, isFixed) {
+			teacherId, batchId, snapshotId, isFixed) {
 	this.day = "" +day;
 	this.slotNo = ""+slotNo;
 	this.roomId = ""+roomId;
@@ -639,7 +676,6 @@ function createTimeTableEntry(day, slotNo, roomId, classId, subjectId,
 	this.subjectId = "" +subjectId;
 	this.teacherId = ""+teacherId;
 	this.batchId = ""+batchId;
-	this.configId = ""+configId;
 	this.isFixed = ""+isFixed;
 	this.snapshotId = ""+snapshotId;
 	if(timeTable.length == 0)
@@ -676,12 +712,12 @@ function createSubjectRoomEntry(subjectId, roomId) {
 		this.srId = ""+(parseInt(subjectRoom[subjectRoom.length - 1]["srId"]) + 1);
 }
 function makeTimeTableEntry(day, slotNo, roomId, classId, subjectId, 
-		teacherId, batchId, configId, currentSnapshotId, isFixed, eachSlot) {
+		teacherId, batchId, currentSnapshotId, isFixed, eachSlot) {
 	for(var i = 0; i < eachSlot; i++) {
 		var newEntry = new createTimeTableEntry(day, (parseInt(slotNo) + i), 
 							roomId, classId, 
 							subjectId, teacherId, 
-							batchId, configId, currentSnapshotId, isFixed);
+							batchId, currentSnapshotId, isFixed);
 		timeTable.push(newEntry);
 		console.log("makeTimeTableEntry: newEntry = " + JSON.stringify(newEntry));
 	}
@@ -706,7 +742,7 @@ function makeTimeTableEntry(day, slotNo, roomId, classId, subjectId,
 					var newEntry = new createTimeTableEntry(day, (parseInt(slotNo) + j), 
 							roomId, classId, 
 							subjectId, teacherId, 
-							batchId, configId, currentSnapshotId, isFixed);
+							batchId, currentSnapshotId, isFixed);
 					timeTable.push(newEntry);
 					console.log("makeTimeTableEntry: newEntry = " + JSON.stringify(newEntry));
 					//alert("Entered");
@@ -715,7 +751,6 @@ function makeTimeTableEntry(day, slotNo, roomId, classId, subjectId,
 		}
 	}	
 }
-
 
 function roomSelected(selecttag) {
 	
@@ -762,12 +797,12 @@ function roomSelected(selecttag) {
 		var newEntry = new createTimeTableEntry(iid, (parseInt(jid) + i), 
 							roomRow["roomId"], classId, 
 							subjectRow["subjectId"], teacherId, 
-							batchId, configId, currentSnapshotId, 0);
+							batchId, currentSnapshotId, 0);
 		timeTable.push(newEntry);
 		console.log("roomEntry: newEntry = " + JSON.stringify(newEntry));
 	}*/
 	makeTimeTableEntry(iid, jid, roomRow["roomId"], classId, subjectRow["subjectId"], 
-		teacherId, batchId, configId, currentSnapshotId, 0, parseInt(subjectRow["eachSlot"]));
+		teacherId, batchId, currentSnapshotId, 0, parseInt(subjectRow["eachSlot"]));
 	var crEntry = new createClassRoomEntry(classId, roomRow["roomId"]);
 	var brEntry = new createBatchRoomEntry(batchId, roomRow["roomId"]);
 	var srEntry = new createSubjectRoomEntry(subjectRow["subjectId"], roomRow["roomId"]);
@@ -789,7 +824,7 @@ function getEligibleBatches(i, j, k, subjectRow) {
 				"subject  = " + subjectRow["subjectShortName"]);
 	var optionString = "<option value=\"NOT_SELECTED\">--Batch--</option>";
 	var eligibleBatches = [];
-	var configRow = search(config, "configId", configId);
+	var configRow = search(config, "configId", currConfigId);
 	/*Get batches of class and for that subject*/
 	var sbtRows;
 	if(type == "class") {
@@ -857,7 +892,7 @@ function getEligibleBatches(i, j, k, subjectRow) {
 					
 			var slotEntries = searchMultipleRows(timeTable, "day", i, "slotNo", (j + z), 
 								"classId", bc["classId"],
-								"configId", configId, "snapshotId", currentSnapshotId);
+								"snapshotId", currentSnapshotId);
 			if(slotEntries !== -1) {
 				/*Batche in slot --> in overlaping batches array*/
 				if(bcoEntries !== -1) {
@@ -910,7 +945,7 @@ function getEligibleRoom(i, j, k, capacity, subjectRow, roomFound) {
 		var roomRow = search(room, "roomId", roomFound["roomId"]);
 		var valid = 1;
 		for(var z =0; z < eachSlot; z++) {
-			var found = search(timeTable, "configId", configId,
+			var found = search(timeTable,
 						"day", i, "slotNo", ""+(parseInt(j) + z), 
 						"roomId", roomRow["roomId"],  "snapshotId", currentSnapshotId);
 			if(found !== -1) {/*There are other classes in this room*/
@@ -929,8 +964,7 @@ function getEligibleRoom(i, j, k, capacity, subjectRow, roomFound) {
 	//alert(parseInt(room[i]["roomCount"]) +" ,"+capacity);
 		var valid = 1;
 		for(var z =0; z < eachSlot; z++) {
-			var found = search(timeTable, "configId", configId,
-						"day", i, "slotNo", ""+(parseInt(j) + z), 
+			var found = search(timeTable, "day", i, "slotNo", ""+(parseInt(j) + z), 
 						"roomId", room[y]["roomId"],  "snapshotId", currentSnapshotId);
 			if(found !== -1) {/*There are other classes in this room*/
 				valid = 0;
@@ -967,12 +1001,12 @@ function classSelected(selecttag) {/*Final stage for room type*/
 		var newEntry = new createTimeTableEntry(iid, (parseInt(jid) + i), 
 							supportObject["roomId"], classRow["classId"], 
 							subjectRow["subjectId"], teacherRow["teacherId"], 
-							1,configId, currentSnapshotId, 0);
+							1, currentSnapshotId, 0);
 		timeTable.push(newEntry);
 		console.log("roomEntry: newEntry = " + JSON.stringify(newEntry));
 	}*/
 	makeTimeTableEntry(iid, jid, supportObject["roomId"], classRow["classId"], subjectRow["subjectId"], 
-		teacherRow["teacherId"], 1, configId, currentSnapshotId, 0, parseInt(subjectRow["eachSlot"]));
+		teacherRow["teacherId"], 1, currentSnapshotId, 0, parseInt(subjectRow["eachSlot"]));
 	fillTable2(false);
 }
 
@@ -1077,12 +1111,12 @@ function batchSelected(selecttag) {
 				var newEntry = new createTimeTableEntry(iid, (parseInt(jid) + i), 
 							supportObject["roomId"], classId, 
 							subjectRow["subjectId"], teacherId, 
-							batchRow["batchId"],configId, currentSnapshotId, 0);
+							batchRow["batchId"], currentSnapshotId, 0);
 				timeTable.push(newEntry);
 				console.log("roomEntry: newEntry = " + JSON.stringify(newEntry));
 			}*/
 			makeTimeTableEntry(iid, jid, supportObject["roomId"], classId, subjectRow["subjectId"], 
-			teacherId, batchRow["batchId"], configId, currentSnapshotId, 0, parseInt(subjectRow["eachSlot"]));
+			teacherId, batchRow["batchId"], currentSnapshotId, 0, parseInt(subjectRow["eachSlot"]));
 			fillTable2(false);
 			return;
 			break;		
@@ -1211,7 +1245,7 @@ function getEligibleSubjects(i, j, k) {
 	if (r.length < 1) 
 		return "NO ROOM";   */
 	//console.log(i + "," + j);
-	var configrow = search(config, "configId", configId);
+	var configrow = search(config, "configId", currConfigId);
 	var nSlotsPerDay = configrow["nSlots"];
 	var select = "<select id= \"subject"+ i + j + k +
 				"\" onchange=\"subjectSelected(this)\">"+
@@ -1674,12 +1708,13 @@ function getPosition(i, j, rowEntry, eachSlot) {
 }
 
 function fillTable2(createNewTable) {
-	var configrow = search(config, "configId", configId);
+	var configrow = search(config, "configId", currConfigId);
 	NoOfSlots = configrow["nSlots"];
 	var days = 6;
 	var slottablePerDay = 1;
 	if(type == "class") {
-		var row = searchMultipleRows(batchClass, "classId", supportObject["classId"]); /*Depending on the no of batches in a class*/
+		var row = searchMultipleRows(batchClass, "classId", supportObject["classId"]); 
+		/*Depending on the no of batches in a class*/
 		slottablePerDay = row.length;
 	}
 	
@@ -1704,17 +1739,16 @@ function fillTable2(createNewTable) {
 		tdTimetable.appendChild(div);
 		//$("#timeTable").slideDown("fast");
 		$(".animateButton").click(function(){
-						
-						var text = this.innerHTML;
-						var id = this.parentElement.id;
-						if(text == "+") {
-							this.innerHTML= "-";
-							$(".animate"+id).fadeIn();
-						}
-						else {
-							this.innerHTML = "+";
-							$(".animate"+id).fadeOut();
-						}
+			var text = this.innerHTML;
+			var id = this.parentElement.id;
+			if(text == "+") {
+				this.innerHTML= "-";
+				$(".animate"+id).fadeIn();
+			}
+			else {
+				this.innerHTML = "+";
+				$(".animate"+id).fadeOut();
+			}
 		});
 		
 
@@ -1723,7 +1757,7 @@ function fillTable2(createNewTable) {
 	//console.log(helperTable);
 	for(var i = 1; i <= days; i++) { /*daywise*/
 		for(var j = 0; j < NoOfSlots; j++) { /*slotwise*/
-			var slotRows = searchMultipleRows(timeTable, "day", i, "slotNo", j, "configId", configId, 
+			var slotRows = searchMultipleRows(timeTable, "day", i, "slotNo", j, 
 												type+"Id", supportObject[type+"Id"],
 											"snapshotId", currentSnapshotId);
 			
@@ -2014,58 +2048,86 @@ function sortSelect(selElem) {
     }
     return;
 }
-
-function load() {
-	var i;
-	//alert("Come 1");
-	getAllData();/*Load whole database*/
-	//alert("Loaded db");
-	getTimetable("default");
-	//alert("Got default tt");
-	/*var selectTag = document.getElementById("subject-menu");
-	//Filling all select tags Menu
-	for (i in subject) {
-		selectTag.appendChild(createOptionTag(subject[i]["subjectShortName"], 
-							subject[i]["subjectShortName"], "subjectChange()"));		
+function loadTeacherMenu() {
+	var selectTag = document.getElementById("teacher-menu");
+	while(selectTag.hasChildNodes()) {
+		selectTag.removeChild(selectTag.childNodes[0]);
 	}
-	selectTag.setAttribute("onchange", "subjectChange()");
-	sortSelect(selectTag); 
-	*/
-	selectTag = document.getElementById("teacher-menu");
 	for (i in teacher) {
 		selectTag.appendChild(createOptionTag(teacher[i]["teacherShortName"], 
-								teacher[i]["teacherShortName"], "classChange()"));		
+								teacher[i]["teacherShortName"], "false"));		
 	}
 	//sortSelect(selectTag);
 	selectTag.setAttribute("onchange", "teacherChange(true)");
 	sortSelect(selectTag);
-
+	document.getElementById("teacher-menu").selectedIndex = -1; /*Setting the select tag*/
+	//$("#teacher-menu").select2();
+}
+function loadClassMenu() {
 	var selectTag = document.getElementById("class-menu");
+	while(selectTag.hasChildNodes()) {
+		selectTag.removeChild(selectTag.childNodes[0]);
+	}
 	for (i in classTable) {
 		selectTag.appendChild(createOptionTag(classTable[i]["classShortName"], 
-								classTable[i]["classShortName"], "classChange()"));		
+								classTable[i]["classShortName"], "false"));		
 	}
 	selectTag.setAttribute("onchange", "classChange(true)");
+	document.getElementById("class-menu").selectedIndex = -1; /*Setting the select tag*/
+	//$("#class-menu").select2();
 	//sortSelect(selectTag);
-
+}
+function loadBatchMenu() {
 	var selectTag = document.getElementById("batch-menu");
+	while(selectTag.hasChildNodes()) {
+		selectTag.removeChild(selectTag.childNodes[0]);
+	}
 	for (i in batch) {
 		selectTag.appendChild(createOptionTag(batch[i]["batchName"], 
-								batch[i]["batchName"], "batchChange()"));		
+								batch[i]["batchName"], "false"));		
 	}
 	//sortSelect(selectTag);
 	selectTag.setAttribute("onchange", "batchChange(true)");
 	sortSelect(selectTag);
-
+	document.getElementById("batch-menu").selectedIndex = -1; /*Setting the select tag*/
+	//$("#batch-menu").select2();
+}
+function loadRoomMenu() {
 	var selectTag = document.getElementById("room-menu");
+	while(selectTag.hasChildNodes()) {
+		selectTag.removeChild(selectTag.childNodes[0]);
+	}
 	for (i in room) {
 		selectTag.appendChild(createOptionTag(room[i]["roomShortName"], 
-								room[i]["roomShortName"], "roomChange()"));		
+								room[i]["roomShortName"], "false"));		
 	}
 	//sortSelect(selectTag);	
 	selectTag.setAttribute("onchange", "roomChange(true)");
 	sortSelect(selectTag);	
+	document.getElementById("room-menu").selectedIndex = -1; /*Setting the select tag*/
+	//$("#room-menu").select2();
+}
+function loadSelectMenus() {
+	loadTeacherMenu();
+	loadClassMenu();
+	loadBatchMenu();
+	loadRoomMenu();
+}
 
+function load() {
+	var i;
+	//alert("Come 1");
+	/*Load whole database*/
+	if(getAllData() == false) { 
+		alert("Loading of Tables Failed. Check your Error Logs");
+		return false;
+	}
+	//alert("Loaded db");
+	if(getTimetable("default") == false) {
+		alert("Loading of default snapshot Failed. Check your Error Logs");
+		return false;
+	};
+	loadSelectMenus(); /* load Teacher, Class, Batch, Room Menu */
 	loadSnapshotMenu("default");
 	$("#mainTimeTable").append("<center><B>No TimeTable loaded </B><br>"+
 								"Please select option from above catgories</center>");
@@ -2079,7 +2141,7 @@ function loadSnapshotMenu(selectedName) {
 	}
 	for (i in snapshot) {
 		option = createOptionTag(snapshot[i]["snapshotName"], 
-								snapshot[i]["snapshotName"], "snapshotChange()");
+								snapshot[i]["snapshotName"], "false");
 		if(snapshot[i]["snapshotName"] === selectedName) {
 			option.selected = true;
 			currentSnapshotId = snapshot[i]["snapshotId"];
@@ -2124,7 +2186,7 @@ function jsSaveNewSnapshot() {
 		document.getElementById("saveNewSnapshot").disabled =  true;
 		xhttp.open("POST", "timetable.php", true); // asynchronous
 		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		xhttp.send("reqType=saveNewSnapshot&snapname="+snapshotName+"&configId="+snapshot[0]["configId"]+
+		xhttp.send("reqType=saveNewSnapshot&snapname="+snapshotName+"&configId="+currConfigId+
 					"&ttData="+JSON.stringify(timeTable));
 	}
 }

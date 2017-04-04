@@ -153,6 +153,7 @@ function batchRoomInsert() {
 				newBatchRoom["batchId"] = batchId;
 				newBatchRoom["brId"] = response["brId"];
 				batchRoom.unshift(newBatchRoom);
+				fillTable2(true);
 				batchRoomForm();
 			} else {
 				alert("Insert batch: " 
@@ -191,6 +192,7 @@ function batchRoomUpdate(i) {
 				document.getElementById("batchRoomUpdateButton_"+i).disabled = false;
 				batchRoom[row]["roomId"] = roomId;
 				batchRoom[row]["batchId"] = batchId;
+				fillTable2(true);
 				batchRoomForm();
 			}
 			else {
@@ -227,6 +229,7 @@ function batchRoomDelete(i) {
 			if(response["Success"] == "True") {
 				document.getElementById("batchRoomDeleteButton_"+row).value = "Delete"
 				batchRoom.splice(i - 2, 1);
+				fillTable2(true);
 				batchRoomForm();
 			} else {
 				alert("batchRoom " + brId + ": Deletion Failed.\nError:\n" + response["Error"]);

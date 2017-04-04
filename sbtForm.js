@@ -193,6 +193,7 @@ function sbtInsert() {
 				newSBT["batchId"] = batchId;
 				newSBT["sbtId"] = response["sbtId"];
 				subjectBatchTeacher.unshift(newSBT);
+				fillTable2(true);
 				sbtForm();
 			} else {
 				alert("Insert teacher:" + teacherShortName + " subject: " + subjectShortName + " batch: " 
@@ -235,6 +236,7 @@ function sbtUpdate(i) {
 				subjectBatchTeacher[row]["teacherId"] = teacherId;
 				subjectBatchTeacher[row]["subjectId"] = subjectId;
 				subjectBatchTeacher[row]["batchId"] = batchId;
+				fillTable2(true);
 				sbtForm();
 			}
 			else {
@@ -272,6 +274,7 @@ function sbtDelete(i) {
 			if(response["Success"] == "True") {
 				document.getElementById("sbtDeleteButton_"+row).value = "Delete"
 				subjectBatchTeacher.splice(i - 2, 1);
+				fillTable2(true);
 				sbtForm();
 			} else {
 				alert("sbt " + sbtId + ": Deletion Failed.\nError:\n" + response["Error"]);

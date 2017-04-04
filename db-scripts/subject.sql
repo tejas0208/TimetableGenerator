@@ -1,6 +1,6 @@
 USE timeTable;
 INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches) VALUES ( "Fundamentals of Mathematics-II", "FM-II", 1, 3, TRUE);
-INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches) VALUES ( "Electronics and Computer Workshop", "ECW", 1, 3, FALSE);
+INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches) VALUES ( "Electronics and Computer Workshop", "ECW", 2, 1, TRUE);
 INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches) VALUES ( "Fundamentals of Computer Programming", "FCP", 1, 3, FALSE);
 INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches) VALUES ( "Fundamentals of Computer Programming Laboratory", "FCP-Lab", 2, 2, TRUE);
 INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches) VALUES ( "Applied Biology", "AB", 1, 3, FALSE);
@@ -42,13 +42,13 @@ INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches) VA
 INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches) VALUES ( "Liberal Learning Course3", "LLC3", 1, 3, FALSE);
 INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches) VALUES ( "open elective final yr", "OE-BTECH", 1, 3, FALSE);
 INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches) VALUES ( "Cyber Security Forensics and Legal Perspective", "CSFLP", 1, 3, FALSE);
-INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches) VALUES ( "Cyber Security Forensics and Legal Perspective lab", "CSFLP-Lab", 1, 2, TRUE);
+INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches) VALUES ( "Cyber Security Forensics and Legal Perspective lab", "CSFLP-Lab", 2, 1, TRUE);
 INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches) VALUES ( "E-Commerce", "EC", 1, 3, FALSE);
 INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches) VALUES ( "E-Commerce lab", "EC-Lab", 2, 1, TRUE);
 INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches) VALUES ( "Natural Language Processing", "NLP", 1, 3, FALSE);
 INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches) VALUES ( "Natural Language Processing lab", "NLP-Lab", 2, 1, TRUE);
 INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches) VALUES ( "Web Systems and Technologies", "WST", 1, 3, FALSE);
-INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches) VALUES ( "Web Systems and Technologies  Laboratory", "WST-Lab", 1, 3, TRUE);
+INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches) VALUES ( "Web Systems and Technologies  Laboratory", "WST-Lab", 3, 1, TRUE);
 INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches) VALUES ( "Project Work", "Project", 1, 3, FALSE);
 INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches) VALUES ( "Intellectual Property Rights", "IPR", 1, 3, FALSE);
 INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches) VALUES ( "Advanced Algorithms", "AA", 1, 3, FALSE);

@@ -185,6 +185,7 @@ function overlappingSBTInsert() {
 				newoverlappingSBT["sbtId2"] = sbtId2;
 				newoverlappingSBT["osbtId"] = response["osbtId"];
 				overlappingSBT.unshift(newoverlappingSBT);
+				fillTable2(true);
 				overlappingSBTForm();
 			} else {
 				alert("Insert " + sbtString + " Failed. \nError From Server: \n" + response["Error"]);
@@ -235,6 +236,7 @@ function overlappingSBTUpdate(i) {
 				document.getElementById("overlappingSBTUpdateButton_"+i).disabled = false;
 				overlappingSBT[row]["sbtId1"] = sbtId1;
 				overlappingSBT[row]["sbtId2"] = sbtId2;
+				fillTable2(true);
 				overlappingSBTForm();
 			}
 			else {
@@ -269,6 +271,7 @@ function overlappingSBTDelete(i) {
 			if(response["Success"] == "True") {
 				document.getElementById("overlappingSBTDeleteButton_"+row).value = "Delete"
 				overlappingSBT.splice(i - 2, 1);
+				fillTable2(true);
 				overlappingSBTForm();
 			} else {
 				alert("overlappingSBT " + osbtId + ": Deletion Failed.\nError:\n" + response["Error"]);

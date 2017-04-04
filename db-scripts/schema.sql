@@ -2,57 +2,72 @@ DROP DATABASE IF EXISTS timeTable;
 CREATE DATABASE timeTable DEFAULT CHARSET=utf8;
 USE timeTable;
 
-CREATE TABLE config
+CREATE TABLE dept 
 (
-configId int AUTO_INCREMENT PRIMARY KEY,
-configName	varchar(128) NOT NULL,
-dayBegin time	COMMENT 'Day Begins At',
-slotDuration int,/* in seconds */	
-nSlots	int,
-deptId	int,
-incharge	int
+deptId	int  AUTO_INCREMENT PRIMARY KEY COMMENT 'Department Id',
+deptName	varchar(128) NOT NULL COMMENT 'Department Name',
+deptShortName	varchar(32) NOT NULL COMMENT 'Department Short Name',
+CONSTRAINT c_deptName UNIQUE(deptName)
 );
 
 CREATE TABLE user
 (
-userid	int  AUTO_INCREMENT PRIMARY KEY,
-userName varchar(128) NOT NULL,
-password varchar(128) NOT NULL,
+userId	int  AUTO_INCREMENT PRIMARY KEY COMMENT 'User Id',
+userName varchar(128) NOT NULL COMMENT 'User\'s Full Name',
+password varchar(128) NOT NULL COMMENT 'User\'s Passsword',
 CONSTRAINT c_userName UNIQUE(userName)
 );
 
+
+CREATE TABLE config
+(
+configId int AUTO_INCREMENT PRIMARY KEY COMMENT 'Configuration Id',
+configName	varchar(128) NOT NULL COMMENT 'Configuration Name',
+dayBegin time	COMMENT 'Day Begins at Time',
+slotDuration int COMMENT 'Duration of each slot in seconds',/* in seconds */	
+nSlots	int COMMENT 'No of slots in a day',
+deptId	int COMMENT 'Department of this config',
+incharge	int COMMENT 'Incharge user of this config',
+FOREIGN KEY (incharge) REFERENCES user(userId) ON DELETE CASCADE
+);
+
+CREATE TABLE snapshot 
+(
+snapshotId	int AUTO_INCREMENT PRIMARY KEY COMMENT 'Snapshot Id',
+snapshotName	varchar(128) COMMENT 'Name of the Snapshot',
+snapshotCreator	int COMMENT 'User who created this snapshot',  
+createTime	time COMMENT 'Time of creation of this snapshot',
+modifyTime	time COMMENT 'Time of modification of this snapshot',
+configId	int COMMENT 'Configuration Id for this snapshot',
+FOREIGN KEY (snapshotCreator) REFERENCES user(userId) ON DELETE CASCADE,
+FOREIGN KEY (configId) REFERENCES config(configId) ON DELETE CASCADE,
+CONSTRAINT c_snapshotName UNIQUE(snapshotName)
+);
+
+
 CREATE TABLE role
 (
-roleId	int  AUTO_INCREMENT PRIMARY KEY,
-roleName varchar(128) NOT NULL,
+roleId	int  AUTO_INCREMENT PRIMARY KEY COMMENT 'Role Id',
+roleName varchar(128) NOT NULL COMMENT 'Name of the Role',
 CONSTRAINT c_roleName UNIQUE(roleName)
 );
 
 CREATE TABLE capability
 (
-capId int  AUTO_INCREMENT PRIMARY KEY,
-capName	varchar(128) NOT NULL,
-roleId	int,
+capId int  AUTO_INCREMENT PRIMARY KEY COMMENT 'Capability Id',
+capName	varchar(128) NOT NULL COMMENT 'Capability Name',
+roleId	int COMMENT 'Role Id' ,
 CONSTRAINT c_capName UNIQUE(capName)
 );
 
-CREATE TABLE dept 
-(
-deptId	int  AUTO_INCREMENT PRIMARY KEY,
-deptName	varchar(128) NOT NULL,
-deptShortName	varchar(32) NOT NULL,
-CONSTRAINT c_deptName UNIQUE(deptName)
-);
-
-
 CREATE TABLE teacher
 (
-teacherId	int  AUTO_INCREMENT PRIMARY KEY,
-teacherName	varchar(256) NOT NULL,
-teacherShortName	varchar(16) NOT NULL,
-minHrs	int,
-maxHrs int,
-deptId	int,
+teacherId	int  AUTO_INCREMENT PRIMARY KEY COMMENT 'Teacher Id',
+teacherName	varchar(256) NOT NULL COMMENT 'Teacher\'s Full Name',
+teacherShortName	varchar(16) NOT NULL COMMENT 'Teacher\'s Short Name',
+minHrs	int COMMENT 'Min Hrs of Work for Teacher',
+maxHrs int COMMENT 'Max hrs of work for Teacher',
+deptId	int COMMENT 'Department of the Teacher',
 CONSTRAINT c_teacherShortName UNIQUE(teacherShortName)
 );
 
@@ -65,27 +80,27 @@ WHERE t.deptId = d.deptId;
 
 CREATE TABLE class
 (
-classId	int  AUTO_INCREMENT PRIMARY KEY,
-className	varchar(256) NOT NULL,
-classShortName	varchar(32) NOT NULL,
-semester	int	NOT NULL,
-classCount	int NOT NULL,
+classId	int  AUTO_INCREMENT PRIMARY KEY COMMENT 'Class Id',
+className	varchar(256) NOT NULL COMMENT 'Class\'s Full Name',
+classShortName	varchar(32) NOT NULL COMMENT 'Class\'s Short Name',
+semester	int	NOT NULL COMMENT 'Current Semester No',
+classCount	int NOT NULL COMMENT 'No. of Students in Class',
 CONSTRAINT c_classShortName UNIQUE(classShortName)
 );
 
 CREATE TABLE batch
 (
-batchId	int AUTO_INCREMENT PRIMARY KEY,
-batchName	varchar(32) NOT NULL,
-batchCount	int,
+batchId	int AUTO_INCREMENT PRIMARY KEY COMMENT 'Batch Id',
+batchName	varchar(32) NOT NULL COMMENT 'Batch Name',
+batchCount	int COMMENT 'No. of Students in Batch',
 CONSTRAINT c_batchName UNIQUE(batchName)
 );
 
 CREATE TABLE batchCanOverlap
 (
-bo int AUTO_INCREMENT PRIMARY KEY,
-batchId	int NOT NULL,
-batchOverlapId int NOT NULL,
+bo int AUTO_INCREMENT PRIMARY KEY COMMENT 'BatchOverlap Id',
+batchId	int NOT NULL COMMENT 'Batch Id',
+batchOverlapId int NOT NULL COMMENT 'Batch Which Can Overlap',
 FOREIGN KEY(batchId) REFERENCES batch(batchId) ON DELETE CASCADE,
 FOREIGN KEY(batchOverlapId) REFERENCES batch(batchId) ON DELETE CASCADE,
 CONSTRAINT c_overlaps UNIQUE(batchId, batchOverlapId)
@@ -100,9 +115,9 @@ WHERE b.batchId  = bo.batchId AND
 
 CREATE TABLE batchClass 
 (
-bcId int AUTO_INCREMENT PRIMARY KEY,
-batchId int NOT NULL, 
-classId int NOT NULL,
+bcId int AUTO_INCREMENT PRIMARY KEY COMMENT 'Batch Class Id',
+batchId int NOT NULL COMMENT 'Batch Id',  
+classId int NOT NULL COMMENT 'Class Id',
 FOREIGN KEY (batchId) REFERENCES batch(batchId) ON DELETE CASCADE,
 FOREIGN KEY (classId) REFERENCES class(classId) ON DELETE CASCADE,
 CONSTRAINT c_batchClass UNIQUE(batchId, classId)
@@ -117,32 +132,32 @@ WHERE b.batchId = bc.batchId AND
 
 CREATE TABLE room
 (
-roomId	int AUTO_INCREMENT PRIMARY KEY,
-roomName	varchar(32) NOT NULL,
-roomShortName	varchar(16) NOT NULL,
-roomCount	int,
+roomId	int AUTO_INCREMENT PRIMARY KEY COMMENT 'Room Id',
+roomName	varchar(32) NOT NULL COMMENT 'Room Name',
+roomShortName	varchar(16) NOT NULL COMMENT 'Room Short Name',
+roomCount	int COMMENT 'Capacity of Room',
 CONSTRAINT c_roomShortName UNIQUE(roomShortName),
 CONSTRAINT c_roomName UNIQUE(roomName)
 );
 
 CREATE TABLE subject
 (
-subjectId	int AUTO_INCREMENT PRIMARY KEY,
-subjectName	varchar(64) NOT NULL,
-subjectShortName	varchar(16) NOT NULL,
-eachSlot	int,
-nSlots	int,
+subjectId	int AUTO_INCREMENT PRIMARY KEY COMMENT 'Subject Id',
+subjectName	varchar(64) NOT NULL COMMENT 'Subject Full Name',
+subjectShortName	varchar(16) NOT NULL COMMENT 'Subject Short Name',
+eachSlot	int COMMENT 'No. of Slots for Each Entry',
+nSlots	int COMMENT 'Total No. of Entries for this Subjeect',
 /*courseCode	varchar(32) NOT NULL, */
-batches	boolean,
+batches	boolean COMMENT 'Schedule in Batches?',
 CONSTRAINT c_subjectShortName UNIQUE(subjectShortName)
 );
 
 CREATE TABLE subjectBatchTeacher
 (
-sbtId	int AUTO_INCREMENT PRIMARY KEY,
-subjectId	int NOT NULL,
-batchId	int NOT NULL,
-teacherId int,
+sbtId	int AUTO_INCREMENT PRIMARY KEY COMMENT 'SBT Id',
+subjectId	int NOT NULL COMMENT 'Subject Id',
+batchId	int NOT NULL COMMENT 'Batch Id',
+teacherId int COMMENT 'Teacher Id',
 FOREIGN KEY (batchId) REFERENCES batch(batchId) ON DELETE CASCADE,
 FOREIGN KEY (subjectId) REFERENCES subject(subjectId) ON DELETE CASCADE,
 FOREIGN KEY (teacherId) REFERENCES teacher(teacherId) ON DELETE CASCADE,
@@ -158,9 +173,9 @@ ORDER by subjectShortName;
 
 CREATE TABLE overlappingSBT
 (
-osbtId int AUTO_INCREMENT PRIMARY KEY,
-sbtId1	int NOT NULL,
-sbtId2	int NOT NULL,
+osbtId int AUTO_INCREMENT PRIMARY KEY COMMENT 'Id: Subject-Batch Pairs that must overlap',
+sbtId1	int NOT NULL COMMENT 'Sub-Batch Id 1',
+sbtId2	int NOT NULL COMMENT 'Sub-Batch Id 2',
 FOREIGN KEY (sbtId1) REFERENCES subjectBatchTeacher(sbtId) ON DELETE CASCADE ON UPDATE CASCADE,
 FOREIGN KEY (sbtId2) REFERENCES subjectBatchTeacher(sbtId) ON DELETE CASCADE ON UPDATE CASCADE,
 CONSTRAINT c_overlappingSBT	UNIQUE(sbtId1, sbtId2)
@@ -178,10 +193,10 @@ WHERE	sbto.sbtId1 = sbt1.sbtId AND sbto.sbtId2 = sbt2.sbtId AND
 	 
 CREATE TABLE subjectClassTeacher 
 (
-sctId	int AUTO_INCREMENT PRIMARY KEY,
-subjectId	int NOT NULL,
-classId		int NOT NULL,
-teacherId	int,
+sctId	int AUTO_INCREMENT PRIMARY KEY COMMENT 'Subject Class Teacher Mapping Id',
+subjectId	int NOT NULL COMMENT 'Subject Id',
+classId		int NOT NULL COMMENT 'Class Id',
+teacherId	int COMMENT 'Teacher Id',
 FOREIGN KEY (subjectId) REFERENCES subject(subjectId) ON DELETE CASCADE,
 FOREIGN KEY (classId) REFERENCES class(classId) ON DELETE CASCADE,
 FOREIGN KEY (teacherId) REFERENCES teacher(teacherId) ON DELETE CASCADE,
@@ -198,9 +213,9 @@ ORDER BY subjectShortName;
 
 CREATE TABLE classRoom
 (
-crId	int AUTO_INCREMENT PRIMARY KEY,
-classId	int NOT NULL,
-roomId	int NOT NULL,
+crId	int AUTO_INCREMENT PRIMARY KEY COMMENT 'Class Room Mapping Id',
+classId	int NOT NULL COMMENT 'Class Id',
+roomId	int NOT NULL COMMENT 'Room Id',
 FOREIGN KEY (classId) REFERENCES class(classId) ON DELETE CASCADE,
 FOREIGN KEY (roomId) REFERENCES room(roomId) ON DELETE CASCADE,
 CONSTRAINT c_classRoom UNIQUE(classId)
@@ -214,9 +229,9 @@ ORDER BY classShortName;
 
 CREATE TABLE batchRoom
 (
-brId	int AUTO_INCREMENT PRIMARY KEY,
-batchId	int NOT NULL,
-roomId	int NOT NULL,
+brId	int AUTO_INCREMENT PRIMARY KEY COMMENT 'Batch Room Mapping Id',
+batchId	int NOT NULL COMMENT 'Batch Id',
+roomId	int NOT NULL COMMENT 'Room Id',
 FOREIGN KEY (batchId) REFERENCES batch(batchId) ON DELETE CASCADE,
 FOREIGN KEY (roomId) REFERENCES room(roomId) ON DELETE CASCADE,
 CONSTRAINT c_batchRoom UNIQUE(batchId)
@@ -230,9 +245,9 @@ ORDER BY batchName;
 
 CREATE TABLE subjectRoom
 (
-srId	int AUTO_INCREMENT PRIMARY KEY,
-subjectId	int NOT NULL,
-roomId	int NOT NULL,
+srId	int AUTO_INCREMENT PRIMARY KEY COMMENT 'Subject Room Preference Id',
+subjectId	int NOT NULL COMMENT 'Subject Id',
+roomId	int NOT NULL COMMENT 'Room Id',
 FOREIGN KEY (subjectId) REFERENCES subject(subjectId) ON DELETE CASCADE,
 FOREIGN KEY (roomId) REFERENCES room(roomId) ON DELETE CASCADE,
 CONSTRAINT c_subjectRoom UNIQUE(subjectId)
@@ -245,38 +260,23 @@ WHERE	s.subjectId = sr.subjectId AND
 ORDER BY subjectShortName;
 
 
-CREATE TABLE snapshot 
-(
-snapshotId	int AUTO_INCREMENT PRIMARY KEY,
-snapshotName	varchar(128),
-snapshotCreator	int, 
-createTime	time,
-modifyTime	time,
-configId	int,
-FOREIGN KEY (snapshotCreator) REFERENCES user(userId) ON DELETE CASCADE,
-FOREIGN KEY (configId) REFERENCES config(configId) ON DELETE CASCADE,
-CONSTRAINT c_snapshotName UNIQUE(snapshotName)
-);
-
 CREATE TABLE timeTable
 (
-ttId	int AUTO_INCREMENT PRIMARY KEY,
-day smallint, 
-slotNo	int,
-roomId	int,
-classId	int,
-subjectId int,
-teacherId	int,
-batchId	int,
-configId	int NOT NULL,
-snapshotId int,
-isFixed boolean,
+ttId	int AUTO_INCREMENT PRIMARY KEY COMMENT 'TimeTable Id',
+day smallint COMMENT 'Day of Week', 
+slotNo	int COMMENT 'Slot No.',
+roomId	int COMMENT 'Room Id',
+classId	int COMMENT 'Class Id',
+subjectId int COMMENT 'Subject Id',
+teacherId	int COMMENT 'Teacher Id',
+batchId	int COMMENT 'Batch Id',
+snapshotId int NOT NULL COMMENT 'Snapshot Id',
+isFixed boolean COMMENT 'Is Lunch/Fixed Slot?',
 FOREIGN KEY (roomId) REFERENCES room(roomId) ON DELETE CASCADE,
 FOREIGN KEY (classId) REFERENCES class(classId) ON DELETE CASCADE,
 FOREIGN KEY (batchId) REFERENCES batch(batchId) ON DELETE CASCADE,
 FOREIGN KEY (subjectId) REFERENCES subject(subjectId) ON DELETE CASCADE,
 FOREIGN KEY (teacherId) REFERENCES teacher(teacherId) ON DELETE CASCADE,
-FOREIGN KEY (configId) REFERENCES config(configId) ON DELETE CASCADE,
 FOREIGN KEY (snapshotId) REFERENCES snapshot(snapshotId) ON DELETE CASCADE
 );
 
@@ -325,8 +325,8 @@ WHERE tt.isFixed = TRUE AND
 ORDER by ttId;
 
 CREATE TABLE fixedEntry (
-feId int AUTO_INCREMENT PRIMARY KEY,
-ttId int NOT NULL UNIQUE,
-fixedText	varchar(128),
+feId int AUTO_INCREMENT PRIMARY KEY COMMENT 'Fixed Entry Id',
+ttId int NOT NULL UNIQUE COMMENT 'Timetable Entry Id',
+fixedText	varchar(128) COMMENT 'Description',
 FOREIGN KEY (ttId) REFERENCES timeTable(ttId) ON DELETE CASCADE
 );

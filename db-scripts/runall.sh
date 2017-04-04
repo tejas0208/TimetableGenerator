@@ -12,6 +12,9 @@ mysql -u root -proot < dept.sql
 echo "---------------config-----------------"
 mysql -u root -proot < config.sql
 
+echo "---------------snapshot ----------------"
+mysql -u root -proot < snapshot.sql
+
 echo "---------------class-----------------"
 cat class.csv  | bash class.sh  > class.sql
 mysql -u root -proot < class.sql
@@ -55,9 +58,6 @@ mysql -u root -proot < batchRoom.sql
 echo "---------------subjectRoom-----------------"
 cat subjectRoom.csv  | bash subjectRoom.sh  > subjectRoom.sql
 mysql -u root -proot < subjectRoom.sql
-
-echo "---------------snapshot ----------------"
-mysql -u root -proot < snapshot.sql
 
 echo "---------------timetable-----------------"
 cat timetable.csv  | bash timetable.sh  > timetable.sql

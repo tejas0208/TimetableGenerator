@@ -159,6 +159,7 @@ function teacherInsert() {
 				newteacher["maxHrs"] = maxHrs;
 				newteacher["deptId"] = deptId;
 				teacher.unshift(newteacher);
+				loadTeacherMenu();
 				teacherForm();
 			} else {
 				alert("teacherInsert " + teacherShortName + " Failed. Error: " + response["Error"]);
@@ -201,6 +202,7 @@ function teacherUpdate(i) {
 				teacher[row]["minHrs"] = minHrs;
 				teacher[row]["maxHrs"] = maxHrs;
 				teacher[row]["dept"] = deptId;
+				loadTeacherMenu();
 				teacherForm();
 			}
 			else {
@@ -239,6 +241,8 @@ function teacherDelete(i) {
 			if(response["Success"] == "True") {
 				document.getElementById("tDeleteButton_"+row).value = "Delete"
 				teacher.splice(i - 2, 1);
+				loadTeacherMenu();
+				fillTable2(true);
 				teacherForm();
 			} else {
 				alert("Teacher " + teacherShortName + ": Deletion Failed.\nError:\n" + response["Error"]);

@@ -109,6 +109,8 @@ function roomInsert() {
 				newroom["roomCount"] = roomCount;
 				newroom["roomId"] = response["roomId"];
 				room.unshift(newroom);
+				loadRoomMenu();
+				fillTable2(true);
 				roomForm();
 			} else {
 				alert("roomInsert " + roomShortName + " Failed. Error: " + response["Error"]);
@@ -146,6 +148,8 @@ function roomUpdate(i) {
 				room[row]["roomName"] = roomName;
 				room[row]["roomShortName"] = roomShortName;
 				room[row]["roomCount"] = roomCount;
+				loadRoomMenu();
+				fillTable2(true);
 				roomForm();
 			}
 			else {
@@ -184,6 +188,8 @@ function roomDelete(i) {
 			if(response["Success"] == "True") {
 				document.getElementById("rDeleteButton_"+row).value = "Delete"
 				room.splice(i - 2, 1);
+				loadRoomMenu();
+				fillTable2(true);
 				roomForm();
 			} else {
 				alert("Room " + roomShortName + ": Deletion Failed.\nError:\n" + response["Error"]);

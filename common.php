@@ -53,12 +53,15 @@ function getArgument($arg) {
 function getAllData() {
 	header("Content-Type: application/JSON; charset=UTF-8");
 	/* List of tables to be returned */	
-	$tableNames = array("teacher", "class", "batch", 
-					"batchCanOverlap", "dept", "room", "config", 
-					"subject", "batchClass", "subjectBatchTeacher", 
-					"subjectClassTeacher", "snapshot", 
+	$tableNames = array("dept", "user", "config", "snapshot", 
+					"teacher", 
+					"class", 
+					"batch", "batchCanOverlap", "batchClass", 
+					"room", 
 					"classRoom", "batchRoom", "subjectRoom", 
-					"overlappingSBT", "fixedEntry");
+					"subject", 
+					"subjectBatchTeacher", "subjectClassTeacher", "overlappingSBT", 
+					"fixedEntry");
 	$length = count($tableNames);
 
 	for($i = 0; $i < $length; $i++) {

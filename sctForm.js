@@ -193,6 +193,7 @@ function sctInsert() {
 				newSCT["classId"] = classId;
 				newSCT["sctId"] = response["sctId"];
 				subjectClassTeacher.unshift(newSCT);
+				fillTable2(true);
 				sctForm();
 			} else {
 				alert("Insert teacher:" + teacherShortName + " subject: " + subjectShortName + " class: " 
@@ -235,6 +236,7 @@ function sctUpdate(i) {
 				subjectClassTeacher[row]["teacherId"] = teacherId;
 				subjectClassTeacher[row]["subjectId"] = subjectId;
 				subjectClassTeacher[row]["classId"] = classId;
+				fillTable2(true);
 				sctForm();
 			}
 			else {
@@ -272,6 +274,7 @@ function sctDelete(i) {
 			if(response["Success"] == "True") {
 				document.getElementById("sctDeleteButton_"+row).value = "Delete"
 				subjectClassTeacher.splice(i - 2, 1);
+				fillTable2(true);
 				sctForm();
 			} else {
 				alert("sct " + sctId + ": Deletion Failed.\nError:\n" + response["Error"]);

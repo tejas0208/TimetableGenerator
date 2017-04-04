@@ -1035,5 +1035,5 @@ $allForms =
 		$roomForm. $classRoomForm. $batchRoomForm. $subjectRoomForm.
 		$sctForm. $sbtForm.
 		$overlappingSBTForm;
-		$configForm.
+		$configForm;
 ?>

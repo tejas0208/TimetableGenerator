@@ -141,6 +141,7 @@ function configInsert() {
 				newconfig["incharge"] = incharge;
 				newconfig["configId"] = response["configId"];
 				config.unshift(newconfig);
+				fillTable2(true);
 				configForm();
 			} else {
 				alert("configInsert " + configName + " Failed. Error: " + response["Error"]);
@@ -184,6 +185,7 @@ function configUpdate(i) {
 				config[row]["nSlots"] = nSlots;
 				config[row]["deptId"] = deptId;
 				config[row]["incharge"] = incharge;
+				fillTable2(true);
 				configForm();
 			}
 			else {
@@ -222,6 +224,7 @@ function configDelete(i) {
 			if(response["Success"] == "True") {
 				document.getElementById("configDeleteButton_"+row).value = "Delete"
 				config.splice(i - 2, 1);
+				fillTable2(true);
 				configForm();
 			} else {
 				alert("Config " + configId + ": Deletion Failed.\nError:\n" + response["Error"]);

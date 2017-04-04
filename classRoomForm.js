@@ -153,6 +153,7 @@ function classRoomInsert() {
 				newClassRoom["classId"] = classId;
 				newClassRoom["crId"] = response["crId"];
 				classRoom.unshift(newClassRoom);
+				fillTable2(true);
 				classRoomForm();
 			} else {
 				alert("Insert class: " 
@@ -191,6 +192,7 @@ function classRoomUpdate(i) {
 				document.getElementById("classRoomUpdateButton_"+i).disabled = false;
 				classRoom[row]["roomId"] = roomId;
 				classRoom[row]["classId"] = classId;
+				fillTable2(true);
 				classRoomForm();
 			}
 			else {
@@ -227,6 +229,7 @@ function classRoomDelete(i) {
 			if(response["Success"] == "True") {
 				document.getElementById("classRoomDeleteButton_"+row).value = "Delete"
 				classRoom.splice(i - 2, 1);
+				fillTable2(true);
 				classRoomForm();
 			} else {
 				alert("classRoom " + crId + ": Deletion Failed.\nError:\n" + response["Error"]);

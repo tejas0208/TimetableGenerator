@@ -118,6 +118,8 @@ function classInsert() {
 				newclass["classCount"] = classCount;
 				newclass["classId"] = response["classId"];
 				classTable.unshift(newclass);
+				loadClassMenu();
+				fillTable2(true);
 				classForm();
 			} else {
 				alert("classInsert " + classShortName + " Failed. Error: " + response["Error"]);
@@ -157,6 +159,8 @@ function classUpdate(i) {
 				classTable[row]["classShortName"] = classShortName;
 				classTable[row]["semester"] = semester;
 				classTable[row]["classCount"] = classCount;
+				loadClassMenu();
+				fillTable2(true);
 				classForm();
 			}
 			else {
@@ -195,6 +199,8 @@ function classDelete(i) {
 			if(response["Success"] == "True") {
 				document.getElementById("cDeleteButton_"+row).value = "Delete"
 				classTable.splice(i - 2, 1);
+				loadClassMenu();
+				fillTable2(true);
 				classForm();
 			} else {
 				alert("Class " + classShortName + ": Deletion Failed.\nError:\n" + response["Error"]);

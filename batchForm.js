@@ -128,6 +128,8 @@ function batchInsert() {
 				newbatch["batchId"] = response["batchId"];
 				newbatch["batchCount"] = batchCount;
 				batch.unshift(newbatch);
+				loadBatchMenu();
+				fillTable2(true);
 				batchForm();
 			} else {
 				alert("batchInsert " + batchName + " Failed. Error: " + response["Error"]);
@@ -203,6 +205,8 @@ function batchUpdate(i) {
 				document.getElementById("bUpdateButton_"+i).disabled = false;
 				batch[row]["batchName"] = batchName; /* new name inserted in array */
 				batch[row]["batchCount"] = batchCount;
+				loadBatchMenu();
+				fillTable2(true);
 				batchForm();
 			}
 			else {
@@ -240,6 +244,8 @@ function batchDelete(i) {
 			if(response["Success"] == "True") {
 				document.getElementById("bDeleteButton_"+row).value = "Delete"
 				batch.splice(i - 2, 1);
+				loadBatchMenu();
+				fillTable2(true);
 				batchForm();
 			} else {
 				alert("Batch " + batchName + ": Deletion Failed.\nError:\n" + response["Error"]);
@@ -406,6 +412,7 @@ function batchCanOverlapDelete(i) {
 					}
 				}*/
 				batchCanOverlap = getOneTable("batchCanOverlap", false).batchCanOverlap;
+				fillTable2(true);
 				batchCanOverlapForm();
 			} else {
 				alert("BatchCanOverlap " + JSON.stringify(overlaps[row]) + ": Deletion Failed.\nError:\n" + response["Error"]);
@@ -442,6 +449,7 @@ function batchCanOverlapInsert() {
 			if(response["Success"] == "True") {
 				//batchChange(false);	/* TODO: Check this call */
 				batchCanOverlap = getOneTable("batchCanOverlap", false).batchCanOverlap;
+				fillTable2(true);
 				batchCanOverlapForm();
 			} else {
 				alert("batchInsert " + batchNames + " Failed. \n" +

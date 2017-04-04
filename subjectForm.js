@@ -145,6 +145,8 @@ function subjectInsert() {
 				newsubject["batches"] = batches;
 				newsubject["subjectId"] = response["subjectId"];
 				subject.unshift(newsubject);
+				loadSubjectMenu();
+				fillTable2(true);
 				subjectForm();
 			} else {
 				alert("subjectInsert " + subjectShortName + " Failed. Error: " + response["Error"]);
@@ -186,6 +188,8 @@ function subjectUpdate(i) {
 				subject[row]["eachSlot"] = eachSlot;
 				subject[row]["nSlots"] = nSlots;
 				subject[row]["batches"] = batches;
+				loadSubjectMenu();
+				fillTable2(true);
 				subjectForm();
 			}
 			else {
@@ -224,6 +228,8 @@ function subjectDelete(i) {
 			if(response["Success"] == "True") {
 				document.getElementById("sDeleteButton_"+row).value = "Delete"
 				subject.splice(i - 2, 1);
+				loadSubjectMenu();
+				fillTable2(true);
 				subjectForm();
 			} else {
 				alert("Subject " + subjectShortName + ": Deletion Failed.\nError:\n" + response["Error"]);

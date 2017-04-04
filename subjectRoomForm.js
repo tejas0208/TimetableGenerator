@@ -153,6 +153,7 @@ function subjectRoomInsert() {
 				newSubjectRoom["subjectId"] = subjectId;
 				newSubjectRoom["srId"] = response["srId"];
 				subjectRoom.unshift(newSubjectRoom);
+				fillTable2(true);
 				subjectRoomForm();
 			} else {
 				alert("Insert subject: " 
@@ -191,6 +192,7 @@ function subjectRoomUpdate(i) {
 				document.getElementById("subjectRoomUpdateButton_"+i).disabled = false;
 				subjectRoom[row]["roomId"] = roomId;
 				subjectRoom[row]["subjectId"] = subjectId;
+				fillTable2(true);
 				subjectRoomForm();
 			}
 			else {
@@ -227,6 +229,7 @@ function subjectRoomDelete(i) {
 			if(response["Success"] == "True") {
 				document.getElementById("subjectRoomDeleteButton_"+row).value = "Delete"
 				subjectRoom.splice(i - 2, 1);
+				fillTable2(true);
 				subjectRoomForm();
 			} else {
 				alert("subjectRoom " + srId + ": Deletion Failed.\nError:\n" + response["Error"]);

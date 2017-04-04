@@ -24,21 +24,21 @@ function saveSnapshot() {
 			$classId = $currRow["classId"];
 			if($currRow["isFixed"] == 1) {
 				$ttInsertQuery = "INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, ".
-								"teacherId, batchId, configId, snapshotId, isFixed) VALUES (".
+								"teacherId, batchId, snapshotId, isFixed) VALUES (".
 								$currRow["day"].",".$currRow["slotNo"].",".
 								"null, null, null, ".
 								//"(SELECT classId from class where classShortName=\"$className\"),".
 								$classId.",".
-								"null, null,".
+								"null, ".
 								$snapshotId.",".
 								$currRow["isFixed"].");";
 			} else {
 				$ttInsertQuery = "INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, ".
-								"teacherId, batchId, configId, snapshotId, isFixed) VALUES (".
+								"teacherId, batchId, snapshotId, isFixed) VALUES (".
 								$currRow["day"].",".$currRow["slotNo"].",".
 								$currRow["roomId"].",".$currRow["classId"].",".
 								$currRow["subjectId"].",".$currRow["teacherId"].",".
-								$currRow["batchId"].",".$currRow["configId"].",".
+								$currRow["batchId"].",".
 								$snapshotId.",".
 								$currRow["isFixed"].");";
 			}
@@ -74,21 +74,21 @@ function saveNewSnapshot() {
 			$classId = $currRow["classId"];
 			if($currRow["isFixed"] == 1) {
 				$ttInsertQuery = "INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, 
-								teacherId, batchId, configId, snapshotId, isFixed) VALUES (".
+								teacherId, batchId, snapshotId, isFixed) VALUES (".
 								$currRow["day"].",".$currRow["slotNo"].",".
 								"null, null, null, ".
 								//"(SELECT classId from class where classShortName=\"$className\"),".
 								$classId.",".
-								"null, null,".
+								"null, ".
 								"(SELECT snapshotId from snapshot where snapshotName = \"$snapshotName\"),".
 								$currRow["isFixed"].");";
 			} else {
 				$ttInsertQuery = "INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, 
-								teacherId, batchId, configId, snapshotId, isFixed) VALUES (".
+								teacherId, batchId, snapshotId, isFixed) VALUES (".
 								$currRow["day"].",".$currRow["slotNo"].",".
 								$currRow["roomId"].",".$currRow["classId"].",".
 								$currRow["subjectId"].",".$currRow["teacherId"].",".
-								$currRow["batchId"].",".$currRow["configId"].",".
+								$currRow["batchId"].",".
 								"(SELECT snapshotId from snapshot where snapshotName = \"$snapshotName\"),".
 								$currRow["isFixed"].");";
 			}
