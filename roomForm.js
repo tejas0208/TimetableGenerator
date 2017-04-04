@@ -18,7 +18,7 @@ function roomForm() {
 	var tr = document.createElement("tr"); table.appendChild(tr);
 
 	var th = document.createElement("th"); tr.appendChild(th);
-	var tc = document.createTextNode("SN"); th.appendChild(tc);
+	var tc = document.createTextNode("Id"); th.appendChild(tc);
 
 	th = document.createElement("th"); tr.appendChild(th);
 	tc = document.createTextNode("Name"); th.appendChild(tc);
@@ -60,8 +60,14 @@ function roomForm() {
 	for (i in room) {
 		currRoom = room[i];	
 		var row = table.insertRow(count);
+
 		var cell = row.insertCell(0);
-		cell.innerHTML = "<center> " + (count - 1) + "</center>";
+		var centerTag = document.createElement("center");
+		centerTag.setAttribute("id", "center_"+count);
+		var centerText = document.createTextNode(currRoom["roomId"]);
+		centerTag.appendChild(centerText);
+		cell.appendChild(centerTag);
+
 		cell = row.insertCell(-1);
 		cell.innerHTML = "<input type=\"text\" id=\"roomName_"+count+"\" size=\"32\" value=\""+currRoom["roomName"]+"\"> </input>";
 		cell = row.insertCell(-1);
@@ -107,6 +113,7 @@ function roomInsert() {
 				newroom["roomName"] = roomName;
 				newroom["roomShortName"] = roomShortName;
 				newroom["roomCount"] = roomCount;
+				newroom["snapshotId"] = currentSnapshotId;
 				newroom["roomId"] = response["roomId"];
 				room.unshift(newroom);
 				loadRoomMenu();
@@ -120,8 +127,7 @@ function roomInsert() {
 	xhttp.open("POST", "timetable.php", false); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhttp.send("reqType=roomInsert&roomName="+roomName+"&roomShortName="+
-			roomShortName+"&roomCount="+roomCount);
-	
+			roomShortName+"&roomCount="+roomCount+"&snapshotId="+currentSnapshotId);
 }
 
 function roomUpdate(i) {
@@ -130,12 +136,13 @@ function roomUpdate(i) {
 	roomName = document.getElementById("roomName_"+row).value;	
 	roomShortName = document.getElementById("roomShortName_"+row).value;	
 	roomCount = document.getElementById("roomCount_"+row).value;	
+	roomId = document.getElementById("center_"+row).childNodes[0].nodeValue;
 	document.getElementById("rUpdateButton_"+row).childNodes[0].nodeValue = "Updating";
 	document.getElementById("rDeleteButton_"+row).disabled = true;
 	document.getElementById("rUpdateButton_"+row).disabled = true;
 
 	row = i - 2;
-	var roomOrigShortName = room[row]["roomShortName"];
+	//var roomOrigShortName = room[row]["roomShortName"];
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function () {
 		if(this.readyState == 4 && this.status == 200) {
@@ -164,8 +171,7 @@ function roomUpdate(i) {
 	xhttp.open("POST", "timetable.php", false); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhttp.send("reqType=roomUpdate&roomName="+roomName+"&roomShortName="+
-			roomShortName+"&roomCount="+roomCount+
-			"&roomOrigShortName="+roomOrigShortName);
+			roomShortName+"&roomCount="+roomCount+"&roomId="+roomId);
 	
 }
 function roomDelete(i) {
@@ -177,7 +183,8 @@ function roomDelete(i) {
 				  "Are you sure?");
 	if(sure != true)
 		return;
-	roomShortName = document.getElementById("roomShortName_"+row).value;
+	//roomShortName = document.getElementById("roomShortName_"+row).value;
+	roomId = document.getElementById("center_"+row).childNodes[0].nodeValue;
 	document.getElementById("rDeleteButton_"+row).childNodes[0].nodeValue = "Deleting";
 	document.getElementById("rDeleteButton_"+row).disabled = true;
 	document.getElementById("rUpdateButton_"+row).disabled = true;
@@ -201,5 +208,5 @@ function roomDelete(i) {
 	}
 	xhttp.open("POST", "timetable.php", true); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("reqType=roomDelete&roomShortName="+roomShortName);
+	xhttp.send("reqType=roomDelete&roomId="+roomId);
 }

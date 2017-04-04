@@ -50,10 +50,11 @@ function getArgument($arg) {
 	else
 		return ""; 
 }
-function getAllData() {
+function getDataTables() {
 	header("Content-Type: application/JSON; charset=UTF-8");
 	/* List of tables to be returned */	
-	$tableNames = array("dept", "user", "config", "snapshot", 
+	$snapshotId = getArgument("snapshotId");
+	$tableNames = array(//"dept", "config", "snapshot", 
 					"teacher", 
 					"class", 
 					"batch", "batchCanOverlap", "batchClass", 
@@ -65,7 +66,7 @@ function getAllData() {
 	$length = count($tableNames);
 
 	for($i = 0; $i < $length; $i++) {
-		$query = "SELECT * FROM ".$tableNames[$i];/*TimeTable*/
+		$query = "SELECT * FROM ".$tableNames[$i]." WHERE snapshotId = $snapshotId";/*TimeTable*/
 		$outp = sqlGetAllRows($query);
 		$tables[$tableNames[$i]] = $outp;
 	}
@@ -74,9 +75,14 @@ function getAllData() {
 }
 function getOneTable($tableName) {
 	header("Content-Type: application/JSON; charset=UTF-8");
-	$query = "SELECT * FROM $tableName";
+	$snapshotId = getArgument("snapshotId");
+	if($snapshotId != "")
+		$query = "SELECT * FROM $tableName WHERE snapshotId = $snapshotId";
+	else 
+		$query = "SELECT * FROM $tableName ";
 	$outp = sqlGetAllRows($query);
 	$tables[$tableName] = $outp;
+	error_log("getOneTable: Returning: ".json_encode($tables));
 	return json_encode($tables);
 }
 

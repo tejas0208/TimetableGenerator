@@ -18,7 +18,7 @@ function batchForm() {
 	var tr = document.createElement("tr"); table.appendChild(tr);
 
 	var th = document.createElement("th"); tr.appendChild(th);
-	var tc = document.createTextNode("SN"); th.appendChild(tc);
+	var tc = document.createTextNode("Id"); th.appendChild(tc);
 
 	th = document.createElement("th"); tr.appendChild(th);
 	tc = document.createTextNode("Name"); th.appendChild(tc);
@@ -68,8 +68,14 @@ function batchForm() {
 	for (i in batch) {
 		currBatch = batch[i];	
 		var row = table.insertRow(count);
+
 		var cell = row.insertCell(0);
-		cell.innerHTML = "<center> " + (count - 1) + "</center>";
+		var centerTag = document.createElement("center");
+		centerTag.setAttribute("id", "center_"+count);
+		var centerText = document.createTextNode(currBatch["batchId"]);
+		centerTag.appendChild(centerText);
+		cell.appendChild(centerTag);
+
 		cell = row.insertCell(-1);
 		cell.innerHTML = "<input type=\"text\" id=\"batchName_"+count+"\" size=\"32\" value=\""+currBatch["batchName"]+"\"> </input>";
 		cell = row.insertCell(-1);
@@ -126,6 +132,7 @@ function batchInsert() {
 				newbatch = {};
 				newbatch["batchName"] = batchName;
 				newbatch["batchId"] = response["batchId"];
+				newbatch["snapshotId"] = currentSnapshotId; 
 				newbatch["batchCount"] = batchCount;
 				batch.unshift(newbatch);
 				loadBatchMenu();
@@ -138,7 +145,7 @@ function batchInsert() {
 	}
 	xhttp.open("POST", "timetable.php", false); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("reqType=batchInsert&batchName="+batchName+"&batchCount="+batchCount);
+	xhttp.send("reqType=batchInsert&batchName="+batchName+"&batchCount="+batchCount+"&snapshotId="+currentSnapshotId);
 	
 }
 function batchClassUpdate(i, currBatchId, currBatchClassId) {
@@ -180,13 +187,15 @@ function batchUpdate(i) {
 	var batchName, batchCount;
 	batchName = document.getElementById("batchName_"+row).value;	
 	batchCount = document.getElementById("batchCount_"+row).value;	
+	batchId = document.getElementById("center_"+row).childNodes[0].nodeValue;
 	document.getElementById("bUpdateButton_"+row).childNodes[0].nodeValue = "Updating";
 	document.getElementById("bDeleteButton_"+row).disabled = true;
 	document.getElementById("bUpdateButton_"+row).disabled = true;
 
 	newClassName = document.getElementById("classShortName_"+row).value;
 	newClassId = search(classTable, "classShortName", newClassName)["classId"];
-	currBatchId = search(batch, "batchName", batch[row-2]["batchName"])["batchId"];
+	//currBatchId = search(batch, "batchName", batch[row-2]["batchName"])["batchId"];
+	currBatchId = batchId;
 	currBatchClassId = search(batchClass, "batchId", currBatchId)["classId"];
 	currBatchClassShortName = search(classTable, "classId", currBatchClassId)["classShortName"];
 	//alert(currBatchId + " " + currBatchClassId + " " + currBatchClassShortName + " " + newClassName);
@@ -194,7 +203,7 @@ function batchUpdate(i) {
 		batchClassUpdate(row, currBatchId, newClassId);
 
 	row = i - 2;
-	var batchOrigName = batch[row]["batchName"];
+	//var batchOrigName = batch[row]["batchName"];
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function () {
 		if(this.readyState == 4 && this.status == 200) {
@@ -221,7 +230,7 @@ function batchUpdate(i) {
 	xhttp.open("POST", "timetable.php", false); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhttp.send("reqType=batchUpdate&batchName="+batchName+"&batchCount="+batchCount+
-				"&batchOrigName="+batchOrigName);
+				"&batchId="+batchId);
 	
 }
 function batchDelete(i) {
@@ -233,7 +242,8 @@ function batchDelete(i) {
 						  "Are you sure?");
 	if(sure != true)
 		return;
-	batchName = document.getElementById("batchName_"+row).value;
+	//batchName = document.getElementById("batchName_"+row).value;
+	batchId = document.getElementById("center_"+row).childNodes[0].nodeValue;
 	document.getElementById("bDeleteButton_"+row).childNodes[0].nodeValue = "Deleting";
 	document.getElementById("bDeleteButton_"+row).disabled = true;
 	document.getElementById("bUpdateButton_"+row).disabled = true;
@@ -257,7 +267,7 @@ function batchDelete(i) {
 	}
 	xhttp.open("POST", "timetable.php", true); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("reqType=batchDelete&batchName="+batchName);
+	xhttp.send("reqType=batchDelete&batchId="+batchId);
 }
 
 var overlaps = [];

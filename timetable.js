@@ -3,15 +3,16 @@ var prevBorder;
 var copyCell;
 
 var database;
-var dept, user, config, snapshot;
+var dept, config, snapshot;
 var teacher, classTable, batch, batchCanOverlap, batchClass;  
 var room, classRoom, batchRoom, subjectRoom;
 var subject, subjectBatchTeacher, subjectClassTeacher, overlappingSBT; 
 var fixedEntry;
 
 var currentSnapshotId;
+var currentDeptId;
 /* In future give a menu option to select a Config, and then a snapshot in that config */
-var currConfigId = 1;
+var currentConfigId = 1;
 var type = "class";
 var id = "SYBT-CE";
 var daysName = ["Sun", "Mon", "Tues", "Wed", "Thur", "Fri", "Sat"];
@@ -372,67 +373,85 @@ function getTimetable(snapshotName) {/*Loads data from server asynchronously*/
 function getOneTable(tName, asynchronousOrNot) {/*Loads data from server asynchronously*/
 	var xhttp;
 	xhttp = new XMLHttpRequest();
-	if(asynchronousOrNot == true) {
-		xhttp.onreadystatechange = function() {
+	xhttp.onreadystatechange = function() {
+		alert("there");
 			if (this.readyState == 4 && this.status == 200) {
 				//alert("getOneTable: " + this.responseText);
 				var db = JSON.parse(this.responseText);
 				return db; 
 			}
-		};
-	}
+	};
 	xhttp.open("POST", "timetable.php", asynchronousOrNot);
 	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	xhttp.send("reqType=getOneTable&tableName="+tName);
+	xhttp.send("reqType=getOneTable&tableName="+tName+"&snapshotId="+currentSnapshotId);
 	if(asynchronousOrNot == false) {
+		alert("here");
 		var db = JSON.parse(xhttp.responseText);
 		return db;  /* JS variables are pass by value */
 	}
 }
+function getSnapshotTable() {/*Loads data from server asynchronously*/
+	var xhttp;
+	xhttp = new XMLHttpRequest();
+	xhttp.open("POST", "timetable.php", false);
+	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xhttp.send("reqType=getOneTable&tableName=snapshot");
+	var db = JSON.parse(xhttp.responseText);
+	return db;  /* JS variables are pass by value */
+}
+function getDeptConfigSnapshot() {
+	var xhttp = new XMLHttpRequest();
+	xhttp.open("POST", "timetable.php", false);
+	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xhttp.send("reqType=getOneTable&tableName=dept");
+	database = JSON.parse(xhttp.responseText);
+	dept = database.dept;
+	if(typeof dept == "undefined") {
+		alert("Table: dept not found. Check your Error Logs");
+		return false;
+	}
+	dept.sort(function(a, b) {
+		var x = a.deptShortName.toLowerCase();
+		var y = b.deptShortName.toLowerCase();
+		if(x < y)
+			return -1;
+		if(x > y)
+			return 1;
+		return 0;
+	});
+	currentDeptId = dept[0]["deptId"];
+	//alert("dept = " + JSON.stringify(dept) + "\n currDeptId = " + currentDeptId);
 
+	var xhttp = new XMLHttpRequest();
+	xhttp.open("POST", "timetable.php", false);
+	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xhttp.send("reqType=getOneTable&tableName=config");
+	database = JSON.parse(xhttp.responseText);
+	config = database.config;
+	if(typeof config == "undefined") {
+		alert("Table: config not found. Check your Error Logs");
+		return false;
+	}
+	currentConfigId = config[0]["configId"];
+	//alert("config = " + JSON.stringify(config) + "\n currConfigId = " + currentConfigId);
 
-function getAllData() {/*Loads data from server asynchronously*/
+	snapshot = getSnapshotTable().snapshot;
+	if(typeof snapshot == "undefined") {
+		alert("Table: snapshot not found. Check your Error Logs");
+		return false;
+	}
+	currentSnapshotId = snapshot[0]["snapshotId"];
+	//alert("snapshot = " + JSON.stringify(snapshot) + "\n currSnapshotId= " + currentSnapshotId);
+	$(".selection-menu").css("display", "block");
+	return true;
+}
+function getDataTables() {/*Loads data from server asynchronously*/
 	var xhttp;
 	xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
 			database = JSON.parse(this.responseText);
 
-			dept = database.dept;
-			if(typeof dept == "undefined") {
-				alert("Table: dept not found. Check your Error Logs");
-				return false;
-			}
-			dept.sort(function(a, b) {
-				var x = a.deptShortName.toLowerCase();
-				var y = b.deptShortName.toLowerCase();
-				if(x < y)
-					return -1;
-				if(x > y)
-					return 1;
-				return 0;
-			});
-
-
-			user = database.user;
-			if(typeof user == "undefined") {
-				alert("Table: user not found. Check your Error Logs");
-				return false;
-			}
-
-			config = database.config;
-			if(typeof config == "undefined") {
-				alert("Table: config not found. Check your Error Logs");
-				return false;
-			}
-
-			snapshot = database.snapshot;
-			if(typeof snapshot == "undefined") {
-				alert("Table: snapshot not found. Check your Error Logs");
-				return false;
-			}
-
-					
 			teacher = database.teacher;
 			if(typeof teacher == "undefined") {
 				alert("Table: teacher not found. Check your Error Logs");
@@ -555,7 +574,7 @@ function getAllData() {/*Loads data from server asynchronously*/
 	};
 	xhttp.open("POST", "timetable.php", false);
 	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	xhttp.send("reqType=getAllData");
+	xhttp.send("reqType=getDataTables&snapshotId="+currentSnapshotId);
 }
 
 function createOptionTag(value, textString, selected) {
@@ -717,6 +736,9 @@ function createSubjectRoomEntry(subjectId, roomId) {
 }
 function makeTimeTableEntry(day, slotNo, roomId, classId, subjectId, 
 		teacherId, batchId, currentSnapshotId, isFixed, eachSlot) {
+	if(classId == null) {
+		alert("makeTimeTableEntry: classId is null");
+	}
 	for(var i = 0; i < eachSlot; i++) {
 		var newEntry = new createTimeTableEntry(day, (parseInt(slotNo) + i), 
 							roomId, classId, 
@@ -828,7 +850,7 @@ function getEligibleBatches(i, j, k, subjectRow) {
 				"subject  = " + subjectRow["subjectShortName"]);
 	var optionString = "<option value=\"NOT_SELECTED\">--Batch--</option>";
 	var eligibleBatches = [];
-	var configRow = search(config, "configId", currConfigId);
+	var configRow = search(config, "configId", currentConfigId);
 	/*Get batches of class and for that subject*/
 	var sbtRows;
 	if(type == "class") {
@@ -1299,7 +1321,7 @@ function getEligibleSubjects(i, j, k) {
 	if (r.length < 1) 
 		return "NO ROOM";   */
 	//console.log(i + "," + j);
-	var configrow = search(config, "configId", currConfigId);
+	var configrow = search(config, "configId", currentConfigId);
 	var nSlotsPerDay = configrow["nSlots"];
 	var select = "<select id= \"subject"+ i + j + k +
 				"\" onchange=\"subjectSelected(this)\">"+
@@ -1753,7 +1775,7 @@ function getPosition(i, j, rowEntry, eachSlot) {
 }
 
 function fillTable2(createNewTable) {
-	var configrow = search(config, "configId", currConfigId);
+	var configrow = search(config, "configId", currentConfigId);
 	NoOfSlots = configrow["nSlots"];
 	var days = 6;
 	var slottablePerDay = 1;
@@ -2068,10 +2090,10 @@ function snapshotChange() {
 			if(save == "yes")
 				jsSaveSnapshot();
 	}
-	getTimetable(snapshotName);	
 	currSnapshotName = snapshotName;
 	var snapshotRow = search(snapshot, "snapshotName", snapshotName);
 	currentSnapshotId = snapshotRow["snapshotId"];
+	loadNewSnapshot();
 	dirtyTimeTable = 0;
 	fillTable2(false);
 }
@@ -2198,25 +2220,34 @@ function loadSelectMenus() {
 	loadBatchMenu();
 	loadRoomMenu();
 }
-
-function load() {
-	var i;
-	//alert("Come 1");
-	/*Load whole database*/
-	if(getAllData() == false) { 
+function loadNewSnapshot() {
+	if(getDataTables() == false) { 
 		alert("Loading of Tables Failed. Check your Error Logs");
 		return false;
 	}
 	//alert("Loaded db");
-	if(getTimetable("default") == false) {
+	if(getTimetable(search(snapshot, "snapshotId", currentSnapshotId)["snapshotName"]) == false) {
 		alert("Loading of default snapshot Failed. Check your Error Logs");
 		return false;
 	};
 	loadSelectMenus(); /* load Teacher, Class, Batch, Room Menu */
-	loadSnapshotMenu("default");
+	loadSnapshotMenu(search(snapshot, "snapshotId", currentSnapshotId)["snapshotName"]);
+	getSupportObject();
+	/* Settings for saving the snapshot */
+	return true;
+}
+function load() {
+	var i;
+	//alert("Come 1");
+	/*Load whole database*/
+	if(getDeptConfigSnapshot() == false) {
+		alert("Loading of Dept/Config/Snapshot Tables Failed. Check your Error Logs");
+		return false;
+	}
+	res = loadNewSnapshot();
 	$("#mainTimeTable").append("<center><B>No TimeTable loaded </B><br>"+
 								"Please select option from above catgories</center>");
-	/* Settings for saving the snapshot */
+	return res;
 }
 function loadSnapshotMenu(selectedName) {
 	//alert("loadSnapshotMenu: here");
@@ -2224,6 +2255,7 @@ function loadSnapshotMenu(selectedName) {
 	while(selectTag.hasChildNodes()) {
 		selectTag.removeChild(selectTag.childNodes[0]);
 	}
+	alert("loading new snapshot Menu: snapshots: " + JSON.stringify(snapshot));
 	for (i in snapshot) {
 		option = createOptionTag(snapshot[i]["snapshotName"], 
 								snapshot[i]["snapshotName"], "false");
@@ -2241,8 +2273,8 @@ function loadSnapshotMenu(selectedName) {
 	//sortSelect(selectTag);	
 }
 function jsSaveNewSnapshot() {
-	var snapshotName = prompt("Enter snapshot Name","snapshot");
-	if(snapshotName != null) {
+	var newSnapshotName = prompt("Enter snapshot Name","snapshot");
+	if(newSnapshotName != null) {
 		var xhttp;
 		xhttp = new XMLHttpRequest();
 		xhttp.onreadystatechange = function() {
@@ -2251,14 +2283,17 @@ function jsSaveNewSnapshot() {
 				response = JSON.parse(this.responseText);
 				alert("response: " + JSON.stringify(response));
 				if(response["Success"] == "True") {
-					alert("snapshot " + snapshotName + " Saved. Press OK to continue");
+					alert("snapshot " + newSnapshotName + " Saved. Press OK to continue");
 					document.getElementById("saveNewSnapshot").value = "Save New Snapshot"
 					document.getElementById("saveNewSnapshot").disabled =  false;
 					// JS variables are pass by vale, so snapshot can be changed here only
-					snapshot = getOneTable("snapshot", false).snapshot;
-					loadSnapshotMenu(snapshotName);
-					currSnapshotName = snapshotName;
-					getTimetable(snapshotName);
+					snapshot = getSnapshotTable().snapshot;
+					currSnapshotName = newSnapshotName;
+					//getDataTables();
+					//getTimetable(newSnapshotName);
+					//loadSnapshotMenu(newSnapshotName);
+					loadNewSnapshot();
+					//fillTable2(true);
 				} else{
 					alert("Saving New Snapshot Failed. Error: " + response["Error"]);
 					loadSnapshotMenu(currSnapshotName);
@@ -2271,8 +2306,9 @@ function jsSaveNewSnapshot() {
 		document.getElementById("saveNewSnapshot").disabled =  true;
 		xhttp.open("POST", "timetable.php", true); // asynchronous
 		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		xhttp.send("reqType=saveNewSnapshot&snapname="+snapshotName+"&configId="+currConfigId+
-					"&ttData="+JSON.stringify(timeTable));
+		xhttp.send("reqType=saveNewSnapshot&newSnapshotName="+newSnapshotName+"&currentSnapshotName="+
+					search(snapshot, "snapshotId", currentSnapshotId)["snapshotName"]+
+					"&configId="+currentConfigId+ "&ttData="+JSON.stringify(timeTable));
 	}
 }
 function jsSaveSnapshot() {
@@ -2299,7 +2335,7 @@ function jsSaveSnapshot() {
 		document.getElementById("saveSnapshot").value = "Saving snapshot ...wait";
 		document.getElementById("saveSnapshot").disabled =  true;
 		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		xhttp.send("reqType=saveSnapshot&snapname="+snapshotName+"&ttData="+JSON.stringify(timeTable));
+		xhttp.send("reqType=saveSnapshot&snapshotName="+snapshotName+"&ttData="+JSON.stringify(timeTable));
 	} else {
 		alert("jsSaveSnapshot: can't find currSnapshotName");
 	}

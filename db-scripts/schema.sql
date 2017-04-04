@@ -68,15 +68,18 @@ teacherShortName	varchar(16) NOT NULL COMMENT 'Teacher\'s Short Name',
 minHrs	int COMMENT 'Min Hrs of Work for Teacher',
 maxHrs int COMMENT 'Max hrs of work for Teacher',
 deptId	int COMMENT 'Department of the Teacher',
-CONSTRAINT c_teacherShortName UNIQUE(teacherShortName)
+snapshotId int COMMENT 'Snapshot Id for this Teacher',
+FOREIGN KEY (snapshotId) REFERENCES snapshot(snapshotId) ON DELETE CASCADE,
+CONSTRAINT c_teacherShortName UNIQUE(teacherShortName, snapshotId)
 );
 
 CREATE VIEW teacherReadable
 AS
-SELECT  t.teacherId, t.teacherName, t.teacherShortName,t.minHrs, t.maxHrs, d.deptShortName
-FROM teacher t, dept d 
-WHERE t.deptId = d.deptId;
-
+SELECT  t.teacherId, t.teacherName, t.teacherShortName,t.minHrs, t.maxHrs, d.deptShortName, s.snapshotName
+FROM teacher t, dept d, snapshot s
+WHERE t.deptId = d.deptId AND
+	  t.snapshotId = s.snapshotId
+ORDER BY snapshotName, teacherShortName;
 
 CREATE TABLE class
 (
@@ -85,7 +88,9 @@ className	varchar(256) NOT NULL COMMENT 'Class\'s Full Name',
 classShortName	varchar(32) NOT NULL COMMENT 'Class\'s Short Name',
 semester	int	NOT NULL COMMENT 'Current Semester No',
 classCount	int NOT NULL COMMENT 'No. of Students in Class',
-CONSTRAINT c_classShortName UNIQUE(classShortName)
+snapshotId int COMMENT 'Snapshot Id for this Class',
+FOREIGN KEY (snapshotId) REFERENCES snapshot(snapshotId) ON DELETE CASCADE,
+CONSTRAINT c_classShortName UNIQUE(classShortName, snapshotId)
 );
 
 CREATE TABLE batch
@@ -93,42 +98,52 @@ CREATE TABLE batch
 batchId	int AUTO_INCREMENT PRIMARY KEY COMMENT 'Batch Id',
 batchName	varchar(32) NOT NULL COMMENT 'Batch Name',
 batchCount	int COMMENT 'No. of Students in Batch',
-CONSTRAINT c_batchName UNIQUE(batchName)
+snapshotId int COMMENT 'Snapshot Id for this Batch',
+FOREIGN KEY (snapshotId) REFERENCES snapshot(snapshotId) ON DELETE CASCADE,
+CONSTRAINT c_batchName UNIQUE(batchName, snapshotId)
 );
 
 CREATE TABLE batchCanOverlap
 (
-bo int AUTO_INCREMENT PRIMARY KEY COMMENT 'BatchOverlap Id',
+boId int AUTO_INCREMENT PRIMARY KEY COMMENT 'BatchOverlap Id',
 batchId	int NOT NULL COMMENT 'Batch Id',
 batchOverlapId int NOT NULL COMMENT 'Batch Which Can Overlap',
+snapshotId int COMMENT 'Snapshot Id for this BO',
+FOREIGN KEY (snapshotId) REFERENCES snapshot(snapshotId) ON DELETE CASCADE,
 FOREIGN KEY(batchId) REFERENCES batch(batchId) ON DELETE CASCADE,
 FOREIGN KEY(batchOverlapId) REFERENCES batch(batchId) ON DELETE CASCADE,
-CONSTRAINT c_overlaps UNIQUE(batchId, batchOverlapId)
+CONSTRAINT c_overlaps UNIQUE(batchId, batchOverlapId, snapshotId)
 );
 
 CREATE VIEW batchCanOverlapReadable
 AS
-SELECT b.batchName as "b1Name", b1.batchName  as "b2Name"
-FROM batch b, batch b1, batchCanOverlap bo
+SELECT bo.boId, b.batchName as "b1Name", b1.batchName  as "b2Name", s.snapShotName
+FROM batch b, batch b1, batchCanOverlap bo, snapshot s
 WHERE b.batchId  = bo.batchId AND
-	  b1.batchId = bo.batchOverlapId;
+	  b1.batchId = bo.batchOverlapId AND
+	  bo.snapshotId = s.snapshotId
+ORDER BY snapshotName, b1Name, b2Name;
 
 CREATE TABLE batchClass 
 (
 bcId int AUTO_INCREMENT PRIMARY KEY COMMENT 'Batch Class Id',
 batchId int NOT NULL COMMENT 'Batch Id',  
 classId int NOT NULL COMMENT 'Class Id',
+snapshotId int COMMENT 'Snapshot Id for this batchClass',
+FOREIGN KEY (snapshotId) REFERENCES snapshot(snapshotId) ON DELETE CASCADE,
 FOREIGN KEY (batchId) REFERENCES batch(batchId) ON DELETE CASCADE,
 FOREIGN KEY (classId) REFERENCES class(classId) ON DELETE CASCADE,
-CONSTRAINT c_batchClass UNIQUE(batchId, classId)
+CONSTRAINT c_batchClass UNIQUE(batchId, classId, snapshotId)
 );
 
 CREATE VIEW batchClassReadable 
 AS
-SELECT b.batchName, c.classShortName 
-FROM batch b, class c, batchClass bc
+SELECT bc.bcId, b.batchName, c.classShortName, s.snapshotName
+FROM batch b, class c, batchClass bc, snapshot s
 WHERE b.batchId = bc.batchId AND
-      c.classId = bc.classId;
+      c.classId = bc.classId AND
+	  bc.snapshotId = s.snapshotId
+ORDER BY snapshotName, classShortName, batchName;
 
 CREATE TABLE room
 (
@@ -136,8 +151,10 @@ roomId	int AUTO_INCREMENT PRIMARY KEY COMMENT 'Room Id',
 roomName	varchar(32) NOT NULL COMMENT 'Room Name',
 roomShortName	varchar(16) NOT NULL COMMENT 'Room Short Name',
 roomCount	int COMMENT 'Capacity of Room',
-CONSTRAINT c_roomShortName UNIQUE(roomShortName),
-CONSTRAINT c_roomName UNIQUE(roomName)
+snapshotId int COMMENT 'Snapshot Id for this Room',
+FOREIGN KEY (snapshotId) REFERENCES snapshot(snapshotId) ON DELETE CASCADE,
+CONSTRAINT c_roomShortName UNIQUE(roomShortName, snapshotId),
+CONSTRAINT c_roomName UNIQUE(roomName, snapshotId)
 );
 
 CREATE TABLE subject
@@ -149,7 +166,9 @@ eachSlot	int COMMENT 'No. of Slots for Each Entry',
 nSlots	int COMMENT 'Total No. of Entries for this Subjeect',
 /*courseCode	varchar(32) NOT NULL, */
 batches	boolean COMMENT 'Schedule in Batches?',
-CONSTRAINT c_subjectShortName UNIQUE(subjectShortName)
+snapshotId int COMMENT 'Snapshot Id for this Subject',
+FOREIGN KEY (snapshotId) REFERENCES snapshot(snapshotId) ON DELETE CASCADE,
+CONSTRAINT c_subjectShortName UNIQUE(subjectShortName, snapshotId)
 );
 
 CREATE TABLE subjectBatchTeacher
@@ -158,38 +177,46 @@ sbtId	int AUTO_INCREMENT PRIMARY KEY COMMENT 'SBT Id',
 subjectId	int NOT NULL COMMENT 'Subject Id',
 batchId	int NOT NULL COMMENT 'Batch Id',
 teacherId int COMMENT 'Teacher Id',
+snapshotId int COMMENT 'Snapshot Id for this SBT',
+FOREIGN KEY (snapshotId) REFERENCES snapshot(snapshotId) ON DELETE CASCADE,
 FOREIGN KEY (batchId) REFERENCES batch(batchId) ON DELETE CASCADE,
 FOREIGN KEY (subjectId) REFERENCES subject(subjectId) ON DELETE CASCADE,
 FOREIGN KEY (teacherId) REFERENCES teacher(teacherId) ON DELETE CASCADE,
-CONSTRAINT c_subjectBatchTeacheer UNIQUE(subjectId, batchId, teacherId)
+CONSTRAINT c_subjectBatchTeacheer UNIQUE(subjectId, batchId, teacherId, snapshotId)
 );
 
 CREATE VIEW subjectBatchTeacherReadable AS
-SELECT s.subjectShortName,b.batchName, t.teacherShortName from subject s, batch b, subjectBatchTeacher sbt, teacher t
+SELECT sbt.sbtId, s.subjectShortName,b.batchName, t.teacherShortName , ss.snapshotName
+FROM subject s, batch b, subjectBatchTeacher sbt, teacher t, snapshot ss
 WHERE	sbt.subjectId = s.subjectId AND
 	sbt.batchid = b.batchId AND
-	sbt.teacherId = t.teacherId
-ORDER by subjectShortName;
+	sbt.teacherId = t.teacherId AND
+	sbt.snapshotId = ss.snapshotId
+ORDER by snapshotName , subjectShortName, batchName, teacherShortname;
 
 CREATE TABLE overlappingSBT
 (
 osbtId int AUTO_INCREMENT PRIMARY KEY COMMENT 'Id: Subject-Batch Pairs that must overlap',
 sbtId1	int NOT NULL COMMENT 'Sub-Batch Id 1',
 sbtId2	int NOT NULL COMMENT 'Sub-Batch Id 2',
+snapshotId int COMMENT 'Snapshot Id for this OSBT',
+FOREIGN KEY (snapshotId) REFERENCES snapshot(snapshotId) ON DELETE CASCADE,
 FOREIGN KEY (sbtId1) REFERENCES subjectBatchTeacher(sbtId) ON DELETE CASCADE ON UPDATE CASCADE,
 FOREIGN KEY (sbtId2) REFERENCES subjectBatchTeacher(sbtId) ON DELETE CASCADE ON UPDATE CASCADE,
-CONSTRAINT c_overlappingSBT	UNIQUE(sbtId1, sbtId2)
+CONSTRAINT c_overlappingSBT	UNIQUE(sbtId1, sbtId2, snapshotId)
 );
 
 CREATE VIEW overlappingSBTReadable AS
-SELECT s1.subjectShortName as subject1, b1.batchName as batch1, t1.teacherShortName as teacher1,
-		s2.subjectShortName as subject2, b2.batchName as batch2, t2.teacherShortName as teacher2 
+SELECT sbto.osbtId as osbtId, s1.subjectShortName as subject1, b1.batchName as batch1, t1.teacherShortName as teacher1,
+		s2.subjectShortName as subject2, b2.batchName as batch2, t2.teacherShortName as teacher2 , ss.snapshotName
 FROM
 		subject s1, subject s2, batch b1, batch b2, teacher t1, teacher t2,  
-		overlappingSBT sbto, subjectBatchTeacher sbt1, subjectBatchTeacher sbt2 
+		overlappingSBT sbto, subjectBatchTeacher sbt1, subjectBatchTeacher sbt2, snapshot ss
 WHERE	sbto.sbtId1 = sbt1.sbtId AND sbto.sbtId2 = sbt2.sbtId AND
 		sbt1.subjectId = s1.subjectId AND sbt1.batchId = b1.batchId AND sbt1.teacherId = t1.teacherId AND
-		sbt2.subjectId = s2.subjectId AND sbt2.batchId = b2.batchId AND sbt2.teacherId = t2.teacherId;
+		sbt2.subjectId = s2.subjectId AND sbt2.batchId = b2.batchId AND sbt2.teacherId = t2.teacherId AND
+		sbto.snapshotId = ss.snapshotId
+ORDER BY snapshotName, subject1, subject2;
 	 
 CREATE TABLE subjectClassTeacher 
 (
@@ -197,67 +224,82 @@ sctId	int AUTO_INCREMENT PRIMARY KEY COMMENT 'Subject Class Teacher Mapping Id',
 subjectId	int NOT NULL COMMENT 'Subject Id',
 classId		int NOT NULL COMMENT 'Class Id',
 teacherId	int COMMENT 'Teacher Id',
+snapshotId int COMMENT 'Snapshot Id for this SCT',
+FOREIGN KEY (snapshotId) REFERENCES snapshot(snapshotId) ON DELETE CASCADE,
 FOREIGN KEY (subjectId) REFERENCES subject(subjectId) ON DELETE CASCADE,
 FOREIGN KEY (classId) REFERENCES class(classId) ON DELETE CASCADE,
 FOREIGN KEY (teacherId) REFERENCES teacher(teacherId) ON DELETE CASCADE,
-CONSTRAINT c_subjectClassTeacheer UNIQUE(subjectId, classId)
+CONSTRAINT c_subjectClassTeacheer UNIQUE(subjectId, classId, snapshotId)
 );
 
 CREATE VIEW subjectClassTeacherReadable AS
-SELECT  c.classShortName, s.subjectShortName, t.teacherShortName 
-FROM subject s, class c, teacher t, subjectClassTeacher sct
+SELECT  sct.sctId, c.classShortName, s.subjectShortName, t.teacherShortName, ss.snapshotName
+FROM subject s, class c, teacher t, subjectClassTeacher sct, snapshot ss
 WHERE	s.subjectId = sct.subjectId AND
 	t.teacherId = sct.teacherId AND
-	c.classId = sct.classId 
-ORDER BY subjectShortName;
+	c.classId = sct.classId  AND
+	sct.snapshotId = ss.snapshotId
+ORDER BY snapshotName, subjectShortName, classShortName, teacherShortName;
 
 CREATE TABLE classRoom
 (
 crId	int AUTO_INCREMENT PRIMARY KEY COMMENT 'Class Room Mapping Id',
 classId	int NOT NULL COMMENT 'Class Id',
 roomId	int NOT NULL COMMENT 'Room Id',
+snapshotId int COMMENT 'Snapshot Id for this Class-Room',
+FOREIGN KEY (snapshotId) REFERENCES snapshot(snapshotId) ON DELETE CASCADE,
 FOREIGN KEY (classId) REFERENCES class(classId) ON DELETE CASCADE,
 FOREIGN KEY (roomId) REFERENCES room(roomId) ON DELETE CASCADE,
-CONSTRAINT c_classRoom UNIQUE(classId)
+CONSTRAINT c_classRoom UNIQUE(classId, snapshotId)
 );
 
 CREATE VIEW classRoomReadable AS
-SELECT c.classShortName, r.roomname from class c, room r, classRoom cr
+SELECT cr.crId, c.classShortName, r.roomShortName, s.snapshotName
+FROM class c, room r, classRoom cr, snapshot s
 WHERE	c.classId = cr.classId AND
-	r.roomId = cr.roomId
-ORDER BY classShortName;
+	r.roomId = cr.roomId AND
+	cr.snapshotId = s.snapshotId
+ORDER BY snapshotName, classShortName, roomShortName;
 
 CREATE TABLE batchRoom
 (
 brId	int AUTO_INCREMENT PRIMARY KEY COMMENT 'Batch Room Mapping Id',
 batchId	int NOT NULL COMMENT 'Batch Id',
 roomId	int NOT NULL COMMENT 'Room Id',
+snapshotId int COMMENT 'Snapshot Id for this Batch-Room',
+FOREIGN KEY (snapshotId) REFERENCES snapshot(snapshotId) ON DELETE CASCADE,
 FOREIGN KEY (batchId) REFERENCES batch(batchId) ON DELETE CASCADE,
 FOREIGN KEY (roomId) REFERENCES room(roomId) ON DELETE CASCADE,
-CONSTRAINT c_batchRoom UNIQUE(batchId)
+CONSTRAINT c_batchRoom UNIQUE(batchId, snapshotId)
 );
 
 CREATE VIEW batchRoomReadable AS 
-SELECT b.batchName, r.roomName from batch b, room r, batchRoom br
+SELECT br.brId, b.batchName, r.roomShortName, s.snapshotName
+FROM batch b, room r, batchRoom br, snapshot s
 WHERE	b.batchId = br.batchId AND
-	r.roomId = br.roomId
-ORDER BY batchName;
+	r.roomId = br.roomId AND
+	br.snapshotId = s.snapshotId
+ORDER BY snapshotName, batchName, roomShortName;
 
 CREATE TABLE subjectRoom
 (
 srId	int AUTO_INCREMENT PRIMARY KEY COMMENT 'Subject Room Preference Id',
 subjectId	int NOT NULL COMMENT 'Subject Id',
 roomId	int NOT NULL COMMENT 'Room Id',
+snapshotId int COMMENT 'Snapshot Id for this Subject-Room',
+FOREIGN KEY (snapshotId) REFERENCES snapshot(snapshotId) ON DELETE CASCADE,
 FOREIGN KEY (subjectId) REFERENCES subject(subjectId) ON DELETE CASCADE,
 FOREIGN KEY (roomId) REFERENCES room(roomId) ON DELETE CASCADE,
-CONSTRAINT c_subjectRoom UNIQUE(subjectId)
+CONSTRAINT c_subjectRoom UNIQUE(subjectId, snapshotId)
 );
 
 CREATE VIEW subjectRoomReadable AS 
-SELECT s.subjectShortName, r.roomName from subject s, room r, subjectRoom sr
+SELECT sr.srId, s.subjectShortName, r.roomShortName , ss.snapshotName
+FROM subject s, room r, subjectRoom sr, snapshot ss
 WHERE	s.subjectId = sr.subjectId AND
-	r.roomId = sr.roomId
-ORDER BY subjectShortName;
+	r.roomId = sr.roomId AND
+	r.snapshotId = ss.snapshotId
+ORDER BY snapshotName, subjectShortName, roomShortName;
 
 
 CREATE TABLE timeTable
@@ -270,8 +312,8 @@ classId	int COMMENT 'Class Id',
 subjectId int COMMENT 'Subject Id',
 teacherId	int COMMENT 'Teacher Id',
 batchId	int COMMENT 'Batch Id',
-snapshotId int NOT NULL COMMENT 'Snapshot Id',
 isFixed boolean COMMENT 'Is Lunch/Fixed Slot?',
+snapshotId int NOT NULL COMMENT 'Snapshot Id',
 FOREIGN KEY (roomId) REFERENCES room(roomId) ON DELETE CASCADE,
 FOREIGN KEY (classId) REFERENCES class(classId) ON DELETE CASCADE,
 FOREIGN KEY (batchId) REFERENCES batch(batchId) ON DELETE CASCADE,
@@ -326,7 +368,10 @@ ORDER by ttId;
 
 CREATE TABLE fixedEntry (
 feId int AUTO_INCREMENT PRIMARY KEY COMMENT 'Fixed Entry Id',
-ttId int NOT NULL UNIQUE COMMENT 'Timetable Entry Id',
+ttId int NOT NULL COMMENT 'Timetable Entry Id',
 fixedText	varchar(128) COMMENT 'Description',
-FOREIGN KEY (ttId) REFERENCES timeTable(ttId) ON DELETE CASCADE
+snapshotId int COMMENT 'Snapshot Id for this fixedEntry',
+FOREIGN KEY (snapshotId) REFERENCES snapshot(snapshotId) ON DELETE CASCADE,
+FOREIGN KEY (ttId) REFERENCES timeTable(ttId) ON DELETE CASCADE,
+CONSTRAINT c_fixedEntry UNIQUE(ttId, snapshotId)
 );

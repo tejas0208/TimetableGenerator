@@ -18,27 +18,29 @@ function updateTeacher($type) {
 	global $CFG;
 	header("Content-Type: application/JSON: charset=UTF-8");
 
+	$teacherId = getArgument("teacherId");
 	$teacherName = getArgument("teacherName");
 	$teacherShortName = getArgument("teacherShortName");
-	$teacherOrigShortName = getArgument("teacherOrigShortName");
+	//$teacherOrigShortName = getArgument("teacherOrigShortName");
 	$minHrs = getArgument("minHrs");
 	$maxHrs = getArgument("maxHrs");
 	$deptId = getArgument("deptId");
+	$snapshotId = getArgument("snapshotId");
 
 	$query2 = "";
 	switch($type) {
 		case "update":
 			$query = "UPDATE teacher SET teacherName = \"$teacherName\", teacherShortName = ".
 					 "\"$teacherShortName\", minHrs = \"$minHrs\", maxHrs = \"$maxHrs\",".
-					 "deptId = \"$deptId\" WHERE teacherShortName = \"$teacherOrigShortName\"";
+					 "deptId = \"$deptId\" WHERE teacherId = \"$teacherId\"";
 			break;
 		case "delete":
-			$query = "DELETE FROM teacher WHERE teacherShortName = \"$teacherShortName\";";
+			$query = "DELETE FROM teacher WHERE teacherId = \"$teacherId\";";
 			break;
 		case "insert":
-			$query = "INSERT INTO teacher (teacherName, teacherShortName, minHrs, maxHrs, deptId) ".
-				     "VALUES (\"$teacherName\", \"$teacherShortName\", $minHrs, $maxHrs, $deptId)";
-			$query2 = "SELECT * from teacher WHERE teacherShortName = \"$teacherShortName\"";
+			$query = "INSERT INTO teacher (teacherName, teacherShortName, minHrs, maxHrs, deptId, snapshotId) ".
+				     "VALUES (\"$teacherName\", \"$teacherShortName\", $minHrs, $maxHrs, $deptId, $snapshotId)";
+			$query2 = "SELECT * from teacher WHERE teacherShortName = \"$teacherShortName\" AND snapshotId = $snapshotId";
 			break;
 		default:
 			$query = "ERROR;";
@@ -93,27 +95,29 @@ function updateSubject($type) {
 	global $CFG;
 	header("Content-Type: application/JSON: charset=UTF-8");
 
+	$subjectId = getArgument("subjectId");
 	$subjectName = getArgument("subjectName");
 	$subjectShortName = getArgument("subjectShortName");
-	$subjectOrigShortName = getArgument("subjectOrigShortName");
+	//$subjectOrigShortName = getArgument("subjectOrigShortName");
 	$eachSlot = getArgument("eachSlot");
 	$nSlots = getArgument("nSlots");
 	$batches = getArgument("batches");
+	$snapshotId = getArgument("snapshotId");
 
 	$query2 = "";
 	switch($type) {
 			case "update":
 				$query = "UPDATE subject SET subjectName = \"$subjectName\", subjectShortName = ".
 						 "\"$subjectShortName\", eachSlot = \"$eachSlot\", nSlots= \"$nSlots\", ".
-						 "batches= \"$batches\" WHERE subjectShortName = \"$subjectOrigShortName\"";
+						 "batches= \"$batches\" WHERE subjectId = \"$subjectId\"";
 				break;
 			case "delete":
-				$query = "DELETE FROM subject WHERE subjectShortName = \"$subjectShortName\";";
+				$query = "DELETE FROM subject WHERE subjectId = \"$subjectId\";";
 				break;
 			case "insert":
-				$query = "INSERT INTO subject (subjectName, subjectShortName, eachSlot, nSlots, batches) ".
-						 "VALUES (\"$subjectName\", \"$subjectShortName\", $eachSlot, $nSlots, $batches)";
-				$query2 = "SELECT * from subject where subjectShortName = \"$subjectShortName\"";
+				$query = "INSERT INTO subject (subjectName, subjectShortName, eachSlot, nSlots, batches, snapshotId) ".
+						 "VALUES (\"$subjectName\", \"$subjectShortName\", $eachSlot, $nSlots, $batches, $snapshotId)";
+				$query2 = "SELECT * from subject where subjectShortName = \"$subjectShortName\" AND snapshotId = $snapshotId";
 				break;
 			default:	
 				$query = "ERROR;";
@@ -168,26 +172,28 @@ function updateClass($type) {
 	global $CFG;
 	header("Content-Type: application/JSON: charset=UTF-8");
 
+	$classId = getArgument("classId");
 	$className = getArgument("className");
 	$classShortName = getArgument("classShortName");
-	$classOrigShortName = getArgument("classOrigShortName");
+	//$classOrigShortName = getArgument("classOrigShortName");
 	$semester = getArgument("semester");
 	$classCount = getArgument("classCount");
+	$snapshotId = getArgument("snapshotId");
 	
 	$query2 = "";
 	switch($type) {
 		case "update":
 			$query = "UPDATE class SET className = \"$className\", classShortName = ".
 					 "\"$classShortName\", semester = \"$semester\", classCount= \"$classCount\" ".
-					 "WHERE classShortName = \"$classOrigShortName\"";
+					 "WHERE classId = \"$classId\"";
 			break;
 		case "delete":
-			$query = "DELETE FROM class WHERE classShortName = \"$classShortName\";";
+			$query = "DELETE FROM class WHERE classId = \"$classId\";";
 			break;
 		case "insert":
-			$query = "INSERT INTO class (className, classShortName, semester, classCount) ".
-					 "VALUES (\"$className\", \"$classShortName\", $semester, $classCount)";
-			$query2 = "SELECT * from class where classShortName = \"$classShortName\"";
+			$query = "INSERT INTO class (className, classShortName, semester, classCount, snapshotId) ".
+					 "VALUES (\"$className\", \"$classShortName\", $semester, $classCount, $snapshotId)";
+			$query2 = "SELECT * from class where classShortName = \"$classShortName\" AND snapshotId = $snapshotId";
 			break;
 		default:
 			$query = "ERROR;";
@@ -320,21 +326,23 @@ function updateBatch($type) {
 	global $CFG;
 	header("Content-Type: application/JSON: charset=UTF-8");
 
+	$batchId = getArgument("batchId");
 	$batchName = getArgument("batchName");
 	$batchOrigName = getArgument("batchOrigName");
 	$batchCount = getArgument("batchCount");
+	$snapshotId = getArgument("snapshotId");
 
 	switch($type) {
 			case "update":
 				$query = "UPDATE batch SET batchName = \"$batchName\", batchCount= \"$batchCount\" ".
-						 "WHERE batchName = \"$batchOrigName\"";
+						 "WHERE batchId = \"$batchId\"";
 				break;
 			case "delete":
-				$query = "DELETE FROM batch WHERE batchName = \"$batchName\";";
+				$query = "DELETE FROM batch WHERE batchId = \"$batchId\";";
 				break;
 			case "insert":
-				$query = "INSERT INTO batch (batchName, batchCount) VALUES (\"$batchName\", $batchCount)";
-				$query2 = "SELECT * FROM batch where batchName = \"$batchName\"";
+				$query = "INSERT INTO batch (batchName, batchCount, snapshotId) VALUES (\"$batchName\", $batchCount, $snapshotId)";
+				$query2 = "SELECT * FROM batch where batchName = \"$batchName\" AND snapshotId = $snapshotId";
 				break;
 			default:
 				$query = "ERROR;";
@@ -463,25 +471,27 @@ function updateRoom($type) {
 	global $CFG;
 	header("Content-Type: application/JSON: charset=UTF-8");
 
+	$roomId = getArgument("roomId");
 	$roomName = getArgument("roomName");
 	$roomShortName = getArgument("roomShortName");
-	$roomOrigShortName = getArgument("roomOrigShortName");
+	//$roomOrigShortName = getArgument("roomOrigShortName");
 	$roomCount = getArgument("roomCount");
+	$snapshotId = getArgument("snapshotId");
 	
 	$query2 = "";
 	switch($type) {
 		case "update":
 			$query = "UPDATE room SET roomName = \"$roomName\", roomShortName = ".
 					 "\"$roomShortName\", roomCount= \"$roomCount\" ".
-					 "WHERE roomShortName = \"$roomOrigShortName\"";
+					 "WHERE roomId = \"$roomId\"";
 			break;
 		case "delete":
-			$query = "DELETE FROM room WHERE roomShortName = \"$roomShortName\";";
+			$query = "DELETE FROM room WHERE roomId = \"$roomId\";";
 			break;
 		case "insert":
-			$query = "INSERT INTO room (roomName, roomShortName, roomCount) ".
-					 "VALUES (\"$roomName\", \"$roomShortName\", $roomCount)";
-			$query2 = "SELECT * from room where roomShortName = \"$roomShortName\"";
+			$query = "INSERT INTO room (roomName, roomShortName, roomCount, snapshotId) ".
+					 "VALUES (\"$roomName\", \"$roomShortName\", $roomCount, $snapshotId)";
+			$query2 = "SELECT * from room where roomShortName = \"$roomShortName\" AND snapshotId = $snapshotId";
 			break;
 		default:
 			$query = "ERROR;";
