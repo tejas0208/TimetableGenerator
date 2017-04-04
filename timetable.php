@@ -1,7 +1,9 @@
 <?php
 require_once('db.php');
 require_once('common.php');
-require_once('configForm.php');
+require_once('snapshot.php');
+require_once('forms.php');
+/*require_once('configForm.php');
 require_once('teacher.php');
 require_once('subject.php');
 require_once('class.php');
@@ -10,10 +12,9 @@ require_once('room.php');
 require_once('classRoom.php');
 require_once('batchRoom.php');
 require_once('subjectRoom.php');
-require_once('snapshot.php');
 require_once('sct.php');
 require_once('sbt.php');
-require_once('overlappingSBT.php');
+require_once('overlappingSBT.php');*/
 
 function getTimeTable() {
 	header("Content-Type: application/JSON; charset=UTF-8");
@@ -88,22 +89,30 @@ $table= "
 					<div class=\"selection-menu\">
 						Configuration	
 						<select id=\"insert-data-menu\" class=\"select-menu\">
-							<option value = \"\" selected> </option>
-							<option value = \"Teacher\" onclick=\"teacherForm()\">Teachers</option>
-							<option value = \"Subjects\" onclick=\"subjectForm()\">Subjects</option>
-							<option value = \"Classes\" onclick=\"classForm()\">Classes</option>
-							<option value = \"Batchs\" onclick=\"batchForm()\">Batches</option>
-							<option value = \"Rooms\" onclick=\"roomForm()\">Rooms</option>
-							<option value = \"Dept\" onclick=\"deptForm()\">Depts</option>
-							<option value = \"Subject-Class Mapping\" onclick=\"sctForm()\"> Class-Subject-Teacher Mapping</option>
-							<option value = \"Subject-Batch Mapping\" onclick=\"sbtForm()\"> Batch-Subject-Teacher Mapping</option>
-							<option value = \"Add Batch-Overlap\" onclick=\"batchCanOverlapForm()\"> Batches: Alloweed Overlaps</option>
-							<option value = \"Overlapping Subject-Batches\" onclick=\"overlappingSBTForm()\"> Overlapping Subject-Batches</option>
-							<option value = \"Class-Room Mapping\" onclick=\"classRoomForm()\"> Room Preference for Classes</option>
-							<option value = \"Batch-Room Mapping\" onclick=\"batchRoomForm()\"> Room Preference for Batches</option>
-							<option value = \"Subject-Room Mapping\" onclick=\"subjectRoomForm()\"> Room Preference for Subjects</option>
-							<option value = \"Configure TT\" onclick=\"configForm()\"> Configure Timetable</option>
-							<option value = \"Users\" onclick=\"userForm()\">Users</option>
+							<option id = \"selectOne\" value = \"selectOne\" selected></option>
+							<option value = \"teachers\" onclick=\"teacherForm()\">Teachers</option>
+							<option value = \"subjects\" onclick=\"subjectForm()\">Subjects</option>
+							<option value = \"classes\" onclick=\"classForm()\">Classes</option>
+							<option value = \"batchs\" onclick=\"batchForm()\">Batches</option>
+							<option value = \"rooms\" onclick=\"roomForm()\">Rooms</option>
+							<option value = \"depts\" onclick=\"deptForm()\">Depts</option>
+							<option value = \"subjectClassMapping\" onclick=\"sctForm()\"> 
+									Class-Subject-Teacher Mapping</option>
+							<option value = \"subjectBatchMapping\" onclick=\"sbtForm()\"> 
+									Batch-Subject-Teacher Mapping</option>
+							<option value = \"batchCanOverlap\" onclick=\"batchCanOverlapForm()\"> 
+									Batches: Alloweed Overlaps</option>
+							<option value = \"overlappingSBT\" onclick=\"overlappingSBTForm()\"> 
+									Overlapping Subject-Batches</option>
+							<option value = \"classRoom\" onclick=\"classRoomForm()\"> 
+									Room Preference for Classes</option>
+							<option value = \"batchRoom\" onclick=\"batchRoomForm()\"> 
+									Room Preference for Batches</option>
+							<option value = \"subjectRoom\" onclick=\"subjectRoomForm()\"> 
+									Room Preference for Subjects</option>
+							<option value = \"config\" onclick=\"configForm()\"> 
+									Configure Timetable</option>
+							<option value = \"user\" onclick=\"userForm()\">Users</option>
 						</select>
 					</div>
 					<div class=\"selection-menu\">
@@ -200,12 +209,7 @@ $footer = "</body> </html>";
 
 $page = $header.
 		$bodystart. 
-		$configForm.
-		$teacherForm.  $subjectForm.  $classForm. 
-		$batchForm. $batchRoomForm. $batchCanOverlapForm.
-		$roomForm. $classRoomForm. $batchRoomForm. $subjectRoomForm.
-		$sctForm. $sbtForm.
-		$overlappingSBTForm.
+		$allForms.
 		$table.
 		$footer;
 

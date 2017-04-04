@@ -1029,4 +1029,11 @@ function updateOverlappingSBT($type) {
 	error_log("updateoverlappingSBT: resString: ".$resString);
 	return $resString;
 }
+$allForms = 		
+		$teacherForm.  $subjectForm.  $classForm. 
+		$batchForm. $batchRoomForm. $batchCanOverlapForm.
+		$roomForm. $classRoomForm. $batchRoomForm. $subjectRoomForm.
+		$sctForm. $sbtForm.
+		$overlappingSBTForm;
+		$configForm.
 ?>
