@@ -35,10 +35,10 @@ INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches, sn
 INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches, snapshotId) VALUES ( "Open Elective Third Year", "OE-TY", 1, 3, FALSE, 1);
 INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches, snapshotId) VALUES ( "Language processors", "LP", 1, 3, FALSE, 1);
 INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches, snapshotId) VALUES ( "Algorithm and complexity", "AnC", 1, 3, FALSE, 1);
-INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches, snapshotId) VALUES ( "Software development process lab", "SDP-Lab", 2, 1, TRUE, 1);
+INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches, snapshotId) VALUES ( "Software development process lab", "SDP-Lab", 3, 1, TRUE, 1);
 INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches, snapshotId) VALUES ( "Software development process", "SDP", 1, 3, FALSE, 1);
-INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches, snapshotId) VALUES ( "Language processors Laboratory", "LP-Lab", 2, 1, TRUE, 1);
-INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches, snapshotId) VALUES ( "Algorithm and complexity lab", "AnC-Lab", 2, 1, TRUE, 1);
+INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches, snapshotId) VALUES ( "Language processors Laboratory", "LP-Lab", 3, 1, TRUE, 1);
+INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches, snapshotId) VALUES ( "Algorithm and complexity lab", "AnC-Lab", 3, 1, TRUE, 1);
 INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches, snapshotId) VALUES ( "Liberal Learning Course3", "LLC3", 1, 3, FALSE, 1);
 INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches, snapshotId) VALUES ( "open elective final yr", "OE-BTECH", 1, 3, FALSE, 1);
 INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches, snapshotId) VALUES ( "Cyber Security Forensics and Legal Perspective", "CSFLP", 1, 3, FALSE, 1);
@@ -48,7 +48,7 @@ INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches, sn
 INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches, snapshotId) VALUES ( "Natural Language Processing", "NLP", 1, 3, FALSE, 1);
 INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches, snapshotId) VALUES ( "Natural Language Processing lab", "NLP-Lab", 2, 1, TRUE, 1);
 INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches, snapshotId) VALUES ( "Web Systems and Technologies", "WST", 1, 3, FALSE, 1);
-INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches, snapshotId) VALUES ( "Web Systems and Technologies  Laboratory", "WST-Lab", 3, 1, TRUE, 1);
+INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches, snapshotId) VALUES ( "Web Systems and Technologies  Laboratory", "WST-Lab", 2, 1, TRUE, 1);
 INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches, snapshotId) VALUES ( "Project Work", "Project", 1, 3, FALSE, 1);
 INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches, snapshotId) VALUES ( "Intellectual Property Rights", "IPR", 1, 3, FALSE, 1);
 INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches, snapshotId) VALUES ( "Advanced Algorithms", "AA", 1, 3, FALSE, 1);

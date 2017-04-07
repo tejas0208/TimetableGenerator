@@ -1,5 +1,4 @@
 USE timeTable;
-INSERT INTO class(className, classShortName, semester, classCount, snapshotId) VALUES ( "NONE", "NONE", 0, 0, 1);
 INSERT INTO class(className, classShortName, semester, classCount, snapshotId) VALUES ( "S.Y. B.Tech. Computer Engineering", "SYBT-CE", 4, 80, 1);
 INSERT INTO class(className, classShortName, semester, classCount, snapshotId) VALUES ( "S.Y. B.Tech. Information Technology", "SYBT-IT", 4, 80, 1);
 INSERT INTO class(className, classShortName, semester, classCount, snapshotId) VALUES ( "T.Y. B.Tech. Computer Engineering", "TYBT-CE", 6, 80, 1);

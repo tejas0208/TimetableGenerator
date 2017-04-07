@@ -34,10 +34,10 @@ Data Mining  Laboratory,DM-Lab,3,1,TRUE
 Open Elective Third Year,OE-TY,1,3,FALSE
 Language processors,LP,1,3,FALSE
 Algorithm and complexity,AnC,1,3,FALSE
-Software development process lab,SDP-Lab,2,1,TRUE
+Software development process lab,SDP-Lab,3,1,TRUE
 Software development process,SDP,1,3,FALSE
-Language processors Laboratory,LP-Lab,2,1,TRUE
-Algorithm and complexity lab,AnC-Lab,2,1,TRUE
+Language processors Laboratory,LP-Lab,3,1,TRUE
+Algorithm and complexity lab,AnC-Lab,3,1,TRUE
 Liberal Learning Course3,LLC3,1,3,FALSE
 open elective final yr,OE-BTECH,1,3,FALSE
 Cyber Security Forensics and Legal Perspective,CSFLP,1,3,FALSE
@@ -47,7 +47,7 @@ E-Commerce lab,EC-Lab,2,1,TRUE
 Natural Language Processing,NLP,1,3,FALSE
 Natural Language Processing lab,NLP-Lab,2,1,TRUE
 Web Systems and Technologies,WST,1,3,FALSE
-Web Systems and Technologies  Laboratory,WST-Lab,3,1,TRUE
+Web Systems and Technologies  Laboratory,WST-Lab,2,1,TRUE
 Project Work,Project,1,3,FALSE
 Intellectual Property Rights,IPR,1,3,FALSE
 Advanced Algorithms,AA,1,3,FALSE
