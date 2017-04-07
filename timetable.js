@@ -1,7 +1,12 @@
+/* These are used in copy-cut-paste of cells */
 var selectedCell ;
 var prevBorder;
 var copyCell;
+var dragSrcEl = null;
+var srcI, NoOfSlots = 11;
+var srcSlotEntry;
 
+/* These global variables represent one table each from the database */
 var database;
 var dept, config, snapshot;
 var teacher, classTable, batch, batchCanOverlap, batchClass; 
@@ -9,12 +14,16 @@ var room, classRoom, batchRoom, subjectRoom;
 var subject, subjectBatchTeacher, subjectClassTeacher, overlappingSBT;
 var fixedEntry;
 
+/* These three represent the current Dept/Snapshot/Config we are working on */
 var currentSnapshotId;
 var currentDeptId;
 /* In future give a menu option to select a Config, and then a snapshot in that config */
 var currentConfigId = 1;
+
 var type = "class";
 var id = "SYBT-CE";
+var supportObject;
+
 var daysName = ["Sun", "Mon", "Tues", "Wed", "Thur", "Fri", "Sat"];
 var enabledRows = [];
 
@@ -29,11 +38,7 @@ var enabledRows = [];
  */
 var helperTable = [];
 
-var supportObject;
 var dirtyTimeTable = 0;
-var dragSrcEl = null;
-var srcI, NoOfSlots = 11;
-var srcSlotEntry;
 
 function dragStartHandler(e) {
 	e.target.style.opacity = '0.4';
@@ -186,23 +191,23 @@ function dropHandler(e) {
 				for(var r = 0; r < srcSubjectRow["eachSlot"]; r++) {
 					//timeTable.push(temp2.pop());
 					temp2[r]["day"] = srcI;
-					temp2[r]["slotNo"] = ""+(slotNo + r);
+					temp2[r]["slotNo"] = "" + (slotNo + r);
 				}
 			}
 			for(var r = 0; r < destSubjectRow["eachSlot"]; r++) {
-				temp1[r]["day"] = ""+i;
-				temp1[r]["slotNo"] = ""+(j + r);
+				temp1[r]["day"] = "" + i;
+				temp1[r]["slotNo"] = "" + (j + r);
 			}
 		}
 		if(valid1 && valid2) {
 			var r;/*swap day n slotNo*/
 			for(r = 0; r < destSubjectRow["eachSlot"]; r++) {
 				temp1[r]["day"] = srcI;
-				temp1[r]["slotNo"] = ""+(slotNo + r);
+				temp1[r]["slotNo"] = "" + (slotNo + r);
 			}
 			for(r = 0; r < srcSubjectRow["eachSlot"]; r++) {
-				temp2[r]["day"] = ""+i;
-				temp2[r]["slotNo"] = ""+(j + r);
+				temp2[r]["day"] = "" + i;
+				temp2[r]["slotNo"] = "" + (j + r);
 			}
 		}
 		else {
@@ -219,7 +224,7 @@ function dropHandler(e) {
 				var slot = search(timeTable, "day", srcI,"slotNo", (slotNo + r),
 				"batchId", srcSlotEntry["batchId"], "subjectId", srcSubjectRow["subjectId"],
 				"classId", srcSlotEntry["classId"]);
-				slot["day"] = ""+i;
+				slot["day"] = "" + i;
 				slot["slotNo"] = "" + (j + r);
 			}
 		}
@@ -381,7 +386,7 @@ function getTimetable(snapshotName) {/*Loads data from server asynchronously*/
 	};
 	xhttp.open("POST", "timetable.php", false);
 	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	xhttp.send("reqType=getTimetable&snapshotName=\""+snapshotName+"\"");
+	xhttp.send("reqType=getTimetable&snapshotName=\"" + snapshotName + "\"");
 	currSnapshotName = snapshotName;
 	//classChange(true);
 }
@@ -397,7 +402,7 @@ function getOneTable(tName, asynchronousOrNot) {/*Loads data from server asynchr
 	};
 	xhttp.open("POST", "timetable.php", asynchronousOrNot);
 	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	xhttp.send("reqType=getOneTable&tableName="+tName+"&snapshotId="+currentSnapshotId);
+	xhttp.send("reqType=getOneTable&tableName=" + tName + "&snapshotId=" + currentSnapshotId);
 	if(asynchronousOrNot == false) {
 		var db = JSON.parse(xhttp.responseText);
 		return db;  /* JS variables are pass by value */
@@ -587,7 +592,7 @@ function getDataTables() {/*Loads data from server asynchronously*/
 	};
 	xhttp.open("POST", "timetable.php", false);
 	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	xhttp.send("reqType=getDataTables&snapshotId="+currentSnapshotId);
+	xhttp.send("reqType=getDataTables&snapshotId=" + currentSnapshotId);
 }
 
 function createOptionTag(value, textString, selected) {
@@ -610,7 +615,7 @@ function displayTime(date) { /*Reurns time in needed format*/
 
 function initializeEnableRowArray(row, cols, slottableCount, initial_value) {
 	enabledRows = new Array(row).fill(initial_value);
-	helperTable =  new Array(row).fill(initial_value).map(row => new Array(cols).fill(initial_value).
+	helperTable = new Array(row).fill(initial_value).map(row => new Array(cols).fill(initial_value).
 						map(cols => new Array(slottableCount).fill(initial_value)));
 }
 
@@ -630,7 +635,7 @@ function createTable(days, nSlots, slotTablePerDay, startTime, timePerSlot) {
 		td = document.createElement("th");
 		var text = displayTime(start);
 		start = new Date(start.getTime() + (timePerSlot * 1000)); /*timePerSlot is in seconds*/
-		text =  text + " to<br>" + displayTime(start);
+		text = text + " to<br>" + displayTime(start);
 		td.innerHTML = text;
 		tr.appendChild(td);
 	}
@@ -638,12 +643,12 @@ function createTable(days, nSlots, slotTablePerDay, startTime, timePerSlot) {
 	for(i = 1; i <= days; i++) {/*Daywise*/
 		for(k = 0; k < slotTablePerDay; k++) {/*slottable row per day*/
 			tr = document.createElement("tr");
-			tr.setAttribute("id", "row"+i+k);
-			tr.setAttribute("class", "row"+i);
+			tr.setAttribute("id", "row" + i + k);
+			tr.setAttribute("class", "row" + i);
 			//tr.setAttribute("class", "row"); //TODO: you may add this to enable rowwise css
 			if(k == 0) {/*slottable per day*/
 				td = document.createElement("td");
-				td.setAttribute("id", ""+i);
+				td.setAttribute("id", "" + i);
 				td.setAttribute("class", "dayname");
 				var button = document.createElement("button");
 				button.setAttribute("class", "animateButton");
@@ -662,11 +667,11 @@ function createTable(days, nSlots, slotTablePerDay, startTime, timePerSlot) {
 				td.setAttribute("class", "cell");
 				td.setAttribute("onclick", "selected(this)");
 				var div = document.createElement("div");
-				div.setAttribute("class", "div"+i+j);
+				div.setAttribute("class", "div"+ i + j);
 				var slottable = document.createElement("table");
 				/*slottable.setAttribute("id", "slottable"+i+j+k); */
 				slottable.setAttribute("id", "slottable"+ makeIJK(i, j, k));
-				slottable.setAttribute("class", "slottable"+k);
+				slottable.setAttribute("class", "slottable" + k);
 				td.setAttribute("ondragenter", "dragEnterHandler(event)");
 				slottable.setAttribute("ondragover", "dragOverHandler(event)");
 				td.setAttribute("ondragleave", "dragLeaveHandler(event)");
@@ -689,7 +694,7 @@ function createTable(days, nSlots, slotTablePerDay, startTime, timePerSlot) {
 function sort(table) {
 	//console.log("sort: table = " + JSON.stringify(table));
 	for(var i = 0; i < table.length - 1; i++) {
-		for(var j = 0; j < table.length - i -1 ; j++) {
+		for(var j = 0; j < table.length - i - 1 ; j++) {
 			var row1 = search(subject, "subjectId", table[j]["subjectId"]);
 			var row2 = search(subject, "subjectId", table[j + 1]["subjectId"]);
 			if(row1["eachSlot"] < row2["eachSlot"]) {
@@ -705,47 +710,47 @@ function sort(table) {
 
 function createTimeTableEntry(day, slotNo, roomId, classId, subjectId,
 			teacherId, batchId, snapshotId, isFixed) {
-	this.day = "" +day;
-	this.slotNo = ""+slotNo;
-	this.roomId = ""+roomId;
-	this.classId = ""+classId;
-	this.subjectId = "" +subjectId;
-	this.teacherId = ""+teacherId;
-	this.batchId = ""+batchId;
-	this.isFixed = ""+isFixed;
-	this.snapshotId = ""+snapshotId;
+	this.day = "" + day;
+	this.slotNo = "" + slotNo;
+	this.roomId = "" + roomId;
+	this.classId = "" + classId;
+	this.subjectId = "" + subjectId;
+	this.teacherId = "" + teacherId;
+	this.batchId = "" + batchId;
+	this.isFixed = "" + isFixed;
+	this.snapshotId = "" + snapshotId;
 	if(timeTable.length == 0)
-		this.ttId =  1;
+		this.ttId = 1;
 	else
-		this.ttId = ""+(parseInt(timeTable[timeTable.length - 1]["ttId"]) + 1);
+		this.ttId = "" + (parseInt(timeTable[timeTable.length - 1]["ttId"]) + 1);
 	dirtyTimeTable = 1;
 }
 
 function createClassRoomEntry(classId, roomId) {
-	this.classId = ""+classId;
-	this.roomId = ""+roomId;
+	this.classId = "" + classId;
+	this.roomId = "" + roomId;
 	if(classRoom.length == 0)
 		this.crId = 1;
 	else
-		this.crId = ""+(parseInt(classRoom[classRoom.length - 1]["crId"]) + 1);
+		this.crId = "" + (parseInt(classRoom[classRoom.length - 1]["crId"]) + 1);
 }
 
 function createBatchRoomEntry(batchId, roomId) {
-	this.batchId = ""+batchId;
-	this.roomId = ""+roomId;
+	this.batchId = "" + batchId;
+	this.roomId = "" + roomId;
 	if(batchRoom.length == 0)
 		this.brId = 1;
 	else
-		this.brId = ""+(parseInt(batchRoom[batchRoom.length - 1]["brId"]) + 1);
+		this.brId = "" + (parseInt(batchRoom[batchRoom.length - 1]["brId"]) + 1);
 }
 
 function createSubjectRoomEntry(subjectId, roomId) {
-	this.subjectId = ""+subjectId;
-	this.roomId = ""+roomId;
+	this.subjectId = "" + subjectId;
+	this.roomId = "" + roomId;
 	if(subjectRoom.length == 0)
 		this.srId = 1;
 	else
-		this.srId = ""+(parseInt(subjectRoom[subjectRoom.length - 1]["srId"]) + 1);
+		this.srId = "" + (parseInt(subjectRoom[subjectRoom.length - 1]["srId"]) + 1);
 }
 function makeTimeTableEntry(day, slotNo, roomId, classId, subjectId,
 		teacherId, batchId, currentSnapshotId, isFixed, eachSlot) {
@@ -763,20 +768,14 @@ function makeTimeTableEntry(day, slotNo, roomId, classId, subjectId,
 	if(batchId != "1" && batchId != null) {/*For overlapping sbt*/
 		var sbt = search(subjectBatchTeacher, "subjectId", subjectId,
 							 "batchId", batchId);
-		//alert("batchsubj");
-		//alert(JSON.stringify(sbt));
 		var osbt;
 		if(sbt !== -1) {
 			var osbt = searchMultipleRows(overlappingSBT, "sbtId1", sbt["sbtId"]);
-			//console.log(osbt);
-			//alert(JSON.stringify(osbt));
 			if(osbt === -1)
 				 return;
 			for(var i in osbt) {
 				var batchId = search(subjectBatchTeacher, "sbtId", osbt[i]["sbtId2"])["batchId"];
-				//alert("batch"+batchId);
 				var classId = search(batchClass, "batchId", batchId)["classId"];
-				//alert("class:"+classId)
 				for(var j = 0; j < eachSlot; j++) {
 					var newEntry = new createTimeTableEntry(day, (parseInt(slotNo) + j),
 							roomId, classId,
@@ -784,7 +783,6 @@ function makeTimeTableEntry(day, slotNo, roomId, classId, subjectId,
 							batchId, currentSnapshotId, isFixed);
 					timeTable.push(newEntry);
 					console.log("makeTimeTableEntry: newEntry = " + JSON.stringify(newEntry));
-					//alert("Entered");
 				}
 			}
 		}
@@ -799,8 +797,8 @@ function roomSelected(selecttag) {
 	kid = Id.substring(Id.length - 1,Id.length);
 	*/
 	[iid, jid, kid ] = getIJK(Id);
-	var roomShortName = document.getElementById("room"+Id).
-				options[document.getElementById("room"+Id).selectedIndex].text;
+	var roomShortName = document.getElementById("room" + Id).
+				options[document.getElementById("room" + Id).selectedIndex].text;
 	if(roomShortName == "--Room--")
 		return;
 	var roomRow = search(room, "roomShortName", roomShortName);
@@ -813,7 +811,7 @@ function roomSelected(selecttag) {
 	if(subjectRow["batches"] == "1") {/*batch*/
 		temp = document.getElementById("batch"+iid+jid+kid);
 		var batchRow = search(batch, "batchName", temp.innerHTML);
-		batchId =  batchRow["batchId"];
+		batchId = batchRow["batchId"];
 
 	}
 	if(type == "teacher") {
@@ -821,14 +819,14 @@ function roomSelected(selecttag) {
 	}
 	else {
 		teacherId = search(teacher, "teacherShortName",
-				document.getElementById("teacher"+iid+jid+kid).innerHTML)["teacherId"];/*teacher*/
+				document.getElementById("teacher" + iid + jid + kid).innerHTML)["teacherId"];/*teacher*/
 	}
 	if(type == "class") {
 		classId = supportObject["classId"];
 	}
 	else {
 		classId = search(classTable, "classShortName",
-					document.getElementById("class"+iid+jid+kid).innerHTML)["classId"];
+					document.getElementById("class" + iid + jid + kid).innerHTML)["classId"];
 	}
 	if(type == "batch") {
 		batchId = supportObject["batchId"];
@@ -861,7 +859,7 @@ function roomSelected(selecttag) {
 
 function getEligibleBatches(i, j, k, subjectRow) {
 	console.log("getEligibleBatches: i = " + i + " j = " + j + " k = " + k +
-				"subject  = " + subjectRow["subjectShortName"]);
+				"subject = " + subjectRow["subjectShortName"]);
 	var optionString = "<option value=\"NOT_SELECTED\">--Batch--</option>";
 	var eligibleBatches = [];
 	var configRow = search(config, "configId", currentConfigId);
@@ -871,7 +869,7 @@ function getEligibleBatches(i, j, k, subjectRow) {
 		sbtRows = searchMultipleRows(subjectBatchTeacher, "subjectId", subjectRow["subjectId"]);
 		var bcRows = searchMultipleRows(batchClass, "classId", supportObject["classId"]);
 		for(var n = 0; n < sbtRows.length; n++) {
-			if(search(bcRows, "batchId", sbtRows[n]["batchId"])  === -1) {
+			if(search(bcRows, "batchId", sbtRows[n]["batchId"]) === -1) {
 				sbtRows.splice(n, 1);
 				--n;
 			}
@@ -889,7 +887,7 @@ function getEligibleBatches(i, j, k, subjectRow) {
 	var eachSlot = parseInt(subjectRow["eachSlot"]);
 	outerloop: //label
 	for(var y = 0; y < sbtRows.length; y++) {
-		console.log("getEligibleBatches Looping y:" +  y + " " + JSON.stringify(sbtRows[y]));
+		console.log("getEligibleBatches Looping y:" + y + " " + JSON.stringify(sbtRows[y]));
 		var currTeacher = search(teacher, "teacherId", sbtRows[y]["teacherId"]);
 		var maxEntriesForSubject = subjectRow["nSlots"];
 
@@ -908,7 +906,8 @@ function getEligibleBatches(i, j, k, subjectRow) {
 			continue outerloop;
 		// Done: following needs a fix for batchable subjects.
 		} else if(lenExistingEntries > maxEntriesForSubject) {
-			alert(lenExistingEntries + " i.e. More than "+maxEntriesForSubject+" Entries for Subject "+subjectRow["subjectShortName"]+
+			alert(lenExistingEntries + " i.e. More than " + maxEntriesForSubject +
+				" Entries for Subject " + subjectRow["subjectShortName"]+
 				"existingEntriesLen = " + existingEntries.length + " eachSlot = " + subjectRow["eachSlot"] +
 				"existingEntries = " + JSON.stringify(existingEntries));
 		}
@@ -916,7 +915,7 @@ function getEligibleBatches(i, j, k, subjectRow) {
 		var allocatedTimeForTeacher = searchMultipleRows(timeTable, "teacherId",
 								currTeacher["teacherId"]);
 		if(allocatedTimeForTeacher !== -1) {
-			 allocatedTimeForTeacher =  allocatedTimeForTeacher.length;
+			 allocatedTimeForTeacher = allocatedTimeForTeacher.length;
 		}
 		else {
 			 allocatedTimeForTeacher = 0;
@@ -985,7 +984,7 @@ function getEligibleRoom(i, j, k, capacity, subjectRow, roomFound) {
 		var valid = 1;
 		for(var z =0; z < eachSlot; z++) {
 			var found = search(timeTable,
-						"day", i, "slotNo", ""+(parseInt(j) + z),
+						"day", i, "slotNo", "" + (parseInt(j) + z),
 						"roomId", roomRow["roomId"],  "snapshotId", currentSnapshotId);
 			if(found !== -1) {/*There are other classes in this room*/
 				valid = 0;
@@ -993,7 +992,7 @@ function getEligibleRoom(i, j, k, capacity, subjectRow, roomFound) {
 			}
 		}
 		if(valid == 1) {
-			optionString += "<option value = \""+roomRow["roomShortName"]+"\" selected=\"selected\">"+
+			optionString += "<option value = \"" + roomRow["roomShortName"] + "\" selected=\"selected\">" +
 						roomRow["roomShortName"] +
 					"</option>";
 		}
@@ -1002,7 +1001,7 @@ function getEligibleRoom(i, j, k, capacity, subjectRow, roomFound) {
 	//alert(parseInt(room[i]["roomCount"]) +" ,"+capacity);
 		var valid = 1;
 		for(var z =0; z < eachSlot; z++) {
-			var found = search(timeTable, "day", i, "slotNo", ""+(parseInt(j) + z),
+			var found = search(timeTable, "day", i, "slotNo", "" + (parseInt(j) + z),
 						"roomId", room[y]["roomId"],  "snapshotId", currentSnapshotId);
 			if(found !== -1) {/*There are other classes in this room*/
 				valid = 0;
@@ -1013,7 +1012,7 @@ function getEligibleRoom(i, j, k, capacity, subjectRow, roomFound) {
 			continue;
 				// TODO: The capacity check needs to be more flexible
 				//if(parseInt(room[y]["roomCount"]) >= capacity) {
-		optionString += "<option value = \""+ room[i]["roomShortName"] +"\">"+
+		optionString += "<option value = \"" + room[i]["roomShortName"] + "\">" +
 					room[y]["roomShortName"] +
 				"</option>";
 				//}
@@ -1032,7 +1031,7 @@ function classSelected(selecttag) {/*Final stage for room type*/
 	[iid, jid, kid ] = getIJK(Id);
 
 	var classRow = search(classTable, "classShortName", classShortName);
-	var subjectShortName = document.getElementById("subject"+iid+jid+kid).innerHTML;
+	var subjectShortName = document.getElementById("subject" + iid + jid + kid).innerHTML;
 	//alert(subjectShortName);
 	var subjectRow = search(subject, "subjectShortName", subjectShortName);
 	var teacherRow = search(subjectClassTeacher, "subjectId", subjectRow["subjectId"],
@@ -1067,7 +1066,7 @@ next_class:for(var l in sct) {
 			existingEntries = (res.length/subjectRow["eachSlot"]);
 		}
 		if(existingEntries >= subjectRow["nSlots"]) {
-			console.log("getEligibleClass: maxHrs prob"+classId);
+			console.log("getEligibleClass: maxHrs prob" + classId);
 			continue next_class;
 		}
 		for(var n = 0; n < subjectRow["eachSlot"]; n++) {
@@ -1085,7 +1084,7 @@ next_class:for(var l in sct) {
 		return  "";
 	}
 	for(var r in classlist) {
-		optionString += "<option value= \""+classlist[r]["classShortName"]+"\">"+
+		optionString += "<option value= \"" + classlist[r]["classShortName"] + "\">" +
 					classlist[r]["classShortName"] +
 				"</option>";
 	}
@@ -1108,26 +1107,26 @@ function batchSelected(selecttag) {
 		case "class" :
 		case "teacher" :
 			var roomFound, optionString = "";
-			var subjectShortName = document.getElementById("subject"+iid+jid+kid).innerHTML;
+			var subjectShortName = document.getElementById("subject" + iid + jid + kid).innerHTML;
 			var subjectRow = search(subject, "subjectShortName", subjectShortName);
-			var roomSelect = document.getElementById("room"+Id);
+			var roomSelect = document.getElementById("room" + Id);
 			roomSelect.style.display = "";
-			document.getElementById("checkbox"+Id).style.display = "";
+			document.getElementById("checkbox" + Id).style.display = "";
 			var capacity = parseInt(batchRow["batchCount"]);
 			if(type == "class") {
 				var teacherRow = search(subjectBatchTeacher, "subjectId", subjectRow["subjectId"],
 							"batchId", batchRow["batchId"]);
 				//alert(JSON.stringify(teacherRow));
 				teacherRow = search(teacher, "teacherId", teacherRow["teacherId"]);
-				extraInfo += "<div id=\"teacher"+iid+jid+kid+"\" class=\"box\">"+
-							teacherRow["teacherShortName"]+
+				extraInfo += "<div id=\"teacher" + iid + jid + kid +"\" class=\"box\">" +
+							teacherRow["teacherShortName"] +
 						"</div>";
 			}
 			else if(type == "teacher"){
 				var classShortName = search(classTable, "classId",
 							search(batchClass, "batchId", batchRow["batchId"])["classId"])
 									["classShortName"];
-				extraInfo += "<div id=\"class"+iid+jid+kid+"\" class=\"box\">"+
+				extraInfo += "<div id=\"class" + iid + jid + kid + "\" class=\"box\">" +
 							classShortName +
 						"</div>";
 			}
@@ -1135,11 +1134,11 @@ function batchSelected(selecttag) {
 			if(roomFound == -1) {
 				roomFound = search(batchRoom, "batchId", batchRow["batchId"]);
 			}
-			roomSelect.innerHTML =  getEligibleRoom(parseInt(iid), parseInt(jid), parseInt(kid),
+			roomSelect.innerHTML = getEligibleRoom(parseInt(iid), parseInt(jid), parseInt(kid),
 								 capacity, subjectRow, roomFound);/*room option*/
 			break;
 		case "room" :/*Final stage for room type*/
-			var subjectShortName = document.getElementById("subject"+iid+jid+kid).innerHTML;
+			var subjectShortName = document.getElementById("subject" + iid + jid + kid).innerHTML;
 			var subjectRow = search(subject, "subjectShortName", subjectShortName);
 			var teacherId = search(subjectBatchTeacher, "subjectId", subjectRow["subjectId"],
 						"batchId", batchRow["batchId"])["teacherId"];
@@ -1158,17 +1157,17 @@ function batchSelected(selecttag) {
 			return;
 			break;
 	}
-	selecttag.parentElement.innerHTML =	"<div id= \"batch"+ iid+jid+kid+"\"class= \"box\">"
-			+batchName+ "</div>"+extraInfo;
+	selecttag.parentElement.innerHTML =	"<div id= \"batch" + iid + jid + kid + "\"class= \"box\">"
+			+ batchName + "</div>" + extraInfo;
 }
 
 function fixedEntryObject(ttId, fixedText) {
-	this.ttId = ""+ttId;
-	this.fixedText = ""+fixedText;
+	this.ttId = "" + ttId;
+	this.fixedText = "" + fixedText;
 	if(fixedEntry.length == 0)
-		this.feId =  1;
+		this.feId = 1;
 	else
-		this.feId = ""+(parseInt(fixedEntry[fixedEntry.length - 1]["feId"]) + 1);
+		this.feId = "" + (parseInt(fixedEntry[fixedEntry.length - 1]["feId"]) + 1);
 }
 
 function fixedSlotEntry(i, j, k) {
@@ -1185,25 +1184,25 @@ function fixedSlotEntry(i, j, k) {
 		}
 		fixedEntry.push(new fixedEntryObject(timeTable[timeTable.length - 1]["ttId"], label));
 		// ABHIJIT var slottable = document.getElementById("slottable"+ i + j + k);
-		var slottable = document.getElementById("slottable"+ makeIJK(i, j, k));
+		var slottable = document.getElementById("slottable" + makeIJK(i, j, k));
 		if(slottable == null) {
 			return;
 		}
 
 		slottable.innerHTML =
-			"<tr>"+
-				"<td>"+
-					"<div class= \"box\" id = \"box"+i+j+k+"\">"+
-						"<span class = \"fixedentry\""+
-						"id = \"fixed"+i+j+k+"\">" +
+			"<tr>" +
+				"<td>" +
+					"<div class= \"box\" id = \"box" + i + j + k + "\">" +
+						"<span class = \"fixedentry\"" +
+						"id = \"fixed" + i + j + k + "\">" +
 							label +
-						"</span>"+
-						"<span id = \""+i+j+k+"\" "+
-						"class=\"delete\" onclick = deleteEntry(this)>"+
-							"x"+
-						"</span>"+
-					"</div>"+
-				"</td>"+
+						"</span>" +
+						"<span id = \"" + i + j + k + "\" " +
+						"class=\"delete\" onclick = deleteEntry(this)>" +
+							"x" +
+						"</span>" +
+					"</div>" +
+				"</td>" +
 			"</tr>";
 		helperTable[i - 1][j][k] = timeTable[timeTable.length - 1];
 	}
@@ -1231,9 +1230,9 @@ function subjectSelected(selecttag) {
 		case "class" :
 		case "teacher" :
 			if(batches === "0") {/*Normal subject*/
-				var roomSelect = document.getElementById("room"+Id);
+				var roomSelect = document.getElementById("room" + Id);
 				roomSelect.style.display = "";
-				document.getElementById("checkbox"+Id).style.display = "";
+				document.getElementById("checkbox" + Id).style.display = "";
 				var capacity = parseInt(supportObject["classCount"]);
 				/*Teacher Entry*/
 				if(type == "class") {
@@ -1267,16 +1266,16 @@ function subjectSelected(selecttag) {
 											capacity, subjectRow, roomFound);/*room option*/
 			}
 			else {/*Subject Having Batches*/
-				var batchSelect = document.getElementById("batch"+ Id);
+				var batchSelect = document.getElementById("batch" + Id);
 				batchSelect.style.display = "";
 				batchSelect.innerHTML = getEligibleBatches(parseInt(iid), parseInt(jid),
 											parseInt(kid), subjectRow);/*batch option*/
 			}
 			break;
 		case "batch" :
-			var roomSelect = document.getElementById("room"+Id);
+			var roomSelect = document.getElementById("room" + Id);
 			roomSelect.style.display = "";
-			document.getElementById("checkbox"+Id).style.display = "";
+			document.getElementById("checkbox" + Id).style.display = "";
 			var classRow = search(classTable, "classId",
 					search(batchClass, "batchId", supportObject["batchId"])["classId"]);
 			var teacherRow = search(teacher, "teacherId", search(subjectBatchTeacher,
@@ -1299,13 +1298,13 @@ function subjectSelected(selecttag) {
 			break;
 		case "room" :
 			if(subjectRow["batches"] == "0") {
-				var classSelect = document.getElementById("class"+ Id);
+				var classSelect = document.getElementById("class" + Id);
 				classSelect.style.display = "";
 				classSelect.innerHTML = getEligibleClass(parseInt(iid), parseInt(jid),
 									parseInt(kid), subjectRow);
 			}
 			else {
-				var batchSelect = document.getElementById("batch"+ Id);
+				var batchSelect = document.getElementById("batch" + Id);
 				batchSelect.style.display = "";
 				batchSelect.innerHTML = getEligibleBatches(parseInt(iid), parseInt(jid),
 											parseInt(kid),
@@ -1316,20 +1315,20 @@ function subjectSelected(selecttag) {
 			alert("ERROR: subjectSelected: should not have come here.");
 			break;
 		}
-		selecttag.parentElement.innerHTML =""+
-		"<div id= \"subject"+ iid +jid + kid + "\"class= \"box\">" +
-			subjectShortName+
-		"</div>"+
-		"<span id = \""+iid+jid+kid+"\" class=\"delete\" "+
-				"onclick = fillTable2(false)>"+ "x"+
-		"</span>" +extraInfo;
+		selecttag.parentElement.innerHTML = "" +
+		"<div id= \"subject" + iid + jid + kid + "\"class= \"box\">" +
+			subjectShortName +
+		"</div>" +
+		"<span id = \"" + iid + jid + kid + "\" class=\"delete\" " +
+				"onclick = fillTable2(false)>" + "x" +
+		"</span>" + extraInfo;
 }
 function getEligibleSubjects(i, j, k) {
 	var configrow = search(config, "configId", currentConfigId);
 	var nSlotsPerDay = configrow["nSlots"];
-	var select = "<select id= \"subject"+ i + j + k +
-				"\" onchange=\"subjectSelected(this)\">"+
-				"<option value=\"NOT_SELECTED\">Subject"+
+	var select = "<select id= \"subject" + i + j + k +
+				"\" onchange=\"subjectSelected(this)\">" +
+				"<option value=\"NOT_SELECTED\">Subject" +
 				"</option>";
 	var subjectsList = [];
 	var blist;
@@ -1402,8 +1401,8 @@ function getEligibleSubjects(i, j, k) {
 			if(lenExistingEntries == maxEntriesForSubject /*&& lists[l] != sbtlist*/) {
 				console.log("eligibleSubjects:  maxEntriesFor subject " + currSubject["subjectShortName"] +
 					"class/batch: " + searchOn + " = " + lists[l][m][searchOn]);
-					disabledSubjects += "<option value =\""+ subj +"\" disabled=\"disabled\">" + 
-						currSubject["subjectShortName"] + ": 0/"+maxEntriesForSubject+"</option>";
+					disabledSubjects += "<option value =\"" + subj + "\" disabled=\"disabled\">" +
+						currSubject["subjectShortName"] + ": 0/" + maxEntriesForSubject + "</option>";
 					continue;
 			}
 			if(lenExistingEntries > maxEntriesForSubject) {
@@ -1415,10 +1414,10 @@ function getEligibleSubjects(i, j, k) {
 
 			/* Skip the subject if it can't fit remaining slots of day */
 			if(j + parseInt(currSubject["eachSlot"]) - 1  >= nSlotsPerDay) {
-				console.log("Skipping slot "+ j + " for " + currSubject["subjectShortName"] +
+				console.log("Skipping slot " + j + " for " + currSubject["subjectShortName"] +
 							" on day " + i + " as slot out of day ");
-				disabledSubjects += "<option value =\""+ subj +"\" disabled=\"disabled\">" + 
-						currSubject["subjectShortName"] + ": Len="+currSubject["eachSlot"]+ "</option>";
+				disabledSubjects += "<option value =\"" + subj + "\" disabled=\"disabled\">" +
+						currSubject["subjectShortName"] + ": Len="+currSubject["eachSlot"] + "</option>";
 				continue;
 			}
 			
@@ -1444,9 +1443,9 @@ function getEligibleSubjects(i, j, k) {
 				var nEntriesForTeacher = search(timeTable, "day", i, "slotNo", j + n,
 					 "teacherId", currTeacher["teacherId"], "snapshotId", currentSnapshotId);
 				if(nEntriesForTeacher != -1) {
-					console.log("eligibleSubjects: Skipping teacher " + 
+					console.log("eligibleSubjects: Skipping teacher " +
 						currTeacher["teacherShortName"] + " as busy");
-					disabledSubjects += "<option value =\""+ subj +"\" disabled=\"disabled\">" + 
+					disabledSubjects += "<option value =\"" + subj +"\" disabled=\"disabled\">" +
 						currSubject["subjectShortName"] + ": Tchr Busy</option>";
 					validSubj = 0;
 					gotoNextSubject = true;
@@ -1484,9 +1483,9 @@ function getEligibleSubjects(i, j, k) {
 					var bco = searchMultipleRows(batchCanOverlap, "batchId", lists[l][m]["batchId"]);
 					for(var q in slotEntries) {
 						if(slotEntries[q]["batchId"] == null) {
-							console.log("getEligibleSubject:  " +currSubject["subjectShortName"]+
+							console.log("getEligibleSubject:  " + currSubject["subjectShortName"] +
 									 supportObject["classShortName"] + " subject for whole class");
-							disabledSubjects += "<option value =\""+ subj +"\" disabled=\"disabled\">" + 
+							disabledSubjects += "<option value =\"" + subj + "\" disabled=\"disabled\">" +
 								currSubject["subjectShortName"] + ": Overlap</option>";
 							validSubj = 0;
 							gotoNextSubject = true;
@@ -1494,12 +1493,12 @@ function getEligibleSubjects(i, j, k) {
 						}
 						/*batch subj but in this slot subj for whole class present*/
 						if(slotEntries[q]["batchId"] == lists[l][m]["batchId"]) {
-							console.log("getEligibleSubject: " + lists[l][m]["batchShortName"] + 
+							console.log("getEligibleSubject: " + lists[l][m]["batchShortName"] +
 								" batch not free");
 							validSubj = 0;
 							gotoNextSubject = true;
-							disabledSubjects += "<option value =\""+ subj +"\" disabled=\"disabled\">" + 
-								currSubject["subjectShortName"] + ": Batch "+ lists[l][m]["batchId"]+"Busy</option>";
+							disabledSubjects += "<option value =\"" + subj + "\" disabled=\"disabled\">" +
+								currSubject["subjectShortName"] + ": Batch " + lists[l][m]["batchId"] + "Busy</option>";
 							break;
 						}
 						if(bco !== -1) {
@@ -1507,7 +1506,7 @@ function getEligibleSubjects(i, j, k) {
 							if(search(bco, "batchOverlapId", slotEntries[q]["batchId"]) === -1) {
 								console.log("BatchCannot overlap");
 								gotoNextSubject = true;
-								disabledSubjects += "<option value =\""+ subj +"\" disabled=\"disabled\">" + 
+								disabledSubjects += "<option value =\"" + subj + "\" disabled=\"disabled\">" +
 									currSubject["subjectShortName"] + ": No Overlapping Batch</option>";
 								break;
 							}
@@ -1526,7 +1525,7 @@ function getEligibleSubjects(i, j, k) {
 				if(osbt !== -1)
 					for(var q in osbt) {
 						if(!overlappingPossible(i, j, osbt[q], currSubject)) {
-							disabledSubjects += "<option value =\""+ subj +"\" disabled=\"disabled\">" + 
+							disabledSubjects += "<option value =\"" + subj + "\" disabled=\"disabled\">" +
 								currSubject["subjectShortName"] + ": Parallel Batch Busy</option>";
 							continue;
 						}
@@ -1551,7 +1550,7 @@ function getEligibleSubjects(i, j, k) {
 	}
 	for(var r in subjectsList) {
 		var subj = subjectsList[r]["subjectShortName"];
-		select += "<option value =\""+ subj +"\">" + subj + "</option>";
+		select += "<option value =\"" + subj + "\">" + subj + "</option>";
 	}
 	if((type == "batch" || type == "class") &&  cellEmpty(i, j)) {
 		select += "<option title=\"Insert a fixed slot/ LUNCH slot\" value = \"FixedEntry\">Fixed slot</option>";
@@ -1800,11 +1799,11 @@ function fillTable2(createNewTable) {
 			var id = this.parentElement.id;
 			if(text == "+") {
 				this.innerHTML= "-";
-				$(".animate"+id).fadeIn();
+				$(".animate" + id).fadeIn();
 			}
 			else {
 				this.innerHTML = "+";
-				$(".animate"+id).fadeOut();
+				$(".animate" + id).fadeOut();
 			}
 		});
 	}
@@ -1827,7 +1826,7 @@ function fillTable2(createNewTable) {
 					"classId", classId, "batchId", 1, "snapshotId", currentSnapshotId);
 			else
 				slotRows = searchMultipleRows(timeTable, "day", i, "slotNo", j,
-					type+"Id", supportObject[type+"Id"], "snapshotId", currentSnapshotId);
+					type + "Id", supportObject[type + "Id"], "snapshotId", currentSnapshotId);
 			if(slotRows != -1) {
 				sort(slotRows);
 				var batches = "1";
@@ -1838,13 +1837,13 @@ function fillTable2(createNewTable) {
 					if(slotRows[k]["isFixed"] == "1") {
 						var position = getPosition(i, j, slotRows[k], 1);
 						var batchName = "";
-						if(position  == null) {
+						if(position == null) {
 							alert("i: " + i + "slot " + slotNo + "k = " + k + " fixed slot. got position null");
 							continue;
 						}
 						batches = "0";
 						// ABHIJIT. var slottable = document.getElementById("slottable"+ i + j + position);
-						var slottable = document.getElementById("slottable"+ makeIJK(i, j, position));
+						var slottable = document.getElementById("slottable" + makeIJK(i, j, position));
 						if(slottable == null) {
 							alert("ERROR. i: " + i + "slot " + slotNo + "k = " + k + " got slottabble  null. ERROR");
 							continue;
@@ -1864,23 +1863,23 @@ function fillTable2(createNewTable) {
 							}
 						}
 						slottable.innerHTML =
-							"<tr>"+
-								"<td>"+
-									"<div class= \"box\" id = \"box"+i+j+position+"\">"+
-										"<span class = \"fixedentry\""+
-										"id = \"fixed"+i+j+position+"\">" +
+							"<tr>" +
+								"<td>" +
+									"<div class= \"box\" id = \"box" + i + j + position + "\">"+
+										"<span class = \"fixedentry\"" +
+										"id = \"fixed" + i + j + position + "\">" +
 											label +
-										"</span>"+
-										"<span class = \"batchentry\""+
-										"id = \"batch"+i+j+position+"\">" +
+										"</span>" +
+										"<span class = \"batchentry\"" +
+										"id = \"batch" + i + j + position + "\">" +
 											batchName +
-										"</span>"+
-										"<span id = \""+i+j+k+"\" "+
+										"</span>" +
+										"<span id = \"" + i + j + k + "\" "+
 										"class=\"delete\" onclick = deleteEntry(this)>"+
-											"x"+
-										"</span>"+
-									"</div>"+
-								"</td>"+
+											"x" +
+										"</span>" +
+									"</div>" +
+								"</td>" +
 							"</tr>";
 						continue;
 					}
@@ -1904,158 +1903,158 @@ function fillTable2(createNewTable) {
 						batchName = "" + batchRow["batchName"];
 					}
 					var position = getPosition(i, j, slotRows[k], subjectRow["eachSlot"]);
-					if(position  == null)
+					if(position == null)
 						continue;
 					//var slottable = document.getElementById("slottable"+ i + j + position);
-					var slottable = document.getElementById("slottable"+ makeIJK(i,  j, position));
+					var slottable = document.getElementById("slottable" + makeIJK(i,  j, position));
 					if(slottable == null) {
 						alert("ERROR. i: " + i + "slot " + slotNo + "k = " + k + " position = " + position + " got slottabble  null. ERROR");
 						continue;
 					}
  					// Note: inside i=days * j=NoOfSlots loop
 					slottable.innerHTML =
-						"<tr>"+
-							"<td colspan=\""+eachSlot+"\">"+
-								"<div class= \"box\" id = \"box"+i+j+position+"\">"+
+						"<tr>" +
+							"<td colspan=\"" + eachSlot + "\">"+
+								"<div class= \"box\" id = \"box" + i + j + position + "\">"+
 									"<span class = \"subjectentry\""+
-									"id = \"subject"+i+j+position+"\">" +
+									"id = \"subject" + i + j + position + "\">" +
 										subjectRow["subjectShortName"] +
-									"</span>"+
-									"<span class = \"batchentry\" "+
-									"id = \"batch"+i+j+position+"\">"+
+									"</span>" +
+									"<span class = \"batchentry\" " +
+									"id = \"batch" + i + j + position + "\">" +
 										batchName +
-									"</span>"+
-									"<span id = \""+i+j+k+"\" "+
-									"class=\"delete\" onclick = deleteEntry(this)>"+
-										"x"+
-									"</span>"+
-								"</div>"+
+									"</span>" +
+									"<span id = \"" + i + j + k + "\" " +
+									"class=\"delete\" onclick = deleteEntry(this)>" +
+										"x" +
+									"</span>" +
+								"</div>" +
 								"<div class = \"animate" + i + "\">" +
-									"<div class = \"box\">"+
-										"<span id = \"room"+i+j+position+"\" "+
+									"<div class = \"box\">" +
+										"<span id = \"room" + i + j + position + "\" " +
 										"class = \"roomentry\" >"
-												+ roomShortName +
-										"</span>"+
-										"<span class =\"teacherentry\" "+
-										"id = \"teacher"+i+j+position+"\">" +
+												 + roomShortName +
+										"</span>" +
+										"<span class =\"teacherentry\" " +
+										"id = \"teacher" + i + j + position + "\">" +
 												teacherShortName +
-										"</span>"+
-										"<span class =\"classentry\" "+
-										"id = \"class"+i+j+position+"\">" +
+										"</span>" +
+										"<span class =\"classentry\" " +
+										"id = \"class" + i + j + position + "\">" +
 												classShortName +
-										"</span>"+
-									"</div>"+
-								"</div>"+
-							"</td>"+
+										"</span>" +
+									"</div>" +
+								"</div>" +
+							"</td>" +
 						"</tr>";
 					slottable.setAttribute("draggable", "true");
 					slottable.setAttribute("ondragstart", "dragStartHandler(event)");
 					if(eachSlot > 1) {/**/
 						for(var p = 1; p < eachSlot; p++) {
-							// ABHIJIT document.getElementById("cell"+ i + (j + p)+ position).style.display = "none";
-							document.getElementById("cell"+ makeIJK(i, j+p, position)).style.display = "none";
+							// ABHIJIT document.getElementById("cell" + i + (j + p) + position).style.display = "none";
+							document.getElementById("cell" + makeIJK(i, j + p, position)).style.display = "none";
 						}
-						// ABHIJIT document.getElementById("cell"+ i + j + position).setAttribute("colspan", eachSlot);
-						document.getElementById("cell"+ makeIJK(i, j, position)).setAttribute("colspan", eachSlot);
+						// ABHIJIT document.getElementById("cell" + i + j + position).setAttribute("colspan", eachSlot);
+						document.getElementById("cell" + makeIJK(i, j, position)).setAttribute("colspan", eachSlot);
 					}
 				}
 				if(batches !== "0" && type == "class") {
 					var position = getPosition(i, j, null, 1);
-					//document.getElementById("cell"+i+j+k).style.borderTop = "2px solid black";
+					//document.getElementById("cell" + i + j + k).style.borderTop = "2px solid black";
 					if(position == null) {
 						alert("ERROR: batches true, on class Page, got positionn null ");
 						continue;
 					}
-					// ABHIJIT slottable = document.getElementById("slottable"+i+j+position);
-					slottable = document.getElementById("slottable"+ makeIJK(i, j, position));
-					//console.log("slottable"+i+j+k);
+					// ABHIJIT slottable = document.getElementById("slottable" + i + j + position);
+					slottable = document.getElementById("slottable" + makeIJK(i, j, position));
+					//console.log("slottable" + i + j + k);
 					slottable.innerHTML =
-					"<tr>"+
-						"<td>"+ getEligibleSubjects(i, j, position) +"</td>"+
-					"</tr>"+
-					"<tr>"+
-						"<td>"+
-							"<select id=\"batch"+ i+j+position +"\" style=\"display:none;\" "+
-							"onchange=\"batchSelected(this)\"/>"+
-						"</td>"+
-					"</tr>"+
-					"<tr>"+
-						"<td>"+
-							"<select id=\"teacher"+ i+j +position+"\" style=\"display:none;\"/>"+
-						"</td>"+
-					"</tr>"+
-					"<tr>"+
-						"<td>"+
-							"<select id=\"class"+ i+j +position+"\" style=\"display:none;\""+
-							"onchange=\"classSelected(this)\"/>"+
-						"</td>"+
-					"</tr>"+
-					"<tr>"+
-						"<td>"+
-							"<select id=\"room"+ i+j +position+"\" "+ "style=\"display:none;\" />"+
-							"Done"+
-							"<input id= \"checkbox"+i+j+position+"\" class=\"toggle\""+ " type=checkbox"+
-							" value = \""+i+j+position+"\"style=\" display:none;\""+
+					"<tr>" +
+						"<td>" + getEligibleSubjects(i, j, position) + "</td>" +
+					"</tr>" +
+					"<tr>" +
+						"<td>" +
+							"<select id=\"batch" + i + j + position + "\" style=\"display:none;\" " +
+							"onchange=\"batchSelected(this)\"/>" +
+						"</td>" +
+					"</tr>" +
+					"<tr>" +
+						"<td>" +
+							"<select id=\"teacher" + i + j + position + "\" style=\"display:none;\"/>" +
+						"</td>" +
+					"</tr>" +
+					"<tr>" +
+						"<td>" +
+							"<select id=\"class" + i + j + position + "\" style=\"display:none;\"" +
+							"onchange=\"classSelected(this)\"/>" +
+						"</td>" +
+					"</tr>" +
+					"<tr>" +
+						"<td>" +
+							"<select id=\"room" + i + j + position + "\" " + "style=\"display:none;\" />" +
+							"Done" +
+							"<input id= \"checkbox" + i + j + position + "\" class=\"toggle\"" + " type=checkbox" +
+							" value = \"" + i + j + position + "\"style=\" display:none;\"" +
 							" onclick=roomSelected(this)>" +
-						"</td>"+
+						"</td>" +
 					"</tr>";
 				}
 				/* refers to dayname td*/
-				var rowspan = document.getElementById(""+ i).getAttribute("rowspan"); 
+				var rowspan = document.getElementById("" + i).getAttribute("rowspan"); 
 				if(rowspan == null)
-					rowspan = ""+1;
+					rowspan = "" + 1;
 				if(parseInt(rowspan) <= slotRows.length && type == "class") {
-					document.getElementById(""+ i).setAttribute("rowspan", 
+					document.getElementById("" + i).setAttribute("rowspan", 
 						(slotRows.length + parseInt(batches)));
 				}
 			}
 			else {
 				var k = getPosition(i, j, null, 1);
-				// ABHIJIT slottable = document.getElementById("slottable"+i+j+k);
-				slottable = document.getElementById("slottable"+ makeIJK(i, j, k));
+				// ABHIJIT slottable = document.getElementById("slottable" + i + j + k);
+				slottable = document.getElementById("slottable" + makeIJK(i, j, k));
 				if(slottable == null)
 					continue;
 				// Note: inside i=days * j=NoOfSlots loop, batches !=0
 				slottable.innerHTML =
-					"<tr>"+
+					"<tr>" +
 						"<td>" +
 							getEligibleSubjects(i, j, k) +
-						"</td>"+
-					"</tr>"+
-					"<tr>"+
-						"<td>"+
-							"<select id=\"batch"+ i + j + k +"\""+
-								"onchange=\"batchSelected(this)\""+
-								"style=\"display:none;\"/>"+
-						"</td>"+
-					"</tr>"+
-					"<tr>"+
-						"<td>"+
-							"<select id=\"teacher"+ i + j + k + "\""+
-								"style=\"display:none;\"/>"+
-						"</td>"+
-					"</tr>"+
-					"<tr>"+
-						"<td>"+
-							"<select id=\"class"+ i + j + k + "\""+
-								"onchange=\"classSelected(this)\" "+
-								"style=\"display:none;\"/>"+
-						"</td>"+
-					"</tr>"+
-					"<tr>"+
-						"<td>"+
-							"<select id=\"room"+ i + j + k + "\""+
-								"style=\"display:none;\" />"+
-							"Done<input id= \"checkbox"+i+j +k+"\" class= \"toggle\""+
-							"type=checkbox"+
-							" value = \""+i+j +k+"\" style=\"display:none;\" onchange=roomSelected(this) >" +
-						"</td>"+
+						"</td>" +
+					"</tr>" +
+					"<tr>" +
+						"<td>" +
+							"<select id=\"batch" + i + j + k + "\"" +
+								"onchange=\"batchSelected(this)\"" +
+								"style=\"display:none;\"/>" +
+						"</td>" +
+					"</tr>" +
+					"<tr>" +
+						"<td>" +
+							"<select id=\"teacher" + i + j + k + "\"" +
+								"style=\"display:none;\"/>" +
+						"</td>" +
+					"</tr>" +
+					"<tr>" +
+						"<td>" +
+							"<select id=\"class" + i + j + k + "\"" +
+								"onchange=\"classSelected(this)\" " +
+								"style=\"display:none;\"/>" +
+						"</td>" +
+					"</tr>" +
+					"<tr>" +
+						"<td>" +
+							"<select id=\"room" + i + j + k + "\"" +
+								"style=\"display:none;\" />" +
+							"Done<input id= \"checkbox" + i + j + k + "\" class= \"toggle\"" +
+							"type=checkbox" +
+							" value = \"" + i + j + k + "\" style=\"display:none;\" onchange=roomSelected(this) >" +
+						"</td>" +
 					"</tr>";
 			}
 		}
 	}
 	for(var i = 1; i <= 6; i++) {/*hiding extra part initially*/
-		$(".animate"+i).hide();
+		$(".animate" + i).hide();
 	}
 
 }
@@ -2251,7 +2250,7 @@ function load() {
 		return false;
 	}
 	res = loadNewSnapshot();
-	$("#mainTimeTable").append("<center><B>No TimeTable loaded </B><br>"+
+	$("#mainTimeTable").append("<center><B>No TimeTable loaded </B><br>" +
 								"Please select option from above catgories</center>");
 	return res;
 }
@@ -2276,7 +2275,7 @@ function loadSnapshotMenu(selectedName) {
 		selectTag.appendChild(option);
 	}
 	selectTag.setAttribute("onchange", "snapshotChange()");
-	document.getElementById("saveNewSnapshot").disabled =  false;
+	document.getElementById("saveNewSnapshot").disabled = false;
 	document.getElementById("saveSnapshot").disabled = false;
 	//sortSelect(selectTag);
 }
@@ -2292,7 +2291,7 @@ function jsSaveNewSnapshot() {
 				if(response["Success"] == "True") {
 					alert("snapshot " + newSnapshotName + " Saved. Press OK to continue");
 					document.getElementById("saveNewSnapshot").value = "Save New Snapshot"
-					document.getElementById("saveNewSnapshot").disabled =  false;
+					document.getElementById("saveNewSnapshot").disabled = false;
 					// JS variables are pass by vale, so snapshot can be changed here only
 					snapshot = getSnapshotTable().snapshot;
 					currSnapshotName = newSnapshotName;
@@ -2305,17 +2304,17 @@ function jsSaveNewSnapshot() {
 					alert("Saving New Snapshot Failed. Error: " + response["Error"]);
 					loadSnapshotMenu(currSnapshotName);
 					document.getElementById("saveNewSnapshot").value = "Save New Snapshot";
-					document.getElementById("saveNewSnapshot").disabled =  false;
+					document.getElementById("saveNewSnapshot").disabled = false;
 				}
 			}
 		}
 		document.getElementById("saveNewSnapshot").value = "Saving New snapshot ...wait";
-		document.getElementById("saveNewSnapshot").disabled =  true;
+		document.getElementById("saveNewSnapshot").disabled = true;
 		xhttp.open("POST", "timetable.php", true); // asynchronous
 		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		xhttp.send("reqType=saveNewSnapshot&newSnapshotName="+newSnapshotName+"&currentSnapshotName="+
-					search(snapshot, "snapshotId", currentSnapshotId)["snapshotName"]+
-					"&configId="+currentConfigId+ "&ttData="+JSON.stringify(timeTable));
+		xhttp.send("reqType=saveNewSnapshot&newSnapshotName=" + newSnapshotName + "&currentSnapshotName=" +
+					search(snapshot, "snapshotId", currentSnapshotId)["snapshotName"] +
+					"&configId=" + currentConfigId + "&ttData=" + JSON.stringify(timeTable));
 	}
 }
 function jsSaveSnapshot() {
@@ -2330,26 +2329,26 @@ function jsSaveSnapshot() {
 					//alert("snapshot response: " + this.responseText);
 					alert("snapshot " + snapshotName + " Saved. Press OK to continue");
 					document.getElementById("saveSnapshot").value = "Save snapshot";
-					document.getElementById("saveSnapshot").disabled =  false;
+					document.getElementById("saveSnapshot").disabled = false;
 				} else {
 					alert("Saving snapshot failed. Error = " + response["Error"]);
 					document.getElementById("saveSnapshot").value = "Save snapshot";
-					document.getElementById("saveSnapshot").disabled =  false;
+					document.getElementById("saveSnapshot").disabled = false;
 				}
 			}
 		}
 		xhttp.open("POST", "timetable.php", true); // asynchronous
 		document.getElementById("saveSnapshot").value = "Saving snapshot ...wait";
-		document.getElementById("saveSnapshot").disabled =  true;
+		document.getElementById("saveSnapshot").disabled = true;
 		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		xhttp.send("reqType=saveSnapshot&snapshotName="+snapshotName+"&ttData="+JSON.stringify(timeTable));
+		xhttp.send("reqType=saveSnapshot&snapshotName=" + snapshotName + "&ttData=" + JSON.stringify(timeTable));
 	} else {
 		alert("jsSaveSnapshot: can't find currSnapshotName");
 	}
 }
 
 function makeIJK(i, j, k) {
-	return "_"+i + "_" + j + "_" + k;
+	return "_" + i + "_" + j + "_" + k;
 }
 function getIJK(id) {
 	return id.split("_").splice(1);
