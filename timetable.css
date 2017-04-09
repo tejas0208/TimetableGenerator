@@ -141,7 +141,7 @@ option, select{
 	border: 1px solid black; 
 	padding: 3; 
 	border-radius: 5px;
-	width: 95%; 
+	width: 100%; 
 	font-size: 13px; 
 	box-shadow: 5px 5px 5px #888888;		
 }
@@ -175,4 +175,7 @@ option, select{
 }
 select :disabled {
 	color: red;
+}
+.disabledEntries {
+	font-size: 8px;
 }

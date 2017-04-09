@@ -335,31 +335,32 @@ same day slot  batch --> not allowed. batch will be always in one place any give
 
 any day, any slot, break true --> room NULL, subject NULL,  class not NULL, teacher ??, batch may or may not be NULL, 
 */
-/* create views */
+/* create views : ttId	day slotNo	roomId	classId	subjectId teacherId	batchId	isFixed snapshotId  */
 CREATE VIEW timeTableReadable AS
 SELECT tt.ttId, tt.day, tt.slotNo, r.roomShortName, c.classShortName, 
-		s.subjectShortName, t.teacherShortName, b.batchName, sn.snapshotName, tt.isFixed
+		s.subjectShortName, t.teacherShortName, b.batchName, tt.isFixed, sn.snapshotName
 FROM  timeTable tt, room r, class c, subject s, teacher t, batch b, snapshot sn
 WHERE tt.classId = c.classId AND
 	tt.subjectId = s.subjectId AND
 	tt.batchId = b.batchId AND 
+	tt.batchId IS NOT null AND 
 	tt.roomId = r.roomId AND
 	tt.teacherId = t.teacherId AND
 	tt.snapshotId = sn.snapshotId AND
 	tt.isFixed = FALSE
 UNION 
 SELECT tt.ttId, tt.day, tt.slotNo, r.roomShortName, c.classShortName, 
-			s.subjectShortName, t.teacherShortName, null, sn.snapshotName, tt.isFixed
+			s.subjectShortName, t.teacherShortName, null, tt.isFixed, sn.snapshotName
 FROM  timeTable tt, room r, class c, subject s, teacher t, batch b, snapshot sn
 WHERE tt.classId = c.classId AND
 	tt.subjectId = s.subjectId AND
 	tt.roomId = r.roomId AND
 	tt.teacherId = t.teacherId AND
-	tt.batchid = null AND
+	tt.batchid IS null AND
 	tt.snapshotId = sn.snapshotId AND
 	tt.isFixed = FALSE
 UNION 
-SELECT tt.ttId, tt.day, tt.slotNo, null, c.classShortName, null, null, null, sn.snapshotName, TRUE 
+SELECT tt.ttId, tt.day, tt.slotNo, null, c.classShortName, null, null, null, TRUE, sn.snapshotName
 FROM  timeTable tt, class c, snapshot sn
 WHERE tt.isFixed = TRUE AND
 	  tt.classId = c.classId AND
