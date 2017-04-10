@@ -24,9 +24,10 @@ function getTimeTable() {
 	
 	$query = "SELECT * FROM timeTable where snapshotId = (SELECT snapshotId 
 				from snapshot where snapshotName = $snapshotName)"; 
+	error_log("getTimeTable: Query: ". $query);
 	$outp = sqlGetAllRows($query);
 	$tables["timeTable"] = $outp;
-	//error_log("getTimeTable: returning table: ".json_encode($tables));
+	error_log("getTimeTable: returning table: ".json_encode($tables));
 	return json_encode($tables);
 }
 

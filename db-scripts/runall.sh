@@ -15,6 +15,7 @@ mysql -u root -proot < config.sql
 echo "---------------snapshot ----------------"
 mysql -u root -proot < snapshot.sql
 
+exit
 echo "---------------class-----------------"
 cat class.csv  | bash class.sh  > class.sql
 mysql -u root -proot < class.sql

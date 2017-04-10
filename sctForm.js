@@ -208,7 +208,7 @@ function sctInsert() {
 	xhttp.open("POST", "timetable.php", false); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhttp.send("reqType=sctInsert&subjectId=" + subjectId + "&teacherId=" +
-			teacherId + "&classId=" + classId);
+			teacherId + "&classId=" + classId + "&snapshotId=" + currentSnapshotId);
 	
 }
 
@@ -257,7 +257,8 @@ function sctUpdate(i) {
 	xhttp.open("POST", "timetable.php", false); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhttp.send("reqType=sctUpdate&subjectId=" + subjectId + "&teacherId=" +
-			teacherId + "&classId=" + classId + "&sctId=" + sctId);
+			teacherId + "&classId=" + classId + "&sctId=" + sctId +
+			"&snapshotId=" + currentSnapshotId);
 	
 }
 function sctDelete(i) {
@@ -290,5 +291,5 @@ function sctDelete(i) {
 	}
 	xhttp.open("POST", "timetable.php", true); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("reqType=sctDelete&sctId=" + sctId);
+	xhttp.send("reqType=sctDelete&sctId=" + sctId + "&snapshotId=" + currentSnapshotId);
 }

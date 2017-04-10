@@ -550,22 +550,23 @@ function updateSBT($type) {
 	$subjectId = getArgument("subjectId");
 	$batchId = getArgument("batchId");
 	$sbtId = getArgument("sbtId");
+	$snapshotId = getArgument("snapshotId");
 
 	$query2 = "";
 	switch($type) {
 		case "update":
 			$query = "UPDATE subjectBatchTeacher SET teacherId = $teacherId, ".
 					  "subjectId = $subjectId, batchId = $batchId".
-					 " WHERE sbtId = $sbtId";
+					 " WHERE sbtId = $sbtId AND snapshotId = $snapshotId";
 			break;
 		case "delete":
-			$query = "DELETE FROM subjectBatchTeacher WHERE sbtId = $sbtId;";
+			$query = "DELETE FROM subjectBatchTeacher WHERE sbtId = $sbtId AND snapshotId = $snapshotId;";
 			break;
 		case "insert":
-			$query = "INSERT INTO subjectBatchTeacher (teacherId, subjectId, batchId) ".
-				     "VALUES ($teacherId, $subjectId, $batchId)";
+			$query = "INSERT INTO subjectBatchTeacher (teacherId, subjectId, batchId, snapshotId) ".
+				     "VALUES ($teacherId, $subjectId, $batchId, $snapshotId)";
 			$query2 = "SELECT * from subjectBatchTeacher WHERE teacherId = $teacherId".
-					  " AND batchId = $batchId AND subjectId = $subjectId";
+					  " AND batchId = $batchId AND subjectId = $subjectId AND snapshotId = $snapshotId";
 			break;
 		default:
 			$query = "ERROR;";
@@ -624,22 +625,24 @@ function updateSCT($type) {
 	$subjectId = getArgument("subjectId");
 	$classId = getArgument("classId");
 	$sctId = getArgument("sctId");
+	$snapshotId = getArgument("snapshotId");
 
 	$query2 = "";
 	switch($type) {
 		case "update":
 			$query = "UPDATE subjectClassTeacher SET teacherId = $teacherId, ".
 					  "subjectId = $subjectId, classId = $classId".
-					 " WHERE sctId = $sctId";
+					 " WHERE sctId = $sctId AND snapshotId = $snapshotId";
 			break;
 		case "delete":
-			$query = "DELETE FROM subjectClassTeacher WHERE sctId = $sctId;";
+			$query = "DELETE FROM subjectClassTeacher WHERE sctId = $sctId AND snapshotId = $snapshotId";
 			break;
 		case "insert":
-			$query = "INSERT INTO subjectClassTeacher (teacherId, subjectId, classId) ".
-				     "VALUES ($teacherId, $subjectId, $classId)";
+			$teacherStr = ($teacherId == "null" ? "null" : $teacherId);
+			$query = "INSERT INTO subjectClassTeacher (teacherId, subjectId, classId, snapshotId) ".
+				     "VALUES ($teacherStr, $subjectId, $classId, $snapshotId)";
 			$query2 = "SELECT * from subjectClassTeacher WHERE teacherId = $teacherId".
-					  " AND classId = $classId AND subjectId = $subjectId";
+					  " AND classId = $classId AND subjectId = $subjectId AND snapshotId = $snapshotId";
 			break;
 		default:
 			$query = "ERROR;";
@@ -697,21 +700,23 @@ function updateSubjectRoom($type) {
 	$subjectId = getArgument("subjectId");
 	$roomId = getArgument("roomId"); 
 	$srId = getArgument("srId");
+	$snapshotId = getArgument("snapshotId");
 	
 	$query2 = "";
 	switch($type) {
 		case "update":
 			$query = "UPDATE subjectRoom SET subjectId = $subjectId, ".
 					 "roomId = $roomId ".
-					 "WHERE srId = $srId";
+					 "WHERE srId = $srId AND snapshotId = $snapshotId";
 			break;
 		case "delete":
-			$query = "DELETE FROM subjectRoom WHERE srId = $srId;";
+			$query = "DELETE FROM subjectRoom WHERE srId = $srId AND snapshotId = $snapshotId;";
 			break;
 		case "insert":
-			$query = "INSERT INTO subjectRoom (subjectId, roomId) ".
-					 "VALUES ($subjectId, $roomId) ";
-			$query2 = "SELECT * from subjectRoom where subjectId = $subjectId AND roomId = $roomId";
+			$query = "INSERT INTO subjectRoom (subjectId, roomId, snapshotId) ".
+					 "VALUES ($subjectId, $roomId, $snapshotId) ";
+			$query2 = "SELECT * from subjectRoom where subjectId = $subjectId AND ".
+					  " roomId = $roomId AND snapshotId = $snapshotId";
 			break;
 		default:
 			$query = "ERROR;";
@@ -769,21 +774,22 @@ function updateClassRoom($type) {
 	$classId = getArgument("classId");
 	$roomId = getArgument("roomId"); 
 	$crId = getArgument("crId");
+	$snapshotId = getArgument("snapshotId");
 	
 	$query2 = "";
 	switch($type) {
 		case "update":
 			$query = "UPDATE classRoom SET classId = $classId, ".
 					 "roomId = $roomId ".
-					 "WHERE crId = $crId";
+					 "WHERE crId = $crId AND snapshotId = $snapshotId";
 			break;
 		case "delete":
-			$query = "DELETE FROM classRoom WHERE crId = $crId;";
+			$query = "DELETE FROM classRoom WHERE crId = $crId AND snapshotId = $snapshotId;";
 			break;
 		case "insert":
-			$query = "INSERT INTO classRoom (classId, roomId) ".
-					 "VALUES ($classId, $roomId) ";
-			$query2 = "SELECT * from classRoom where classId = $classId AND roomId = $roomId";
+			$query = "INSERT INTO classRoom (classId, roomId, snapshotId) ".
+					 "VALUES ($classId, $roomId, $snapshotId) ";
+			$query2 = "SELECT * from classRoom where classId = $classId AND roomId = $roomId AND snapshotId = $snapshotId";
 			break;
 		default:
 			$query = "ERROR;";
@@ -841,21 +847,22 @@ function updateBatchRoom($type) {
 	$batchId = getArgument("batchId");
 	$roomId = getArgument("roomId"); 
 	$brId = getArgument("brId");
+	$snapshotId = getArgument("snapshotId");
 	
 	$query2 = "";
 	switch($type) {
 		case "update":
 			$query = "UPDATE batchRoom SET batchId = $batchId, ".
 					 "roomId = $roomId ".
-					 "WHERE brId = $brId";
+					 "WHERE brId = $brId AND snapshotId = $snapshotId";
 			break;
 		case "delete":
-			$query = "DELETE FROM batchRoom WHERE brId = $brId;";
+			$query = "DELETE FROM batchRoom WHERE brId = $brId AND snapshotId = $snapshotId;";
 			break;
 		case "insert":
-			$query = "INSERT INTO batchRoom (batchId, roomId) ".
-					 "VALUES ($batchId, $roomId) ";
-			$query2 = "SELECT * from batchRoom where batchId = $batchId AND roomId = $roomId";
+			$query = "INSERT INTO batchRoom (batchId, roomId, snapshotId) ".
+					 "VALUES ($batchId, $roomId, $snapshotId) ";
+			$query2 = "SELECT * from batchRoom where batchId = $batchId AND roomId = $roomId AND snapshotId = $snapshotId";
 			break;
 		default:
 			$query = "ERROR;";
@@ -990,22 +997,23 @@ function updateOverlappingSBT($type) {
 	$sbtId1 = getArgument("sbtId1");
 	$sbtId2 = getArgument("sbtId2");
 	$osbtId = getArgument("osbtId");
+	$snapshotId = getArgument("snapshotId");
 
 	$query2 = "";
 	switch($type) {
 		case "update":
 			$query = "UPDATE overlappingSBT SET sbtId1 = $sbtId1, ".
 					  "sbtId2 = $sbtId2".
-					 " WHERE osbtId = $osbtId";
+					 " WHERE osbtId = $osbtId AND snapshotId = $snapshotId";
 			break;
 		case "delete":
-			$query = "DELETE FROM overlappingSBT WHERE osbtId = $osbtId;";
+			$query = "DELETE FROM overlappingSBT WHERE osbtId = $osbtId AND snapshotId = $snapshotId;";
 			break;
 		case "insert":
-			$query = "INSERT INTO overlappingSBT (sbtId1, sbtId2) ".
-				     "VALUES ($sbtId1, $sbtId2)";
+			$query = "INSERT INTO overlappingSBT (sbtId1, sbtId2, snapshotId) ".
+				     "VALUES ($sbtId1, $sbtId2, $snapshotId)";
 			$query2 = "SELECT * from overlappingSBT WHERE sbtId1 = $sbtId1 ".
-					  " AND sbtId2 = $sbtId2";
+					  " AND sbtId2 = $sbtId2 AND snapshotId = $snapshotId";
 			break;
 		default:
 			$query = "ERROR;";

@@ -189,10 +189,10 @@ CREATE VIEW subjectBatchTeacherReadable AS
 SELECT sbt.sbtId, s.subjectShortName,b.batchName, t.teacherShortName , ss.snapshotName
 FROM subject s, batch b, subjectBatchTeacher sbt, teacher t, snapshot ss
 WHERE	sbt.subjectId = s.subjectId AND
-	sbt.batchid = b.batchId AND
+	sbt.batchId = b.batchId AND
 	sbt.teacherId = t.teacherId AND
 	sbt.snapshotId = ss.snapshotId
-ORDER by snapshotName , subjectShortName, batchName, teacherShortname;
+ORDER by snapshotName , subjectShortName, batchName, teacherShortName;
 
 CREATE TABLE overlappingSBT
 (
@@ -327,7 +327,7 @@ FOREIGN KEY (snapshotId) REFERENCES snapshot(snapshotId) ON DELETE CASCADE
 same day slot teacher --> room same, subject same, class can be different (combined classes), batches can be different, break must be false
 
 
-same day slot class --> roomid same not allowed (duplicate entry) + different room must for different batch, subject same ok for lab course as batch will be scheduled + different subject also ok for a batch of different lab,   teacherid must be different, batchId must be different, break must be false
+same day slot class --> roomId same not allowed (duplicate entry) + different room must for different batch, subject same ok for lab course as batch will be scheduled + different subject also ok for a batch of different lab,   teacherId must be different, batchId must be different, break must be false
 
 same day slot subject --> must be a lab, batchId must be present, roomId must be different, classId can be different (different classe's batch scheduled), teacherId must be different, break must be false
 
@@ -351,16 +351,17 @@ WHERE tt.classId = c.classId AND
 UNION 
 SELECT tt.ttId, tt.day, tt.slotNo, r.roomShortName, c.classShortName, 
 			s.subjectShortName, t.teacherShortName, null, tt.isFixed, sn.snapshotName
-FROM  timeTable tt, room r, class c, subject s, teacher t, batch b, snapshot sn
+FROM  timeTable tt, room r, class c, subject s, teacher t, snapshot sn
 WHERE tt.classId = c.classId AND
 	tt.subjectId = s.subjectId AND
 	tt.roomId = r.roomId AND
 	tt.teacherId = t.teacherId AND
-	tt.batchid IS null AND
+	tt.batchId IS null AND
 	tt.snapshotId = sn.snapshotId AND
 	tt.isFixed = FALSE
 UNION 
-SELECT tt.ttId, tt.day, tt.slotNo, null, c.classShortName, null, null, null, TRUE, sn.snapshotName
+SELECT tt.ttId, tt.day, tt.slotNo, null, c.classShortName, 
+			null, null, null, TRUE, sn.snapshotName
 FROM  timeTable tt, class c, snapshot sn
 WHERE tt.isFixed = TRUE AND
 	  tt.classId = c.classId AND

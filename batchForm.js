@@ -135,7 +135,7 @@ function batchInsert() {
 				newbatch["snapshotId"] = currentSnapshotId; 
 				newbatch["batchCount"] = batchCount;
 				batch.unshift(newbatch);
-				loadBatchMenu();
+				loadSelectMenus();
 				fillTable2(true);
 				batchForm();
 			} else {
@@ -214,7 +214,7 @@ function batchUpdate(i) {
 				document.getElementById("bUpdateButton_"+i).disabled = false;
 				batch[row]["batchName"] = batchName; /* new name inserted in array */
 				batch[row]["batchCount"] = batchCount;
-				loadBatchMenu();
+				loadSelectMenus();
 				fillTable2(true);
 				batchForm();
 			}
@@ -254,7 +254,7 @@ function batchDelete(i) {
 			if(response["Success"] == "True") {
 				document.getElementById("bDeleteButton_"+row).value = "Delete"
 				batch.splice(i - 2, 1);
-				loadBatchMenu();
+				loadSelectMenus();
 				fillTable2(true);
 				batchForm();
 			} else {

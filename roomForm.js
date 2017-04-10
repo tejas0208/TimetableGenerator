@@ -116,7 +116,7 @@ function roomInsert() {
 				newroom["snapshotId"] = currentSnapshotId;
 				newroom["roomId"] = response["roomId"];
 				room.unshift(newroom);
-				loadRoomMenu();
+				loadSelectMenus();
 				fillTable2(true);
 				roomForm();
 			} else {
@@ -195,7 +195,7 @@ function roomDelete(i) {
 			if(response["Success"] == "True") {
 				document.getElementById("rDeleteButton_"+row).value = "Delete"
 				room.splice(i - 2, 1);
-				loadRoomMenu();
+				loadSelectMenus();
 				fillTable2(true);
 				roomForm();
 			} else {

@@ -13,15 +13,17 @@ var teacher, classTable, batch, batchCanOverlap, batchClass;
 var room, classRoom, batchRoom, subjectRoom;
 var subject, subjectBatchTeacher, subjectClassTeacher, overlappingSBT;
 var fixedEntry;
+var timeTableReadable;
 
 /* These three represent the current Dept/Snapshot/Config we are working on */
 var currentSnapshotId;
+var currentSnapshotName;
 var currentDeptId;
 /* In future give a menu option to select a Config, and then a snapshot in that config */
 var currentConfigId = 1;
 
-var type = "class";
-var id = "SYBT-CE";
+var type;// = "class";
+var id;// = "SYBT-CE";
 var supportObject;
 
 var daysName = ["Sun", "Mon", "Tues", "Wed", "Thur", "Fri", "Sat"];
@@ -40,6 +42,71 @@ var helperTable = [];
 
 var dirtyTimeTable = 0;
 
+function debugPrint(tableName, row) {
+	var res = {};
+	switch(tableName) {
+		case "timeTable":
+			//if((res = search(timeTableReadable, "ttId", row["ttId"])) !== -1)
+				//return JSON.stringify(res);
+
+			res.ttid = row["ttId"];
+			res.day = row["day"];
+			res.slotNo = row["slotNo"];
+
+			roomId = row["roomId"];
+			if("" + roomId != "null")
+				res.roomShortName = search(room, "roomId", roomId)["roomShortName"];
+			else
+				res.roomShortName = "null";
+
+			subjectId = row["subjectId"];
+			if("" + subjectId != "null")
+				res.subjectShortName = search(subject, "subjectId", subjectId)["subjectShortName"];
+			else
+				res.subjectShortName = "null";
+
+			teacherId = row["teacherId"];
+			if("" + teacherId != "null")
+				res.teacherShortName = search(teacher, "teacherId", teacherId)["teacherShortName"];
+			else
+				res.teacherShortName = "null";
+
+			classId = row["classId"];
+			if("" + classId != "null")
+				res.classShortName = search(classTable, "classId", classId)["classShortName"];
+			else
+				res.classShortName = "null";
+
+			batchId = row["batchId"];
+			if("" + batchId != "null")
+				res.batchName = search(batch, "batchId", batchId)["batchName"];
+			else
+				res.batchName = "null";
+
+			res.isFixed = row["isFixed"];
+
+			snapshotId = row["snapshotId"];
+			if("" + snapshotId != "null")
+				res.snapshotName = search(snapshot, "snapshotId", snapshotId)["snapshotName"];
+			else
+				res.snapshotName = "null";
+			break;
+		case "fixedEntry":
+			res.feId = row["feId"];
+			res.ttId = row["ttId"];
+			res.fixedText = row["fixedText"];
+			snapshotId = row["snapshotId"];
+			if("" + snapshotId != "null")
+				res.snapshotName = search(snapshot, "snapshotId", snapshotId)["snapshotName"];
+			else
+				res.snapshotName = "null";
+			break;
+		default:
+			alert(tableName + " table not supported yet in debugPrint");
+			break;
+	}
+	return JSON.stringify(res);
+}
 function dragStartHandler(e) {
 	e.target.style.opacity = '0.4';
 	dragSrcEl = e.target;
@@ -294,6 +361,7 @@ function search(table) {
  */
 function searchMultipleRows(table) {
 	var i;
+	console.log("searchMultipleRows: " + JSON.stringify(arguments));
 	if(typeof table == "undefined" || table.length == 0) {
 		return -1;
 	}
@@ -332,7 +400,7 @@ function getSupportObject() {
 		case "batch": supportObject = search(batch, "batchName", id);
 			break;
 		default:
-			alert("ERROR: getSupportObject: should not come here in default");
+			console.log("ERROR: getSupportObject: should not come here in default");
 			break;
 	}
 }
@@ -375,19 +443,19 @@ function paste() {
 function getTimetable(snapshotName) {
 	var xhttp;
 	xhttp = new XMLHttpRequest();
-	xhttp.onreadystatechange = function() {
+	/*xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
-			var db = JSON.parse(this.responseText);
-			timeTable = db.timeTable;
-			if(typeof timeTable == "undefined") {
-				timeTable = [];
 			}
 		}
-	};
+	}; */
 	xhttp.open("POST", "timetable.php", false);
 	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	xhttp.send("reqType=getTimetable&snapshotName=\"" + snapshotName + "\"");
-	currSnapshotName = snapshotName;
+	var db = JSON.parse(xhttp.responseText);
+	timeTable = db.timeTable;
+	if(typeof timeTable == "undefined") 
+		timeTable = [];
+	currentSnapshotName = snapshotName;
 	//classChange(true);
 }
 function getOneTable(tName, asynchronousOrNot) {/*Loads data from server asynchronously*/
@@ -459,6 +527,7 @@ function getDeptConfigSnapshot() {
 		return false;
 	}
 	currentSnapshotId = snapshot[0]["snapshotId"];
+	currentSnapshotName = snapshot[0]["snapshotName"];
 
 	/* Initially all selection menu is hidden, now display it */
 	$(".selection-menu").css("display", "block");
@@ -467,133 +536,133 @@ function getDeptConfigSnapshot() {
 function getDataTables() {/*Loads data from server asynchronously*/
 	var xhttp;
 	xhttp = new XMLHttpRequest();
-	xhttp.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-			database = JSON.parse(this.responseText);
-
-			teacher = database.teacher;
-			if(typeof teacher == "undefined") {
-				alert("Table: teacher not found. Check your Error Logs");
-				return false;
-			}
-			teacher.sort(function(a, b) {
-				var x = a.teacherShortName.toLowerCase();
-				var y = b.teacherShortName.toLowerCase();
-				if(x < y)
-					return -1;
-				if(x > y)
-					return 1;
-				return 0;
-			});
-
-			classTable = database.class;
-			if(typeof classTable == "undefined") {
-				alert("Table: class not found. Check your Error Logs");
-				return false;
-			}
-			classTable.sort(function(a, b) {
-				var x = a.classShortName.toLowerCase();
-				var y = b.classShortName.toLowerCase();
-				if(x < y)
-					return -1;
-				if(x > y)
-					return 1;
-				return 0;
-			});
-
-			batch = database.batch;
-			if(typeof batch == "undefined") {
-				alert("Table: batch not found. Check your Error Logs");
-				return false;
-			}
-			batch.sort(function(a, b) {
-				var x = a.batchName.toLowerCase();
-				var y = b.batchName.toLowerCase();
-				if(x < y)
-					return -1;
-				if(x > y)
-					return 1;
-				return 0;
-			});
-
-			batchCanOverlap = database.batchCanOverlap;
-			if(typeof batchCanOverlap == "undefined") {
-				alert("Table: batchCanOverlap not found. Check your Error Logs");
-				return false;
-			}
-
-			room = database.room;
-			if(typeof room == "undefined") {
-				alert("Table: room not found. Check your Error Logs");
-				return false;
-			}
-			room.sort(function(a, b) {
-				var x = a.roomShortName.toLowerCase();
-				var y = b.roomShortName.toLowerCase();
-				if(x < y)
-					return -1;
-				if(x > y)
-					return 1;
-				return 0;
-			});
-
-			batchClass = database.batchClass;
-			if(typeof batchClass == "undefined") {
-				alert("Table: batchClass not found. Check your Error Logs");
-				return false;
-			}
-
-			subject = database.subject;
-			if(typeof subject == "undefined") {
-				alert("Table: subject not found. Check your Error Logs");
-				return false;
-			}
-			subject.sort(function(a, b) {
-				var x = a.subjectShortName.toLowerCase();
-				var y = b.subjectShortName.toLowerCase();
-				if(x < y)
-					return -1;
-				if(x > y)
-					return 1;
-				return 0;
-			});
-
-			subjectBatchTeacher = database.subjectBatchTeacher; // subjectBatch
-			if(typeof subjectBatchTeacher == "undefined") {
-				alert("Table: subjectBatchTeacher not found. Check your Error Logs");
-				return false;
-			}
-
-			subjectClassTeacher = database.subjectClassTeacher;
-			if(typeof subjectClassTeacher == "undefined") {
-				alert("Table: subjectClassTeacher not found. Check your Error Logs");
-				return false;
-			}
-
-			classRoom = database.classRoom;
-			if(typeof classRoom == "undefined")
-				classRoom = [];
-
-			batchRoom = database.batchRoom;
-			if(typeof batchRoom == "undefined")
-				batchRoom = [];
-
-			subjectRoom = database.subjectRoom;
-			if(typeof subjectRoom == "undefined")
-				subjectRoom = [];
-
-			overlappingSBT = database.overlappingSBT;
-			if(typeof overlappingSBT == "undefined")
-				overlappingSBT = [];
-
-			fixedEntry = database.fixedEntry;
-			if(typeof fixedEntry == "undefined")
-				fixedEntry = [];
-		}
-	};
+	//xhttp.onreadystatechange = function() {
+		//if (this.readyState == 4 && this.status == 200) {
+			//};
 	xhttp.open("POST", "timetable.php", false);
 	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	xhttp.send("reqType=getDataTables&snapshotId=" + currentSnapshotId);
+	database = JSON.parse(xhttp.responseText);
+	teacher = database.teacher;
+	if(typeof teacher == "undefined") {
+		alert("Table: teacher not found. Check your Error Logs");
+		return false;
+	}
+	teacher.sort(function(a, b) {
+		var x = a.teacherShortName.toLowerCase();
+		var y = b.teacherShortName.toLowerCase();
+		if(x < y)
+			return -1;
+		if(x > y)
+			return 1;
+		return 0;
+	});
+
+	classTable = database.class;
+	if(typeof classTable == "undefined") {
+		alert("Table: class not found. Check your Error Logs");
+		return false;
+	}
+	classTable.sort(function(a, b) {
+		var x = a.classShortName.toLowerCase();
+		var y = b.classShortName.toLowerCase();
+		if(x < y)
+			return -1;
+		if(x > y)
+			return 1;
+		return 0;
+	});
+
+	batch = database.batch;
+	if(typeof batch == "undefined") {
+		alert("Table: batch not found. Check your Error Logs");
+		return false;
+	}
+	batch.sort(function(a, b) {
+		var x = a.batchName.toLowerCase();
+		var y = b.batchName.toLowerCase();
+		if(x < y)
+			return -1;
+		if(x > y)
+			return 1;
+		return 0;
+	});
+
+	batchCanOverlap = database.batchCanOverlap;
+	if(typeof batchCanOverlap == "undefined") {
+		alert("Table: batchCanOverlap not found. Check your Error Logs");
+		return false;
+	}
+
+	room = database.room;
+	if(typeof room == "undefined") {
+		alert("Table: room not found. Check your Error Logs");
+		return false;
+	}
+	room.sort(function(a, b) {
+		var x = a.roomShortName.toLowerCase();
+		var y = b.roomShortName.toLowerCase();
+		if(x < y)
+			return -1;
+		if(x > y)
+			return 1;
+		return 0;
+	});
+
+	batchClass = database.batchClass;
+	if(typeof batchClass == "undefined") {
+		alert("Table: batchClass not found. Check your Error Logs");
+		return false;
+	}
+
+	subject = database.subject;
+	if(typeof subject == "undefined") {
+		alert("Table: subject not found. Check your Error Logs");
+		return false;
+	}
+	subject.sort(function(a, b) {
+		var x = a.subjectShortName.toLowerCase();
+		var y = b.subjectShortName.toLowerCase();
+		if(x < y)
+			return -1;
+		if(x > y)
+			return 1;
+		return 0;
+	});
+
+	subjectBatchTeacher = database.subjectBatchTeacher; // subjectBatch
+	if(typeof subjectBatchTeacher == "undefined") {
+		alert("Table: subjectBatchTeacher not found. Check your Error Logs");
+		return false;
+	}
+
+	subjectClassTeacher = database.subjectClassTeacher;
+	if(typeof subjectClassTeacher == "undefined") {
+		alert("Table: subjectClassTeacher not found. Check your Error Logs");
+		return false;
+	}
+
+	classRoom = database.classRoom;
+	if(typeof classRoom == "undefined")
+		classRoom = [];
+
+	batchRoom = database.batchRoom;
+	if(typeof batchRoom == "undefined")
+		batchRoom = [];
+
+	subjectRoom = database.subjectRoom;
+	if(typeof subjectRoom == "undefined")
+		subjectRoom = [];
+
+	overlappingSBT = database.overlappingSBT;
+	if(typeof overlappingSBT == "undefined")
+		overlappingSBT = [];
+
+	fixedEntry = database.fixedEntry;
+	if(typeof fixedEntry == "undefined")
+		fixedEntry = [];
+//}
+
 }
 
 function createOptionTag(value, textString, selected) {
@@ -771,7 +840,8 @@ function makeTimeTableEntry(day, slotNo, roomId, classId, subjectId,
 							subjectId, teacherId,
 							batchId, currentSnapshotId, isFixed);
 		timeTable.push(newEntry);
-		console.log("makeTimeTableEntry: newEntry = " + JSON.stringify(newEntry));
+		console.log("makeTimeTableEntry: " + debugPrint("timeTable", newEntry));
+		//console.log("makeTimeTableEntry: newEntry = " + JSON.stringify(newEntry));
 	}
 	//if(batchId != "1" && batchId != null) {/*For overlapping sbt*/
 	if((""+ batchId) != "null") {
@@ -1024,9 +1094,8 @@ function getEligibleRoom(i, j, k, capacity, subjectRow, roomFound) {
 			continue;
 				// TODO: The capacity check needs to be more flexible
 				//if(parseInt(room[y]["roomCount"]) >= capacity) {
-		optionString += "<option value = \"" + room[i]["roomShortName"] + "\">" +
-					room[y]["roomShortName"] +
-				"</option>";
+		optionString += "<option value = \"" + room[y]["roomShortName"] + "\">" +
+			room[y]["roomShortName"] + "</option>";
 				//}
 	}
 	return optionString;
@@ -1208,7 +1277,7 @@ function fixedSlotEntry(i, j, k) {
 				"<td>" +
 					//"<div class= \"box\" id = \"box" + i + j + k + "\">" +
 					"<div class= \"box\" id = \"box" +  makeIdFromIJK(i, j, k) + "\">" +
-						"<span class = \"fixedentry\"" +
+						"<span class = \"fixedEntry\"" +
 						//"id = \"fixed" + i + j + k + "\">" +
 						"id = \"fixed" + makeIdFromIJK(i, j, k) + "\">" +
 							label +
@@ -1347,11 +1416,14 @@ function subjectSelected(selecttag) {
  * Which reason to display ? 
  */
 function disabledSubjectPresent(disabledArray, subject) {
+	//console.log("disabledSubjectPresent: " + subject);
 	for(i = 0; i < disabledArray.length; i++) {
 		if(disabledArray[i][0] === subject) {
+			//console.log("Present");
 			return 1;
 		}
 	}
+	//console.log("Absent");
 	return 0;
 }
 function getEligibleSubjects(i, j, k) {
@@ -1578,6 +1650,10 @@ function getEligibleSubjects(i, j, k) {
 	} /* end: for each sct/sbt list */
 
 	if(subjectsList.length == 0) {
+		var select = "<select disabled=true id= \"subject" + makeIdFromIJK(i, j, k) +
+				"\" onchange=\"subjectSelected(this)\">" +
+				"<option value=\"NOT_SELECTED\">Subject" +
+				"</option>";
 		for(x = 0; x < disabledSubjects.length; x++) {
 			select += "<option class=\"disabledEntries\" disabled=\"disabled\"" +
 				  "value = \"\">" + disabledSubjects[x][0] + ":" +
@@ -1646,7 +1722,6 @@ function deleteEntry(Span) {
 	Id = makeIdFromIJK(day, SlotNo, slottableNo);
 
 	var row = helperTable[day - 1][SlotNo][slottableNo];
-	//var subjShortName = document.getElementById("subject"+Id).innerHTML;
 
 	var batchId, classId, teacherId, roomId, isFixed;
 	roomId = row["roomId"];
@@ -1656,53 +1731,54 @@ function deleteEntry(Span) {
 	isFixed = row["isFixed"];
 	if(isFixed == "1") {/*Fixed Entry handling*/
 		var index = timeTable.indexOf(row);
+		console.log("Deleting TT Entry: " + debugPrint("timeTable", timeTable[index]));
 		if(index != -1)
 			timeTable.splice(index, 1);/*Delete entry from table*/
+		else
+			console.log("Error Deleting TT Entry: Couldn't find index");
+
 		index = searchIndex(fixedEntry, "ttId", row["ttId"]);
+		console.log("Deleting Fixed Entry: " + debugPrint("fixedEntry", fixedEntry[index]));
 		if(index != -1)
 			fixedEntry.splice(index, 1);/*Delete entry from table*/
+		else
+			console.log("Error Deleting TT Entry: Couldn't find index");
+
 		fillTable2(true);
 		return;
 	}
 	var subjRow = search(subject, "subjectId", row["subjectId"]);/*For the subject*/
-	//alert(subjRow["subjectShortName"]);
 	for(var i = 0; i < subjRow["eachSlot"]; i++) {
-		//console.log("searchIndex: " + day + " " + (parseInt(SlotNo) + i) + " " + subjRow["subjectId"] + 
-					//" " + batchId + " " + classId + " " + currentSnapshotId);
 		var index = searchIndex(timeTable, "day", day, "slotNo", "" + (parseInt(SlotNo) + i),
 					"subjectId", subjRow["subjectId"], "batchId", batchId,
 					"classId", classId, "snapshotId", currentSnapshotId);
-		//alert("index = " + index);
-		if(index != -1)
+		if(index != -1) {
+			console.log("Deleting TT Entry: " + debugPrint("timeTable", timeTable[index]));
 			timeTable.splice(index, 1);/*Delete entry from table*/
+		} else {
+			console.log("Error Deleting TT Entry: Couldn't find index");
+		}
 	}
 	if(batchId != "" + null) {/*For overlapping sbt*/
 		var sbt = search(subjectBatchTeacher, "subjectId", subjRow["subjectId"],
 							 "batchId", batchId);
-		//alert("batchsubj");
-		//alert(JSON.stringify(sbt));
 		var osbt;
 		if(sbt !== -1) {
 			var osbt = searchMultipleRows(overlappingSBT, "sbtId1", sbt["sbtId"]);
-			//console.log(osbt);
-			//alert(JSON.stringify(osbt));
 			if(osbt === -1) {
 				fillTable2(true);
 				return;
 			}
 			for(var i in osbt) {
 				var batchId = search(subjectBatchTeacher, "sbtId", osbt[i]["sbtId2"])["batchId"];
-				//alert("batch"+batchId);
 				var classId = search(batchClass, "batchId", batchId)["classId"];
-				//alert("class:"+classId)
 				for(var j = 0; j < subjRow["eachSlot"]; j++) {
 					var index = searchIndex(timeTable, "day", day, "slotNo", (SlotNo + j),
 						"subjectId", subjRow["subjectId"], "batchId", batchId,
 						"classId", classId, "snapshotId", currentSnapshotId);
+					console.log("Deleting TT Entry: " + debugPrint("timeTable", timeTable[index]));
 					if(index != -1)
 						timeTable.splice(index, 1);
-					//console.log("makeTimeTableEntry: newEntry = " + JSON.stringify(newEntry));
-					//alert("Entered");
 				}
 			}
 		}
@@ -1792,10 +1868,13 @@ function fillTable2(createNewTable) {
 	NoOfSlots = configrow["nSlots"];
 	var days = 6;
 	var slottablePerDay = 1;
+	if(type == undefined || id == undefined)
+		return;	
 	if(type == "class") {
 		var row = searchMultipleRows(batchClass, "classId", supportObject["classId"]);
-		/*Depending on the no of batches in a class*/
-		slottablePerDay = row.length;
+		/*Depending on the no of batches in a class. TODO: check + 1*/
+		if(row !== -1)
+			slottablePerDay = row.length;
 	}
 
 	if(createNewTable) {
@@ -1839,21 +1918,23 @@ function fillTable2(createNewTable) {
 		if(classId == "1")
 			return;
 	}
-	//console.log(helperTable);
+	console.log(JSON.stringify(timeTable));
 	for(var i = 1; i <= days; i++) { /*daywise*/
 		for(var j = 0; j < NoOfSlots; j++) { /*slotwise*/
 			var slotRows;
-			/* TODO:DONE. Rewrite following two lines, just have a if(type == "batch") clause */
+			console.log(" i = " + i + " j = " + j + "\n");
 			if(type == "batch") 
 				slotRows = searchMultipleRows(timeTable, "day", i, "slotNo", j, 
 					"classId", classId, "batchId", 1, "snapshotId", currentSnapshotId);
 			else
 				slotRows = searchMultipleRows(timeTable, "day", i, "slotNo", j,
 					type + "Id", supportObject[type + "Id"], "snapshotId", currentSnapshotId);
+			console.log("slotRows: " + JSON.stringify(slotRows));
 			if(slotRows != -1) {
 				sort(slotRows);
 				var batches = "1";
-				for(var k = 0; k < slotRows.length; k++) {/*within each slot*/
+				/*within each slot*/
+				for(var k = 0; k < slotRows.length; k++) {
 					var teacherShortName = "", classShortName = "",
 						batchName = "", roomShortName = "";
 					/*For lunch*/
@@ -1890,7 +1971,7 @@ function fillTable2(createNewTable) {
 								"<td>" +
 									//"<div class= \"box\" id = \"box" + i + j + position + "\">"+
 									"<div class= \"box\" id = \"box" + makeIdFromIJK(i, j, position) + "\">"+
-										"<span class = \"fixedentry\"" +
+										"<span class = \"fixedEntry\"" +
 										//"id = \"fixed" + i + j + position + "\">" +
 										"id = \"fixed" + makeIdFromIJK(i, j, position) + "\">" +
 											label +
@@ -2127,20 +2208,18 @@ function classChange(createNewTable){
 	fillTable2(createNewTable);
 
 }
-var currSnapshotName;
 function snapshotChange() {
 	var index = document.getElementById("fetch-snapshot-menu").selectedIndex;
 	var snapshotName = document.getElementById("fetch-snapshot-menu").options[index].text;
-	if(snapshotName == currSnapshotName)
+	if(snapshotName == currentSnapshotName)
 		return;
 	if(dirtyTimeTable) {
 			save = confirm("Timetable Modified. Your changes will be lost if not saved. Save current timeTable?");
 			if(save == "yes")
 				jsSaveSnapshot();
 	}
-	currSnapshotName = snapshotName;
-	var snapshotRow = search(snapshot, "snapshotName", snapshotName);
-	currentSnapshotId = snapshotRow["snapshotId"];
+	currentSnapshotName = snapshotName;
+	currentSnapshotId = search(snapshot, "snapshotName", currentSnapshotName)["snapshotId"];
 	loadNewSnapshot();
 	document.getElementById("fetch-snapshot-menu").selectedIndex = index;
 	dirtyTimeTable = 0;
@@ -2264,28 +2343,53 @@ function loadRoomMenu() {
 	//$("#room-menu").select2();
 }
 function loadSelectMenus() {
-	loadTeacherMenu();
-	loadClassMenu();
-	loadBatchMenu();
-	loadRoomMenu();
+	if(room.length > 0) {
+		$("#room-menu").css("display", "block");
+		loadRoomMenu();
+	}
+	else {
+		$("#teacher-menu").css("display", "none");
+		$("#class-menu").css("display", "none");
+		$("#batch-menu").css("display", "none");
+		$("#room-menu").css("display", "none"); 
+		return;
+	}
+	if(teacher.length > 0) {
+		$("#teacher-menu").css("display", "block");
+		//$("#teacher-menu").setAttribute("disabled", "false");
+		loadTeacherMenu();
+	}
+	if(classTable.length > 0) {
+		$("#class-menu").css("display", "block");
+		loadClassMenu();
+	}
+	if(batch.length > 0) {
+		$("#batch-menu").css("display", "block");
+		loadBatchMenu();
+	}
 }
 /* Loads a new snapshot in JS variables.
  * Snapshot includes all Data Tables. Teacher, Class, Subject, ..., Timetable. and mappinngs.
  * Also reinitializes all select-menus
  */
 function loadNewSnapshot() {
-	if(getDataTables() == false) {
+	if(getDataTables() === false) {
 		alert("Loading of Tables Failed. Check your Error Logs");
 		return false;
 	}
-	//alert("Loaded db");
-	if(getTimetable(search(snapshot, "snapshotId", currentSnapshotId)["snapshotName"]) == false) {
+	if(getTimetable(currentSnapshotName) === false) {
 		alert("Loading of default snapshot Failed. Check your Error Logs");
 		return false;
 	};
 	loadSelectMenus(); /* load Teacher, Class, Batch, Room Menu */
 	loadSnapshotMenu(search(snapshot, "snapshotId", currentSnapshotId)["snapshotName"]);
 	getSupportObject();
+	console.log("loadNewSnapshot: loaded snapshot " + currentSnapshotId);
+	//alert(JSON.stringify(timeTable));
+	/* If some table was already displayed, then type and id globals will be set 
+	 * and this call will redisplay that table. Else, it will just return
+	 */
+	fillTable2(true);
 	/* Settings for saving the snapshot */
 	return true;
 }
@@ -2294,16 +2398,16 @@ function loadNewSnapshot() {
  */
 function load() {
 	var i;
-	/*id = makeIdFromIJK(1, 2, 3);
-	[ii, jj, kk] = makeIJKFromId(id);
-	alert("ii" + ii + "jj " + jj + " kk" + kk); */
-	//alert("Come 1");
-	/*Load whole database*/
-	if(getDeptConfigSnapshot() == false) {
-		alert("Loading of Dept/Config/Snapshot Tables Failed. Check your Error Logs");
+	if(getDeptConfigSnapshot() === false) {
+		alert("load(): Loading of Dept/Config/Snapshot Tables Failed. Check your Error Logs");
 		return false;
 	}
+	/*Load the default snapshot*/
 	res = loadNewSnapshot();
+	if(res === false) {
+		alert("load(): Loading of Snapshot Failed. Check your Error Logs.");
+		return false;
+	}
 	$("#mainTimeTable").append("<center><B>No TimeTable loaded </B><br>" +
 								"Please select option from above catgories</center>");
 	return res;
@@ -2313,24 +2417,25 @@ function load() {
  * Make sure that table snapshot is fetch properly before calling this
  */
 function loadSnapshotMenu(selectedName) {
-	//alert("loadSnapshotMenu: here");
 	var selectTag = document.getElementById("fetch-snapshot-menu");
 	while(selectTag.hasChildNodes()) {
 		selectTag.removeChild(selectTag.childNodes[0]);
 	}
 	for (i in snapshot) {
-		option = createOptionTag(snapshot[i]["snapshotId"],
-								snapshot[i]["snapshotName"], "false");
 		if(snapshot[i]["snapshotName"] === selectedName) {
-			option.selected = true;
-			currentSnapshotId = snapshot[i]["snapshotId"];
-			//alert("default" + option.text);
+			option = createOptionTag(snapshot[i]["snapshotId"],
+						snapshot[i]["snapshotName"], "true");
+			index = i;
 		}
+		else
+			option = createOptionTag(snapshot[i]["snapshotId"],
+						snapshot[i]["snapshotName"], "false");
 		selectTag.appendChild(option);
 	}
 	selectTag.setAttribute("onchange", "snapshotChange()");
 	document.getElementById("saveNewSnapshot").disabled = false;
 	document.getElementById("saveSnapshot").disabled = false;
+	document.getElementById("fetch-snapshot-menu").selectedIndex = index;
 	//sortSelect(selectTag);
 }
 function jsSaveNewSnapshot() {
@@ -2348,7 +2453,8 @@ function jsSaveNewSnapshot() {
 					document.getElementById("saveNewSnapshot").disabled = false;
 					// JS variables are pass by vale, so snapshot can be changed here only
 					snapshot = getSnapshotTable().snapshot;
-					currSnapshotName = newSnapshotName;
+					currentSnapshotName = newSnapshotName;
+					currentSnapshotId = response["snapshotId"];
 					//getDataTables();
 					//getTimetable(newSnapshotName);
 					//loadSnapshotMenu(newSnapshotName);
@@ -2356,7 +2462,7 @@ function jsSaveNewSnapshot() {
 					//fillTable2(true);
 				} else{
 					alert("Saving New Snapshot Failed. Error: " + response["Error"]);
-					loadSnapshotMenu(currSnapshotName);
+					loadSnapshotMenu(currentSnapshotName);
 					document.getElementById("saveNewSnapshot").value = "Save New Snapshot";
 					document.getElementById("saveNewSnapshot").disabled = false;
 				}
@@ -2366,14 +2472,13 @@ function jsSaveNewSnapshot() {
 		document.getElementById("saveNewSnapshot").disabled = true;
 		xhttp.open("POST", "timetable.php", true); // asynchronous
 		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		xhttp.send("reqType=saveNewSnapshot&newSnapshotName=" + newSnapshotName + "&currentSnapshotName=" +
-					search(snapshot, "snapshotId", currentSnapshotId)["snapshotName"] +
-					"&configId=" + currentConfigId + "&ttData=" + JSON.stringify(timeTable));
+		xhttp.send("reqType=saveNewSnapshot&newSnapshotName=" + newSnapshotName + "&currentSnapshotName=" + currentSnapshotName +
+					"&configId=" + currentConfigId + "&ttData=" + JSON.stringify(timeTable) +
+					"&feData=" + JSON.stringify(fixedEntry));
 	}
 }
 function jsSaveSnapshot() {
-	var snapshotName = currSnapshotName;
-	if(snapshotName != null) {
+	if(currentSnapshotName != null) {
 		var xhttp;
 		xhttp = new XMLHttpRequest();
 		xhttp.onreadystatechange = function() {
@@ -2381,9 +2486,10 @@ function jsSaveSnapshot() {
 				response = JSON.parse(this.responseText);
 				if(response["Success"] == "True") {
 					//alert("snapshot response: " + this.responseText);
-					alert("snapshot " + snapshotName + " Saved. Press OK to continue");
+					alert("snapshot " + currentSnapshotName + " Saved. Press OK to continue");
 					document.getElementById("saveSnapshot").value = "Save snapshot";
 					document.getElementById("saveSnapshot").disabled = false;
+					loadSnapshotMenu(currentSnapshotName);
 				} else {
 					alert("Saving snapshot failed. Error = " + response["Error"]);
 					document.getElementById("saveSnapshot").value = "Save snapshot";
@@ -2395,9 +2501,10 @@ function jsSaveSnapshot() {
 		document.getElementById("saveSnapshot").value = "Saving snapshot ...wait";
 		document.getElementById("saveSnapshot").disabled = true;
 		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		xhttp.send("reqType=saveSnapshot&snapshotName=" + snapshotName + "&ttData=" + JSON.stringify(timeTable));
+		xhttp.send("reqType=saveSnapshot&snapshotName=" + currentSnapshotName + "&ttData=" + 
+				JSON.stringify(timeTable) + "&feData=" + JSON.stringify(fixedEntry));
 	} else {
-		alert("jsSaveSnapshot: can't find currSnapshotName");
+		alert("jsSaveSnapshot: can't find currentSnapshotName");
 	}
 }
 

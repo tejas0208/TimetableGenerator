@@ -1,5 +1,33 @@
 <?php
-
+/* When we get data here, the ttId in timeTable and ttId in fixedEntry 
+ * are likely to be wrong, as they were just computed at user end. Take care
+ * of that. 
+ */
+function rollback() {
+	global $CFG;
+	sqlUpdate("ROLLBACK;");
+	$resString = "{\"Success\": \"False\",";
+	$resString .= "\"Error\" : ".json_encode($CFG->conn->error)."}";
+	return $resString;
+}
+function findTTId($ttId, $ttData, $snapshotId) {
+	for($i = 0; $i < count($ttData); $i++) {
+		if($ttData[$i]["ttId"] == $ttId) {
+			$index = $i;
+			break;
+		}
+	}
+	$row = $ttData[$index];
+	$selectQuery = "SELECT ttId FROM timeTable WHERE".
+					" day = ". $row["day"] . " AND slotNo = ". $row["slotNo"].
+					" AND classId = ". $row["classId"]. 
+					/*" AND roomId = ".$row["roomId"]. " AND teacherId = ".$row["teacherId"].
+					" AND batchId = ". $row["batchId"].
+					" AND subjectId = ".$row["subjectId"]. */
+					" AND isFixed = ".$row["isFixed"]. " AND snapshotId = $snapshotId;";
+	$res = sqlGetOneRow($selectQuery);
+	return $res[0]["ttId"];
+}
 function saveSnapshot() {
 	header("Content-Type: application/JSON: charset=UTF-8");
 	global $CFG;
@@ -8,58 +36,82 @@ function saveSnapshot() {
 	$snapshotName = getArgument("snapshotName");
 	$user = getArgument("userId");
 	$ttd = getArgument("ttData");
+	$fed = getArgument("feData");
 	$ttData = json_decode($ttd, true);	
+	$feData = json_decode($fed, true);	
+
+	$startTransactionQuery = "START TRANSACTION";
+	$result = sqlUpdate($startTransactionQuery);
+	if($result != true)
+		return rollback();
+	
 	$snapshotFindQuery = "SELECT snapshotId FROM snapshot WHERE snapshotName = \"$snapshotName\"";
 	error_log("saveSnapShot: query: $snapshotFindQuery", 0);
 
 	$result = sqlGetOneRow($snapshotFindQuery);	
 	$snapshotId = $result[0]["snapshotId"];
+	if($result != true)
+		return rollback();
 
-	$snapshotDeleteQuery = "DELETE from timeTable where snapshotId = $snapshotId";	
-	$result = sqlUpdate($snapshotDeleteQuery);
-	error_log("saveSnapShot: query: $snapshotDeleteQuery", 0);
 	error_log("saveSnapShot: ttData: ".json_encode($ttData), 0);
+	error_log("saveSnapShot: fixedEntries: ".json_encode($feData), 0);
+
+	$snapshotDeleteQuery = "DELETE FROM timeTable where snapshotId = $snapshotId;";	
+	error_log("saveSnapShot: query: $snapshotDeleteQuery", 0);
+	$result = sqlUpdate($snapshotDeleteQuery);
+	if($result != true)
+		return rollback();
+
+	$snapshotDeleteQuery = "DELETE FROM fixedEntry where snapshotId = $snapshotId;";	
+	error_log("saveSnapShot: query: $snapshotDeleteQuery", 0);
+	$result = sqlUpdate($snapshotDeleteQuery);
+	if($result != true)
+		return rollback();
+
 	for($k = 0; $k < count($ttData); $k++) {
-			$currRow = $ttData[$k];
-			$classId = $currRow["classId"];
-			if($currRow["isFixed"] == 1) {
-				$ttInsertQuery = "INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, ".
-								"teacherId, batchId, snapshotId, isFixed) VALUES (".
-								$currRow["day"].",".$currRow["slotNo"].",".
-								"null, $classId, null, null, ".
-								//"(SELECT classId from class where classShortName=\"$className\"),".
-								"null, ".
-								$snapshotId.",".
-								$currRow["isFixed"].");";
-			} else {
-				$ttInsertQuery = "INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, ".
-								"teacherId, batchId, snapshotId, isFixed) VALUES (".
-								$currRow["day"].",".$currRow["slotNo"].",".
-								$currRow["roomId"].",".$currRow["classId"].",".
-								$currRow["subjectId"].",".$currRow["teacherId"].",".
-								$currRow["batchId"].",".
-								$snapshotId.",".
-								$currRow["isFixed"].");";
-			}
-			$result = sqlUpdate($ttInsertQuery);
-			error_log("saveSnapShot: query: $ttInsertQuery", 0);
-			if($result != true ) {
-				$resString = "{\"Success\": \"False\",";
-				$resString .= "\"Error\" : ".json_encode($CFG->conn->error)."}";
-				return $resString;
-			}
+		$currRow = $ttData[$k];
+		$classId = $currRow["classId"];
+		if($currRow["isFixed"] == 1) {
+			$ttInsertQuery = "INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, ".
+							"teacherId, batchId, snapshotId, isFixed) VALUES (".
+							$currRow["day"].",".$currRow["slotNo"].",".
+							"null, $classId, null, null, ".
+							//"(SELECT classId FROM class where classShortName=\"$className\"),".
+							"null, ".
+							$snapshotId.",".
+							$currRow["isFixed"].");";
+		} else {
+			$batchStr = ($currRow["batchId"] == ""? "null": $currRow["batchId"]);
+			$ttInsertQuery = "INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, ".
+							"teacherId, batchId, snapshotId, isFixed) VALUES (".
+							$currRow["day"].",".$currRow["slotNo"].",".
+							$currRow["roomId"].",".$currRow["classId"].",".
+							$currRow["subjectId"].",".$currRow["teacherId"].",".
+							$batchStr.",".
+							$snapshotId.",".
+							$currRow["isFixed"].");";
+		}
+		$result = sqlUpdate($ttInsertQuery);
+		error_log("saveSnapShot: query: $ttInsertQuery", 0);
+		if($result != true )
+			return rollback();
 	}
+	for($k = 0; $k < count($feData); $k++) {
+		$currRow = $feData[$k];
+		$ttId = findTTId($currRow["ttId"], $ttData, $snapshotId);
+		$feInsertQuery = "INSERT INTO fixedEntry(ttId, fixedText, snapshotId) VALUES (".
+						$ttId.",\"".$currRow["fixedText"]."\",".$snapshotId.");";
+		$result = sqlUpdate($feInsertQuery);
+		error_log("saveSnapShot: query: $feInsertQuery", 0);
+		if($result != true)
+			return rollback();
+	}
+	sqlUpdate("COMMIT;");
 	$resString = "{\"Success\": \"True\"}";
 	error_log("saveSnapShot: Success True".  $resString, 0);
 	return $resString;
 }
-function cloneAllTables($currentSnapshotName, $newSnapshotName) {
-	$query1 = "SELECT snapshotId FROM snapshot WHERE snapshotName = \"$currentSnapshotName\"";
-	$query2 = "SELECT snapshotId FROM snapshot WHERE snapshotName = \"$newSnapshotName\"";
-	$result = sqlGetOneRow($query1);	
-	$currentSnapshotId = $result[0]["snapshotId"];
-	$result = sqlGetOneRow($query2);	
-	$newSnapshotId = $result[0]["snapshotId"];
+function cloneAllTables($currentSnapshotId, $newSnapshotId) {
 	$tableNames = array(//"dept", "config", "snapshot", 
 					"teacher", 
 					"class", 
@@ -96,7 +148,7 @@ function cloneAllTables($currentSnapshotName, $newSnapshotName) {
 			if($result == false) {
 				error_log("clone: query failed ". $insertQuery. "\nError: ".json_encode($CFG->conn->error));
 				return false;
-			}	
+			}
 		}
 	}
 	return true;
@@ -118,7 +170,15 @@ function saveNewSnapshot() {
 	$result = sqlUpdate($snapshotCreateQuery);	
 	error_log("saveNewSnapshot: query: " + $result);
 
-	$cloneResult = cloneAllTables($currentSnapshotName, $newSnapshotName);
+	$query1 = "SELECT snapshotId FROM snapshot WHERE snapshotName = \"$currentSnapshotName\"";
+	$query2 = "SELECT snapshotId FROM snapshot WHERE snapshotName = \"$newSnapshotName\"";
+	$result = sqlGetOneRow($query1);	
+	$currentSnapshotId = $result[0]["snapshotId"];
+	$result = sqlGetOneRow($query2);	
+	$newSnapshotId = $result[0]["snapshotId"];
+
+	$cloneResult = cloneAllTables($currentSnapshotId, $newSnapshotId);
+
 	if($cloneResult == false) {
 		$resString = "{\"Success\": \"False\",";
 		$resString .= "\"Error\" : \"Cloning Failed\"}";
@@ -132,20 +192,20 @@ function saveNewSnapshot() {
 				$ttInsertQuery = "INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, 
 								teacherId, batchId, snapshotId, isFixed) VALUES (".
 								$currRow["day"].",".$currRow["slotNo"].",".
-								"null, null, null, ".
-								//"(SELECT classId from class where classShortName=\"$className\"),".
-								$classId.",".
-								"null, ".
-								"(SELECT snapshotId from snapshot where snapshotName = \"$newSnapshotName\"),".
+								"null, $classId, null, ".
+								//"(SELECT classId FROM class where classShortName=\"$className\"),".
+								"null, null, ".
+								"(SELECT snapshotId FROM snapshot where snapshotName = \"$newSnapshotName\"),".
 								$currRow["isFixed"].");";
 			} else {
+				$batchStr = ($currRow["batchId"] == ""? "null": $currRow["batchId"]);
 				$ttInsertQuery = "INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, 
 								teacherId, batchId, snapshotId, isFixed) VALUES (".
 								$currRow["day"].",".$currRow["slotNo"].",".
 								$currRow["roomId"].",".$currRow["classId"].",".
 								$currRow["subjectId"].",".$currRow["teacherId"].",".
-								$currRow["batchId"].",".
-								"(SELECT snapshotId from snapshot where snapshotName = \"$newSnapshotName\"),".
+								$batchStr.",".
+								"(SELECT snapshotId FROM snapshot where snapshotName = \"$newSnapshotName\"),".
 								$currRow["isFixed"].");";
 			}
 			$result = sqlUpdate($ttInsertQuery);
@@ -157,7 +217,8 @@ function saveNewSnapshot() {
 				$resString = "{\"Success\": \"True\"}";
 			}
 	}
-	$resString = "{\"Success\": \"True\"}";
+	$resString = "{\"Success\": \"True\",";
+	$resString .= "\"snapshotId\": \"$newSnapshotId\"}";
 	error_log("saveNewSnapShot: Success True".  $resString, 0);
 	return $resString;
 }
