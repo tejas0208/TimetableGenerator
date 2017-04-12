@@ -179,7 +179,7 @@ function batchClassUpdate(i, currBatchId, currBatchClassId) {
 	}
 	xhttp.open("POST", "timetable.php", true); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("reqType=batchClassUpdate&batchId="+currBatchId+"&classId="+currBatchClassId);
+	xhttp.send("reqType=batchClassUpdate&batchId="+currBatchId+"&classId="+currBatchClassId+"&snapshotId="+currentSnapshotId);
 	
 }
 function batchUpdate(i) {
@@ -230,7 +230,7 @@ function batchUpdate(i) {
 	xhttp.open("POST", "timetable.php", false); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhttp.send("reqType=batchUpdate&batchName="+batchName+"&batchCount="+batchCount+
-				"&batchId="+batchId);
+				"&batchId="+batchId+"&snapshotId="+currentSnapshotId);
 	
 }
 function batchDelete(i) {
@@ -470,6 +470,6 @@ function batchCanOverlapInsert() {
 	}
 	xhttp.open("POST", "timetable.php", false); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("reqType=batchCanOverlapInsert&batches="+batchNames);
+	xhttp.send("reqType=batchCanOverlapInsert&batches="+batchNames+"&snapshotId="+currentSnapshotId);
 	
 }

@@ -15,7 +15,6 @@ mysql -u root -proot < config.sql
 echo "---------------snapshot ----------------"
 mysql -u root -proot < snapshot.sql
 
-exit
 echo "---------------class-----------------"
 cat class.csv  | bash class.sh  > class.sql
 mysql -u root -proot < class.sql
@@ -47,6 +46,10 @@ mysql -u root -proot < subject-class-teacher.sql
 echo "---------------subject-batch-teacher-----------------"
 cat subject-batch-teacher.csv  | bash subject-batch-teacher.sh  > subject-batch-teacher.sql
 mysql -u root -proot < subject-batch-teacher.sql
+
+echo "---------------overlappingSBT-----------------"
+cat overlappingSBT.csv  | bash overlappingSBT.sh  > overlappingSBT.sql
+mysql -u root -proot < overlappingSBT.sql
 
 echo "---------------classRoom-----------------"
 cat classRoom.csv  | bash classRoom.sh  > classRoom.sql

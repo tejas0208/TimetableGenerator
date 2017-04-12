@@ -1,5 +1,5 @@
-FM-II,SYBT-CE-DSY,Maths-1
-FM-II,SYBT-IT-DSY,Maths-1
+FM-II,SYBT-CE-DSY,Maths1
+FM-II,SYBT-IT-DSY,Maths1
 ECW,FYBT-A1,Gaikwad
 ECW,FYBT-A2,Gaikwad
 ECW,FYBT-A3,Gaikwad
@@ -31,8 +31,8 @@ FCP-Lab,FYBT-B3,Soma
 FCP-Lab,FYBT-B4,Asmita
 FCP-Lab,FYBT-B5,Asmita
 FCP-Lab,FYBT-C1,Asmita
-FCP-Lab,FYBT-C2,Shirish
-FCP-Lab,FYBT-C3,Shirish
+FCP-Lab,FYBT-C2,Gosavi
+FCP-Lab,FYBT-C3,Gosavi
 FCP-Lab,FYBT-C4,Jagdish
 FCP-Lab,FYBT-C5,Jagdish
 FCP-Lab,FYBT-D1,Jagdish
@@ -73,10 +73,10 @@ CBD-Lab,TYBT-IT-CBD2,Nikita
 CG-Lab,TYBT-CE-CG1,Pachghare
 CPES-Lab,TYBT-CE-CPES1,Sheetal
 CPES-Lab,TYBT-IT-CPES1,Sheetal
-CSFLP-Lab,BT-CE-CSFLP1,Shashi
-CSFLP-Lab,BT-CE-CSFLP2,Shashi
-CSFLP-Lab,BT-IT-CSFLP1,Shashi
-CSFLP-Lab,BT-IT-CSFLP2,Shashi
+CSFLP-Lab,BT-CE-CSFLP1,Ghumbre
+CSFLP-Lab,BT-CE-CSFLP2,Ghumbre
+CSFLP-Lab,BT-IT-CSFLP1,Ghumbre
+CSFLP-Lab,BT-IT-CSFLP2,Ghumbre
 DM-Lab,TYBT-CE-DM1,Archana
 DM-Lab,TYBT-IT-DM1,Archana
 EC-Lab,BT-CE-EC1,Rahul

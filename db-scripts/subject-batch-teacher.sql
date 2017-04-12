@@ -2,13 +2,13 @@ USE timeTable;
 INSERT INTO subjectBatchTeacher(subjectId, batchId, teacherId, snapshotId) VALUES (
 		(SELECT subjectId FROM subject WHERE subjectShortName="FM-II"),
 		(SELECT batchId FROM batch WHERE batchName="SYBT-CE-DSY"),
-		(SELECT teacherId FROM teacher WHERE teacherShortName="Maths-1"),
+		(SELECT teacherId FROM teacher WHERE teacherShortName="Maths1"),
 		1
 	);
 INSERT INTO subjectBatchTeacher(subjectId, batchId, teacherId, snapshotId) VALUES (
 		(SELECT subjectId FROM subject WHERE subjectShortName="FM-II"),
 		(SELECT batchId FROM batch WHERE batchName="SYBT-IT-DSY"),
-		(SELECT teacherId FROM teacher WHERE teacherShortName="Maths-1"),
+		(SELECT teacherId FROM teacher WHERE teacherShortName="Maths1"),
 		1
 	);
 INSERT INTO subjectBatchTeacher(subjectId, batchId, teacherId, snapshotId) VALUES (
@@ -200,13 +200,13 @@ INSERT INTO subjectBatchTeacher(subjectId, batchId, teacherId, snapshotId) VALUE
 INSERT INTO subjectBatchTeacher(subjectId, batchId, teacherId, snapshotId) VALUES (
 		(SELECT subjectId FROM subject WHERE subjectShortName="FCP-Lab"),
 		(SELECT batchId FROM batch WHERE batchName="FYBT-C2"),
-		(SELECT teacherId FROM teacher WHERE teacherShortName="Shirish"),
+		(SELECT teacherId FROM teacher WHERE teacherShortName="Gosavi"),
 		1
 	);
 INSERT INTO subjectBatchTeacher(subjectId, batchId, teacherId, snapshotId) VALUES (
 		(SELECT subjectId FROM subject WHERE subjectShortName="FCP-Lab"),
 		(SELECT batchId FROM batch WHERE batchName="FYBT-C3"),
-		(SELECT teacherId FROM teacher WHERE teacherShortName="Shirish"),
+		(SELECT teacherId FROM teacher WHERE teacherShortName="Gosavi"),
 		1
 	);
 INSERT INTO subjectBatchTeacher(subjectId, batchId, teacherId, snapshotId) VALUES (
@@ -452,25 +452,25 @@ INSERT INTO subjectBatchTeacher(subjectId, batchId, teacherId, snapshotId) VALUE
 INSERT INTO subjectBatchTeacher(subjectId, batchId, teacherId, snapshotId) VALUES (
 		(SELECT subjectId FROM subject WHERE subjectShortName="CSFLP-Lab"),
 		(SELECT batchId FROM batch WHERE batchName="BT-CE-CSFLP1"),
-		(SELECT teacherId FROM teacher WHERE teacherShortName="Shashi"),
+		(SELECT teacherId FROM teacher WHERE teacherShortName="Ghumbre"),
 		1
 	);
 INSERT INTO subjectBatchTeacher(subjectId, batchId, teacherId, snapshotId) VALUES (
 		(SELECT subjectId FROM subject WHERE subjectShortName="CSFLP-Lab"),
 		(SELECT batchId FROM batch WHERE batchName="BT-CE-CSFLP2"),
-		(SELECT teacherId FROM teacher WHERE teacherShortName="Shashi"),
+		(SELECT teacherId FROM teacher WHERE teacherShortName="Ghumbre"),
 		1
 	);
 INSERT INTO subjectBatchTeacher(subjectId, batchId, teacherId, snapshotId) VALUES (
 		(SELECT subjectId FROM subject WHERE subjectShortName="CSFLP-Lab"),
 		(SELECT batchId FROM batch WHERE batchName="BT-IT-CSFLP1"),
-		(SELECT teacherId FROM teacher WHERE teacherShortName="Shashi"),
+		(SELECT teacherId FROM teacher WHERE teacherShortName="Ghumbre"),
 		1
 	);
 INSERT INTO subjectBatchTeacher(subjectId, batchId, teacherId, snapshotId) VALUES (
 		(SELECT subjectId FROM subject WHERE subjectShortName="CSFLP-Lab"),
 		(SELECT batchId FROM batch WHERE batchName="BT-IT-CSFLP2"),
-		(SELECT teacherId FROM teacher WHERE teacherShortName="Shashi"),
+		(SELECT teacherId FROM teacher WHERE teacherShortName="Ghumbre"),
 		1
 	);
 INSERT INTO subjectBatchTeacher(subjectId, batchId, teacherId, snapshotId) VALUES (

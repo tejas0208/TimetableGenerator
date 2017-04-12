@@ -2446,6 +2446,7 @@ function jsSaveNewSnapshot() {
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
 				//alert("snapshot response: " + this.responseText);
+				alert(this.responseText);
 				response = JSON.parse(this.responseText);
 				if(response["Success"] == "True") {
 					alert("snapshot " + newSnapshotName + " Saved. Press OK to continue");

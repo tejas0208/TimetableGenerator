@@ -11,5 +11,6 @@ $CFG->db_pass = "root";
 $CFG->db_database = "timeTable";
 $CFG->server = "localhost";
 $CFG->conn = false;
+$CFG->last_query = "";
 
 ?>
