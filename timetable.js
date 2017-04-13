@@ -728,6 +728,11 @@ function createTable(days, nSlots, slotTablePerDay, startTime, timePerSlot) {
 				td.appendChild(document.createElement("br"));
 				td.appendChild(document.createTextNode(daysName[i]));
 				tr.appendChild(td);
+			} else {
+				td = document.createElement("td");
+				td.setAttribute("id", "" + i);
+				td.setAttribute("class", "dayname");
+				tr.appendChild(td);
 			}
 			for(j = 0; j < nSlots; j++) {
 				/*i=noOfDays * k=slottable-row-per-day * j=nSlots */
