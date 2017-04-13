@@ -48,10 +48,10 @@
 .toggle:checked:after {
 	color: #85ada7;
 	text-shadow: 0 1px 0 #669991;
-	
+
 	-webkit-box-shadow: 0px 0px 1px 1px rgba(155, 155, 255, 0.2);
 	box-shadow: 0px 0px 1px 1px rgba(155, 155, 255, 0.2);
-	
+
 	background: #87e0fd; /* Old browsers */
 	background: -moz-radial-gradient(center, ellipse cover,  #87e0fd 0%, #53cbf1 40%, #05abe0 100%); /* FF3.6+ */
 	background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,#87e0fd), color-stop(40%,#53cbf1), color-stop(100%,#05abe0)); /* Chrome,Safari4+ */
@@ -96,7 +96,7 @@ option, select{
 	color:blue
 }
 .batchentry {
-		color:green
+	color:green
 }
 .roomentry {
 	color:cyan
@@ -125,7 +125,7 @@ option, select{
 
 /*.dayname {width:100px; height:20px; padding: 0px;} */
 .animateButton {
-	padding: 0px;	
+	padding: 0px;
 }
 
 .delete {
@@ -143,7 +143,7 @@ option, select{
 	border-radius: 5px;
 	width: 100%; 
 	font-size: 13px; 
-	box-shadow: 5px 5px 5px #888888;		
+	box-shadow: 5px 5px 5px #888888;
 }
 .inputForm{
 	background-color:#ddd;
@@ -158,18 +158,18 @@ option, select{
 	overflow: auto;
 }
 .inputFormField {
-	text-align: left;	
+	text-align: left;
 	font-size: 14px;
 	font-family: Times;
 }
 .warning {
-	color: red;		
+	color: red;
 }
 .inputFormTable {
 	border: 1px solid black;
 	padding: 3;
 	color: blue;
-	font-size: 13px;		
+	font-size: 13px;
 	font-family: courier;
 	float:left;
 }
