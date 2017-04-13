@@ -1,4 +1,9 @@
 #!/bin/bash
+if [ $# -ne 1 ]
+then
+	echo "Specify the directory containing data as argv[1]"
+	exit
+fi
 echo "---------------schema-----------------"
 mysql -u root -proot < schema.sql
 
@@ -6,63 +11,63 @@ echo "---------------triggers-----------------"
 mysql -u root -proot <	triggers.sql 
 
 echo "---------------dept -----------------"
-mysql -u root -proot < dept.sql 
+mysql -u root -proot < $1/dept.sql 
 
 #this one, config needs changes, as it used deptId
 echo "---------------config-----------------"
-mysql -u root -proot < config.sql
+mysql -u root -proot < $1/config.sql
 
 echo "---------------snapshot ----------------"
-mysql -u root -proot < snapshot.sql
+mysql -u root -proot < $1/snapshot.sql
 
 echo "---------------class-----------------"
-cat class.csv  | bash class.sh  > class.sql
-mysql -u root -proot < class.sql
+cat $1/class.csv  | bash class.sh  > $1/class.sql
+mysql -u root -proot < $1/class.sql
 
 echo "---------------subject-----------------"
-cat subject.csv  | bash subject.sh  > subject.sql
-mysql -u root -proot < subject.sql
+cat $1/subject.csv  | bash subject.sh  > $1/subject.sql
+mysql -u root -proot < $1/subject.sql
 
 echo "---------------teacher-----------------"
-cat teacher.csv  | bash teacher.sh  > teacher.sql
-mysql -u root -proot < teacher.sql
+cat $1/teacher.csv  | bash teacher.sh  > $1/teacher.sql
+mysql -u root -proot < $1/teacher.sql
 
 echo "---------------room-----------------"
-cat room.csv  | bash room.sh  > room.sql
-mysql -u root -proot < room.sql
+cat $1/room.csv  | bash room.sh  > $1/room.sql
+mysql -u root -proot < $1/room.sql
 
 echo "---------------batch-----------------"
-cat batch.csv  | bash batch.sh  > batch.sql
-mysql -u root -proot < batch.sql
+cat $1/batch.csv  | bash batch.sh  > $1/batch.sql
+mysql -u root -proot < $1/batch.sql
 
 echo "---------------batch-can-overlap-----------------"
-cat batch-can-overlap.csv  | bash batch-can-overlap.sh  > batch-can-overlap.sql
-mysql -u root -proot < batch-can-overlap.sql
+cat $1/batch-can-overlap.csv  | bash batch-can-overlap.sh  > $1/batch-can-overlap.sql
+mysql -u root -proot < $1/batch-can-overlap.sql
 
 echo "----------------subject-class-teacher-----------------"
-cat subject-class-teacher.csv  | bash subject-class-teacher.sh  > subject-class-teacher.sql
-mysql -u root -proot < subject-class-teacher.sql
+cat $1/subject-class-teacher.csv  | bash subject-class-teacher.sh  > $1/subject-class-teacher.sql
+mysql -u root -proot < $1/subject-class-teacher.sql
 
 echo "---------------subject-batch-teacher-----------------"
-cat subject-batch-teacher.csv  | bash subject-batch-teacher.sh  > subject-batch-teacher.sql
-mysql -u root -proot < subject-batch-teacher.sql
+cat $1/subject-batch-teacher.csv  | bash subject-batch-teacher.sh  > $1/subject-batch-teacher.sql
+mysql -u root -proot < $1/subject-batch-teacher.sql
 
 echo "---------------overlappingSBT-----------------"
-cat overlappingSBT.csv  | bash overlappingSBT.sh  > overlappingSBT.sql
-mysql -u root -proot < overlappingSBT.sql
+cat $1/overlappingSBT.csv  | bash overlappingSBT.sh  > $1/overlappingSBT.sql
+mysql -u root -proot < $1/overlappingSBT.sql
 
 echo "---------------classRoom-----------------"
-cat classRoom.csv  | bash classRoom.sh  > classRoom.sql
-mysql -u root -proot < classRoom.sql
+cat $1/classRoom.csv  | bash classRoom.sh  > $1/classRoom.sql
+mysql -u root -proot < $1/classRoom.sql
 
 echo "---------------batchRoom-----------------"
-cat batchRoom.csv  | bash batchRoom.sh  > batchRoom.sql
-mysql -u root -proot < batchRoom.sql
+cat $1/batchRoom.csv  | bash batchRoom.sh  > $1/batchRoom.sql
+mysql -u root -proot < $1/batchRoom.sql
 
 echo "---------------subjectRoom-----------------"
-cat subjectRoom.csv  | bash subjectRoom.sh  > subjectRoom.sql
-mysql -u root -proot < subjectRoom.sql
+cat $1/subjectRoom.csv  | bash subjectRoom.sh  > $1/subjectRoom.sql
+mysql -u root -proot < $1/subjectRoom.sql
 
 echo "---------------timetable-----------------"
-cat timetable.csv  | bash timetable.sh  > timetable.sql
-mysql -u root -proot < timetable.sql
+cat $1/timetable.csv  | bash timetable.sh  > $1/timetable.sql
+mysql -u root -proot < $1/timetable.sql

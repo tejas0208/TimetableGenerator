@@ -1,0 +1,14 @@
+USE timeTable;
+INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches, snapshotId) VALUES ( "Applied Biology", "AB", 1, 3, FALSE, 1);
+INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches, snapshotId) VALUES ( "Fundamentals of Mathematics-II", "FM-II", 1, 3, TRUE, 1);
+INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches, snapshotId) VALUES ( "Theory of Computer Science", "TCS", 1, 3, FALSE, 1);
+INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches, snapshotId) VALUES ( "Microprocessor techniques", "MPT", 1, 3, FALSE, 1);
+INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches, snapshotId) VALUES ( "Principles of Programming language", "PPL", 1, 3, FALSE, 1);
+INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches, snapshotId) VALUES ( "Data Communication", "DC", 1, 3, FALSE, 1);
+INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches, snapshotId) VALUES ( "Institute Level Open Elective Sem4", "ILOE-Sem4", 1, 3, FALSE, 1);
+INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches, snapshotId) VALUES ( "Microprocessor techniques lab", "MPT-Lab", 3, 1, TRUE, 1);
+INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches, snapshotId) VALUES ( "Principles of Programming language lab", "PPL-Lab", 3, 1, TRUE, 1);
+INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches, snapshotId) VALUES ( "Numerical Methods", "NM", 1, 3, FALSE, 1);
+INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches, snapshotId) VALUES ( "Liberal Learning Course-1", "LLC1", 1, 3, FALSE, 1);
+INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches, snapshotId) VALUES ( "Professional Science Course", "PSC", 1, 3, FALSE, 1);
+INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches, snapshotId) VALUES ( "Liberal Learning Course2", "LLC2", 1, 3, FALSE, 1);
