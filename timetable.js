@@ -40,7 +40,7 @@ var enabledRows = [];
  */
 var helperTable = [];
 
-var dirtyTimeTable = 0;
+var dirtyTimeTable = false;
 
 function debugPrint(tableName, row) {
 	var res = {};
@@ -794,7 +794,7 @@ function createTimeTableEntry(day, slotNo, roomId, classId, subjectId,
 		this.ttId = 1;
 	else
 		this.ttId = "" + (parseInt(timeTable[timeTable.length - 1]["ttId"]) + 1);
-	dirtyTimeTable = 1; 
+	dirtyTimeTable = true; 
 }
 
 function createClassRoomEntry(classId, roomId) {
@@ -1745,6 +1745,7 @@ function deleteEntry(Span) {
 			console.log("Error Deleting TT Entry: Couldn't find index");
 
 		fillTable2(true);
+		dirtyTimeTable = true;
 		return;
 	}
 	var subjRow = search(subject, "subjectId", row["subjectId"]);/*For the subject*/
@@ -1767,6 +1768,7 @@ function deleteEntry(Span) {
 			var osbt = searchMultipleRows(overlappingSBT, "sbtId1", sbt["sbtId"]);
 			if(osbt === -1) {
 				fillTable2(true);
+				dirtyTimeTable = true;
 				return;
 			}
 			for(var i in osbt) {
@@ -1783,7 +1785,7 @@ function deleteEntry(Span) {
 			}
 		}
 	}
-	dirtyTimeTable = 1;
+	dirtyTimeTable = true;
 	fillTable2(true);
 }
 
@@ -2215,14 +2217,16 @@ function snapshotChange() {
 		return;
 	if(dirtyTimeTable) {
 			save = confirm("Timetable Modified. Your changes will be lost if not saved. Save current timeTable?");
-			if(save == "yes")
-				jsSaveSnapshot();
+			if(save == true) {
+				alert("Saving snapshot");
+				jsSaveSnapshot(false);
+			}
 	}
 	currentSnapshotName = snapshotName;
 	currentSnapshotId = search(snapshot, "snapshotName", currentSnapshotName)["snapshotId"];
 	loadNewSnapshot();
 	document.getElementById("fetch-snapshot-menu").selectedIndex = index;
-	dirtyTimeTable = 0;
+	dirtyTimeTable = false;
 	fillTable2(false);
 }
 
@@ -2478,10 +2482,11 @@ function jsSaveNewSnapshot() {
 					"&feData=" + JSON.stringify(fixedEntry));
 	}
 }
-function jsSaveSnapshot() {
+function jsSaveSnapshot(asynchronousOrNot) {
 	if(currentSnapshotName != null) {
 		var xhttp;
 		xhttp = new XMLHttpRequest();
+		if(asynchronousOrNot === true)
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
 				response = JSON.parse(this.responseText);
@@ -2491,6 +2496,7 @@ function jsSaveSnapshot() {
 					document.getElementById("saveSnapshot").value = "Save snapshot";
 					document.getElementById("saveSnapshot").disabled = false;
 					loadSnapshotMenu(currentSnapshotName);
+					dirtyTimeTable = false;
 				} else {
 					alert("Saving snapshot failed. Error = " + response["Error"]);
 					document.getElementById("saveSnapshot").value = "Save snapshot";
@@ -2498,12 +2504,26 @@ function jsSaveSnapshot() {
 				}
 			}
 		}
-		xhttp.open("POST", "timetable.php", true); // asynchronous
+		xhttp.open("POST", "timetable.php", asynchronousOrNot); // asynchronous
 		document.getElementById("saveSnapshot").value = "Saving snapshot ...wait";
 		document.getElementById("saveSnapshot").disabled = true;
 		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		xhttp.send("reqType=saveSnapshot&snapshotName=" + currentSnapshotName + "&ttData=" + 
 				JSON.stringify(timeTable) + "&feData=" + JSON.stringify(fixedEntry));
+		if(asynchronousOrNot === false) {
+			response = JSON.parse(xhttp.responseText);
+			if(response["Success"] == "True") {
+				alert("snapshot " + currentSnapshotName + " Saved. Press OK to continue");
+				document.getElementById("saveSnapshot").value = "Save snapshot";
+				document.getElementById("saveSnapshot").disabled = false;
+				loadSnapshotMenu(currentSnapshotName);
+				dirtyTimeTable = false;
+			} else {
+				alert("Saving snapshot failed. Error = " + response["Error"]);
+				document.getElementById("saveSnapshot").value = "Save snapshot";
+				document.getElementById("saveSnapshot").disabled = false;
+			}
+		}
 	} else {
 		alert("jsSaveSnapshot: can't find currentSnapshotName");
 	}

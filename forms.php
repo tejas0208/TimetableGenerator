@@ -551,6 +551,7 @@ function updateSBT($type) {
 	$batchId = getArgument("batchId");
 	$sbtId = getArgument("sbtId");
 	$snapshotId = getArgument("snapshotId");
+	error_log("arguments: ".json_encode($_POST), 0);
 
 	$query2 = "";
 	switch($type) {

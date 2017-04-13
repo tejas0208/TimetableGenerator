@@ -204,7 +204,7 @@ function sbtInsert() {
 	xhttp.open("POST", "timetable.php", false); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhttp.send("reqType=sbtInsert&subjectId="+subjectId+"&teacherId="+
-			teacherId+"&batchId="+batchId);
+			teacherId+"&batchId="+batchId+"&snapshotId="+currentSnapshotId);
 	
 }
 
@@ -253,7 +253,7 @@ function sbtUpdate(i) {
 	xhttp.open("POST", "timetable.php", false); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhttp.send("reqType=sbtUpdate&subjectId="+subjectId+"&teacherId="+
-			teacherId+"&batchId="+batchId+"&sbtId="+sbtId);
+			teacherId+"&batchId="+batchId+"&sbtId="+sbtId+"&snapshotId="+currentSnapshotId);
 	
 }
 function sbtDelete(i) {
@@ -286,5 +286,5 @@ function sbtDelete(i) {
 	}
 	xhttp.open("POST", "timetable.php", true); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("reqType=sbtDelete&sbtId="+sbtId);
+	xhttp.send("reqType=sbtDelete&sbtId="+sbtId+"&snapshotId="+currentSnapshotId);
 }
