@@ -123,7 +123,12 @@ option, select{
 	border: 1px solid black;*/
 }
 
-/*.dayname {width:100px; height:20px; padding: 0px;} */
+.dayname {
+	width:10px;
+	height:5px;
+	padding: 0px;
+} 
+
 .animateButton {
 	padding: 0px;
 }

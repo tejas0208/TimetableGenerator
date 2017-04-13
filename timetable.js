@@ -728,12 +728,7 @@ function createTable(days, nSlots, slotTablePerDay, startTime, timePerSlot) {
 				td.appendChild(document.createElement("br"));
 				td.appendChild(document.createTextNode(daysName[i]));
 				tr.appendChild(td);
-			} else {
-				td = document.createElement("td");
-				td.setAttribute("id", "" + i);
-				td.setAttribute("class", "dayname");
-				tr.appendChild(td);
-			}
+			} 
 			for(j = 0; j < nSlots; j++) {
 				/*i=noOfDays * k=slottable-row-per-day * j=nSlots */
 				td = document.createElement("td");
@@ -1926,7 +1921,7 @@ function fillTable2(createNewTable) {
 		if(""+ classId == "null")
 			return;
 	}
-	console.log(JSON.stringify(timeTable));
+	//console.log(JSON.stringify(timeTable));
 	for(var i = 1; i <= days; i++) { /*daywise*/
 		for(var j = 0; j < NoOfSlots; j++) { /*slotwise*/
 			var slotRows;
@@ -2094,6 +2089,7 @@ function fillTable2(createNewTable) {
 					//document.getElementById("cell" + i + j + k).style.borderTop = "2px solid black";
 					if(position == null) {
 						console.log("WARNING: batches true, on class Page, got positionn null at " + i + " " + j);
+						document.getElementById("" + i).setAttribute("rowspan", slotRows.length);
 						continue;
 					}
 					// ABHIJIT slottable = document.getElementById("slottable" + i + j + position);
@@ -2138,8 +2134,9 @@ function fillTable2(createNewTable) {
 				}
 				/* refers to dayname td*/
 				var rowspan = document.getElementById("" + i).getAttribute("rowspan"); 
-				if(rowspan == null)
+				if(rowspan == null) {
 					rowspan = "" + 1;
+				}
 				if(parseInt(rowspan) <= slotRows.length && type == "class") {
 					document.getElementById("" + i).setAttribute("rowspan", 
 						(slotRows.length + parseInt(batches)));
