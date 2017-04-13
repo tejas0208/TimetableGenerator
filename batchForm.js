@@ -267,7 +267,7 @@ function batchDelete(i) {
 	}
 	xhttp.open("POST", "timetable.php", true); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("reqType=batchDelete&batchId="+batchId);
+	xhttp.send("reqType=batchDelete&batchId="+batchId+"&snapshotId="+currentSnapshotId);
 }
 
 var overlaps = [];
@@ -435,7 +435,7 @@ function batchCanOverlapDelete(i) {
 	xhttp.open("POST", "timetable.php", true); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	//alert("Asking to delete " + JSON.stringify(overlaps[row]));
-	xhttp.send("reqType=batchCanOverlapDelete&batches="+JSON.stringify(overlaps[row]));
+	xhttp.send("reqType=batchCanOverlapDelete&batches="+JSON.stringify(overlaps[row])+"&snapshotId="+currentSnapshotId);
 
 	
 }

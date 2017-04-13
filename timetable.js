@@ -361,7 +361,7 @@ function search(table) {
  */
 function searchMultipleRows(table) {
 	var i;
-	console.log("searchMultipleRows: " + JSON.stringify(arguments));
+	//console.log("searchMultipleRows: " + JSON.stringify(arguments));
 	if(typeof table == "undefined" || table.length == 0) {
 		return -1;
 	}
@@ -741,7 +741,7 @@ function createTable(days, nSlots, slotTablePerDay, startTime, timePerSlot) {
 				var slottable = document.createElement("table");
 				/*slottable.setAttribute("id", "slottable"+i+j+k); */
 				slottable.setAttribute("id", "slottable"+ makeIdFromIJK(i, j, k));
-				slottable.setAttribute("class", "slottable" + k);
+				//slottable.setAttribute("class", "slottable" + k);
 				td.setAttribute("ondragenter", "dragEnterHandler(event)");
 				slottable.setAttribute("ondragover", "dragOverHandler(event)");
 				td.setAttribute("ondragleave", "dragLeaveHandler(event)");
@@ -780,7 +780,7 @@ function sort(table) {
 
 function createTimeTableEntry(day, slotNo, roomId, classId, subjectId,
 			teacherId, batchId, snapshotId, isFixed) {
-	console.log(timeTable);
+	//console.log(timeTable);
 	this.day = "" + day;
 	this.slotNo = "" + slotNo;
 	this.roomId = "" + roomId;
@@ -1917,21 +1917,23 @@ function fillTable2(createNewTable) {
 	var classId;
 	if(type == "batch") {
 		classId = search(batchClass, "batchId", supportObject["batchId"])["classId"];
-		if(classId == "1")
+		if(""+ classId == "null")
 			return;
 	}
 	console.log(JSON.stringify(timeTable));
 	for(var i = 1; i <= days; i++) { /*daywise*/
 		for(var j = 0; j < NoOfSlots; j++) { /*slotwise*/
 			var slotRows;
-			console.log(" i = " + i + " j = " + j + "\n");
-			if(type == "batch") 
+			//console.log(" i = " + i + " j = " + j + "\n");
+			if(type == "batch") {
+				xbatchId = search(batch, "batchName", id)["batchId"];
 				slotRows = searchMultipleRows(timeTable, "day", i, "slotNo", j, 
-					"classId", classId, "batchId", 1, "snapshotId", currentSnapshotId);
+					"classId", classId, "batchId", xbatchId, "snapshotId", currentSnapshotId);
+			}
 			else
 				slotRows = searchMultipleRows(timeTable, "day", i, "slotNo", j,
 					type + "Id", supportObject[type + "Id"], "snapshotId", currentSnapshotId);
-			console.log("slotRows: " + JSON.stringify(slotRows));
+			//console.log("slotRows: " + JSON.stringify(slotRows));
 			if(slotRows != -1) {
 				sort(slotRows);
 				var batches = "1";
@@ -2010,7 +2012,7 @@ function fillTable2(createNewTable) {
 					//if(slotRows[k]["batchId"] != 1 && type != "batch")
 					batchIdNull = ("" + slotRows[k]["batchId"] == "null");
 					//alert("batchIdNull: " + batchIdNull + " batchId = " + slotRows[k]["batchId"] + " slotRows = " + JSON.stringify(slotRows[k]));	
-					if(!batchIdNull && (type != "batch")) { 
+					if(!batchIdNull) { // && (type != "batch")) { 
 						/* NUll made by abhijit. check. TODO */
 						var batchRow = search(batch, "batchId", slotRows[k]["batchId"]);
 						batchName = "" + batchRow["batchName"];
@@ -2085,7 +2087,7 @@ function fillTable2(createNewTable) {
 					var position = getPosition(i, j, null, 1);
 					//document.getElementById("cell" + i + j + k).style.borderTop = "2px solid black";
 					if(position == null) {
-						alert("ERROR: batches true, on class Page, got positionn null ");
+						console.log("WARNING: batches true, on class Page, got positionn null at " + i + " " + j);
 						continue;
 					}
 					// ABHIJIT slottable = document.getElementById("slottable" + i + j + position);

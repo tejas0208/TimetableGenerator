@@ -32,10 +32,10 @@ function updateTeacher($type) {
 		case "update":
 			$query = "UPDATE teacher SET teacherName = \"$teacherName\", teacherShortName = ".
 					 "\"$teacherShortName\", minHrs = \"$minHrs\", maxHrs = \"$maxHrs\",".
-					 "deptId = \"$deptId\" WHERE teacherId = \"$teacherId\"";
+					 "deptId = \"$deptId\" WHERE teacherId = \"$teacherId\" AND snapshotId = $snapshotId";
 			break;
 		case "delete":
-			$query = "DELETE FROM teacher WHERE teacherId = \"$teacherId\";";
+			$query = "DELETE FROM teacher WHERE teacherId = \"$teacherId\" AND snapshotId = $snapshotId;";
 			break;
 		case "insert":
 			$query = "INSERT INTO teacher (teacherName, teacherShortName, minHrs, maxHrs, deptId, snapshotId) ".
@@ -109,10 +109,10 @@ function updateSubject($type) {
 			case "update":
 				$query = "UPDATE subject SET subjectName = \"$subjectName\", subjectShortName = ".
 						 "\"$subjectShortName\", eachSlot = \"$eachSlot\", nSlots= \"$nSlots\", ".
-						 "batches= \"$batches\" WHERE subjectId = \"$subjectId\"";
+						 "batches= \"$batches\" WHERE subjectId = \"$subjectId\" AND snapshotId = $snapshotId";
 				break;
 			case "delete":
-				$query = "DELETE FROM subject WHERE subjectId = \"$subjectId\";";
+				$query = "DELETE FROM subject WHERE subjectId = \"$subjectId\" AND snapshotId = $snapshotId;";
 				break;
 			case "insert":
 				$query = "INSERT INTO subject (subjectName, subjectShortName, eachSlot, nSlots, batches, snapshotId) ".
@@ -185,10 +185,10 @@ function updateClass($type) {
 		case "update":
 			$query = "UPDATE class SET className = \"$className\", classShortName = ".
 					 "\"$classShortName\", semester = \"$semester\", classCount= \"$classCount\" ".
-					 "WHERE classId = \"$classId\"";
+					 "WHERE classId = \"$classId\" and snapshotId = $snapshotId";
 			break;
 		case "delete":
-			$query = "DELETE FROM class WHERE classId = \"$classId\";";
+			$query = "DELETE FROM class WHERE classId = \"$classId\" AND snapshotId = $snapshotId;";
 			break;
 		case "insert":
 			$query = "INSERT INTO class (className, classShortName, semester, classCount, snapshotId) ".
@@ -278,16 +278,17 @@ function updateBatchClass() {
 
 	$batchId= getArgument("batchId");
 	$classId = getArgument("classId");
+	$snapshotId = getArgument("snapshotId");
 
-	$query = "SELECT batchId, classId FROM batchClass WHERE batchId = $batchId";
+	$query = "SELECT batchId, classId FROM batchClass WHERE batchId = $batchId and snapshotId = $snapshotId";
 	$result = sqlGetAllRows($query);
 
 	$query2 = "";
 	if(count($result) == 1) 
-		$query = "UPDATE batchClass SET classId = $classId WHERE (batchId = $batchId);";
+		$query = "UPDATE batchClass SET classId = $classId WHERE batchId = $batchId  AND snapshotId = $snapshotId;";
 	else if(count($result == 0)) {
-		$query = "INSERT INTO batchClass (batchId, classId) VALUES ($batchId, $classId)";
-		$query2 = "SELECT * from batchClass WHERE batchId =$batchId";
+		$query = "INSERT INTO batchClass (batchId, classId, snapshotId) VALUES ($batchId, $classId, $snapshotId)";
+		$query2 = "SELECT * from batchClass WHERE batchId =$batchId AND snapshotId = $snapshotId";
 	}
 	else
 		$query = "ERORR-Query: Not found $batchId"; 
@@ -335,10 +336,10 @@ function updateBatch($type) {
 	switch($type) {
 			case "update":
 				$query = "UPDATE batch SET batchName = \"$batchName\", batchCount= \"$batchCount\" ".
-						 "WHERE batchId = \"$batchId\"";
+						 "WHERE batchId = \"$batchId\" AND snapshotId = $snapshotId";
 				break;
 			case "delete":
-				$query = "DELETE FROM batch WHERE batchId = \"$batchId\";";
+				$query = "DELETE FROM batch WHERE batchId = \"$batchId\" AND snapshotId = $snapshotId;";
 				break;
 			case "insert":
 				$query = "INSERT INTO batch (batchName, batchCount, snapshotId) VALUES (\"$batchName\", $batchCount, $snapshotId)";
@@ -383,7 +384,7 @@ function batchCanOverlapDelete() {
 	$batchesJSON = getArgument("batches");
 	$batches = json_decode($batchesJSON);
 	error_log("batchCanOverlapDelete: received batches for deletion: ".$batches." and ".$batchesJSON);
-	$query = "DELETE FROM batchCanOverlap WHERE";
+	$query = "DELETE FROM batchCanOverlap WHERE  snapshotId = $snapshotId AND ";
 	$query .= " batchId = ".$batches[0]." OR batchOverlapId = ".$batches[0]." ";
 	for($i = 1; $i < count($batches); $i++) { // 0 special case, to match the "OR" in query
 			$query .= "OR batchId = ".$batches[$i]." OR batchOverlapId = ".$batches[$i]." ";
@@ -419,16 +420,16 @@ function batchCanOverlapInsert() {
 			$batches[count($batches)] = $tok;
 	} 
 	error_log("batchCanOverlapDelete: received batches for deletion: ".json_encode($batches));
-	$query = "INSERT INTO batchCanOverlap (batchId, batchOverlapId) VALUES ";
+	$query = "INSERT INTO batchCanOverlap (batchId, batchOverlapId, snapshotId) VALUES ";
 	for($i = 0; $i < count($batches); $i++) { // 0 special case, to match the "OR" in query
 			for($j = 0; $j < count($batches); $j++) {
 				if($j == $i)
 					continue;
 				/* all this just to avoid the , on the last entry */
 				if(($i == (count($batches) - 1)) && ($j == (count($batches) -2)))
-					$query .= "(".$batches[$i].", ".$batches[$j].")";
+					$query .= "(".$batches[$i].", ".$batches[$j].", $snapshotId)";
 				else
-					$query .= "(".$batches[$i].", ".$batches[$j]."), ";
+					$query .= "(".$batches[$i].", ".$batches[$j].", $snapshotId), ";
 			}
 	}
 	$query .= ";"; // remove the last comma  
@@ -483,10 +484,10 @@ function updateRoom($type) {
 		case "update":
 			$query = "UPDATE room SET roomName = \"$roomName\", roomShortName = ".
 					 "\"$roomShortName\", roomCount= \"$roomCount\" ".
-					 "WHERE roomId = \"$roomId\"";
+					 "WHERE roomId = \"$roomId\" AND snapshotId = $snapshotId";
 			break;
 		case "delete":
-			$query = "DELETE FROM room WHERE roomId = \"$roomId\";";
+			$query = "DELETE FROM room WHERE roomId = \"$roomId\" AND snapshotId = $snapshotId;";
 			break;
 		case "insert":
 			$query = "INSERT INTO room (roomName, roomShortName, roomCount, snapshotId) ".
