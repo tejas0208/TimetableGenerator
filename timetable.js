@@ -42,6 +42,118 @@ var helperTable = [];
 
 var dirtyTimeTable = false;
 
+var tracker = [];
+function makeTrackerList() {
+	tracker = [];
+	for (i in subjectClassTeacher) {
+		entry = {}
+		curr = subjectClassTeacher[i];
+
+		entry["subjectId"] =  curr["subjectId"];
+		entry["batchId"] = ""; 
+		entry["classId"] = curr["classId"];
+		entry["teacherId"] = curr["teacherId"];
+		subjectRow =  search(subject, "subjectId", subjectClassTeacher[i]["subjectId"]);
+		entry["nSlots"] = subjectRow["nSlots"];
+		entry["eachSlot"] = subjectRow["eachSlot"];
+		entry["done"] = 0;
+		tracker.push(entry);		
+	}	
+	for (i in subjectBatchTeacher) {
+		entry = {}
+		curr = subjectBatchTeacher[i];
+
+		entry["subjectId"] =  curr["subjectId"];
+		entry["batchId"] = curr["batchId"]; 
+		entry["classId"] = search(batchClass, "batchId", curr["batchId"])["classId"]; 
+		entry["teacherId"] = curr["teacherId"];
+		subjectRow =  search(subject, "subjectId", curr["subjectId"]);
+		entry["nSlots"] = subjectRow["nSlots"];
+		entry["eachSlot"] = subjectRow["eachSlot"];
+		entry["done"] = 0;
+		tracker.push(entry);
+	}
+	for(i in timeTable) {
+		curr = timeTable[i];
+		/* 3 types of entries. (a) isFixed = 1 (b) isFixed = 0, batchId != null
+		 * (c) isFixed = 0, batchId = null 
+		 */
+		if(curr["isFixed"] == "1")
+			continue;
+		if("" + curr["batchId"] != "null") {
+			index = searchIndex(tracker, "subjectId", curr["subjectId"], 
+						"batchId", curr["batchId"], "classId", curr["classId"]);
+			eachSlot = tracker[index]["eachSlot"];
+			tracker[index]["done"] += (1.0/eachSlot);
+			//tracker[index]["done"] = parseInt(tracker[index]["done"]);
+			continue;
+		} 
+		if("" + curr["batchId"] == "null") {
+			index = searchIndex(tracker, "subjectId", curr["subjectId"], 
+						"classId", curr["classId"]);
+			eachSlot = tracker[index]["eachSlot"];
+			tracker[index]["done"] += (1.0/eachSlot);
+		} else {
+			alert("ERROR: should not come here in makeTrackerList");
+			continue;
+		}
+	}
+}
+function updateTrackerList(subjectId, classId, batchId, teacherId) {
+}
+function showTrackerList() {
+	switch(type) {
+		case "class":
+			var trackerStr = "";
+			currClassId = search(classTable, "classShortName", id)["classId"];
+			for(i = 0; i < tracker.length; i++) {
+				curr = tracker[i];
+				if(curr["classId"] != currClassId)
+					continue;
+				trackerStr += search(subject, "subjectId", curr["subjectId"])["subjectShortName"];
+				if(curr["batchId"] != "") {
+					trackerStr += "-" + search(batch, "batchId", curr["batchId"])["batchName"];
+				}
+				trackerStr += ": " + curr["done"] + "/" + curr["nSlots"];
+				trackerStr += "\n";
+			}
+			break;
+		case "batch":
+			var trackerStr = "";
+			currBatchId = search(batch, "batchName", id)["batchId"];
+			for(i = 0; i < tracker.length; i++) {
+				curr = tracker[i];
+				if(curr["batchId"] != currBatchId)
+					continue;
+				trackerStr += search(subject, "subjectId", curr["subjectId"])["subjectShortName"];
+				trackerStr += "-" + id;
+				trackerStr += ": " + curr["done"] + "/" + curr["nSlots"];
+				trackerStr += "\n";
+			}
+			break;
+		case "teacher":
+			var trackerStr = "";
+			currTeacherId = search(teacher, "teacherShortName", id)["teacherId"];
+			for(i = 0; i < tracker.length; i++) {
+				curr = tracker[i];
+				if(curr["teacherId"] != currTeacherId)
+					continue;
+				trackerStr += search(subject, "subjectId", curr["subjectId"])["subjectShortName"];
+				if(curr["batchId"] != "") {
+					trackerStr += "-" + search(batch, "batchId", curr["batchId"])["batchName"];
+				}
+				trackerStr += ": " + curr["done"] + "/" + curr["nSlots"];
+				trackerStr += "\n";
+			}
+			break;
+		case "room":
+			var trackerStr = "Not Applicable";
+		default:
+			break;
+	}
+	document.getElementById("tracker").innerHTML = trackerStr;
+}
+
 function debugPrint(tableName, row) {
 	var res = {};
 	switch(tableName) {
@@ -1886,6 +1998,7 @@ function getPosition(day1, slotNo, rowEntry, eachSlot) {
  *		  display "Select" box
  */
 function fillTable2(createNewTable) {
+	makeTrackerList();
 	var configrow = search(config, "configId", currentConfigId);
 	NoOfSlots = configrow["nSlots"];
 	var days = 6;
@@ -2191,6 +2304,7 @@ function fillTable2(createNewTable) {
 		/* Initially hiding extra rows */
 		$(".animate" + i).hide();
 	}
+	showTrackerList();
 }
 
 function classChange(createNewTable){
