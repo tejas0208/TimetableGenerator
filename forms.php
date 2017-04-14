@@ -332,6 +332,7 @@ function updateBatch($type) {
 	$batchOrigName = getArgument("batchOrigName");
 	$batchCount = getArgument("batchCount");
 	$snapshotId = getArgument("snapshotId");
+	$query2 = "";
 
 	switch($type) {
 			case "update":

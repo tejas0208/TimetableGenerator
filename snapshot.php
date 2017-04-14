@@ -495,7 +495,7 @@ function saveNewSnapshot() {
 							"VALUES (\"".
 							$newSnapshotName."\",1,1000,2000, $configId);";
 	$result = sqlUpdate($snapshotCreateQuery);	
-	error_log("saveNewSnapshot: query: " + $result);
+	error_log("saveNewSnapshot: query: ". $result);
 	if($result === false)
 		return rollback();
 

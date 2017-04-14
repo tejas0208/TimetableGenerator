@@ -675,7 +675,8 @@ function createOptionTag(value, textString, selected) {
 	return option;
 }
 
-function displayTime(date) { /*Reurns time in needed format*/
+/*Returns time in needed format*/
+function displayTime(date) { 
 	var hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
 	var am_pm = date.getHours() >= 12 ? "PM" : "AM";
 	hours = hours < 10 ? "0" + hours : hours;
@@ -683,6 +684,11 @@ function displayTime(date) { /*Reurns time in needed format*/
 	return hours + ":" + minutes +" " + am_pm;
 }
 
+/* initializeEnableRowArray: 
+ * slottableCount is set to no. of actual rows needed per day,
+ * which is no. of batches for a class, 1 otherwise.
+ * initial_value is 0 in the only call() we have, so it can be removed.
+ */
 function initializeEnableRowArray(row, cols, slottableCount, initial_value) {
 	enabledRows = new Array(row).fill(initial_value);
 	helperTable = new Array(row).fill(initial_value).map(row => new Array(cols).fill(initial_value).
@@ -762,18 +768,16 @@ function createTable(days, nSlots, slotTablePerDay, startTime, timePerSlot) {
 	return table;
 }
 
+/* Sorts the subject table on eachSlot of a subject  */
 function sort(table) {
-	//console.log("sort: table = " + JSON.stringify(table));
 	for(var i = 0; i < table.length - 1; i++) {
 		for(var j = 0; j < table.length - i - 1 ; j++) {
 			var row1 = search(subject, "subjectId", table[j]["subjectId"]);
 			var row2 = search(subject, "subjectId", table[j + 1]["subjectId"]);
 			if(row1["eachSlot"] < row2["eachSlot"]) {
-				//console.log("sort: row1" + row1["eachSlot"]+"< row2: "+row2["eachSlot"]);
 				var temp = table[j + 1];
 				table[j + 1] = table[j];
 				table[j] = temp;
-				//console.log("sort: table : " + JSON.stringify(table));
 			}
 		}
 	}
@@ -1790,26 +1794,32 @@ function deleteEntry(Span) {
 	fillTable2(true);
 }
 
-function getPosition(i, j, rowEntry, eachSlot) {
+/* getPosition is called with day starting at 1, not 0 
+ * so we do, day = day1 - 1. 
+ * if rowEntry == null, then getPosition
+ */
+function getPosition(day1, slotNo, rowEntry, eachSlot) {
 	var subjectId = -1, classId= -1, batchId = -1, pos = -1;
+	var day = day1 - 1;
 	if(rowEntry != null) {
 		subjectId = rowEntry["subjectId"];
 		classId = rowEntry["classId"];
 		batchId = rowEntry["batchId"];
 	}
-	for(var k = 0; k < helperTable[i - 1][j].length; k++) {
+	var $nSlots = search(config, "configId", currentConfigId)["nSlots"];
+
+	/* helperTable[][].length = no. of batches for a class, or 1 */
+	for(var k = 0; k < helperTable[day][slotNo].length; k++) {
 		var valid = true;
 		for(var n = 0; n < eachSlot; n++) {
-			if((j + n) > 10)
+			if((slotNo + n) > $nSlots)
 				return null;
-			var temp = helperTable[i - 1][j + n][k];
+			var temp = helperTable[day][slotNo + n][k];
 			if(temp == null) /* Means "Subject select box is there */
 				continue;
 			if(temp !== 0) {/*means Row Entry is there*/
 				if(temp["subjectId"] === subjectId && temp["batchId"] === batchId && temp["classId"] === classId) {
 					valid = false;/*this subject was already displayed*/
-					//alert("helperTable: entry exists" + JSON.stringify(helperTable));
-					//alert("Entry exists: i = " + i + " j = " + j + " subject = " + search(subject, "subjectId", subjectId)["subjectShortName"]);
 					return null;
 				}
 				valid = false;
@@ -1824,28 +1834,32 @@ function getPosition(i, j, rowEntry, eachSlot) {
 		return null;
 	}
 	for(var n = 0; n < eachSlot; n++) {
-		helperTable[i - 1][j + n][pos] = rowEntry;
+		/* This is the only place where we make entries in helperTable. 
+		 * For a 3rd entry of 3 slots, on Monday starting at slot-3, we make
+		 * 3 entries in [0, 3, 3], [0, 4, 3], [0, 5, 3]
+		 */
+		helperTable[day][slotNo + n][pos] = rowEntry;
 		//console.log(JSON.stringify(helperTable));
 	}
-	//console.log("Found location:"+i+j+k);
+	/* enabledRows is used only here, to set the display attribute and
+	 * to set the border
+	 */
 	if(pos > 0) {
-		if(pos > enabledRows[i - 1]) { /*Enabling rows and hiding the borders row-wise*/
-			for(var p = enabledRows[i - 1] + 1; p <= pos; p++) {
-				var row = document.getElementById("row" + i + p);
+		if(pos > enabledRows[day]) { /*Enabling rows and hiding the borders row-wise*/
+			for(var p = enabledRows[day] + 1; p <= pos; p++) {
+				var row = document.getElementById("row" + day1 + p);
 				row.style.display = "";
-				//console.log("Row enabled ==========================>"+i+","+p);
 				for(var x = 0; x < row.children.length; x++) {
 					document.getElementById(row.children[x].id).style.borderTop = "0px none white";
 				}
-				row = document.getElementById("row" + i + (p - 1));
+				row = document.getElementById("row" + day1 + (p - 1));
 				for(x = 0; x < row.children.length; x++) {
 					document.getElementById(row.children[x].id).style.borderBottom = "0px none white";
 				}
 			}
-			enabledRows[i - 1] = pos;
+			enabledRows[day] = pos;
 		} 
-		// ABHIJIT document.getElementById("cell"+i+j+pos).style.borderTop = "0px solid black";
-		document.getElementById("cell"+ makeIdFromIJK(i, j, pos)).style.borderTop = "0px solid black";
+		document.getElementById("cell"+ makeIdFromIJK(day1, slotNo, pos)).style.borderTop = "0px solid black";
 	}
 	return pos;
 }
@@ -2277,7 +2291,7 @@ function teacherChange(createNewTable){
 }
 function sortSelect(selElem) {
     var tmpAry = new Array();
-    for (var i=0;i<selElem.options.length;i++) {
+    for (var i = 0; i < selElem.options.length; i++) {
         tmpAry[i] = new Array();
         tmpAry[i][0] = selElem.options[i].text;
         tmpAry[i][1] = selElem.options[i].value;
@@ -2286,7 +2300,7 @@ function sortSelect(selElem) {
     while (selElem.options.length > 0) {
         selElem.options[0] = null;
     }
-    for (var i=0;i<tmpAry.length;i++) {
+    for (var i = 0; i < tmpAry.length; i++) {
         var op = new Option(tmpAry[i][0], tmpAry[i][1]);
         selElem.options[i] = op;
     }
@@ -2455,7 +2469,7 @@ function jsSaveNewSnapshot() {
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
 				//alert("snapshot response: " + this.responseText);
-				alert(this.responseText);
+				//alert(this.responseText);
 				response = JSON.parse(this.responseText);
 				if(response["Success"] == "True") {
 					alert("snapshot " + newSnapshotName + " Saved. Press OK to continue");

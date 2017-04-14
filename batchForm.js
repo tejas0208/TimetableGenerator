@@ -151,7 +151,7 @@ function batchInsert() {
 function batchClassUpdate(i, currBatchId, currBatchClassId) {
 	var row = i;
 	var xhttp = new XMLHttpRequest();
-	xhttp.onreadystatechange = function () {
+	/*xhttp.onreadystatechange = function () {
 		if(this.readyState == 4 && this.status == 200) {
 			response = JSON.parse(this.responseText);
 			if(response["Success"] == "True") {
@@ -176,11 +176,32 @@ function batchClassUpdate(i, currBatchId, currBatchClassId) {
 				document.getElementById("bUpdateButton_"+i).disabled = false;
 			}
 		}
-	}
-	xhttp.open("POST", "timetable.php", true); // asynchronous
+	}*/
+	xhttp.open("POST", "timetable.php", false); // synchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhttp.send("reqType=batchClassUpdate&batchId="+currBatchId+"&classId="+currBatchClassId+"&snapshotId="+currentSnapshotId);
-	
+	response = JSON.parse(xhttp.responseText);
+	if(response["Success"] == "True") {
+		document.getElementById("bUpdateButton_"+i).childNodes[0].nodeValue = "Updated";
+		document.getElementById("bDeleteButton_"+i).disabled = false;
+		document.getElementById("bUpdateButton_"+i).disabled = false;
+		var index = response["bcId"];
+		if(index != -1) {// insert was done 
+			newBatchClass = {};
+			newBatchClass["bcId"] = index;
+			newBatchClass["batchId"] = currBatchId;
+			newBatchClass["classId"] = currBatchClassId;
+			batchClass.unshift(newBatchClass);
+		} else {
+			var index = searchIndex(batchClass, "batchId", currBatchId);
+			batchClass[index]["classId"] = currBatchClassId;
+		}
+	}
+	else {
+		alert("Batch " + currBatchId+ ": Update Failed.\nError:\n" + response["Error"]);
+		document.getElementById("bDeleteButton_"+i).disabled = false;
+		document.getElementById("bUpdateButton_"+i).disabled = false;
+	}
 }
 function batchUpdate(i) {
 	var row = i;
@@ -199,8 +220,10 @@ function batchUpdate(i) {
 	currBatchClassId = search(batchClass, "batchId", currBatchId)["classId"];
 	currBatchClassShortName = search(classTable, "classId", currBatchClassId)["classShortName"];
 	//alert(currBatchId + " " + currBatchClassId + " " + currBatchClassShortName + " " + newClassName);
-	if(newClassId != currBatchClassId)
+	if(newClassId != currBatchClassId) {
+		//alert(currBatchId);
 		batchClassUpdate(row, currBatchId, newClassId);
+	}
 
 	row = i - 2;
 	//var batchOrigName = batch[row]["batchName"];
@@ -227,7 +250,7 @@ function batchUpdate(i) {
 			}
 		}
 	}
-	xhttp.open("POST", "timetable.php", false); // asynchronous
+	xhttp.open("POST", "timetable.php", true); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhttp.send("reqType=batchUpdate&batchName="+batchName+"&batchCount="+batchCount+
 				"&batchId="+batchId+"&snapshotId="+currentSnapshotId);
