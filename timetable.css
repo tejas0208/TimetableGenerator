@@ -71,7 +71,12 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#87e0fd', end
 	padding: 2px;
 	font-family: Courier;
 	font-size: 14px;
+	font-weight: bold;
 	display: none;
+	background-color: #eeeeee;
+}
+#title {
+	background-color: cyan;
 }
 .row {
 	border: 1px solid black;
@@ -186,4 +191,33 @@ select :disabled {
 }
 .disabledEntries {
 	font-size: 8px;
+}
+.outercol2 {
+	width: 20%;
+	border: 1px solid black;
+	vertical-align: top;
+}
+.outercol1 {
+	width: 80%;
+	padding: 0;
+}
+
+textarea#tracker{
+    width:100%;
+    direction:rtl;
+    display:block;
+    max-width:100%;
+    line-height:1.5;
+    padding:15px 15px 30px;
+    border-radius:3px;
+    border:1px solid #F7E98D;
+    font:14px Tahoma, cursive;
+    transition:box-shadow 0.5s ease;
+    box-shadow:0 4px 6px rgba(0,0,0,0.1);
+    font-smoothing:subpixel-antialiased;
+    background:linear-gradient(#F9EFAF, #F7E98D);
+    background:-o-linear-gradient(#F9EFAF, #F7E98D);
+    background:-ms-linear-gradient(#F9EFAF, #F7E98D);
+    background:-moz-linear-gradient(#F9EFAF, #F7E98D);
+    background:-webkit-linear-gradient(#F9EFAF, #F7E98D);
 }

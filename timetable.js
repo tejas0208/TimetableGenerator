@@ -152,6 +152,8 @@ function showTrackerList() {
 			break;
 	}
 	document.getElementById("tracker").innerHTML = trackerStr;
+	trackerElem = document.getElementById("tracker");
+    trackerElem.style.height = (trackerElem.scrollHeight)+"px";
 }
 
 function debugPrint(tableName, row) {
@@ -2525,6 +2527,8 @@ function load() {
 	}
 	$("#mainTimeTable").append("<center><B>No TimeTable loaded </B><br>" +
 								"Please select option from above catgories</center>");
+	document.getElementById("title").innerHTML =  "<h2> Timetable For: " +
+				search(dept, "deptId", currentDeptId)["deptName"] + "</h2>";
 	return res;
 }
 /* Reload the select menu for snapshots. This is typically done

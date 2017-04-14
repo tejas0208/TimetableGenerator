@@ -1,75 +1,54 @@
 <table border = "0" padding = "0" style = "width:100%;" id="outerTable">
-	<tr> <td style = "height:100px;">
-		<table border = "0" padding = "0" style = "height:50px; width:100%;" id="menuTable">
-		<tr> <td style = "width:30%;">
-		 		<h1> COEP Timetable </h1>
-			</td>
-			<td width="30%">
-				<div id="trackerdiv"> 
-				<textarea id="tracker" rows = "3" cols = "20" readonly="readonly">
-				Tracker 
-				</textarea>
-				</div>
-			</td>
-			<td style = "width:40%;">   
-				<!--h1> Scope for Menus Here </h1>
-				<div class = "selection-menu">
-					Select Snapshot<br>
-					<select id = "fetch-snapshot-menu" class= "select-menu">
-						<option value = "" selected></option>
-					</select>
-				</div>
-				<div class="selection-menu"> 
-					<input type=button id="saveSnapshot" value="Save Snapshot"
-						onclick="jsSaveSnapshot()" >   <br>
-					<input type=button id="saveNewSnapshot" value="Save New Snapshot" 
-								onclick="jsSaveNewSnapshot()" > 
-				</div-->
-				<div class="selection-menu">
-					Configuration	
-					<select id="configuration-menu" class="select-menu" display="none">
-						<option id = "selectOne" value = "selectOne" selected></option>
-						<option value = "teachers" onclick="teacherForm()">Teachers</option>
-						<option value = "subjects" onclick="subjectForm()">Subjects</option>
-						<option value = "classes" onclick="classForm()">Classes</option>
-						<option value = "batchs" onclick="batchForm()">Batches</option>
-						<option value = "rooms" onclick="roomForm()">Rooms</option>
-						<option value = "depts" onclick="deptForm()">Depts</option>
-						<option value = "subjectClassMapping" onclick="sctForm()"> 
-								Class-Subject-Teacher Mapping</option>
-						<option value = "subjectBatchMapping" onclick="sbtForm()"> 
-								Batch-Subject-Teacher Mapping</option>
-						<option value = "batchCanOverlap" onclick="batchCanOverlapForm()"> 
-								Batches: Alloweed Overlaps</option>
-						<option value = "overlappingSBT" onclick="overlappingSBTForm()"> 
-								Overlapping Subject-Batches</option>
-						<option value = "classRoom" onclick="classRoomForm()"> 
-								Room Preference for Classes</option>
-						<option value = "batchRoom" onclick="batchRoomForm()"> 
-								Room Preference for Batches</option>
-						<option value = "subjectRoom" onclick="subjectRoomForm()"> 
-								Room Preference for Subjects</option>
-						<option value = "config" onclick="configForm()"> 
-								Configure Timetable</option>
-						<option value = "user" onclick="userForm()">Users</option>
-					</select>
-				</div>
-				<div class="selection-menu">
-				Warnings
-				</div>
-				</td>	
-		</tr>
-		</table>
+	<tr>
+		<td class="outercol1"> 
+			<div id="title" align="center"> <h2> COEP TimeTable </h2> </div>
 		</td>
-	</tr>
-	<tr id = "selection-menu">
-	<td >
-		<!--div class = "selection-menu">
-			See Subjectwise<br>
-			<select id = "subject-menu" class= "select-menu">
-				<option value = "EMPTY"> </option>
+		<td class="outercol2" rowspan="3" border="1">
+			<div class="selection-menu">
+				Configuration	
+				<select id="configuration-menu" class="select-menu" display="none">
+					<option id = "selectOne" value = "selectOne" selected></option>
+					<option value = "teachers" onclick="teacherForm()">Teachers</option>
+					<option value = "subjects" onclick="subjectForm()">Subjects</option>
+					<option value = "classes" onclick="classForm()">Classes</option>
+					<option value = "batchs" onclick="batchForm()">Batches</option>
+					<option value = "rooms" onclick="roomForm()">Rooms</option>
+					<option value = "depts" onclick="deptForm()">Depts</option>
+					<option value = "subjectClassMapping" onclick="sctForm()"> 
+							Class-Subject-Teacher Mapping</option>
+					<option value = "subjectBatchMapping" onclick="sbtForm()"> 
+							Batch-Subject-Teacher Mapping</option>
+					<option value = "batchCanOverlap" onclick="batchCanOverlapForm()"> 
+							Batches: Alloweed Overlaps</option>
+					<option value = "overlappingSBT" onclick="overlappingSBTForm()"> 
+							Overlapping Subject-Batches</option>
+					<option value = "classRoom" onclick="classRoomForm()"> 
+							Room Preference for Classes</option>
+					<option value = "batchRoom" onclick="batchRoomForm()"> 
+							Room Preference for Batches</option>
+					<option value = "subjectRoom" onclick="subjectRoomForm()"> 
+							Room Preference for Subjects</option>
+					<option value = "config" onclick="configForm()"> 
+							Configure Timetable</option>
+					<option value = "user" onclick="userForm()">Users</option>
 				</select>
-		</div-->
+			</div>
+			<div id="trackerdiv" class="selection-menu"> 
+				Tasks List
+				<textarea id="tracker" rows = "3" cols = "20" readonly="readonly">
+				</textarea>
+			</div>
+			<div class="selection-menu">
+				Warnings
+			</div>
+		
+		</td>
+
+
+	</tr>
+	<tr>
+	<!-- The Menus -->
+		<td  class="outercol1">
 		<div class = "selection-menu">
 			See Classwise<br>
 			<select id = "class-menu" class= "select-menu" display="none">
@@ -103,41 +82,32 @@
 			</select>
 		</div>
 		<div class="selection-menu" id="save-snapshot-menu" display="none"> 
-			<input type=button id="saveSnapshot" value="Save Snapshot"
+			<input type=button id="saveSnapshot" value="Save"
 				onclick="jsSaveSnapshot(true)" >   <br>
-			<input type=button id="saveNewSnapshot" value="Save New Snapshot" 
+			<input type=button id="saveNewSnapshot" value="Save As" 
 						onclick="jsSaveNewSnapshot()" > 
 		</div>
 		<div class = "selection-menu">
 			<form action="timetable.php" method="POST">
-			Export <br>
+			Export/Import <br>
 			<select name="type" class= "select-menu" id="export-menu" display="none">
 				<option value = "" selected></option>
-				<!--option value = "ODS">Timetable as ODS</option>
-				<option value = "Excel">Timetable as Excel </option-->
 				<option value = "Excelx" onclick=jsExport("timetable")>Timetable as Excelx</option>
-				<!--option value = "DODS">Configuration as ODS</option>
-				<option value = "DExcel">Configuration as Excel </option-->
 				<option value = "DExcelx" onclick=jsExport("config")>Configuration as Excelx</option>
+				<option value = "Excelx" onclick='alert("not supported")'>Import Timetable as Excelx</option>
+				<option value = "DExcelx" onclick='alert("not supported")'>Import Configuration as Excelx</option>
 			</select>
 			</form>
 		</div>
-		<div class = "selection-menu">
-			<form action="import.php" method="POST">
-			Import <br>
-			<select name="type" class= "select-menu" onchange="this.form.submit()" id="import-menu" display="none">
-				<option value = "" selected></option>
-				<option value = "ODS">Timetable as ODS</option>
-				<option value = "Excel">Timetable as Excel </option>
-				<option value = "Excelx">Timetable as Excelx</option>
-				<option value = "DODS">Configuration as ODS</option>
-				<option value = "DExcel">Configuration as Excel </option>
-				<option value = "DExcelx">Configuration as Excelx</option>
-			</select>
-			</form>
-		</div>
-	</td>
+		</td>
+		<!--td class="outercol2">
+		</td-->
 	</tr>
-	<tr > <td id = "mainTimeTable"> </td>
+	<!-- The Main TimeTable-->
+	<tr>
+		<td id = "mainTimeTable"> 
+		</td>
+		<!--td class="outercol2">
+		</td-->
 	</tr>
 </table>
