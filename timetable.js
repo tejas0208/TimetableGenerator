@@ -676,11 +676,11 @@ function createOptionTag(value, textString, selected) {
 }
 
 function displayTime(date) { /*Reurns time in needed format*/
-        var hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
-        var am_pm = date.getHours() >= 12 ? "PM" : "AM";
-        hours = hours < 10 ? "0" + hours : hours;
-        var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-        return hours + ":" + minutes +" " + am_pm;
+	var hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
+	var am_pm = date.getHours() >= 12 ? "PM" : "AM";
+	hours = hours < 10 ? "0" + hours : hours;
+	var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+	return hours + ":" + minutes +" " + am_pm;
 }
 
 function initializeEnableRowArray(row, cols, slottableCount, initial_value) {
@@ -2539,5 +2539,30 @@ function makeIdFromIJK(i, j, k) {
 }
 function makeIJKFromId(id) {
 	return id.split("_").splice(1);
+}
+function jsExport(type) {
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function () {
+		if (this.readyState == 4 && this.status == 200) {
+			//alert(this.response);
+			var blob = this.response;
+			var headers = this.getAllResponseHeaders();
+			var fileName = this.getResponseHeader("filename"); //if you have the fileName header available
+			var link=document.createElement('a');
+			link.href=window.URL.createObjectURL(blob);
+			link.download=fileName;
+			link.style.display = 'none';
+			document.body.appendChild(link);
+			link.click();
+		}
+	}
+	xhttp.open("POST", "timetable.php", true); // asynchronous
+	xhttp.responseType = "blob";
+	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	//xhttp.setRequestHeader("Content-Type", "application/json");
+	xhttp.send("reqType=export&snapshotName=" + currentSnapshotName+ "&type=" +
+				type + "&snapshotId=" + currentConfigId);
+	//window.location='timetable.php';
+
 }
 window.onload = load;

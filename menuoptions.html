@@ -102,16 +102,16 @@
 						onclick="jsSaveNewSnapshot()" > 
 		</div>
 		<div class = "selection-menu">
-			<form action="export.php" method="POST">
+			<form action="timetable.php" method="POST">
 			Export <br>
-			<select name="type" class= "select-menu" onchange="this.form.submit()" id="export-menu" display="none">
+			<select name="type" class= "select-menu" id="export-menu" display="none">
 				<option value = "" selected></option>
 				<!--option value = "ODS">Timetable as ODS</option>
 				<option value = "Excel">Timetable as Excel </option-->
-				<option value = "Excelx">Timetable as Excelx</option>
+				<option value = "Excelx" onclick=jsExport("timetable")>Timetable as Excelx</option>
 				<!--option value = "DODS">Configuration as ODS</option>
 				<option value = "DExcel">Configuration as Excel </option-->
-				<option value = "DExcelx">Configuration as Excelx</option>
+				<option value = "DExcelx" onclick=jsExport("config")>Configuration as Excelx</option>
 			</select>
 			</form>
 		</div>

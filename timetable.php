@@ -3,6 +3,7 @@ require_once('db.php');
 require_once('common.php');
 require_once('snapshot.php');
 require_once('forms.php');
+require_once('export.php');
 /*require_once('configForm.php');
 require_once('teacher.php');
 require_once('subject.php');
@@ -215,6 +216,7 @@ $page = $header.
 		$footer;
 
 $reqType = getArgument("reqType");
+error_log("reqType = ".$reqType, 0);
 switch($reqType) {
 	case "getDataTables":
 		echo getDataTables();
@@ -349,6 +351,19 @@ switch($reqType) {
 		break;
 	case "configUpdate":
 		echo updateConfig("update");
+		break;
+	case "export":
+		//error_log("Exporting file ", 0);
+		$filename = exportFile();
+		header("Cache-Control: public");
+		header("Content-Description: File Transfer");
+		//header("Content-disposition: attachment; filename='$filename'");	
+		header("Content-disposition: attachment");
+		header("filename:". $filename);	
+		header('Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		header("Content-Transfer-Encoding: binary");
+		readfile($filename);
+		//error_log("Exported file $filename", 0);
 		break;
 	default:
 		echo $page;
