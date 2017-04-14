@@ -32,37 +32,7 @@ function getTimeTable() {
 	return json_encode($tables);
 }
 
-$header = "
-<html>
-	<head>
-		<title> TimeTable </title>
-		<meta charset=\"utf-8\" /> 
-		<link href=\"./select2-4.0.3/dist/css/select2.min.css\" rel=\"stylesheet\"/>
-		<link rel=\"stylesheet\" type=\"text/css\" href=\"timetable.css\"/>
-		<script type=\"text/javascript\" src=\"./jquery.js\"></script>
-		<script src=\"./select2-4.0.3/dist/js/select2.min.js\"></script>
-		<script src = \"timetable.js\"></script>
-		<script src = \"configForm.js\"></script>
-		<script src = \"teacherForm.js\"></script>
-		<script src = \"subjectForm.js\"></script>
-		<script src = \"classForm.js\"></script>
-		<script src = \"batchForm.js\"></script>
-		<script src = \"roomForm.js\"></script>
-		<script src = \"classRoomForm.js\"></script>
-		<script src = \"batchRoomForm.js\"></script>
-		<script src = \"subjectRoomForm.js\"></script>
-		<script src = \"sctForm.js\"></script>
-		<script src = \"sbtForm.js\"></script>
-		<script src = \"overlappingSBTForm.js\"></script>
-		<script>
-			function deptForm() {
-				alert(\"Departments not supported yet\");
-			}
-			function userForm() {
-				alert(\"Users not supported yet\");
-			}
-		</script>
-";
+$header = file_get_contents("header.html");
 $bodystart="
 	</head>
 	<body>

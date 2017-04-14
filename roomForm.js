@@ -171,7 +171,7 @@ function roomUpdate(i) {
 	xhttp.open("POST", "timetable.php", false); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhttp.send("reqType=roomUpdate&roomName="+roomName+"&roomShortName="+
-			roomShortName+"&roomCount="+roomCount+"&roomId="+roomId);
+			roomShortName+"&roomCount="+roomCount+"&roomId="+roomId+"&snapshotId="+currentSnapshotId);
 	
 }
 function roomDelete(i) {
@@ -208,5 +208,5 @@ function roomDelete(i) {
 	}
 	xhttp.open("POST", "timetable.php", true); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("reqType=roomDelete&roomId="+roomId);
+	xhttp.send("reqType=roomDelete&roomId="+roomId+"&snapshotId="+currentSnapshotId);
 }

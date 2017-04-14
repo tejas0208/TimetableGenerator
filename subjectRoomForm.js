@@ -163,7 +163,7 @@ function subjectRoomInsert() {
 	}
 	xhttp.open("POST", "timetable.php", false); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("reqType=subjectRoomInsert&roomId="+roomId+"&subjectId="+subjectId);
+	xhttp.send("reqType=subjectRoomInsert&roomId="+roomId+"&subjectId="+subjectId+"&snapshotId="+currentSnapshotId);
 	
 }
 
@@ -208,7 +208,7 @@ function subjectRoomUpdate(i) {
 	}
 	xhttp.open("POST", "timetable.php", false); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("reqType=subjectRoomUpdate&roomId="+roomId+"&subjectId="+subjectId+"&srId="+srId);
+	xhttp.send("reqType=subjectRoomUpdate&roomId="+roomId+"&subjectId="+subjectId+"&srId="+srId+"&snapshotId="+currentSnapshotId);
 	
 }
 function subjectRoomDelete(i) {
@@ -241,5 +241,5 @@ function subjectRoomDelete(i) {
 	}
 	xhttp.open("POST", "timetable.php", true); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("reqType=subjectRoomDelete&srId="+srId);
+	xhttp.send("reqType=subjectRoomDelete&srId="+srId+"&snapshotId="+currentSnapshotId);
 }

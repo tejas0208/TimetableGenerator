@@ -125,7 +125,7 @@ function sbtForm() {
 		var selectTag = document.createElement("select");
 		selectTag.setAttribute("id","subject_"+count);
 		for (k in subject) {
-			if(subject[k]["batches"] == 0) /* don't show NON-batchable subjects here */
+			if(subject[k]["batches"] == "0") /* don't show NON-batchable subjects here */
 				continue;
 			if(subject[k]["subjectId"] == currSBT["subjectId"])
 				var tag = createOptionTag(subject[k]["subjectId"], subject[k]["subjectName"], true);		

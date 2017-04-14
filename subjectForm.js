@@ -211,7 +211,7 @@ function subjectUpdate(i) {
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhttp.send("reqType=subjectUpdate&subjectName="+subjectName+"&subjectShortName="+
 				subjectShortName+"&eachSlot="+eachSlot+"&nSlots="+nSlots+"&batches="+batches+
-				"&subjectId="+subjectId);
+				"&subjectId="+subjectId+"&snapshotId="+currentSnapshotId);
 	
 }
 function subjectDelete(i) {
@@ -247,5 +247,5 @@ function subjectDelete(i) {
 	}
 	xhttp.open("POST", "timetable.php", true); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("reqType=subjectDelete&subjectId="+subjectId);
+	xhttp.send("reqType=subjectDelete&subjectId="+subjectId+"&snapshotId="+currentSnapshotId);
 }

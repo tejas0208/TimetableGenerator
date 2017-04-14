@@ -163,7 +163,7 @@ function batchRoomInsert() {
 	}
 	xhttp.open("POST", "timetable.php", false); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("reqType=batchRoomInsert&roomId="+roomId+"&batchId="+batchId);
+	xhttp.send("reqType=batchRoomInsert&roomId="+roomId+"&batchId="+batchId+"&snapshotId="+currentSnapshotId);
 	
 }
 
@@ -208,7 +208,7 @@ function batchRoomUpdate(i) {
 	}
 	xhttp.open("POST", "timetable.php", false); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("reqType=batchRoomUpdate&roomId="+roomId+"&batchId="+batchId+"&brId="+brId);
+	xhttp.send("reqType=batchRoomUpdate&roomId="+roomId+"&batchId="+batchId+"&brId="+brId+"&snapshotId="+currentSnapshotId);
 	
 }
 function batchRoomDelete(i) {
@@ -241,5 +241,5 @@ function batchRoomDelete(i) {
 	}
 	xhttp.open("POST", "timetable.php", true); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("reqType=batchRoomDelete&brId="+brId);
+	xhttp.send("reqType=batchRoomDelete&brId="+brId+"&snapshotId="+currentSnapshotId);
 }

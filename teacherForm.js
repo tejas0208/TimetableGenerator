@@ -226,7 +226,7 @@ function teacherUpdate(i) {
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhttp.send("reqType=teacherUpdate&teacherName="+teacherName+"&teacherShortName="+
 			teacherShortName+"&minHrs="+minHrs+"&maxHrs="+maxHrs+"&deptId="+deptId+
-			"&teacherId="+teacherId);
+			"&teacherId="+teacherId+"&snapshotId="+currentSnapshotId);
 	
 }
 function teacherDelete(i) {
@@ -263,5 +263,5 @@ function teacherDelete(i) {
 	}
 	xhttp.open("POST", "timetable.php", true); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("reqType=teacherDelete&teacherId="+teacherId);
+	xhttp.send("reqType=teacherDelete&teacherId="+teacherId+"&snapshotId="+currentSnapshotId);
 }

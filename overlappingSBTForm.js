@@ -194,7 +194,7 @@ function overlappingSBTInsert() {
 	}
 	xhttp.open("POST", "timetable.php", false); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("reqType=overlappingSBTInsert&sbtId2="+sbtId2+"&sbtId1="+ sbtId1);
+	xhttp.send("reqType=overlappingSBTInsert&sbtId2="+sbtId2+"&sbtId1="+ sbtId1+"&snapshotId="+currentSnapshotId);
 	
 }
 
@@ -250,7 +250,8 @@ function overlappingSBTUpdate(i) {
 	}
 	xhttp.open("POST", "timetable.php", false); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("reqType=overlappingSBTUpdate&sbtId2="+sbtId2+"&sbtId1="+ sbtId1+"&osbtId="+osbtId);
+	xhttp.send("reqType=overlappingSBTUpdate&sbtId2="+sbtId2+"&sbtId1="+ sbtId1+
+				"&osbtId="+osbtId+"&snapshotId="+currentSnapshotId);
 	
 }
 function overlappingSBTDelete(i) {
@@ -283,5 +284,5 @@ function overlappingSBTDelete(i) {
 	}
 	xhttp.open("POST", "timetable.php", true); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("reqType=overlappingSBTDelete&osbtId="+osbtId);
+	xhttp.send("reqType=overlappingSBTDelete&osbtId="+osbtId+"&snapshotId="+currentSnapshotId);
 }
