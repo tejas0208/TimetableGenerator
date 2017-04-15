@@ -48,8 +48,10 @@ function sctForm() {
 	cell = row.insertCell(-1);
 	var selectTag = document.createElement("select");
 	selectTag.setAttribute("id","classAdd");
+	var tag = createOptionTag(-1, "", false);		
+	selectTag.appendChild(tag);
 	for (k in classTable) {
-		var tag = createOptionTag(classTable[k]["classId"], classTable[k]["classShortName"], false);
+		var tag = createOptionTag(classTable[k]["classId"], classTable[k]["className"], false);
 		selectTag.appendChild(tag);
 	}
 	cell.appendChild(selectTag);
@@ -60,6 +62,8 @@ function sctForm() {
 	cell = row.insertCell(-1);
 	var selectTag = document.createElement("select");
 	selectTag.setAttribute("id","subjectAdd");
+	var tag = createOptionTag(-1, "", false);		
+	selectTag.appendChild(tag);
 	for (k in subject) {
 		if(subject[k]["batches"] == 1) /* don't show batchable subjects here */
 			continue;
@@ -74,8 +78,10 @@ function sctForm() {
 	cell = row.insertCell(-1);
 	var selectTag = document.createElement("select");
 	selectTag.setAttribute("id","teacherAdd");
+	var tag = createOptionTag(-1, "", false);		
+	selectTag.appendChild(tag);
 	for (k in teacher) {
-		var tag = createOptionTag(teacher[k]["teacherId"], teacher[k]["teacherShortName"], false);		
+		var tag = createOptionTag(teacher[k]["teacherId"], teacher[k]["teacherName"], false);		
 		selectTag.appendChild(tag);
 	}
 	cell.appendChild(selectTag);
@@ -103,62 +109,39 @@ function sctForm() {
 		var cell = row.insertCell(0);
 		var centerTag = document.createElement("center");
 		centerTag.setAttribute("id", "center_" + count);
+		centerTag.setAttribute("class", "formText");
 		var centerText = document.createTextNode(currSCT["sctId"]);
 		centerTag.appendChild(centerText);
 		cell.appendChild(centerTag);
 		//cell.innerHTML = "<center> " + (count - 1) + "</center>";
 
 		cell = row.insertCell(-1);
-		var selectTag = document.createElement("select");
-		selectTag.setAttribute("id","class_" + count);
-		for (k in classTable) {
-			if(classTable[k]["classId"] == currSCT["classId"])
-				var tag = createOptionTag(classTable[k]["classId"], classTable[k]["classShortName"], true);		
-			else
-				var tag = createOptionTag(classTable[k]["classId"], classTable[k]["classShortName"], false);		
-			selectTag.appendChild(tag);
-		}
-		cell.appendChild(selectTag);
-		//$("#class_" + i).select2();
+		var centerTag = document.createElement("center");
+		centerTag.setAttribute("id", "class_" + count);
+		centerTag.setAttribute("class", "formText");
+		var text = search(classTable, "classId", currSCT["classId"])["className"];
+		var centerText = document.createTextNode(text);
+		centerTag.appendChild(centerText);
+		cell.appendChild(centerTag);
+			
+		cell = row.insertCell(-1);
+		var centerTag = document.createElement("center");
+		centerTag.setAttribute("id", "subject_" + count);
+		centerTag.setAttribute("class", "formText");
+		var text = search(subject, "subjectId", currSCT["subjectId"])["subjectName"];
+		var centerText = document.createTextNode(text);
+		centerTag.appendChild(centerText);
+		cell.appendChild(centerTag);
 
 		cell = row.insertCell(-1);
-		var selectTag = document.createElement("select");
-		selectTag.setAttribute("id","subject_" + count);
-		for (k in subject) {
-			if(subject[k]["batches"] == 1) /* don't show batchable subjects here */
-				continue;
-			if(subject[k]["subjectId"] == currSCT["subjectId"])
-				var tag = createOptionTag(subject[k]["subjectId"], subject[k]["subjectName"], true);		
-			else
-				var tag = createOptionTag(subject[k]["subjectId"], subject[k]["subjectName"], false);		
-			selectTag.appendChild(tag);
-		}
-		cell.appendChild(selectTag);
-		//$("#subject_" + i).select2();
-
-
-		cell = row.insertCell(-1);
-		var selectTag = document.createElement("select");
-		selectTag.setAttribute("id","teacher_" + count);
-		for (k in teacher) {
-			if(teacher[k]["teacherId"] == currSCT["teacherId"])
-				var tag = createOptionTag(teacher[k]["teacherId"], teacher[k]["teacherShortName"], true);		
-			else
-				var tag = createOptionTag(teacher[k]["teacherId"], teacher[k]["teacherShortName"], false);		
-			selectTag.appendChild(tag);
-		}
-		cell.appendChild(selectTag);
-		//$("#teacher_" + i).select2();
-
-		cell = row.insertCell(-1);
-		var button = document.createElement("button");
-		cell.appendChild(button);
-		button.value = "Update"; button.name = "sctUpdateButton_" + count;
-		var textNode = document.createTextNode("Update");
-		button.appendChild(textNode);
-		button.setAttribute("onclick","sctUpdate(" + count + ")");
-		button.setAttribute("id","sctUpdateButton_" + count);
-
+		var centerTag = document.createElement("center");
+		centerTag.setAttribute("id", "teacher_" + count);
+		centerTag.setAttribute("class", "formText");
+		var text = search(teacher, "teacherId", currSCT["teacherId"])["teacherName"];
+		var centerText = document.createTextNode(text);
+		centerTag.appendChild(centerText);
+		cell.appendChild(centerTag);
+	
 		cell = row.insertCell(-1);
 		var button = document.createElement("button");
 		cell.appendChild(button);
@@ -176,7 +159,7 @@ function sctInsert() {
 	classId = document.getElementById("classAdd").value;	
 	subjectId = document.getElementById("subjectAdd").value;	
 	teacherId = document.getElementById("teacherAdd").value;	
-	if(classId == "" || subjectId == "" || teacherId == "") {
+	if(classId == -1 || subjectId == -1 || teacherId == -1) {
 		alert("Enter All Values");
 		return;
 	}
@@ -269,9 +252,12 @@ function sctDelete(i) {
 	if(sure != true)
 		return;
 	sctId = document.getElementById("center_" + row).childNodes[0].nodeValue;
+	sctRow =  search(subjectClassTeacher, "sctId", sctId);
+	subjectId = sctRow["subjectId"];
+	classId = sctRow["classId"];
+	teacherId = sctRow["teacherId"];
 	document.getElementById("sctDeleteButton_" + row).childNodes[0].nodeValue = "Deleting";
 	document.getElementById("sctDeleteButton_" + row).disabled = true;
-	document.getElementById("sctUpdateButton_" + row).disabled = true;
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function () {
 		if(this.readyState == 4 && this.status == 200) {
@@ -279,17 +265,20 @@ function sctDelete(i) {
 			if(response["Success"] == "True") {
 				document.getElementById("sctDeleteButton_" + row).value = "Delete"
 				subjectClassTeacher.splice(i - 2, 1);
+				getTimetable(currentSnapshotName);
+				alert("got new timeTable");
 				fillTable2(true);
 				sctForm();
 			} else {
 				alert("sct " + sctId + ": Deletion Failed.\nError:\n" + response["Error"]);
 				document.getElementById("sctDeleteButton_" + row).value = "Delete"
-				document.getElementById("sctUpdateButton_" + row).disabled = false;
+				document.getElementById("sctDeleteButton_" + row).disabled = false;
 				document.getElementById("sctDeleteButton_" + row).childNodes[0].nodeValue = "Can't Delete";
 			}
 		}
 	}
 	xhttp.open("POST", "timetable.php", true); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("reqType=sctDelete&sctId=" + sctId + "&snapshotId=" + currentSnapshotId);
+	xhttp.send("reqType=sctDelete&sctId=" + sctId + "&snapshotId=" + currentSnapshotId + "&subjectId=" +
+				subjectId + "&teacherId=" + teacherId + "&classId=" + classId);
 }

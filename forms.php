@@ -631,6 +631,7 @@ function updateSCT($type) {
 	$snapshotId = getArgument("snapshotId");
 
 	$query2 = "";
+	$query3 = "";
 	switch($type) {
 		case "update":
 			$query = "UPDATE subjectClassTeacher SET teacherId = $teacherId, ".
@@ -638,7 +639,9 @@ function updateSCT($type) {
 					 " WHERE sctId = $sctId AND snapshotId = $snapshotId";
 			break;
 		case "delete":
-			$query = "DELETE FROM subjectClassTeacher WHERE sctId = $sctId AND snapshotId = $snapshotId";
+			$query = "DELETE FROM subjectClassTeacher WHERE sctId = $sctId AND snapshotId = $snapshotId; ";
+			$query3 = "DELETE FROM timeTable WHERE subjectId = $subjectId AND teacherId = $teacherId ".
+						" and classId = $classId AND snapshotId = $snapshotId;";
 			break;
 		case "insert":
 			$teacherStr = ($teacherId == "null" ? "null" : $teacherId);
@@ -661,6 +664,16 @@ function updateSCT($type) {
 		$resString .= "\"Error\" : ".json_encode($CFG->conn->error)."}";
 		error_log("updateSCT: resString: ".$resString);
 		return $resString;
+	}
+	if($query3 != "") {
+		error_log("updateSCT: Query: ".$query3, 0);
+		$result = sqlUpdate($query3);
+		error_log("updateSCT: Result: $result", 0);
+		if($result == false) {
+			$resString = "{\"Success\": \"False\",";
+			$resString .= "\"Error\" : ".json_encode($CFG->conn->error)."}";
+			return $resString;
+		}
 	}
 
 	if($query2 != "") {

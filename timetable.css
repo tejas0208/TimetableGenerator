@@ -221,3 +221,7 @@ textarea#tracker{
     background:-moz-linear-gradient(#F9EFAF, #F7E98D);
     background:-webkit-linear-gradient(#F9EFAF, #F7E98D);
 }
+.formText {
+	font: 15px Tahoma bold;
+	font-color: black;
+}

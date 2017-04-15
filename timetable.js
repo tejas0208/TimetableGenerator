@@ -73,7 +73,7 @@ function makeTrackerList() {
 		entry["done"] = 0;
 		tracker.push(entry);
 	}
-	for(i in timeTable) {
+	for(i = 0; i < timeTable.length; i++) {
 		curr = timeTable[i];
 		/* 3 types of entries. (a) isFixed = 1 (b) isFixed = 0, batchId != null
 		 * (c) isFixed = 0, batchId = null 
@@ -83,25 +83,45 @@ function makeTrackerList() {
 		if("" + curr["batchId"] != "null") {
 			index = searchIndex(tracker, "subjectId", curr["subjectId"], 
 						"batchId", curr["batchId"], "classId", curr["classId"]);
+			if(index == -1) {
+				alert("ERROR: index -1 in makeTrackerList i = . " + i + " curr = " +
+						JSON.stringify(curr) + "Tracker: " + JSON.stringify(tracker));
+			}
 			eachSlot = tracker[index]["eachSlot"];
 			tracker[index]["done"] += (1.0/eachSlot);
+			console.log("makeTrackerList: " + JSON.stringify(curr));
 			//tracker[index]["done"] = parseInt(tracker[index]["done"]);
 			continue;
 		} 
 		if("" + curr["batchId"] == "null") {
 			index = searchIndex(tracker, "subjectId", curr["subjectId"], 
 						"classId", curr["classId"]);
+			if(index == -1) {
+				alert("ERROR: index -1 in makeTrackerList i = . " + i + " curr = " +
+						JSON.stringify(curr) + "Tracker: " + JSON.stringify(tracker));
+			}
 			eachSlot = tracker[index]["eachSlot"];
 			tracker[index]["done"] += (1.0/eachSlot);
+			console.log("makeTrackerList: " + JSON.stringify(curr));
 		} else {
 			alert("ERROR: should not come here in makeTrackerList");
 			continue;
 		}
 	}
+	console.log("Tracker: " + JSON.stringify(tracker));
 }
 function updateTrackerList(subjectId, classId, batchId, teacherId) {
 }
 function showTrackerList() {
+	tracker.sort(function (a, b) {
+		var x = a.done/a.nSlots;
+		var y = b.done/b.nSlots;
+		if(x < y)
+			return -1;
+		if(x > y)
+			return 1;
+		return 0;
+	});
 	switch(type) {
 		case "class":
 			var trackerStr = "";
@@ -2569,7 +2589,7 @@ function jsSaveNewSnapshot() {
 				response = JSON.parse(this.responseText);
 				if(response["Success"] == "True") {
 					alert("snapshot " + newSnapshotName + " Saved. Press OK to continue");
-					document.getElementById("saveNewSnapshot").value = "Save New Snapshot"
+					document.getElementById("saveNewSnapshot").value = "Save As"
 					document.getElementById("saveNewSnapshot").disabled = false;
 					// JS variables are pass by vale, so snapshot can be changed here only
 					snapshot = getSnapshotTable().snapshot;
@@ -2588,7 +2608,7 @@ function jsSaveNewSnapshot() {
 				}
 			}
 		}
-		document.getElementById("saveNewSnapshot").value = "Saving New snapshot ...wait";
+		document.getElementById("saveNewSnapshot").value = "Saving New...wait";
 		document.getElementById("saveNewSnapshot").disabled = true;
 		xhttp.open("POST", "timetable.php", true); // asynchronous
 		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -2608,13 +2628,13 @@ function jsSaveSnapshot(asynchronousOrNot) {
 				if(response["Success"] == "True") {
 					//alert("snapshot response: " + this.responseText);
 					alert("snapshot " + currentSnapshotName + " Saved. Press OK to continue");
-					document.getElementById("saveSnapshot").value = "Save snapshot";
+					document.getElementById("saveSnapshot").value = "Save";
 					document.getElementById("saveSnapshot").disabled = false;
 					loadSnapshotMenu(currentSnapshotName);
 					dirtyTimeTable = false;
 				} else {
 					alert("Saving snapshot failed. Error = " + response["Error"]);
-					document.getElementById("saveSnapshot").value = "Save snapshot";
+					document.getElementById("saveSnapshot").value = "Save";
 					document.getElementById("saveSnapshot").disabled = false;
 				}
 			}
