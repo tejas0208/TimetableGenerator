@@ -117,7 +117,7 @@ function sctForm() {
 
 		cell = row.insertCell(-1);
 		var centerTag = document.createElement("center");
-		centerTag.setAttribute("id", "class_" + count);
+		centerTag.setAttribute("id", "sctClass_" + count);
 		centerTag.setAttribute("class", "formText");
 		var text = search(classTable, "classId", currSCT["classId"])["className"];
 		var centerText = document.createTextNode(text);
@@ -126,7 +126,7 @@ function sctForm() {
 			
 		cell = row.insertCell(-1);
 		var centerTag = document.createElement("center");
-		centerTag.setAttribute("id", "subject_" + count);
+		centerTag.setAttribute("id", "sctSubject_" + count);
 		centerTag.setAttribute("class", "formText");
 		var text = search(subject, "subjectId", currSCT["subjectId"])["subjectName"];
 		var centerText = document.createTextNode(text);
@@ -135,7 +135,7 @@ function sctForm() {
 
 		cell = row.insertCell(-1);
 		var centerTag = document.createElement("center");
-		centerTag.setAttribute("id", "teacher_" + count);
+		centerTag.setAttribute("id", "sctTeacher_" + count);
 		centerTag.setAttribute("class", "formText");
 		var text = search(teacher, "teacherId", currSCT["teacherId"])["teacherName"];
 		var centerText = document.createTextNode(text);
@@ -198,9 +198,9 @@ function sctInsert() {
 function sctUpdate(i) {
 	var row = i;
 	var classId, subjectId, teacheId, sctId;
-	classId = document.getElementById("class_" + row).value;	
-	subjectId = document.getElementById("subject_" + row).value;	
-	teacherId = document.getElementById("teacher_" + row).value;	
+	classId = document.getElementById("sctClass_" + row).value;	
+	subjectId = document.getElementById("sctSubject_" + row).value;	
+	teacherId = document.getElementById("sctTeacher_" + row).value;	
 	sctId = document.getElementById("center_" + row).childNodes[0].nodeValue;
 	document.getElementById("sctUpdateButton_" + row).childNodes[0].nodeValue = "Updating";
 	document.getElementById("sctDeleteButton_" + row).disabled = true;
@@ -266,7 +266,6 @@ function sctDelete(i) {
 				document.getElementById("sctDeleteButton_" + row).value = "Delete"
 				subjectClassTeacher.splice(i - 2, 1);
 				getTimetable(currentSnapshotName);
-				alert("got new timeTable");
 				fillTable2(true);
 				sctForm();
 			} else {

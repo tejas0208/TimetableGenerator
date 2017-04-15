@@ -556,6 +556,7 @@ function updateSBT($type) {
 	error_log("arguments: ".json_encode($_POST), 0);
 
 	$query2 = "";
+	$query3 = "";
 	switch($type) {
 		case "update":
 			$query = "UPDATE subjectBatchTeacher SET teacherId = $teacherId, ".
@@ -564,6 +565,8 @@ function updateSBT($type) {
 			break;
 		case "delete":
 			$query = "DELETE FROM subjectBatchTeacher WHERE sbtId = $sbtId AND snapshotId = $snapshotId;";
+			$query3 = "DELETE FROM timeTable WHERE subjectId = $subjectId AND teacherId = $teacherId ".
+						" and batchId = $batchId AND snapshotId = $snapshotId;";
 			break;
 		case "insert":
 			$query = "INSERT INTO subjectBatchTeacher (teacherId, subjectId, batchId, snapshotId) ".
@@ -586,6 +589,17 @@ function updateSBT($type) {
 		error_log("updateSBT: resString: ".$resString);
 		return $resString;
 	}
+	if($query3 != "") {
+		error_log("updateSBT: Query: ".$query3, 0);
+		$result = sqlUpdate($query3);
+		error_log("updateSBT: Result: $result", 0);
+		if($result == false) {
+			$resString = "{\"Success\": \"False\",";
+			$resString .= "\"Error\" : ".json_encode($CFG->conn->error)."}";
+			return $resString;
+		}
+	}
+
 
 	if($query2 != "") {
 		$result2 = sqlGetAllRows($query2);

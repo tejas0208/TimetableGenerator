@@ -48,6 +48,8 @@ function sbtForm() {
 	cell = row.insertCell(-1);
 	var selectTag = document.createElement("select");
 	selectTag.setAttribute("id","batchAdd");
+	var tag = createOptionTag(-1, "", false);		
+	selectTag.appendChild(tag);
 	for (k in batch) {
 		var tag = createOptionTag(batch[k]["batchId"], batch[k]["batchName"], false);
 		selectTag.appendChild(tag);
@@ -60,6 +62,8 @@ function sbtForm() {
 	cell = row.insertCell(-1);
 	var selectTag = document.createElement("select");
 	selectTag.setAttribute("id","subjectAdd");
+	var tag = createOptionTag(-1, "", false);		
+	selectTag.appendChild(tag);
 	for (k in subject) {
 		if(subject[k]["batches"] == 0) /* don't show NON-batchable subjects here */
 			continue;
@@ -74,8 +78,10 @@ function sbtForm() {
 	cell = row.insertCell(-1);
 	var selectTag = document.createElement("select");
 	selectTag.setAttribute("id","teacherAdd");
+	var tag = createOptionTag(-1, "", false);		
+	selectTag.appendChild(tag);
 	for (k in teacher) {
-		var tag = createOptionTag(teacher[k]["teacherId"], teacher[k]["teacherShortName"], false);		
+		var tag = createOptionTag(teacher[k]["teacherId"], teacher[k]["teacherName"], false);		
 		selectTag.appendChild(tag);
 	}
 	cell.appendChild(selectTag);
@@ -103,54 +109,40 @@ function sbtForm() {
 		var cell = row.insertCell(0);
 		var centerTag = document.createElement("center");
 		centerTag.setAttribute("id", "center_"+count);
+		centerTag.setAttribute("class", "formText");
 		var centerText = document.createTextNode(currSBT["sbtId"]);
 		centerTag.appendChild(centerText);
 		cell.appendChild(centerTag);
 		//cell.innerHTML = "<center> " + (count - 1) + "</center>";
 
 		cell = row.insertCell(-1);
-		var selectTag = document.createElement("select");
-		selectTag.setAttribute("id","batch_"+count);
-		for (k in batch) {
-			if(batch[k]["batchId"] == currSBT["batchId"])
-				var tag = createOptionTag(batch[k]["batchId"], batch[k]["batchName"], true);		
-			else
-				var tag = createOptionTag(batch[k]["batchId"], batch[k]["batchName"], false);		
-			selectTag.appendChild(tag);
-		}
-		cell.appendChild(selectTag);
-		//$("#batch_"+i).select2();
-
+		var centerTag = document.createElement("center");
+		centerTag.setAttribute("id", "sbtBatch_" + count);
+		centerTag.setAttribute("class", "formText");
+		var text = search(batch, "batchId", currSBT["batchId"])["batchName"];
+		var centerText = document.createTextNode(text);
+		centerTag.appendChild(centerText);
+		cell.appendChild(centerTag);
+			
 		cell = row.insertCell(-1);
-		var selectTag = document.createElement("select");
-		selectTag.setAttribute("id","subject_"+count);
-		for (k in subject) {
-			if(subject[k]["batches"] == "0") /* don't show NON-batchable subjects here */
-				continue;
-			if(subject[k]["subjectId"] == currSBT["subjectId"])
-				var tag = createOptionTag(subject[k]["subjectId"], subject[k]["subjectName"], true);		
-			else
-				var tag = createOptionTag(subject[k]["subjectId"], subject[k]["subjectName"], false);		
-			selectTag.appendChild(tag);
-		}
-		cell.appendChild(selectTag);
-		//$("#subject_"+i).select2();
-
-
+		var centerTag = document.createElement("center");
+		centerTag.setAttribute("id", "sbtSubject_" + count);
+		centerTag.setAttribute("class", "formText");
+		var text = search(subject, "subjectId", currSBT["subjectId"])["subjectName"];
+		var centerText = document.createTextNode(text);
+		centerTag.appendChild(centerText);
+		cell.appendChild(centerTag);
+			
 		cell = row.insertCell(-1);
-		var selectTag = document.createElement("select");
-		selectTag.setAttribute("id","teacher_"+ count);
-		for (k in teacher) {
-			if(teacher[k]["teacherId"] == currSBT["teacherId"])
-				var tag = createOptionTag(teacher[k]["teacherId"], teacher[k]["teacherShortName"], true);		
-			else
-				var tag = createOptionTag(teacher[k]["teacherId"], teacher[k]["teacherShortName"], false);		
-			selectTag.appendChild(tag);
-		}
-		cell.appendChild(selectTag);
-		//$("#teacher_"+i).select2();
-
-		cell = row.insertCell(-1);
+		var centerTag = document.createElement("center");
+		centerTag.setAttribute("id", "sbtTeacher_" + count);
+		centerTag.setAttribute("class", "formText");
+		var text = search(teacher, "teacherId", currSBT["teacherId"])["teacherName"];
+		var centerText = document.createTextNode(text);
+		centerTag.appendChild(centerText);
+		cell.appendChild(centerTag);
+			
+		/*cell = row.insertCell(-1);
 		var button = document.createElement("button");
 		cell.appendChild(button);
 		button.value = "Update"; button.name = "sbtUpdateButton_"+count;
@@ -158,6 +150,7 @@ function sbtForm() {
 		button.appendChild(textNode);
 		button.setAttribute("onclick","sbtUpdate("+count+")");
 		button.setAttribute("id","sbtUpdateButton_"+count);
+		*/
 
 		cell = row.insertCell(-1);
 		var button = document.createElement("button");
@@ -176,6 +169,10 @@ function sbtInsert() {
 	batchId = document.getElementById("batchAdd").value;	
 	subjectId = document.getElementById("subjectAdd").value;	
 	teacherId = document.getElementById("teacherAdd").value;	
+	if(batchId == -1 || subjectId == -1 || teacherId == -1) {
+		alert("Enter all values");
+		return;
+	}
 	/* debug */
 	teacherShortName = search(teacher, "teacherId", teacherId)["teacherShortName"];
 	subjectShortName = search(subject, "subjectId", subjectId)["subjectShortName"];
@@ -211,11 +208,11 @@ function sbtInsert() {
 function sbtUpdate(i) {
 	var row = i;
 	var batchId, subjectId, teacheId, sbtId;
-	batchId = document.getElementById("batch_"+row).value;	
-	subjectId = document.getElementById("subject_"+row).value;	
-	teacherId = document.getElementById("teacher_"+row).value;	
+	batchId = document.getElementById("sbtBatch_"+row).value;	
+	subjectId = document.getElementById("sbtSubject_"+row).value;	
+	teacherId = document.getElementById("sbtTeacher_"+row).value;	
 	sbtId = document.getElementById("center_"+row).childNodes[0].nodeValue;
-	document.getElementById("sbtUpdateButton_"+row).childNodes[0].nodeValue = "Updating";
+	//document.getElementById("sbtUpdateButton_"+row).childNodes[0].nodeValue = "Updating";
 	document.getElementById("sbtDeleteButton_"+row).disabled = true;
 	document.getElementById("sbtUpdateButton_"+row).disabled = true;
 	/* debug */
@@ -264,9 +261,12 @@ function sbtDelete(i) {
 	if(sure != true)
 		return;
 	sbtId = document.getElementById("center_"+row).childNodes[0].nodeValue;
+	sbtRow =  search(subjectBatchTeacher, "sbtId", sbtId);
+	subjectId = sbtRow["subjectId"];
+	batchId = sbtRow["batchId"];
+	teacherId = sbtRow["teacherId"];
 	document.getElementById("sbtDeleteButton_"+row).childNodes[0].nodeValue = "Deleting";
 	document.getElementById("sbtDeleteButton_"+row).disabled = true;
-	document.getElementById("sbtUpdateButton_"+row).disabled = true;
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function () {
 		if(this.readyState == 4 && this.status == 200) {
@@ -274,17 +274,19 @@ function sbtDelete(i) {
 			if(response["Success"] == "True") {
 				document.getElementById("sbtDeleteButton_"+row).value = "Delete"
 				subjectBatchTeacher.splice(i - 2, 1);
+				getTimetable(currentSnapshotName);
 				fillTable2(true);
 				sbtForm();
 			} else {
 				alert("sbt " + sbtId + ": Deletion Failed.\nError:\n" + response["Error"]);
 				document.getElementById("sbtDeleteButton_"+row).value = "Delete"
-				document.getElementById("sbtUpdateButton_"+row).disabled = false;
 				document.getElementById("sbtDeleteButton_"+row).childNodes[0].nodeValue = "Can't Delete";
+				document.getElementById("sbtDeleteButton_"+row).disabled = false;
 			}
 		}
 	}
 	xhttp.open("POST", "timetable.php", true); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("reqType=sbtDelete&sbtId="+sbtId+"&snapshotId="+currentSnapshotId);
+	xhttp.send("reqType=sbtDelete&sbtId="+sbtId+"&snapshotId="+currentSnapshotId
+				+"&subjectId="+subjectId+"&batchId="+batchId+"&teacherId="+teacherId);
 }
