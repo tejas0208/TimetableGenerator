@@ -991,6 +991,7 @@ function createTable(days, nSlots, slotTablePerDay, startTime, timePerSlot) {
 				td.appendChild(div);
 				tr.appendChild(td);
 			}
+			//document.getElementsByClassName("cell").style.width = window.width * 0.8 / nSlots; 
 			table.appendChild(tr);
 			if(k != 0) {
 				tr.style.display = "none";                                                       
@@ -1772,7 +1773,9 @@ function BatchBusyInThisSlot(i, j, currSubject, classId, batchId) {
 	for(var n = 0; n < currSubject["eachSlot"]; n++) {
 		var thisSlotEntries = searchMultipleRows(timeTable, "day", i, "slotNo", (j + n),
 			"classId", classId, "snapshotId", currentSnapshotId);
-		if(thisSlotEntries.length < 1)
+		//console.log("i  = " + i + " j = " + j + " n = " + n + "thisSlotEntries = " +
+				//JSON.stringify(thisSlotEntries));
+		if(thisSlotEntries.length < 1 || thisSlotEntries === -1)
 			continue;
 		for(var q in thisSlotEntries) {
 			if("" + thisSlotEntries[q]["batchId"] == "null") {
@@ -1792,12 +1795,15 @@ function BatchBusyInThisSlot(i, j, currSubject, classId, batchId) {
 		/* If some batches overlap with current batch-subject's batch,
 		 * check that only those batches exist in the n + j slots */
 		if(bco !== -1) {
+			//console.log("currSubject: " + JSON.stringify(currSubject) + JSON.stringify(bco));
 			var overlappingPossible = false;
 			for(var q in thisSlotEntries) {
 				/* TODO: Abhijit: Check. This may be impossible condition */
 				if(search(bco, "batchOverlapId", thisSlotEntries[q]["batchId"]) === -1) {
 						continue;
 				} else {
+					//console.log(" i = " + i + " j = " + j + "subject:" +
+						//JSON.stringify(currSubject)+ "possible");
 					overlappingPossible = true;
 					break;
 				}
@@ -1816,7 +1822,7 @@ function BatchBusyInThisSlot(i, j, currSubject, classId, batchId) {
 			continue;
 		}
 	}
-	return true; 
+	return false; 
 }
 
 function subjectCantFitInRemainingSlots(currSubject, j, nSlotsPerDay) {
@@ -2512,6 +2518,10 @@ function fillTable2(createNewTable) {
 		$(".animate" + i).hide();
 	}
 	showTrackerList();
+	width1 = 0.7 * window.width / nSlots;
+	width2 = window.width = width1;
+	$(".cell").width(width1); 
+	$(".outercol2").width(width2);
 }
 
 function classChange(createNewTable){
@@ -2734,6 +2744,11 @@ function load() {
 								"Please select option from above catgories</center>");
 	document.getElementById("title").innerHTML =  "<h2> Timetable For: " +
 				search(dept, "deptId", currentDeptId)["deptName"] + "</h2>";
+	$("#waitMessage").hide();
+	$(window).resize(function () { 
+		/* do something */ 
+		fillTable2(true);
+	});
 	return res;
 }
 /* Reload the select menu for snapshots. This is typically done
@@ -2792,7 +2807,15 @@ function jsSaveNewSnapshot() {
 					document.getElementById("saveNewSnapshot").disabled = false;
 				}
 			}
+			$("#mainTimeTable").show();
+			$("#selection-menu-column").show();
+			$("#configuration-menu-column").show();
+			$("#waitMessage").hide();
 		}
+		$("#mainTimeTable").hide();
+		$("#selection-menu-column").hide();
+		$("#configuration-menu-column").hide();
+		$("#waitMessage").show();
 		document.getElementById("saveNewSnapshot").value = "Saving New...wait";
 		document.getElementById("saveNewSnapshot").disabled = true;
 		xhttp.open("POST", "timetable.php", true); // asynchronous
@@ -2823,6 +2846,10 @@ function jsSaveSnapshot(asynchronousOrNot) {
 					document.getElementById("saveSnapshot").disabled = false;
 				}
 			}
+			$("#mainTimeTable").show();
+			$("#selection-menu-column").show();
+			$("#configuration-menu-column").show();
+			$("#waitMessage").hide();
 		}
 		xhttp.open("POST", "timetable.php", asynchronousOrNot); // asynchronous
 		document.getElementById("saveSnapshot").value = "Saving snapshot ...wait";
@@ -2830,6 +2857,10 @@ function jsSaveSnapshot(asynchronousOrNot) {
 		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		xhttp.send("reqType=saveSnapshot&snapshotName=" + currentSnapshotName + "&ttData=" + 
 				JSON.stringify(timeTable) + "&feData=" + JSON.stringify(fixedEntry));
+		$("#mainTimeTable").hide();
+		$("#selection-menu-column").hide();
+		$("#configuration-menu-column").hide();
+		$("#waitMessage").show();
 		if(asynchronousOrNot === false) {
 			response = JSON.parse(xhttp.responseText);
 			if(response["Success"] == "True") {
@@ -2843,6 +2874,10 @@ function jsSaveSnapshot(asynchronousOrNot) {
 				document.getElementById("saveSnapshot").value = "Save snapshot";
 				document.getElementById("saveSnapshot").disabled = false;
 			}
+			$("#mainTimeTable").show();
+			$("#selection-menu-column").show();
+			$("#configuration-menu-column").show();
+			$("#waitMessage").hide();
 		}
 	} else {
 		alert("jsSaveSnapshot: can't find currentSnapshotName");
@@ -2869,8 +2904,16 @@ function jsSQLExport(type) {
 			link.style.display = 'none';
 			document.body.appendChild(link);
 			link.click();
+			$("#mainTimeTable").show();
+			$("#selection-menu-column").show();
+			$("#configuration-menu-column").show();
+			$("#waitMessage").hide();
 		}
 	}
+	$("#mainTimeTable").hide();
+	$("#selection-menu-column").hide();
+	$("#configuration-menu-column").hide();
+	$("#waitMessage").show();
 	xhttp.open("POST", "timetable.php", true); // asynchronous
 	xhttp.responseType = "blob";
 	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -2894,8 +2937,16 @@ function jsExport(type) {
 			link.style.display = 'none';
 			document.body.appendChild(link);
 			link.click();
+			$("#mainTimeTable").show();
+			$("#selection-menu-column").show();
+			$("#configuration-menu-column").show();
+			$("#waitMessage").hide();
 		}
 	}
+	$("#mainTimeTable").hide();
+	$("#selection-menu-column").hide();
+	$("#configuration-menu-column").hide();
+	$("#waitMessage").show();
 	if(dirtyTimeTable) {
 		save = confirm("Timetable not saved. Save before exporting?");
 		if(save == true) {

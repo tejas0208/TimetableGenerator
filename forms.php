@@ -14,6 +14,14 @@ $teacherForm = "
 	</div>	
 ";
 
+$waitMessage = "
+	<div id=\"waitMessage\">
+	<table width=\"60%\"> <tr> 
+	<td> <h1> Wait till the operation completes ... </h1>
+	</td> 
+	</tr>
+	</div>
+";
 function updateTeacher($type) {
 	global $CFG;
 	header("Content-Type: application/JSON: charset=UTF-8");

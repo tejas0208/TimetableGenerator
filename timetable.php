@@ -45,6 +45,7 @@ $page = $header.
 		$bodystart. 
 		$allForms.
 		$table.
+		$waitMessage.
 		$footer;
 
 $reqType = getArgument("reqType");
