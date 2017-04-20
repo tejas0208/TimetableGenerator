@@ -2466,7 +2466,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="EC"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Rahul"), 
-			(SELECT batchId from batch WHERE batchName="NONE"), 
+			(SELECT batchId from batch WHERE batchName="BT-CE-EC1"), 
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
@@ -2806,7 +2806,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="EC"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Rahul"), 
-			(SELECT batchId from batch WHERE batchName="NONE"), 
+			(SELECT batchId from batch WHERE batchName="BT-CE-EC1"), 
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
@@ -2886,7 +2886,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT classId from class WHERE classShortName="BT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="EC"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Rahul"), 
-			(SELECT batchId from batch WHERE batchName="NONE"), 
+			(SELECT batchId from batch WHERE batchName="BT-CE-EC1"), 
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, classId, batchId, snapshotId, isFixed) VALUES 
@@ -2899,16 +2899,6 @@ INSERT INTO fixedEntry(ttId, fixedText, snapshotId) VALUES
 				((SELECT ttId FROM timeTable WHERE day = 1 AND slotNo = 6 AND 
 				classId = (SELECT classId from class WHERE classShortName="BT-IT")  
 				AND isFixed = TRUE), "LUNCH", 1);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, snapshotId, isFixed) VALUES 		
-			(1, 7, 
-			(SELECT roomId from room WHERE roomShortName="AC-203"),
-			(SELECT classId from class WHERE classShortName="BT-IT"), 
-			(SELECT subjectId from subject WHERE subjectShortName="EC"),
-			(SELECT teacherId from teacher WHERE teacherShortName="Rahul"), 
-			(SELECT batchId from batch WHERE batchName="BT-IT-EC1"), 
-			(SELECT snapshotId from snapshot where snapshotName="default"),
-			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
 						batchId, snapshotId, isFixed) VALUES 		
 			(1, 8, 
@@ -3226,7 +3216,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="EC"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Rahul"), 
-			(SELECT batchId from batch WHERE batchName="NONE"), 
+			(SELECT batchId from batch WHERE batchName="BT-IT-EC1"), 
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
@@ -3326,7 +3316,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT classId from class WHERE classShortName="BT-IT"), 
 			(SELECT subjectId from subject WHERE subjectShortName="EC"),
 			(SELECT teacherId from teacher WHERE teacherShortName="Rahul"), 
-			(SELECT batchId from batch WHERE batchName="NONE"), 
+			(SELECT batchId from batch WHERE batchName="BT-IT-EC1"), 
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 

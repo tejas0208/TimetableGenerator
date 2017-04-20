@@ -121,68 +121,155 @@ function makeTrackerList() {
 	}
 	//console.log("Tracker: " + JSON.stringify(tracker));
 }
-function updateTrackerList(subjectId, classId, batchId, teacherId) {
+var subjectSort = 1, batchSort = 1, teacherSort = 1, doneSort = 1;
+
+function sortTrackerOnTeacher() {
+	tracker.sort(function(a, b) {
+		x = search(teacher, "teacherId", a["teacherId"])["teacherShortName"];
+		y = search(teacher, "teacherId", b["teacherId"])["teacherShortName"];
+		if(x < y)
+			return ((teacherSort == 1? 1 : -1) * (-1));
+		if(x > y)
+			return ((teacherSort == 1? 1 : -1) * (1));
+	});
+	teacherSort = 1 - teacherSort;
+	showTrackerList();
 }
-function showTrackerList() {
+function sortTrackerOnSub() {
+	tracker.sort(function(a, b) {
+		x = search(subject, "subjectId", a["subjectId"])["subjectShortName"];
+		y = search(subject, "subjectId", b["subjectId"])["subjectShortName"];
+		if(x < y)
+			return ((subjectSort == 1? 1 : -1) * (-1));
+		if(x > y)
+			return ((subjectSort == 1? 1 : -1) * (1));
+	});
+	subjectSort = 1 - subjectSort;
+	showTrackerList();
+}
+function sortTrackerOnBatch() {
+	tracker.sort(function(a, b) {
+		var x = search(batch, "batchId", a["batchId"])["batchName"];
+		var y = search(batch, "batchId", b["batchId"])["batchName"];
+		if(x < y)
+			return ((batchSort == 1? 1 : -1) * (-1));
+		if(x > y)
+			return ((batchSort == 1? 1 : -1) * (1));
+	});
+	batchSort = 1 - batchSort; 
+	showTrackerList();
+}
+function sortTrackerOnDone() {
 	tracker.sort(function (a, b) {
 		var x = a.done/a.nSlots;
 		var y = b.done/b.nSlots;
 		if(x < y)
-			return -1;
+			return ((doneSort == 1? 1 : -1) * (-1));
 		if(x > y)
-			return 1;
-		return 0;
+			return ((doneSort == 1? 1 : -1) * (1));
 	});
+	doneSort = 1 - doneSort;
+	showTrackerList();
+}
+function showTrackerList() {
+	var trackerStr = "<table class=\"trackertable\">";
+	trackerStr += "<tr class=\"trackerrow\">";
+	trackerStr += "<td class=\"trackercol\"> <a href=\"javascript:void(0) " +
+					"\"class=\"closebtn\" onclick=\"sortTrackerOnSub()\">" + 
+					"Sub^ </a></td>";
+	trackerStr += "<td class=\"trackercol\"> <a href=\"javascript:void(0) " +
+					"\"class=\"closebtn\" onclick=\"sortTrackerOnBatch()\">" + 
+					"Batch^ </a></td>";
+	trackerStr += "<td class=\"trackercol\"> <a href=\"javascript:void(0) " +
+					"\"class=\"closebtn\" onclick=\"sortTrackerOnTeacher()\">" + 
+					"Teacher^ </a></td>";
+	trackerStr += "<td class=\"trackercol\"> <a href=\"javascript:void(0) " +
+					"\"class=\"closebtn\" onclick=\"sortTrackerOnDone()\">" + 
+					"Done^ </a></td>";
+	trackerStr += "</tr>";
 	switch(type) {
 		case "class":
-			var trackerStr = "";
 			currClassId = search(classTable, "classShortName", id)["classId"];
 			for(i = 0; i < tracker.length; i++) {
 				curr = tracker[i];
 				if(curr["classId"] != currClassId)
 					continue;
+				trackerStr += "<tr class=\"trackerrow\">";
+				trackerStr += "<td class=\"trackercol\">";
 				trackerStr += search(subject, "subjectId", curr["subjectId"])["subjectShortName"];
+				trackerStr += "</td>";
+				trackerStr += "<td class=\"trackercol\">";
 				if(curr["batchId"] != "") {
-					trackerStr += "(" + search(batch, "batchId", curr["batchId"])["batchName"] + ")";
+					trackerStr += search(batch, "batchId", curr["batchId"])["batchName"];
+				} else {
+					trackerStr += "";
 				}
-				trackerStr += "_ " + search(teacher, "teacherId", curr["teacherId"])["teacherShortName"];
-				trackerStr += ": " + curr["done"] + "/" + curr["nSlots"];
-				trackerStr += "\n";
+				trackerStr += "</td>";
+				trackerStr += "<td class=\"trackercol\">";
+				trackerStr += search(teacher, "teacherId", curr["teacherId"])["teacherShortName"];
+				trackerStr += "</td>";
+				trackerStr += "<td class=\"trackercol\">";
+				trackerStr += curr["done"] + "/" + curr["nSlots"];
+				trackerStr += "</td>";
+				trackerStr += "</tr>";
 			}
 			break;
 		case "batch":
-			var trackerStr = "";
 			currBatchId = search(batch, "batchName", id)["batchId"];
 			for(i = 0; i < tracker.length; i++) {
 				curr = tracker[i];
 				if(curr["batchId"] != currBatchId)
 					continue;
+				trackerStr += "<tr class=\"trackerrow\">";
+				trackerStr += "<td class=\"trackercol\">";
 				trackerStr += search(subject, "subjectId", curr["subjectId"])["subjectShortName"];
-				trackerStr += "-" + id;
-				trackerStr += ": " + curr["done"] + "/" + curr["nSlots"];
-				trackerStr += "\n";
+				trackerStr += "</td>";
+				trackerStr += "<td class=\"trackercol\">";
+				trackerStr +=  id;
+				trackerStr += "</td>";
+				trackerStr += "<td class=\"trackercol\">";
+				trackerStr += search(teacher, "teacherId", curr["teacherId"])["teacherShortName"];
+				trackerStr += "</td>";
+				trackerStr += "<td class=\"trackercol\">";
+				trackerStr += curr["done"] + "/" + curr["nSlots"];
+				trackerStr += "</td>";
+				trackerStr += "</tr>";
 			}
 			break;
 		case "teacher":
-			var trackerStr = "";
 			currTeacherId = search(teacher, "teacherShortName", id)["teacherId"];
 			for(i = 0; i < tracker.length; i++) {
 				curr = tracker[i];
 				if(curr["teacherId"] != currTeacherId)
 					continue;
+				trackerStr += "<tr class=\"trackerrow\">";
+				trackerStr += "<td class=\"trackercol\">";
 				trackerStr += search(subject, "subjectId", curr["subjectId"])["subjectShortName"];
+				trackerStr += "</td>";
+				trackerStr += "<td class=\"trackercol\">";
 				if(curr["batchId"] != "") {
-					trackerStr += "-" + search(batch, "batchId", curr["batchId"])["batchName"];
+					trackerStr += search(batch, "batchId", curr["batchId"])["batchName"];
+				} else {
+					trackerStr += "";
 				}
-				trackerStr += ": " + curr["done"] + "/" + curr["nSlots"];
-				trackerStr += "\n";
+				trackerStr += "</td>";
+				trackerStr += "<td class=\"trackercol\">";
+				trackerStr += id;
+				trackerStr += "</td>";
+				trackerStr += "<td class=\"trackercol\">";
+				trackerStr += curr["done"] + "/" + curr["nSlots"];
+				trackerStr += "</td>";
+				trackerStr += "</tr>";
 			}
 			break;
 		case "room":
-			var trackerStr = "Not Applicable";
+			var trackerStr = "<tr> <td> Not Applicable </td> </tr>";
+			break;
 		default:
+			var trackerStr = "<tr> <td> ERROR: Please check</td> </tr>";
 			break;
 	}
+	trackerStr += "</table>";
 	document.getElementById("tracker").innerHTML = trackerStr;
 	trackerElem = document.getElementById("tracker");
     trackerElem.style.height = (trackerElem.scrollHeight)+"px";
@@ -507,7 +594,6 @@ function search(table) {
  */
 function searchMultipleRows(table) {
 	var i;
-	//console.log("searchMultipleRows: " + JSON.stringify(arguments));
 	if(typeof table == "undefined" || table.length == 0) {
 		return -1;
 	}

@@ -112,6 +112,7 @@ option, select{
 .timeTable {
 	border-collapse: collapse; 
 	border: 3px solid black;
+	padding: 0px;
 	/*width: 1024px;*/
 }
 
@@ -120,6 +121,7 @@ option, select{
 	height:20px; 
 	padding: 0px;
 	*/
+	padding: 0px;
 	border: 1px solid black;
 } 
 .cell:hover {
@@ -149,14 +151,13 @@ option, select{
 
 .box {
 	border: 1px solid black; 
-	padding: 3; 
+	padding: 1; 
 	border-radius: 5px;
 	width: 100%; 
 	font-size: 13px; 
 	box-shadow: 5px 5px 5px #888888;
 	text-align: center;
 	vertical-align: middle;
-	
 }
 .inputForm{
 	background-color:#ddd;
@@ -224,4 +225,19 @@ textarea#tracker{
 .formText {
 	font: 15px Tahoma bold;
 	font-color: black;
+}
+.trackerrow {
+	font: 11px Tahoma;
+}
+.trackertable {
+	border: 1px solid black;
+	padding: 0px;
+	margin: 0px;
+}
+.trackercol {
+	border-top: 1px solid black;
+	border-bottom: 0px solid black;
+	text-align: center;
+	padding: 1px;
+	margin: 1px;
 }
