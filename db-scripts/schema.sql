@@ -182,7 +182,7 @@ FOREIGN KEY (snapshotId) REFERENCES snapshot(snapshotId) ON DELETE CASCADE,
 FOREIGN KEY (batchId) REFERENCES batch(batchId) ON DELETE CASCADE,
 FOREIGN KEY (subjectId) REFERENCES subject(subjectId) ON DELETE CASCADE,
 FOREIGN KEY (teacherId) REFERENCES teacher(teacherId) ON DELETE CASCADE,
-CONSTRAINT c_subjectBatchTeacheer UNIQUE(subjectId, batchId, teacherId, snapshotId)
+CONSTRAINT c_subjectBatchTeacheer UNIQUE(subjectId, batchId, snapshotId)
 );
 
 CREATE VIEW subjectBatchTeacherReadable AS

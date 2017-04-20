@@ -4,6 +4,7 @@ require_once('common.php');
 require_once('snapshot.php');
 require_once('forms.php');
 require_once('export.php');
+require_once('exportsql.php');
 /*require_once('configForm.php');
 require_once('teacher.php');
 require_once('subject.php');
@@ -195,6 +196,9 @@ switch($reqType) {
 		header("Content-Transfer-Encoding: binary");
 		readfile($filename);
 		//error_log("Exported file $filename", 0);
+		break;
+	case "exportSQL":
+		exportDatabase();
 		break;
 	default:
 		echo $page;

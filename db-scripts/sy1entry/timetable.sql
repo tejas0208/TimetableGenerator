@@ -25,7 +25,7 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="SYBT-CE"), 
 			(SELECT subjectId from subject WHERE subjectShortName="DC"),
-			(SELECT teacherId from teacher WHERE teacherShortName="Gaikwad"), 
+			(SELECT teacherId from teacher WHERE teacherShortName="Aparna"), 
 			(SELECT batchId from batch WHERE batchName="NONE"), 
 			(SELECT snapshotId from snapshot where snapshotName="default"),
 			FALSE);

@@ -186,7 +186,7 @@ option, select{
 	float:left;
 }
 select :disabled {
-	color: red;
+	color: grey;
 }
 .disabledEntries {
 	font-size: 8px;
@@ -210,7 +210,7 @@ textarea#tracker{
     padding:15px 15px 30px;
     border-radius:3px;
     border:1px solid #F7E98D;
-    font:14px Tahoma, cursive;
+    font:12px Tahoma, cursive;
     transition:box-shadow 0.5s ease;
     box-shadow:0 4px 6px rgba(0,0,0,0.1);
     font-smoothing:subpixel-antialiased;
