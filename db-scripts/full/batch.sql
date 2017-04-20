@@ -58,7 +58,7 @@ INSERT INTO batchClass(batchId, classId, snapshotId) VALUES ((SELECT batchId FRO
 INSERT INTO batch(batchName, batchCount, snapshotId) VALUES ("SYBT-IT-S4", 22, 1);
 INSERT INTO batchClass(batchId, classId, snapshotId) VALUES ((SELECT batchId FROM batch WHERE batchName="SYBT-IT-S4"),(SELECT classId from class WHERE classShortName="SYBT-IT"), 1);
 INSERT INTO batch(batchName, batchCount, snapshotId) VALUES ("SYBT-IT-DSY", 15, 1);
-INSERT INTO batchClass(batchId, classId, snapshotId) VALUES ((SELECT batchId FROM batch WHERE batchName="SYBT-IT-DSY"),(SELECT classId from class WHERE classShortName="SYBT-CE"), 1);
+INSERT INTO batchClass(batchId, classId, snapshotId) VALUES ((SELECT batchId FROM batch WHERE batchName="SYBT-IT-DSY"),(SELECT classId from class WHERE classShortName="SYBT-IT"), 1);
 INSERT INTO batch(batchName, batchCount, snapshotId) VALUES ("TYBT-CE-T1", 20, 1);
 INSERT INTO batchClass(batchId, classId, snapshotId) VALUES ((SELECT batchId FROM batch WHERE batchName="TYBT-CE-T1"),(SELECT classId from class WHERE classShortName="TYBT-CE"), 1);
 INSERT INTO batch(batchName, batchCount, snapshotId) VALUES ("TYBT-CE-T2", 20, 1);

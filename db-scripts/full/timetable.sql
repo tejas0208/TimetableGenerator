@@ -1621,16 +1621,6 @@ INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId,
 			FALSE);
 INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
 						batchId, snapshotId, isFixed) VALUES 		
-			(1, 6, 
-			(SELECT roomId from room WHERE roomShortName="AC-203"),
-			(SELECT classId from class WHERE classShortName="TYBT-IT"), 
-			(SELECT subjectId from subject WHERE subjectShortName="CPES"),
-			(SELECT teacherId from teacher WHERE teacherShortName="Sheetal"), 
-			(SELECT batchId from batch WHERE batchName="TYBT-IT-CPES1"), 
-			(SELECT snapshotId from snapshot where snapshotName="default"),
-			FALSE);
-INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-						batchId, snapshotId, isFixed) VALUES 		
 			(1, 7, 
 			(SELECT roomId from room WHERE roomShortName="AC-202"),
 			(SELECT classId from class WHERE classShortName="TYBT-IT"), 

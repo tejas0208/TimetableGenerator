@@ -89,7 +89,14 @@ function makeTrackerList() {
 						"batchId", curr["batchId"], "classId", curr["classId"]);
 			if(index == -1) {
 				alert("ERROR: index -1 in makeTrackerList i = . " + i + " curr = " +
-						JSON.stringify(curr) + "Tracker: " + JSON.stringify(tracker));
+						JSON.stringify(curr) + "Tracker: " + JSON.stringify(
+							search(tracker, "batchId", curr["batchId"])) + JSON.stringify(
+							search(tracker, "teacherId", curr["teacherId"])) + JSON.stringify(
+							search(tracker, "subjectId", curr["subjectId"])) + JSON.stringify(
+							search(subjectBatchTeacher, "subjectId", curr["subjectId"])) + JSON.stringify(
+							search(subjectBatchTeacher, "teacherId", curr["teacherId"])) + JSON.stringify(
+							search(subjectBatchTeacher, "batchId", curr["batchId"])) 
+						);
 			}
 			eachSlot = tracker[index]["eachSlot"];
 			tracker[index]["done"] += (1.0/eachSlot);
@@ -1699,7 +1706,7 @@ function BatchBusyInThisSlot(i, j, currSubject, classId, batchId) {
 		/* If some batches overlap with current batch-subject's batch,
 		 * check that only those batches exist in the n + j slots */
 		if(bco !== -1) {
-			onlyOverlapping = false;
+			var overlappingPossible = false;
 			for(var q in thisSlotEntries) {
 				/* TODO: Abhijit: Check. This may be impossible condition */
 				if(search(bco, "batchOverlapId", thisSlotEntries[q]["batchId"]) === -1) {
@@ -1741,7 +1748,7 @@ function overlappingBatchBusyInThisSlot(i, j, currSubject, batchId) {
 	var osbt = searchMultipleRows(overlappingSBT, "sbtId1", batchId);
 	if(osbt !== -1)
 		for(var q in osbt) {
-			if(!overlappingPossible(i, j, osbt[q], currSubject)) {
+			if(!batchOverlappingPossible(i, j, osbt[q], currSubject)) {
 				if(!disabledSubjectPresent(disabledSubjects, currSubject["subjectShortName"]))
 					disabledSubjects.push([currSubject["subjectShortName"],  "OL Batch Busy"]);
 				return true;
@@ -1911,7 +1918,7 @@ function cellEmpty(i, j) {
 /*Checks the must overlapping subject in its own class timeTable
 Returns true if there is no problem in overlapping
 Otherwise false*/
-function overlappingPossible(i, j, osbt, subjectRow) {
+function batchOverlappingPossible(i, j, osbt, subjectRow) {
 	var sbt = search(subjectBatchTeacher, "sbtId", osbt["sbtId2"]);
 	var classId = search(batchClass, "batchId", sbt["batchId"])["classId"];
 	var bco = searchMultipleRows(batchCanOverlap, "batchId", sbt["batchId"]);

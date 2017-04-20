@@ -185,3 +185,45 @@ INSERT INTO subjectClassTeacher(subjectId, classId, teacherId, snapshotId) VALUE
 				(SELECT teacherId from teacher WHERE teacherShortName="Gosavi"),
 				1
 			);
+INSERT INTO subjectClassTeacher(subjectId, classId, teacherId, snapshotId) VALUES (
+				(SELECT subjectId FROM subject WHERE subjectShortName="ILOE-Sem8"), 
+				(SELECT classId FROM class WHERE classShortName="BT-IT"),
+				(SELECT teacherId from teacher WHERE teacherShortName="Insti2"),
+				1
+			);
+INSERT INTO subjectClassTeacher(subjectId, classId, teacherId, snapshotId) VALUES (
+				(SELECT subjectId FROM subject WHERE subjectShortName="ILOE-Sem8"), 
+				(SELECT classId FROM class WHERE classShortName="BT-CE"),
+				(SELECT teacherId from teacher WHERE teacherShortName="Insti2"),
+				1
+			);
+INSERT INTO subjectClassTeacher(subjectId, classId, teacherId, snapshotId) VALUES (
+				(SELECT subjectId FROM subject WHERE subjectShortName="WST"), 
+				(SELECT classId FROM class WHERE classShortName="BT-CE"),
+				(SELECT teacherId from teacher WHERE teacherShortName="Khadse"),
+				1
+			);
+INSERT INTO subjectClassTeacher(subjectId, classId, teacherId, snapshotId) VALUES (
+				(SELECT subjectId FROM subject WHERE subjectShortName="IPR"), 
+				(SELECT classId FROM class WHERE classShortName="BT-IT"),
+				(SELECT teacherId from teacher WHERE teacherShortName="Insti3"),
+				1
+			);
+INSERT INTO subjectClassTeacher(subjectId, classId, teacherId, snapshotId) VALUES (
+				(SELECT subjectId FROM subject WHERE subjectShortName="IPR"), 
+				(SELECT classId FROM class WHERE classShortName="BT-CE"),
+				(SELECT teacherId from teacher WHERE teacherShortName="Insti3"),
+				1
+			);
+INSERT INTO subjectClassTeacher(subjectId, classId, teacherId, snapshotId) VALUES (
+				(SELECT subjectId FROM subject WHERE subjectShortName="WST"), 
+				(SELECT classId FROM class WHERE classShortName="BT-IT"),
+				(SELECT teacherId from teacher WHERE teacherShortName="Jignesh"),
+				1
+			);
+INSERT INTO subjectClassTeacher(subjectId, classId, teacherId, snapshotId) VALUES (
+				(SELECT subjectId FROM subject WHERE subjectShortName="PG-Lab-II"), 
+				(SELECT classId FROM class WHERE classShortName="FYMT-CE"),
+				(SELECT teacherId from teacher WHERE teacherShortName="Vahida"),
+				1
+			);
