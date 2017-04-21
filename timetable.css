@@ -190,7 +190,7 @@ select :disabled {
 	color: grey;
 }
 .disabledEntries {
-	font-size: 8px;
+	font-size: 12px;
 }
 .outercol2 {
 	width: 20%;
@@ -224,7 +224,7 @@ textarea#tracker{
 }
 .formText {
 	font: 15px Tahoma bold;
-	font-color: black;
+	color: black;
 }
 .trackerrow {
 	font: 11px Tahoma;
