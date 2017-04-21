@@ -23,7 +23,7 @@ var currentDeptId;
 var currentConfigId = 1;
 
 var type;// = "class";
-var id;// = "SYBT-CE";
+var currTableId;// = "SYBT-CE";
 var supportObject;
 
 var daysName = ["Sun", "Mon", "Tues", "Wed", "Thur", "Fri", "Sat"];
@@ -45,7 +45,7 @@ var dirtyTimeTable = false;
 /* This stores information about no. of schedules done from SCT/SBT */
 var tracker = [];
 
-
+var roomSizeDelta = 10;
 
 function makeTrackerList() {
 	tracker = [];
@@ -150,7 +150,11 @@ function sortTrackerOnSub() {
 function sortTrackerOnBatch() {
 	tracker.sort(function(a, b) {
 		var x = search(batch, "batchId", a["batchId"])["batchName"];
+		if(x == undefined)
+			var x = search(classTable, "classId", a["classId"])["classShortName"];
 		var y = search(batch, "batchId", b["batchId"])["batchName"];
+		if(y == undefined)
+			var y = search(classTable, "classId", b["classId"])["classShortName"];
 		if(x < y)
 			return ((batchSort == 1? 1 : -1) * (-1));
 		if(x > y)
@@ -179,7 +183,7 @@ function showTrackerList() {
 					"Sub^ </a></td>";
 	trackerStr += "<td class=\"trackercol\"> <a href=\"javascript:void(0) " +
 					"\"class=\"closebtn\" onclick=\"sortTrackerOnBatch()\">" + 
-					"Batch^ </a></td>";
+					"Batch^ <br> Class^ </a></td>";
 	trackerStr += "<td class=\"trackercol\"> <a href=\"javascript:void(0) " +
 					"\"class=\"closebtn\" onclick=\"sortTrackerOnTeacher()\">" + 
 					"Teacher^ </a></td>";
@@ -189,7 +193,7 @@ function showTrackerList() {
 	trackerStr += "</tr>";
 	switch(type) {
 		case "class":
-			currClassId = search(classTable, "classShortName", id)["classId"];
+			currClassId = search(classTable, "classShortName", currTableId)["classId"];
 			for(i = 0; i < tracker.length; i++) {
 				curr = tracker[i];
 				if(curr["classId"] != currClassId)
@@ -202,7 +206,7 @@ function showTrackerList() {
 				if(curr["batchId"] != "") {
 					trackerStr += search(batch, "batchId", curr["batchId"])["batchName"];
 				} else {
-					trackerStr += "";
+					trackerStr += search(classTable, "classId", curr["classId"])["classShortName"];
 				}
 				trackerStr += "</td>";
 				trackerStr += "<td class=\"trackercol\">";
@@ -215,7 +219,7 @@ function showTrackerList() {
 			}
 			break;
 		case "batch":
-			currBatchId = search(batch, "batchName", id)["batchId"];
+			currBatchId = search(batch, "batchName", currTableId)["batchId"];
 			for(i = 0; i < tracker.length; i++) {
 				curr = tracker[i];
 				if(curr["batchId"] != currBatchId)
@@ -225,7 +229,7 @@ function showTrackerList() {
 				trackerStr += search(subject, "subjectId", curr["subjectId"])["subjectShortName"];
 				trackerStr += "</td>";
 				trackerStr += "<td class=\"trackercol\">";
-				trackerStr +=  id;
+				trackerStr +=  currTableId;
 				trackerStr += "</td>";
 				trackerStr += "<td class=\"trackercol\">";
 				trackerStr += search(teacher, "teacherId", curr["teacherId"])["teacherShortName"];
@@ -237,7 +241,7 @@ function showTrackerList() {
 			}
 			break;
 		case "teacher":
-			currTeacherId = search(teacher, "teacherShortName", id)["teacherId"];
+			currTeacherId = search(teacher, "teacherShortName", currTableId)["teacherId"];
 			for(i = 0; i < tracker.length; i++) {
 				curr = tracker[i];
 				if(curr["teacherId"] != currTeacherId)
@@ -250,11 +254,11 @@ function showTrackerList() {
 				if(curr["batchId"] != "") {
 					trackerStr += search(batch, "batchId", curr["batchId"])["batchName"];
 				} else {
-					trackerStr += "";
+					trackerStr += search(classTable, "classId", curr["classId"])["classShortName"];
 				}
 				trackerStr += "</td>";
 				trackerStr += "<td class=\"trackercol\">";
-				trackerStr += id;
+				trackerStr += currTableId;
 				trackerStr += "</td>";
 				trackerStr += "<td class=\"trackercol\">";
 				trackerStr += curr["done"] + "/" + curr["nSlots"];
@@ -263,7 +267,28 @@ function showTrackerList() {
 			}
 			break;
 		case "room":
-			var trackerStr = "<tr> <td> Not Applicable </td> </tr>";
+			for(i = 0; i < tracker.length; i++) {
+				curr = tracker[i];
+				trackerStr += "<tr class=\"trackerrow\">";
+				trackerStr += "<td class=\"trackercol\">";
+				trackerStr += search(subject, "subjectId", curr["subjectId"])["subjectShortName"];
+				trackerStr += "</td>";
+				trackerStr += "<td class=\"trackercol\">";
+				if(curr["batchId"] != "") {
+					trackerStr += search(batch, "batchId", curr["batchId"])["batchName"];
+				} else {
+					trackerStr += search(classTable, "classId", curr["classId"])["classShortName"];
+				}
+				trackerStr += "</td>";
+				trackerStr += "<td class=\"trackercol\">";
+				trackerStr += search(teacher, "teacherId", tracker[i]["teacherId"])["teacherShortName"];;
+				trackerStr += "</td>";
+				trackerStr += "<td class=\"trackercol\">";
+				trackerStr += curr["done"] + "/" + curr["nSlots"];
+				trackerStr += "</td>";
+				trackerStr += "</tr>";
+			}
+			//var trackerStr = "<tr> <td> Not Applicable </td> </tr>";
 			break;
 		default:
 			var trackerStr = "<tr> <td> ERROR: Please check</td> </tr>";
@@ -623,13 +648,13 @@ function searchMultipleRows(table) {
  */
 function getSupportObject() {
 	switch(type) {
-		case "class": supportObject = search(classTable, "classShortName", id);
+		case "class": supportObject = search(classTable, "classShortName", currTableId);
 			break;
-		case "teacher":supportObject = search(teacher, "teacherShortName", id);
+		case "teacher":supportObject = search(teacher, "teacherShortName", currTableId);
 			break;
-		case "room": supportObject = search(room, "roomShortName", id);
+		case "room": supportObject = search(room, "roomShortName", currTableId);
 			break;
-		case "batch": supportObject = search(batch, "batchName", id);
+		case "batch": supportObject = search(batch, "batchName", currTableId);
 			break;
 		default:
 			console.log("ERROR: getSupportObject: should not come here in default");
@@ -1288,6 +1313,7 @@ function getEligibleRoom(i, j, k, capacity, subjectRow, roomFound) {
 						"</option>";
 		}
 	}
+	disabledRooms = []
 	for(var y = 0; y < room.length; y++) {
 		var valid = 1;
 		for(var z =0; z < eachSlot; z++) {
@@ -1296,8 +1322,14 @@ function getEligibleRoom(i, j, k, capacity, subjectRow, roomFound) {
 			/*There are other classes in this room*/
 			if(found !== -1) {
 				valid = 0;
+				disabledRooms.push([room[y]["roomShortName"], "Busy"]);
 				break;
 			}
+			if((parseInt(room[y]["roomCount"]) + roomSizeDelta) < capacity) {
+				valid = 0;
+				disabledRooms.push([room[y]["roomShortName"], "Small"]);
+				break;
+			} 
 		}
 		if(valid == 0)
 			continue;
@@ -1308,17 +1340,18 @@ function getEligibleRoom(i, j, k, capacity, subjectRow, roomFound) {
 							"\">" + room[y]["roomShortName"] + "</option>";
 		}
 	}
+	for(z in disabledRooms) { 
+		 optionString += "<option disabled=true class=\"disabledEntries1\"" + 
+					"\">" + disabledRooms[z][0] + "</option>";
+		 optionString += "<option disabled=true class=\"disabledEntries2\"" + 
+					"\">&nbsp;&nbsp" + disabledRooms[z][1] + "</option>";
+	}
 	return optionString;
 }
 
 function classSelected(selecttag) {/*Final stage for room type*/
 	var classShortName = selecttag.options[selecttag.selectedIndex].text;
 	var Id = selecttag.getAttribute("id");
-	/*Id = Id.substring(5, Id.length);
-	iid = Id.substring(0, 1);
-	jid = Id.substring(1, Id.length -1);
-	kid = Id.substring(Id.length - 1,Id.length);
-	*/
 	[iid, jid, kid ] = makeIJKFromId(Id);
 	Id = makeIdFromIJK(iid, jid, kid);
 
@@ -1328,14 +1361,6 @@ function classSelected(selecttag) {/*Final stage for room type*/
 	var subjectRow = search(subject, "subjectShortName", subjectShortName);
 	var teacherRow = search(subjectClassTeacher, "subjectId", subjectRow["subjectId"],
 				"classId", classRow["classId"]);
-	/*for(var i = 0; i < parseInt(subjectRow["eachSlot"]); i++) {
-		var newEntry = new createTimeTableEntry(iid, (parseInt(jid) + i),
-							supportObject["roomId"], classRow["classId"],
-							subjectRow["subjectId"], teacherRow["teacherId"],
-							1, currentSnapshotId, 0);
-		timeTable.push(newEntry);
-		console.log("roomEntry: newEntry = " + JSON.stringify(newEntry));
-	}*/
 	makeTimeTableEntry(iid, jid, supportObject["roomId"], classRow["classId"], subjectRow["subjectId"],
 		teacherRow["teacherId"], null, currentSnapshotId, 0, parseInt(subjectRow["eachSlot"]));
 	fillTable2(false);
@@ -1351,6 +1376,7 @@ function getEligibleClass(i, j, k, subjectRow) {
 	var classlist = [];
 	var existingEntries;
 	var optionString = "<option value=\"NOT_SELECTED\">--Class--</option>";
+	var disabledClasses = [];
 next_class:
 	for(var l in sct) {
 		var classId = sct[l]["classId"];
@@ -1368,6 +1394,8 @@ next_class:
 			console.log("getEligibleClass: subject " + subjectRow["subjectShortName"] + " class: " +
 						search(classTable, "classId", classId)["classShortName"] +
 						" has no pending entries");
+			disabledClasses.push([search(classTable, "classId", sct[l]["classId"])["classShortName"], 
+								"Full"]);
 			continue;
 		}
 		
@@ -1375,19 +1403,28 @@ next_class:
 		for(var n = 0; n < subjectRow["eachSlot"]; n++) {
 			var res = search(timeTable, "day", i, "slotNo", (j + n), "classId", classId,
 					"snapshotId", currentSnapshotId);
-			if(res !== -1)
+			if(res !== -1) {
+				disabledClasses.push([search(classTable, "classId", sct[l]["classId"])["classShortName"], 
+								"Busy"]);
 				continue next_class;
+			}
 		}
 		classlist.push(search(classTable, "classId", classId));
 	}
 	if(classlist.length == 0) {
-		alert("Not found appropriate class for this subject for this particular room");
+		alert("ERROR: getEligibleClass: No eligible class found");
 		fillTable2(false);
 		return  "";
 	}
 	for(var r in classlist) {
 		optionString += "<option value= \"" + classlist[r]["classShortName"] + "\">" +
 					classlist[r]["classShortName"] + "</option>";
+	}
+	for(z in disabledClasses) {
+		 optionString += "<option disabled=true class=\"disabledEntries1\"" + 
+					"\">" + disabledClasses[z][0] + "</option>";
+		 optionString += "<option disabled=true class=\"disabledEntries2\"" + 
+					"\">&nbsp;&nbsp" + disabledClasses[z][1] + "</option>";
 	}
 	return optionString;
 }
@@ -1567,17 +1604,19 @@ function subjectSelected(selecttag) {
 				}
 				/* On teacher's page, show class's info*/
 				else {
+					/* TODO: Abhijit: different classes, same subject, same teacher is possible 
+					 * e.g. DSA sycomp, syit taught by Abhijit
+					 */
 					var sctEntry = search(subjectClassTeacher,
 									"subjectId", subjectRow["subjectId"],
 									"teacherId", supportObject["teacherId"]);
 					var classRow = search(classTable, "classId", sctEntry["classId"]);
-					extraInfo += "<div id=\"class"+ Id 
+					extraInfo += "<div id=\"class"+ Id +
 									"\" class=\"box\">" +
 									classRow["classShortName"] +
-						"</div>";
+									"</div>";
 					roomFound = search(classRoom, "classId", classRow["classId"]);
 				}
-
 				if(roomFound == -1) {
 					roomFound = search(subjectRoom, "subjectId", subjectRow["subjectId"]);
 				}
@@ -1601,7 +1640,6 @@ function subjectSelected(selecttag) {
 			var teacherRow = search(teacher, "teacherId", search(subjectBatchTeacher,
 						 "subjectId", subjectRow["subjectId"], "batchId",
 								 supportObject["batchId"])["teacherId"]);
-			/* TODO: check if this should be + Id instead of + iid + jid + kid */
 			extraInfo += "<div id= \"teacher"+ Id +"\"class=\"box\">" +
 						teacherRow["teacherShortName"] +
 					"</div>";
@@ -1721,7 +1759,7 @@ function teacherBusyInThisSlot(i, j, sctOrSbtEntry, teacherId) {
 		if(nEntriesForTeacher != -1) {
 			//console.log("eligibleSubjects: Skipping teacher " + currTeacher["teacherShortName"] + " as busy");
 			disabledSubjectAdd(disabledSubjects, currSubject["subjectShortName"],
-							currTeacher["teacherShortName"], "TeacherBusy");
+							currTeacher["teacherShortName"], "Busy");
 			return true;
 		}
 	}
@@ -1735,7 +1773,7 @@ function classBusyInThisSlot(i, j, sctOrSbtEntry, classId, batchId) {
  		 * only if the slot had no entry?
 		 */
 		if(classId == "undefined") {
-			alert("classOrBatchBusyInThisSlot ERROR: classId undefined subject: " +
+			alert("classBusyInThisSlot ERROR: classId undefined subject: " +
 					currSubject["subjectShortName"]);
 		}
 		for(var n = 0; n < currSubject["eachSlot"]; n++) {
@@ -1744,7 +1782,7 @@ function classBusyInThisSlot(i, j, sctOrSbtEntry, classId, batchId) {
 			if(slotEntries !== -1) {
 				//console.log("getEligibleSubject: Batched-subject " + supportObject["classShortName"] + " in slot");
 				disabledSubjectAdd(disabledSubjects, currSubject["subjectShortName"],
-						search(classTable, "classId", classId)["classShortName"], "ClassBusy");
+						search(classTable, "classId", classId)["classShortName"], "Busy");
 				return true;
 			}
 		}
@@ -1768,7 +1806,7 @@ function BatchBusyInThisSlot(i, j, sctOrSbtEntry, classId, batchId) {
 	if(typeof classId == "undefined")
 		classId = search(batchClass, "batchId", batchId) ["classId"];
 	if(batchId == "undefined") {
-		alert("classOrBatchBusyInThisSlot ERROR: batchId undefined subject: " +
+		alert("BatchBusyInThisSlot ERROR: batchId undefined subject: " +
 				currSubject["subjectShortName"]);
 	}
 	/* We check three conditions for each of the j + n slots. 
@@ -1786,21 +1824,28 @@ function BatchBusyInThisSlot(i, j, sctOrSbtEntry, classId, batchId) {
 			if("" + thisSlotEntries[q]["batchId"] == "null") {
 				/* There is a non-batchable entry , so skip */ 
 				disabledSubjectAdd(disabledSubjects, currSubject["subjectShortName"],
-					search(batch, "batchId", batchId)["batchName"], "Overlaps");
+					search(batch, "batchId", batchId)["batchName"], "Overlap");
 				return true;
 			}
 			/* current batch-subject's batch is busy */
 			if(thisSlotEntries[q]["batchId"] == batchId) {
 				disabledSubjectAdd(disabledSubjects, currSubject["subjectShortName"],
-					search(batch, "batchId", batchId)["batchName"], "BatchBusy");
+					search(batch, "batchId", batchId)["batchName"], "Busy");
 				return true;
 			}
 		}
-		/* If some batches overlap with current batch-subject's batch,
-		 * check that only those batches exist in the n + j slots */
+	}
+	/* If some batches overlap with current batch-subject's batch,
+	 * check that only those batches exist in the n + j slots */
+	for(var n = 0; n < currSubject["eachSlot"]; n++) {
 		if(bco !== -1) {
+			var thisSlotEntries = searchMultipleRows(timeTable, "day", i, "slotNo", (j + n),
+				"classId", classId, "snapshotId", currentSnapshotId);
 			//console.log("currSubject: " + JSON.stringify(currSubject) + JSON.stringify(bco));
-			var overlappingPossible = false;
+			if(thisSlotEntries != -1)
+				var overlappingPossible = false;
+			else /* No entries in this slot, so overlapping is obviously possible */
+				var overlappingPossible = true;
 			for(var q in thisSlotEntries) {
 				/* TODO: Abhijit: Check. This may be impossible condition */
 				if(search(bco, "batchOverlapId", thisSlotEntries[q]["batchId"]) === -1) {
@@ -1829,10 +1874,10 @@ function BatchBusyInThisSlot(i, j, sctOrSbtEntry, classId, batchId) {
 	return false; 
 }
 
-function subjectCantFitInRemainingSlots(sctOrSbtEntry, j, nSlotsPerDay) {
+function subjectCantFitInRemainingSlots(sctOrSbtEntry, j, nSlotsPerDay, idText) {
 	var currSubject= search(subject, "subjectId", sctOrSbtEntry["subjectId"]);
 	if(j + parseInt(currSubject["eachSlot"]) - 1  >= nSlotsPerDay) {
-		disabledSubjectAdd(disabledSubjects, currSubject["subjectShortName"], "", "Len=" + currSubject["eachSlot"]);
+		disabledSubjectAdd(disabledSubjects, currSubject["subjectShortName"], idText, "Len=" + currSubject["eachSlot"]);
 		//console.log("Skipping slot " + j + " for " + currSubject["subjectShortName"] +
 				//" on day " + i + " as slot out of day ");
 		return true;
@@ -1852,6 +1897,22 @@ function overlappingBatchBusyInThisSlot(i, j, sctOrSbtEntry, batchId) {
 			}
 		}
 	return false;
+}
+function roomSmallOnRoomPageForThisClassOrBatch(sctOrSbtEntry, searchId, capacity) {
+	var currSubject= search(subject, "subjectId", sctOrSbtEntry["subjectId"]);
+	if(searchId == "classId")
+		searchText = search(classTable, "classId", sctOrSbtEntry["classId"])["classShortName"];
+	else
+		searchText = search(batch, "batchId", sctOrSbtEntry["batchId"])["batchName"];
+	if(type != "room")
+		return false;
+	if(parseInt(search(room, "roomShortName", currTableId)["roomCount"]) +
+			roomSizeDelta < capacity) {
+		disabledSubjectAdd(disabledSubjects, currSubject["subjectShortName"],
+				searchText, "TooBig");	
+		return true;
+	}
+	return false; 	
 }
 function enableSelect(disabledSelect) {
 	disabledSelect.disabled = false;
@@ -1926,7 +1987,8 @@ function getEligibleSubjects(i, j, k) {
 		}
 		
 		/* Skip the subject if it can't fit remaining slots of day */
-		if(subjectCantFitInRemainingSlots(sctlist[m], j, nSlotsPerDay)) {
+		if(subjectCantFitInRemainingSlots(sctlist[m], j, nSlotsPerDay,
+				search(classTable, "classId", sctlist[m]["classId"])["classShortName"])) {
 			continue;
 		}
 		
@@ -1937,6 +1999,10 @@ function getEligibleSubjects(i, j, k) {
 			continue;
 		}
 		if(classBusyInThisSlot(i, j, sctlist[m], sctlist[m]["classId"], sctlist[m]["batchId"])) {
+			continue;
+		}
+		if(roomSmallOnRoomPageForThisClassOrBatch(sctlist[m], "classId",
+				search(classTable, "classId", sctlist[m]["classId"])["classCount"])) {
 			continue;
 		}
 		subjectsList.push(currSubject);
@@ -1957,7 +2023,8 @@ function getEligibleSubjects(i, j, k) {
 		}
 
 		/* Skip the subject if it can't fit remaining slots of day */
-		if(subjectCantFitInRemainingSlots(sbtlist[m], j, nSlotsPerDay)) {
+		if(subjectCantFitInRemainingSlots(sbtlist[m], j, nSlotsPerDay,
+				search(batch, "batchId", sbtlist[m]["batchId"])["batchName"])) {
 			continue;
 		}
 		
@@ -1974,6 +2041,10 @@ function getEligibleSubjects(i, j, k) {
 		if(overlappingBatchBusyInThisSlot(i, j, sbtlist[m], sbtlist[m]["batchId"])) {
 			continue
 		}
+		if(roomSmallOnRoomPageForThisClassOrBatch(sbtlist[m], "batchId",
+			search(batch, "batchId", sbtlist[m]["batchId"])["batchCount"])) {
+			continue;
+		}
 		subjectsList.push(currSubject);
 	}
 	if(subjectsList.length == 0) {
@@ -1984,12 +2055,12 @@ function getEligibleSubjects(i, j, k) {
 				"<option value=\"NOT_SELECTED\">Subject" +
 				"</option>";
 		for(x = 0; x < disabledSubjects.length; x++) {
-			select += "<option class=\"disabledEntries\" disabled=\"disabled\"" +
+			select += "<option class=\"disabledEntries1\" disabled=\"disabled\"" +
 			  "value = \"\">" + disabledSubjects[x][0] + "</option>";
 			for(y = 1; y < disabledSubjects[x].length; y++) {
-				  select += "<option class=\"disabledEntries\" disabled=\"disabled\"" +
-				  "value = \"\">&nbsp-" + disabledSubjects[x][y][0] + "</option>";
-				  select += "<option class=\"disabledEntries\" disabled=\"disabled\"" +
+				  select += "<option class=\"disabledEntries2\" disabled=\"disabled\"" +
+				  "value = \"\">&nbsp&nbsp" + disabledSubjects[x][y][0] + "</option>";
+				  select += "<option class=\"disabledEntries3\" disabled=\"disabled\"" +
 				  "value = \"\">&nbsp:" + disabledSubjects[x][y][1] + "</option>";
 			}
 		}
@@ -2000,15 +2071,16 @@ function getEligibleSubjects(i, j, k) {
 		select += "<option value =\"" + subj + "\">" + subj + "</option>";
 	}
 	if((type == "batch" || type == "class") &&  cellEmpty(i, j)) {
-		select += "<option title=\"Insert a fixed slot/ LUNCH slot\" value = \"FixedEntry\">Fixed slot</option>";
+		select += "<option title=\"Insert a fixed slot/ LUNCH slot\" " + 
+				  "value = \"FixedEntry\">Fixed Slot</option>";
 	}
 	for(x = 0; x < disabledSubjects.length; x++) {
-		select += "<option class=\"disabledEntries\" disabled=\"disabled\"" +
+		select += "<option class=\"disabledEntries1\" disabled=\"disabled\"" +
 		  "value = \"\">" + disabledSubjects[x][0] + "</option>";
 		for(y = 1; y < disabledSubjects[x].length; y++) {
-			select += "<option class=\"disabledEntries\" disabled=\"disabled\"" +
-				"value = \"\">&nbsp-" + disabledSubjects[x][y][0] + "</option>";
-			select += "<option class=\"disabledEntries\" disabled=\"disabled\"" +
+			select += "<option class=\"disabledEntries2\" disabled=\"disabled\"" +
+				"value = \"\">&nbsp&nbsp" + disabledSubjects[x][y][0] + "</option>";
+			select += "<option class=\"disabledEntries3\" disabled=\"disabled\"" +
 				"value = \"\">&nbsp:" + disabledSubjects[x][y][1] + "</option>";
 		}
 	}
@@ -2236,7 +2308,7 @@ function fillTable2(createNewTable) {
 	NoOfSlots = configrow["nSlots"];
 	var days = 6;
 	var slottablePerDay = 1;
-	if(type == undefined || id == undefined)
+	if(type == undefined || currTableId == undefined)
 		return;	
 	if(type == "class") {
 		var row = searchMultipleRows(batchClass, "classId", supportObject["classId"]);
@@ -2291,10 +2363,18 @@ function fillTable2(createNewTable) {
 		for(var j = 0; j < NoOfSlots; j++) { /*slotwise*/
 			var slotRows;
 			if(type == "batch") {
-				xbatchId = search(batch, "batchName", id)["batchId"];
+				xbatchId = search(batch, "batchName", currTableId)["batchId"];
 				slotRows = searchMultipleRows(timeTable, "day", i, "slotNo", j, 
 					"classId", classId, "batchId", xbatchId, 
 					"snapshotId", currentSnapshotId);
+				slotRows2 = searchMultipleRows(timeTable, "day", i, "slotNo", j, 
+					"classId", classId, "batchId", null, 
+					"snapshotId", currentSnapshotId);
+				if(slotRows != -1)
+					for(k in slotRows2)
+						slotRows.push(slotRows2[k]);
+				else
+					slotRows = slotRows2;
 			}
 			else {
 				slotRows = searchMultipleRows(timeTable, "day", i, "slotNo", j,
@@ -2376,6 +2456,11 @@ function fillTable2(createNewTable) {
 					if(!batchIdNull) { // && (type != "batch")) 
 						var batchRow = search(batch, "batchId", slotRows[k]["batchId"]);
 						batchName = "" + batchRow["batchName"];
+					}
+					/* On room/teacher page, show className. use batchName field for that */
+					if((type == "room" || type == "teacher") && batchIdNull) {
+						var classRow = search(classTable, "classId", slotRows[k]["classId"]);
+						batchName = "" + classRow["classShortName"];
 					}
 					var position = getPosition(i, j, slotRows[k], subjectRow["eachSlot"]);
 					if(position == null)
@@ -2550,13 +2635,17 @@ function classChange(createNewTable){
 	var index = document.getElementById("class-menu").selectedIndex; /*Setting the select tag*/
 	var classShortName = document.getElementById("class-menu").options[index].text;
 	type = "class";
-	id = classShortName;
+	currTableId = classShortName;
 	document.getElementById("teacher-menu").selectedIndex = "-1";
 	document.getElementById("room-menu").selectedIndex = "-1";
 	//document.getElementById("subject-menu").selectedIndex = "-1";
 	document.getElementById("batch-menu").selectedIndex = "-1";
 	getSupportObject();//fills supportObject correctly depending on type and id;
 	/*Filling the table*/
+	document.getElementById("title").innerHTML =  
+				"<h2> " + search(dept, "deptId", currentDeptId)["deptName"] + 
+				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+				"Timetable for Class: " + classShortName + " </h2>";
 	fillTable2(createNewTable);
 
 }
@@ -2587,8 +2676,12 @@ function roomChange(createNewTable){
 	document.getElementById("batch-menu").selectedIndex = "-1";
 	var index = document.getElementById("room-menu").selectedIndex; /*Setting the select tag*/
 	var roomShortName = document.getElementById("room-menu").options[index].text;
+	document.getElementById("title").innerHTML =  
+				"<h2> " + search(dept, "deptId", currentDeptId)["deptName"] + 
+				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+				"Timetable for Room: " + roomShortName + " </h2>";
 	type = "room";
-	id = roomShortName;
+	currTableId = roomShortName;
 	getSupportObject();//fills supportObject correctly depending on type and id;
 	/*Filling the table*/
 	fillTable2(createNewTable);
@@ -2601,8 +2694,12 @@ function batchChange(createNewTable){
 	//document.getElementById("subject-menu").selectedIndex = "-1";
 	var index = document.getElementById("batch-menu").selectedIndex; /*Setting the select tag*/
 	var batchName = document.getElementById("batch-menu").options[index].text;
+	document.getElementById("title").innerHTML =  
+				"<h2> " + search(dept, "deptId", currentDeptId)["deptName"] + 
+				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+				"Timetable for Batch: " + batchName + " </h2>";
 	type = "batch";
-	id = batchName;
+	currTableId = batchName;
 	getSupportObject();//fills supportObject correctly depending on type and id;
 	/*Filling the table*/
 	fillTable2(createNewTable);
@@ -2611,8 +2708,12 @@ function batchChange(createNewTable){
 function teacherChange(createNewTable){
 	var index = document.getElementById("teacher-menu").selectedIndex; /*Setting the select tag*/
 	var teacherShortName = document.getElementById("teacher-menu").options[index].text;
+	document.getElementById("title").innerHTML =  
+				"<h2> " + search(dept, "deptId", currentDeptId)["deptName"] + 
+				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+				"Timetable for Teacher: " + teacherShortName + " </h2>";
 	type = "teacher";
-	id = teacherShortName;
+	currTableId = teacherShortName;
 	document.getElementById("room-menu").selectedIndex = "-1";
 	document.getElementById("class-menu").selectedIndex = "-1";
 	document.getElementById("batch-menu").selectedIndex = "-1";
@@ -2764,7 +2865,7 @@ function load() {
 	}
 	$("#mainTimeTable").append("<center><B>No TimeTable loaded </B><br>" +
 								"Please select option from above catgories</center>");
-	document.getElementById("title").innerHTML =  "<h2> Timetable For: " +
+	document.getElementById("title").innerHTML =  "<h2> Timetable for " +
 				search(dept, "deptId", currentDeptId)["deptName"] + "</h2>";
 	$("#waitMessage").hide();
 	$(window).resize(function () { 

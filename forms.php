@@ -15,7 +15,7 @@ $teacherForm = "
 ";
 
 $waitMessage = "
-	<div id=\"waitMessage\">
+	<div id=\"waitMessage\" class=\"waitMessage\">
 	<table width=\"60%\"> <tr> 
 	<td> <h1> Wait till the operation completes ... </h1>
 	</td> 

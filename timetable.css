@@ -123,6 +123,7 @@ option, select{
 	*/
 	padding: 0px;
 	border: 1px solid black;
+	max-width: 5%;
 } 
 .cell:hover {
 	background-color: #f5f5f5;
@@ -186,11 +187,20 @@ option, select{
 	font-family: courier;
 	float:left;
 }
-select :disabled {
+/*select :disabled {
+	color: grey;
+} */
+.disabledEntries1 {
+	font-size: 12px;
+	color: #ff6666;
+}
+.disabledEntries2 {
+	font-size: 12px;
 	color: grey;
 }
-.disabledEntries {
+.disabledEntries3 {
 	font-size: 12px;
+	color: grey;
 }
 .outercol2 {
 	width: 20%;
@@ -240,4 +250,7 @@ textarea#tracker{
 	text-align: center;
 	padding: 1px;
 	margin: 1px;
+}
+.waitMessage {
+	z-index: 1;
 }
