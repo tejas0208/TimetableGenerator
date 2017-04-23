@@ -71,7 +71,6 @@ function subjectRoomForm() {
 	tr = document.getElementById("subjectRoomTable").rows[0];
 	var ncells = tr.cells.length;
 	var count = 2;
-	alert('subjectRoom = ' + JSON.stringify(subjectRoom));
 	for (i in subjectRoom) {
 		currSubjectRoom = subjectRoom[i];
 		var row = table.insertRow(count);
@@ -137,7 +136,6 @@ function subjectRoomInsert() {
 	var subjectId, roomId,  srId;
 	subjectId = document.getElementById("crSubjectAdd").value;	
 	roomId = document.getElementById("crRoomAdd").value;
-	alert(subjectId + " " + roomId);
 	/* debug */
 	roomShortName = search(room, "roomId", roomId)["roomShortName"];
 	subjectName= search(subject, "subjectId", subjectId)["subjectName"];

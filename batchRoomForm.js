@@ -71,7 +71,6 @@ function batchRoomForm() {
 	tr = document.getElementById("batchRoomTable").rows[0];
 	var ncells = tr.cells.length;
 	var count = 2;
-	alert('batchRoom = ' + JSON.stringify(batchRoom));
 	for (i in batchRoom) {
 		currBatchRoom = batchRoom[i];
 		var row = table.insertRow(count);
@@ -137,7 +136,6 @@ function batchRoomInsert() {
 	var batchId, roomId,  brId;
 	batchId = document.getElementById("crBatchAdd").value;	
 	roomId = document.getElementById("crRoomAdd").value;
-	alert(batchId + " " + roomId);
 	/* debug */
 	roomShortName = search(room, "roomId", roomId)["roomShortName"];
 	batchName= search(batch, "batchId", batchId)["batchName"];

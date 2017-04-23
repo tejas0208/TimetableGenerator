@@ -71,7 +71,6 @@ function classRoomForm() {
 	tr = document.getElementById("classRoomTable").rows[0];
 	var ncells = tr.cells.length;
 	var count = 2;
-	alert('classRoom = ' + JSON.stringify(classRoom));
 	for (i in classRoom) {
 		currClassRoom = classRoom[i];
 		var row = table.insertRow(count);
@@ -137,7 +136,6 @@ function classRoomInsert() {
 	var classId, roomId,  crId;
 	classId = document.getElementById("crClassAdd").value;	
 	roomId = document.getElementById("crRoomAdd").value;
-	alert(classId + " " + roomId);
 	/* debug */
 	roomShortName = search(room, "roomId", roomId)["roomShortName"];
 	classShortName= search(classTable, "classId", classId)["classShortName"];
