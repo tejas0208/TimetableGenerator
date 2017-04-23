@@ -117,10 +117,12 @@ CONSTRAINT c_overlaps UNIQUE(batchId, batchOverlapId, snapshotId)
 
 CREATE VIEW batchCanOverlapReadable
 AS
-SELECT bo.boId, b.batchName as "b1Name", b1.batchName  as "b2Name", s.snapShotName
-FROM batch b, batch b1, batchCanOverlap bo, snapshot s
-WHERE b.batchId  = bo.batchId AND
-	  b1.batchId = bo.batchOverlapId AND
+SELECT bo.boId, b1.batchId as "b1Id", b1.batchName as "b1Name",
+				b2.batchId as "b2Id", b2.batchName  as "b2Name",
+				s.snapShotName
+FROM batch b1, batch b2, batchCanOverlap bo, snapshot s
+WHERE b1.batchId  = bo.batchId AND
+	  b2.batchId = bo.batchOverlapId AND
 	  bo.snapshotId = s.snapshotId
 ORDER BY snapshotName, b1Name, b2Name;
 
@@ -138,7 +140,8 @@ CONSTRAINT c_batchClass UNIQUE(batchId, classId, snapshotId)
 
 CREATE VIEW batchClassReadable 
 AS
-SELECT bc.bcId, b.batchName, c.classShortName, s.snapshotName
+SELECT bc.bcId, b.batchId, b.batchName, b.batchCount, 
+	c.classId, c.classShortName, c.classCount, s.snapshotName
 FROM batch b, class c, batchClass bc, snapshot s
 WHERE b.batchId = bc.batchId AND
       c.classId = bc.classId AND
@@ -186,7 +189,8 @@ CONSTRAINT c_subjectBatchTeacheer UNIQUE(subjectId, batchId, snapshotId)
 );
 
 CREATE VIEW subjectBatchTeacherReadable AS
-SELECT sbt.sbtId, s.subjectShortName,b.batchName, t.teacherShortName , ss.snapshotName
+SELECT sbt.sbtId, s.subjectId, s.subjectShortName,
+		b.batchId, b.batchName, t.teacherId, t.teacherShortName , ss.snapshotName
 FROM subject s, batch b, subjectBatchTeacher sbt, teacher t, snapshot ss
 WHERE	sbt.subjectId = s.subjectId AND
 	sbt.batchId = b.batchId AND
@@ -207,8 +211,14 @@ CONSTRAINT c_overlappingSBT	UNIQUE(sbtId1, sbtId2, snapshotId)
 );
 
 CREATE VIEW overlappingSBTReadable AS
-SELECT sbto.osbtId as osbtId, s1.subjectShortName as subject1, b1.batchName as batch1, t1.teacherShortName as teacher1,
-		s2.subjectShortName as subject2, b2.batchName as batch2, t2.teacherShortName as teacher2 , ss.snapshotName
+SELECT sbto.osbtId as osbtId,
+		s1.subjectId as subjectId1, s1.subjectShortName as subject1,
+		b1.batchId as batchId1, b1.batchName as batch1,
+		t1.teacherId as teacherId1, t1.teacherShortName as teacher1,
+		s2.subjectId as subjectId2, s2.subjectShortName as subject2,
+		b2.batchId as batchId2, b2.batchName as batch2,
+		t2.teacherId as teacherId2, t2.teacherShortName as teacher2,
+		ss.snapshotName
 FROM
 		subject s1, subject s2, batch b1, batch b2, teacher t1, teacher t2,  
 		overlappingSBT sbto, subjectBatchTeacher sbt1, subjectBatchTeacher sbt2, snapshot ss
@@ -233,7 +243,8 @@ CONSTRAINT c_subjectClassTeacheer UNIQUE(subjectId, classId, snapshotId)
 );
 
 CREATE VIEW subjectClassTeacherReadable AS
-SELECT  sct.sctId, c.classShortName, s.subjectShortName, t.teacherShortName, ss.snapshotName
+SELECT  sct.sctId, c.classId, c.classShortName, s.subjectId, s.subjectShortName,
+		t.teacherId, t.teacherShortName, ss.snapshotName
 FROM subject s, class c, teacher t, subjectClassTeacher sct, snapshot ss
 WHERE	s.subjectId = sct.subjectId AND
 	t.teacherId = sct.teacherId AND
@@ -254,7 +265,7 @@ CONSTRAINT c_classRoom UNIQUE(classId, snapshotId)
 );
 
 CREATE VIEW classRoomReadable AS
-SELECT cr.crId, c.classShortName, r.roomShortName, s.snapshotName
+SELECT cr.crId, c.classId, c.classShortName, r.roomId, r.roomShortName, s.snapshotName
 FROM class c, room r, classRoom cr, snapshot s
 WHERE	c.classId = cr.classId AND
 	r.roomId = cr.roomId AND
@@ -274,7 +285,7 @@ CONSTRAINT c_batchRoom UNIQUE(batchId, snapshotId)
 );
 
 CREATE VIEW batchRoomReadable AS 
-SELECT br.brId, b.batchName, r.roomShortName, s.snapshotName
+SELECT br.brId, b.batchId, b.batchName, r.roomId, r.roomShortName, s.snapshotName
 FROM batch b, room r, batchRoom br, snapshot s
 WHERE	b.batchId = br.batchId AND
 	r.roomId = br.roomId AND
@@ -294,7 +305,8 @@ CONSTRAINT c_subjectRoom UNIQUE(subjectId, snapshotId)
 );
 
 CREATE VIEW subjectRoomReadable AS 
-SELECT sr.srId, s.subjectShortName, r.roomShortName , ss.snapshotName
+SELECT sr.srId, s.subjectId, s.subjectShortName, r.roomId, 
+		r.roomShortName , ss.snapshotName
 FROM subject s, room r, subjectRoom sr, snapshot ss
 WHERE	s.subjectId = sr.subjectId AND
 	r.roomId = sr.roomId AND

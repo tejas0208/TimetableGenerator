@@ -16,10 +16,11 @@ $teacherForm = "
 
 $waitMessage = "
 	<div id=\"waitMessage\" class=\"waitMessage\">
-	<table width=\"60%\"> <tr> 
-	<td> <h1> Wait till the operation completes ... </h1>
-	</td> 
+	<table width=\"60%\"> 
+	<tr> 
+		<td> <h1> Wait till the operation completes ... </h1> </td> 
 	</tr>
+	</table>
 	</div>
 ";
 function updateTeacher($type) {
@@ -547,7 +548,7 @@ $sbtForm= "
 					Close &times; </a> 
 			</td> 
 	</table>
-	<table width=\"60%\"id=\"sbtTable\" class=\"inputFormTable\">	
+	<table width=\"60%\" id=\"sbtTable\" class=\"inputFormTable\">	
 	</table>
 	</div>	
 ";
@@ -637,7 +638,7 @@ $sctForm= "
 					Close &times; </a> 
 			</td> 
 	</table>
-	<table width=\"60%\"id=\"sctTable\" class=\"inputFormTable\">	
+	<table width=\"60%\" id=\"sctTable\" class=\"inputFormTable\">	
 	</table>
 	</div>	
 ";
@@ -1023,7 +1024,7 @@ $overlappingSBTForm= "
 					Close &times; </a> 
 			</td> 
 	</table>
-	<table width=\"60%\"id=\"overlappingSBTTable\" class=\"inputFormTable\">	
+	<table width=\"60%\" id=\"overlappingSBTTable\" class=\"inputFormTable\">	
 	</table>
 	</div>	
 ";
@@ -1037,52 +1038,100 @@ function updateOverlappingSBT($type) {
 	$osbtId = getArgument("osbtId");
 	$snapshotId = getArgument("snapshotId");
 
-	$query2 = "";
-	switch($type) {
-		case "update":
-			$query = "UPDATE overlappingSBT SET sbtId1 = $sbtId1, ".
-					  "sbtId2 = $sbtId2".
-					 " WHERE osbtId = $osbtId AND snapshotId = $snapshotId";
-			break;
-		case "delete":
-			$query = "DELETE FROM overlappingSBT WHERE osbtId = $osbtId AND snapshotId = $snapshotId;";
-			break;
-		case "insert":
-			$query = "INSERT INTO overlappingSBT (sbtId1, sbtId2, snapshotId) ".
-				     "VALUES ($sbtId1, $sbtId2, $snapshotId)";
-			$query2 = "SELECT * from overlappingSBT WHERE sbtId1 = $sbtId1 ".
-					  " AND sbtId2 = $sbtId2 AND snapshotId = $snapshotId";
-			break;
-		default:
-			$query = "ERROR;";
-			break;
-	}
-	error_log("updateoverlappingSBT: Query: ".$query, 0);
 
-	$result = sqlUpdate($query);
-	error_log("updateoverlappingSBT: Result: $result", 0);
+	if($type == "update") {
+		$query = "UPDATE overlappingSBT SET sbtId1 = $sbtId1, ".
+				  "sbtId2 = $sbtId2".
+				 " WHERE osbtId = $osbtId AND snapshotId = $snapshotId";
+		error_log("updateoverlappingSBT: Query: ".$query, 0);
 
-	if($result == false) {
-		$resString = "{\"Success\": \"False\",";
-		$resString .= "\"Error\" : ".json_encode($CFG->conn->error)."}";
-		error_log("updateoverlappingSBT: resString: ".$resString);
-		return $resString;
-	}
-
-	if($query2 != "") {
-		$result2 = sqlGetAllRows($query2);
-		error_log("updateoverlappingSBT: query2: Result: ".json_encode($result2), 0);
+		$result = sqlUpdate($query);
+		error_log("updateoverlappingSBT: Result: $result", 0);
 		if($result == false) {
 			$resString = "{\"Success\": \"False\",";
 			$resString .= "\"Error\" : ".json_encode($CFG->conn->error)."}";
+			error_log("updateoverlappingSBT: resString: ".$resString);
+			return $resString;
+		} else {
+			$resString = "{\"Success\": \"True\"}";
+			return $resString;
+		}
+	}
+	if($type == "insert") {
+		$queryInsert1 = "INSERT INTO overlappingSBT (sbtId1, sbtId2, snapshotId) ".
+			     "VALUES ($sbtId1, $sbtId2, $snapshotId)";
+		$queryInsert2 = "INSERT INTO overlappingSBT (sbtId1, sbtId2, snapshotId) ".
+			     "VALUES ($sbtId2, $sbtId1, $snapshotId)";
+		$querySelect1 = "SELECT * from overlappingSBT WHERE sbtId1 = $sbtId1 ".
+				  " AND sbtId2 = $sbtId2 AND snapshotId = $snapshotId";
+		$querySelect2 = "SELECT * from overlappingSBT WHERE sbtId1 = $sbtId2 ".
+				  " AND sbtId2 = $sbtId1 AND snapshotId = $snapshotId";
+
+		$result = sqlUpdate($queryInsert1);
+		error_log("updateoverlappingSBT: $queryInsert1 Result: $result", 0);
+		if($result == false) { 
+			$resString = "{\"Success\": \"False\",";
+			$resString .= "\"Error\" : ".json_encode($CFG->conn->error)."}";
+			error_log("updateoverlappingSBT: resString: ".$resString);
+			return $resString;
+		}
+
+		$result = sqlUpdate($queryInsert2);
+		error_log("updateoverlappingSBT: $queryInsert2 Result: $result", 0);
+		if($result == false) {
+			$resString = "{\"Success\": \"False\",";
+			$resString .= "\"Error\" : ".json_encode($CFG->conn->error)."}";
+			error_log("updateoverlappingSBT: resString: ".$resString);
+			return $resString;
+		}
+
+		$result1 = sqlGetAllRows($querySelect1);
+		error_log("updateoverlappingSBT: query1: Result: ".json_encode($result1), 0);
+		if($result1 == false) {
+			$resString = "{\"Success\": \"False\",";
+			$resString .= "\"Error\" : ".json_encode($CFG->conn->error)."}";
+			return $resString;
 		} else {
 			$resString = "{\"Success\": \"True\",";
-			$resString .= "\"osbtId\"   : \"".$result2[0]["osbtId"]."\"}";
+			$resString .= "\"osbtId1\"   : \"".$result1[0]["osbtId"]."\",";
 		}
-	} else {
-			$resString = "{\"Success\": \"True\"}";
+
+		$result2 = sqlGetAllRows($querySelect2);
+		error_log("updateoverlappingSBT: query1: Result: ".json_encode($result2), 0);
+		if($result2 == false) {
+			$resString = "{\"Success\": \"False\",";
+			$resString .= "\"Error\" : ".json_encode($CFG->conn->error)."}";
+			return $resString;
+		} else {
+			$resString .= "\"osbtId2\"   : \"".$result2[0]["osbtId"]."\"}";
+		}
+		return $resString;
 	}
-	error_log("updateoverlappingSBT: resString: ".$resString);
+	if($type == "delete") {
+		$selectQuery = "SELECT * from overlappingSBT WHERE osbtId = $osbtId and snapshotId = $snapshotId;";
+		$result = sqlGetOneRow($selectQuery);
+		$sbtId1 = $result[0]["sbtId1"];
+		$sbtId2 = $result[0]["sbtId2"];
+
+		$query = "DELETE FROM overlappingSBT WHERE sbtId1 = $sbtId1 OR sbtId2 = $sbtId2 " .
+				" OR sbtId2 = $sbtId1 OR sbtId1 = $sbtId2 ".
+				" AND snapshotId = $snapshotId;";
+		error_log("updateoverlappingSBT: Query: ".$query, 0);
+
+		$result = sqlUpdate($query);
+		error_log("updateoverlappingSBT: Result: $result", 0);
+		if($result == false) {
+			$resString = "{\"Success\": \"False\",";
+			$resString .= "\"Error\" : ".json_encode($CFG->conn->error)."}";
+			error_log("updateoverlappingSBT: resString: ".$resString);
+			return $resString;
+		} else {
+			$resString = "{\"Success\": \"True\"}";
+			return $resString;
+		}
+	}
+	$resString = "{\"Success\": \"False\",";
+	$resString .= "\"Error\" : \"Bad Type\"}";
 	return $resString;
 }
 $allForms = 		
@@ -1090,6 +1139,6 @@ $allForms =
 		$batchForm. $batchRoomForm. $batchCanOverlapForm.
 		$roomForm. $classRoomForm. $batchRoomForm. $subjectRoomForm.
 		$sctForm. $sbtForm.
-		$overlappingSBTForm;
+		$overlappingSBTForm.
 		$configForm;
 ?>

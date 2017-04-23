@@ -45,6 +45,8 @@ function overlappingSBTForm() {
 	cell = row.insertCell(-1);
 	var selectTag = document.createElement("select");
 	selectTag.setAttribute("id","sbtAdd1");
+	var tag = createOptionTag("-1", "", false);
+	selectTag.appendChild(tag);
 	for (k in subjectBatchTeacher) {
 		var currSBT = subjectBatchTeacher[k];
 		var subjectShortName = search(subject, "subjectId", currSBT["subjectId"])["subjectShortName"];
@@ -52,32 +54,27 @@ function overlappingSBTForm() {
 		var teacherShortName = search(teacher, "teacherId", currSBT["teacherId"])["teacherShortName"];
 		if(typeof teacherShortName == "undefined")
 			teacherShortName = "Not Defined";
-		var sbtString = "Sub: " + subjectShortName + " Batch: " + batchName + " Teacher: " + teacherShortName;
+		var sbtString = "" + subjectShortName + " - " + batchName + " - " + teacherShortName;
 		var tag = createOptionTag(subjectBatchTeacher[k]["sbtId"], sbtString, false);
 		selectTag.appendChild(tag);
 	}
 	cell.appendChild(selectTag);
 	$("#sbtAdd1").select2({
-		placeholder: "SBT Name"
+		placeholder: "SBT Name",
+		width: 'resolve'
 	});
+	$("#sbtAdd1").on("change", makesbtAdd2);
 
 	cell = row.insertCell(-1);
 	var selectTag = document.createElement("select");
 	selectTag.setAttribute("id","sbtAdd2");
-	for (k in subjectBatchTeacher) {
-		var currSBT = subjectBatchTeacher[k];
-		var subjectShortName = search(subject, "subjectId", currSBT["subjectId"])["subjectShortName"];
-		var batchName = search(batch, "batchId", currSBT["batchId"])["batchName"];
-		var teacherShortName = search(teacher, "teacherId", currSBT["teacherId"])["teacherShortName"];
-		if(typeof teacherShortName == "undefined")
-			teacherShortName = "Not Defined";
-		var sbtString = "Sub: " + subjectShortName + " Batch: " + batchName + " Teacher: " + teacherShortName;
-		var tag = createOptionTag(subjectBatchTeacher[k]["sbtId"], sbtString, false);
-		selectTag.appendChild(tag);
-	}
 	cell.appendChild(selectTag);
+	var tag = createOptionTag("-1", "Select an entry in the first box", false);
+	selectTag.appendChild(tag);
 	$("#sbtAdd2").select2({
-		placeholder: "SBT Name"
+		placeholder: "Matching SBT",
+		dropdownAutoWidth : true,
+		width: 'resolve'
 	});
 
 	cell = row.insertCell(-1);
@@ -95,51 +92,48 @@ function overlappingSBTForm() {
 	var count = 2;
 
 	for (i in overlappingSBT) {
-		curroverlappingSBT = overlappingSBT[i];
+		currOverlappingSBT = overlappingSBT[i];
 		var row = table.insertRow(count);
 		var cell = row.insertCell(0);
 		var centerTag = document.createElement("center");
 		centerTag.setAttribute("id", "center_"+count);
-		var centerText = document.createTextNode(curroverlappingSBT["osbtId"]);
+		var centerText = document.createTextNode(currOverlappingSBT["osbtId"]);
 		centerTag.appendChild(centerText);
 		cell.appendChild(centerTag);
 		//cell.innerHTML = "<center> " + (count - 1) + "</center>";
 
-		k = curroverlappingSBT["sbtId1"];
+		k = currOverlappingSBT["sbtId1"];
+		currSBT = search(subjectBatchTeacher, "sbtId", k);
 		cell = row.insertCell(-1);
-		var selectTag = document.createElement("select");
-		selectTag.setAttribute("id","batch_"+count);
-		var subjectShortName = search(subject, subjectBatchTeacher[k]["subjectId"])["subjectShortName"];
-		var batchName = search(batch, subjectBatchTeacher[k]["batchId"])["batchName"];
-		var teacherShortName = search(teacher, subjectBatchTeacher[k]["teacherId"])["teacherShortName"];
+		var centerTag = document.createElement("center");
+		centerTag.setAttribute("id", "sbtId1_"+ count);
+		var subjectShortName = search(subject, "subjectId", currSBT["subjectId"])["subjectShortName"];
+		var batchName = search(batch, "batchId", currSBT["batchId"])["batchName"];
+		var teacherShortName = search(teacher, "teacherId", currSBT["teacherId"])["teacherShortName"];
 		if(typeof teacherShortName == "undefined")
 			teacherShortName = "Not Defined";
-		var sbtString = "Sub: " + subjectShortName + " Batch: " + batchName + " Teacher: " + teacherShortName;
-		cell.innerHTML = sbtString;
+		var sbtString = "" + subjectShortName + " : " + batchName + " : " + teacherShortName;
+		var centerText = document.createTextNode(sbtString);
+		centerTag.appendChild(centerText);
+		cell.appendChild(centerTag);
 		//$("#batch_"+i).select2();
 
 
-		k = curroverlappingSBT["sbtId2"];
+		k = currOverlappingSBT["sbtId2"];
+		currSBT = search(subjectBatchTeacher, "sbtId", k);
+		console.log(JSON.stringify(currSBT));
 		cell = row.insertCell(-1);
-		var selectTag = document.createElement("select");
-		selectTag.setAttribute("id","batch_"+count);
-		var subjectShortName = search(subject, subjectBatchTeacher[k]["subjectId"])["subjectShortName"];
-		var batchName = search(batch, subjectBatchTeacher[k]["batchId"])["batchName"];
-		var teacherShortName = search(teacher, subjectBatchTeacher[k]["teacherId"])["teacherShortName"];
+		var centerTag = document.createElement("center");
+		centerTag.setAttribute("id", "sbtId2_"+count);
+		var subjectShortName = search(subject, "subjectId", currSBT["subjectId"])["subjectShortName"];
+		var batchName = search(batch, "batchId", currSBT["batchId"])["batchName"];
+		var teacherShortName = search(teacher, "teacherId", currSBT["teacherId"])["teacherShortName"];
 		if(typeof teacherShortName == "undefined")
 			teacherShortName = "Not Defined";
-		var sbtString = "Sub: " + subjectShortName + " Batch: " + batchName + " Teacher: " + teacherShortName;
-		cell.innerHTML = sbtString;
-		//$("#batch_"+i).select2();
-
-		/*cell = row.insertCell(-1);
-		var button = document.createElement("button");
-		cell.appendChild(button);
-		button.value = "Update"; button.name = "overlappingSBTUpdateButton_"+count;
-		var textNode = document.createTextNode("Update");
-		button.appendChild(textNode);
-		button.setAttribute("onclick","overlappingSBTUpdate("+count+")");
-		button.setAttribute("id","overlappingSBTUpdateButton_"+count); */
+		var sbtString = "" + subjectShortName + " : " + batchName + " : " + teacherShortName;
+		var centerText = document.createTextNode(sbtString);
+		centerTag.appendChild(centerText);
+		cell.appendChild(centerTag);
 
 		cell = row.insertCell(-1);
 		var button = document.createElement("button");
@@ -153,25 +147,60 @@ function overlappingSBTForm() {
 		count++;
 	}
 }
+function makesbtAdd2() {
+	var count = 0;
+	selectTag = document.getElementById("sbtAdd2");	
+
+	sbtId1 = document.getElementById("sbtAdd1").value;	
+	selectedSBT = search(subjectBatchTeacher, "sbtId", sbtId1);
+	var selectedSubjectId= selectedSBT["subjectId"];
+	var selectedBatchId = selectedSBT["batchId"];
+	var selectedTeacherId = selectedSBT["teacherId"];
+
+	while(selectTag.hasChildNodes()) {
+		selectTag.removeChild(selectTag.childNodes[0]);
+	}
+	for (k in subjectBatchTeacher) {
+		var currSBT = subjectBatchTeacher[k];
+		if(currSBT["teacherId"] != selectedTeacherId || currSBT["subjectId"] != selectedSubjectId)
+			continue;
+		if(currSBT["teacherId"] == selectedTeacherId && currSBT["subjectId"] == selectedSubjectId
+			&& currSBT["batchId"] == selectedBatchId)
+			continue;
+		var subjectShortName = search(subject, "subjectId", currSBT["subjectId"])["subjectShortName"];
+		var batchName = search(batch, "batchId", currSBT["batchId"])["batchName"];
+		var teacherShortName = search(teacher, "teacherId", currSBT["teacherId"])["teacherShortName"];
+		if(typeof teacherShortName == "undefined")
+			teacherShortName = "Not Defined";
+		var sbtString = "" + subjectShortName + " - " + batchName + "- " + teacherShortName;
+		var tag = createOptionTag(subjectBatchTeacher[k]["sbtId"], sbtString, false);
+		selectTag.appendChild(tag);
+		count++;
+	} 
+	if(count == 0)
+		selectTag.innerHTML = "<option> No matching Subject-Batches </option>";
+	selectTag.style.width = "100%";
+}
 function overlappingSBTInsert() {
-	var sbtId2, teacheId, osbtId;
-	sbtId2 = document.getElementById("sbtAdd1").value;	
-	sbtId1 = document.getElementById("sbtAdd2").value;	
+	var sbtId2, teacherId, osbtId;
+	sbtId1 = document.getElementById("sbtAdd1").value;	
+	sbtId2 = document.getElementById("sbtAdd2").value;	
 	/* debug */
-	currSBT = subjectBatchTeacher[sbtId1];
+	currSBT = search(subjectBatchTeacher, "sbtId", sbtId1);
 	var subjectShortName = search(subject, "subjectId", currSBT["subjectId"])["subjectShortName"];
 	var batchName = search(batch, "batchId", currSBT["batchId"])["batchName"];
 	var teacherShortName = search(teacher, "teacherId", currSBT["teacherId"])["teacherShortName"];
 	if(typeof teacherShortName == "undefined")
 		teacherShortName = "Not Defined";
-	var sbtString = "Sub: " + subjectShortName + " Batch: " + batchName + " Teacher: " + teacherShortName;
-	currSBT = subjectBatchTeacher[sbtId2];
+	var sbtString = "" + subjectShortName + " - " + batchName + " - " + teacherShortName;
+
+	currSBT = search(subjectBatchTeacher, "sbtId", sbtId2);
 	var subjectShortName = search(subject, "subjectId", currSBT["subjectId"])["subjectShortName"];
 	var batchName = search(batch, "batchId", currSBT["batchId"])["batchName"];
 	var teacherShortName = search(teacher, "teacherId", currSBT["teacherId"])["teacherShortName"];
 	if(typeof teacherShortName == "undefined")
 		teacherShortName = "Not Defined";
-	var sbtString = sbtString + " AND " + subjectShortName + " " + batchName + " " + teacherShortName;
+	sbtString = "" + subjectShortName + " - " + batchName + " - " + teacherShortName;
 	/* end Debug */
 
 	var xhttp = new XMLHttpRequest();
@@ -183,7 +212,12 @@ function overlappingSBTInsert() {
 				newoverlappingSBT = {};
 				newoverlappingSBT["sbtId1"] = sbtId1;
 				newoverlappingSBT["sbtId2"] = sbtId2;
-				newoverlappingSBT["osbtId"] = response["osbtId"];
+				newoverlappingSBT["osbtId"] = response["osbtId1"];
+				overlappingSBT.unshift(newoverlappingSBT);
+				newoverlappingSBT = {};
+				newoverlappingSBT["sbtId1"] = sbtId2;
+				newoverlappingSBT["sbtId2"] = sbtId1;
+				newoverlappingSBT["osbtId"] = response["osbtId2"];
 				overlappingSBT.unshift(newoverlappingSBT);
 				fillTable2(true);
 				overlappingSBTForm();
@@ -198,62 +232,6 @@ function overlappingSBTInsert() {
 	
 }
 
-function overlappingSBTUpdate(i) {
-	var row = i;
-	var sbtId2, teacheId, osbtId;
-	sbtId2 = document.getElementById("subject_"+row).value;	
-	sbtId1 = document.getElementById("teacher_"+row).value;	
-	osbtId = document.getElementById("center_"+row).childNodes[0].nodeValue;
-	document.getElementById("overlappingSBTUpdateButton_"+row).childNodes[0].nodeValue = "Updating";
-	document.getElementById("overlappingSBTDeleteButton_"+row).disabled = true;
-	document.getElementById("overlappingSBTUpdateButton_"+row).disabled = true;
-	/* debug */
-	currSBT = subjectBatchTeacher[sbtId1];
-	var subjectShortName = search(subject, "subjectId", currSBT["subjectId"])["subjectShortName"];
-	var batchName = search(batch, "batchId", currSBT["batchId"])["batchName"];
-	var teacherShortName = search(teacher, "teacherId", currSBT["teacherId"])["teacherShortName"];
-	if(typeof teacherShortName == "undefined")
-		teacherShortName = "Not Defined";
-	var sbtString = "Sub: " + subjectShortName + " Batch: " + batchName + " Teacher: " + teacherShortName;
-	currSBT = subjectBatchTeacher[sbtId2];
-	var subjectShortName = search(subject, "subjectId", currSBT["subjectId"])["subjectShortName"];
-	var batchName = search(batch, "batchId", currSBT["batchId"])["batchName"];
-	var teacherShortName = search(teacher, "teacherId", currSBT["teacherId"])["teacherShortName"];
-	if(typeof teacherShortName == "undefined")
-		teacherShortName = "Not Defined";
-	var sbtString = sbtString + " AND " + "Sub: " + subjectShortName + " Batch: " + 
-			batchName + " Teacher: " + teacherShortName;
-
-	row = i - 2;
-	var xhttp = new XMLHttpRequest();
-	xhttp.onreadystatechange = function () {
-		if(this.readyState == 4 && this.status == 200) {
-			//alert("overlappingSBT Row " + row + "Updated");		
-			response = JSON.parse(this.responseText);
-			if(response["Success"] == "True") {
-				document.getElementById("overlappingSBTUpdateButton_"+i).childNodes[0].nodeValue = "Updated";
-				document.getElementById("overlappingSBTDeleteButton_"+i).disabled = false;
-				document.getElementById("overlappingSBTUpdateButton_"+i).disabled = false;
-				overlappingSBT[row]["sbtId1"] = sbtId1;
-				overlappingSBT[row]["sbtId2"] = sbtId2;
-				fillTable2(true);
-				overlappingSBTForm();
-			}
-			else {
-				document.getElementById("overlappingSBTUpdateButton_"+i).childNodes[0].nodeValue = "Update";
-				alert("osbtId = " + osbtId + ": Update Failed " + + "\nError:\n" + response["Error"]);
-				document.getElementById("overlappingSBTDeleteButton_"+i).disabled = false;
-				document.getElementById("overlappingSBTUpdateButton_"+i).disabled = false;
-				overlappingSBTForm();
-			}
-		}
-	}
-	xhttp.open("POST", "timetable.php", false); // asynchronous
-	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("reqType=overlappingSBTUpdate&sbtId2="+sbtId2+"&sbtId1="+ sbtId1+
-				"&osbtId="+osbtId+"&snapshotId="+currentSnapshotId);
-	
-}
 function overlappingSBTDelete(i) {
 	var row = i;
 	var osbtId;
@@ -262,22 +240,32 @@ function overlappingSBTDelete(i) {
 	if(sure != true)
 		return;
 	osbtId = document.getElementById("center_"+row).childNodes[0].nodeValue;
+	sbtId1 = search(overlappingSBT, "osbtId", osbtId)["sbtId1"];
+	sbtId2 = search(overlappingSBT, "osbtId", osbtId)["sbtId2"];
 	document.getElementById("overlappingSBTDeleteButton_"+row).childNodes[0].nodeValue = "Deleting";
 	document.getElementById("overlappingSBTDeleteButton_"+row).disabled = true;
-	document.getElementById("overlappingSBTUpdateButton_"+row).disabled = true;
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function () {
 		if(this.readyState == 4 && this.status == 200) {
 			response = JSON.parse(this.responseText);
 			if(response["Success"] == "True") {
 				document.getElementById("overlappingSBTDeleteButton_"+row).value = "Delete"
-				overlappingSBT.splice(i - 2, 1);
+				deleted = true;
+				while(deleted) {
+					deleted = false;
+					for(x in overlappingSBT) {
+						if(overlappingSBT[x]["sbtId1"] == sbtId1 || overlappingSBT[x]["sbtId2"] == sbtId1 || 
+							overlappingSBT[x]["sbtId1"] == sbtId2 || overlappingSBT[x]["sbtId2"] == sbtId2)  {
+							overlappingSBT.splice(x, 1);
+							deleted = true;
+						}
+					}
+				}
 				fillTable2(true);
 				overlappingSBTForm();
 			} else {
 				alert("overlappingSBT " + osbtId + ": Deletion Failed.\nError:\n" + response["Error"]);
 				document.getElementById("overlappingSBTDeleteButton_"+row).value = "Delete"
-				document.getElementById("overlappingSBTUpdateButton_"+row).disabled = false;
 				document.getElementById("overlappingSBTDeleteButton_"+row).childNodes[0].nodeValue = "Can't Delete";
 			}
 		}

@@ -6,7 +6,7 @@
 	text-align: center;
 	background: #191919;
 	-webkit-border-radius: 100%;
-	-moz-border-radius: 100%;
+	/*-moz-border-radius: 100%;*/
 	border-radius: 100%;
 	/* auto, since non-WebKit browsers doesn't support input styling */
 	margin: auto 10px;
@@ -15,7 +15,7 @@
 	/*-moz-appearance: none;*/
 	-ms-appearance: none;
 	-o-appearance: none;
-	appearance: none;
+	/*appearance: none;*/
 	outline:none;
 	-webkit-box-shadow: 0px 0px 1px 1px rgba(30, 144, 255, 1);
 	box-shadow: 0px 0px 1px 1px rgba(30, 144, 255, 1);
@@ -41,7 +41,7 @@
 	float: left;
 	margin: auto;
 	-webkit-border-radius: 100%;
-	-moz-border-radius: 100%;
+	/*-moz-border-radius: 100%;*/
 	border-radius: 100%;
 }
 
@@ -59,8 +59,8 @@
 	background: -o-radial-gradient(center, ellipse cover,  #87e0fd 0%,#53cbf1 40%,#05abe0 100%); /* Opera 12+ */
 	background: -ms-radial-gradient(center, ellipse cover,  #87e0fd 0%,#53cbf1 40%,#05abe0 100%); /* IE10+ */
 	background: radial-gradient(ellipse at center,  #87e0fd 0%,#53cbf1 40%,#05abe0 100%); /* W3C */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#87e0fd', endColorstr='#05abe0',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
-
+	/*filter: IE6-9 fallback on horizontal gradient */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#87e0fd', endColorstr='#05abe0',GradientType=1 );  
 }
 .selection-menu { 
 	border: 4px solid brown;
@@ -225,10 +225,10 @@ textarea#tracker{
     font:12px Tahoma, cursive;
     transition:box-shadow 0.5s ease;
     box-shadow:0 4px 6px rgba(0,0,0,0.1);
-    font-smoothing:subpixel-antialiased;
+    /*font-smoothing:subpixel-antialiased;*/
     background:linear-gradient(#F9EFAF, #F7E98D);
-    background:-o-linear-gradient(#F9EFAF, #F7E98D);
-    background:-ms-linear-gradient(#F9EFAF, #F7E98D);
+    /*background:-o-linear-gradient(#F9EFAF, #F7E98D);
+    background:-ms-linear-gradient(#F9EFAF, #F7E98D); */
     background:-moz-linear-gradient(#F9EFAF, #F7E98D);
     background:-webkit-linear-gradient(#F9EFAF, #F7E98D);
 }
@@ -238,6 +238,10 @@ textarea#tracker{
 }
 .trackerrow {
 	font: 11px Tahoma;
+}
+.trackerrowExtra {
+	font: 11px Tahoma;
+	color: green;
 }
 .trackertable {
 	border: 1px solid black;
@@ -251,6 +255,18 @@ textarea#tracker{
 	padding: 1px;
 	margin: 1px;
 }
+.trackercolExtra {
+	border-top: 1px black;
+	border-bottom: 0px black;
+	text-align: center;
+	padding: 1px;
+	margin: 1px;
+}
+
 .waitMessage {
 	z-index: 1;
+}
+.select2-container.select2-dropdown-open {
+	width: 200%;
+	margin-left: -70%;
 }

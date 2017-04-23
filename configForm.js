@@ -4,8 +4,8 @@ function configFormClose() {
 	document.getElementById("inputConfigForm").style.display= "none";
 }
 function configForm() {
-    document.getElementById("inputConfigForm").style.height = "auto";
-   document.getElementById("inputConfigForm").style.display= "block";
+	document.getElementById("inputConfigForm").style.height = "auto";
+	document.getElementById("inputConfigForm").style.display= "block";
     document.getElementById("outerTable").style.display = "none";
 	var table = document.getElementById("configTable");
 	table.innerHTML = ""; /* Required for recursive calls on delete */

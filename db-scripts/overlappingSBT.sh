@@ -13,5 +13,10 @@ do
 			(SELECT sbtId from subjectBatchTeacher WHERE subjectId = ($qs2) AND batchId = ($qb2) AND teacherId = ($qt2)),
 			1
 		);";
+	echo "INSERT INTO overlappingSBT(sbtId1, sbtId2, snapshotId) VALUES (
+			(SELECT sbtId from subjectBatchTeacher WHERE subjectId = ($qs2) AND batchId = ($qb2) AND teacherId = ($qt2)),
+			(SELECT sbtId from subjectBatchTeacher WHERE subjectId = ($qs1) AND batchId = ($qb1) AND teacherId = ($qt1)),
+			1
+		);";
 done
 
