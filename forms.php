@@ -393,8 +393,9 @@ function batchCanOverlapDelete() {
 	header("Content-Type: application/JSON: charset=UTF-8");
 
 	$batchesJSON = getArgument("batches");
+	$snapshotId = getArgument("snapshotId");
 	$batches = json_decode($batchesJSON);
-	error_log("batchCanOverlapDelete: received batches for deletion: ".$batches." and ".$batchesJSON);
+	error_log("batchCanOverlapDelete: received batches for deletion: $batchesJSON", 0);
 	$query = "DELETE FROM batchCanOverlap WHERE  snapshotId = $snapshotId AND ";
 	$query .= " batchId = ".$batches[0]." OR batchOverlapId = ".$batches[0]." ";
 	for($i = 1; $i < count($batches); $i++) { // 0 special case, to match the "OR" in query
@@ -422,6 +423,7 @@ function batchCanOverlapInsert() {
 	header("Content-Type: application/JSON: charset=UTF-8");
 
 	$batchesString = getArgument("batches");
+	$snapshotId = getArgument("snapshotId");
 	$batches = [];
 	$tok = strtok($batchesString, ",");
 	$batches[count($batches)] = $tok;

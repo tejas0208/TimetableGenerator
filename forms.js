@@ -45,6 +45,29 @@ function insertAddButton(row, onClickFunction) {
 	button.setAttribute("onclick", onClickFunction);
 	return cell;
 }
+function insertDeleteButton(row, id, onClickFunction){
+	cell = row.insertCell(-1);
+	var button = document.createElement("button");
+	cell.appendChild(button);
+	button.value = "Delete";
+	button.name = id;
+	var textNode = document.createTextNode("Delete");
+	button.appendChild(textNode);
+	button.setAttribute("onclick", onClickFunction);
+	button.setAttribute("id", id);
+	return cell;
+}
+function insertUpdateButton(row, id, onClickFunction) {
+	cell = row.insertCell(-1);
+	var button = document.createElement("button");
+	cell.appendChild(button);
+	button.value = "Update";
+	button.name = id;
+	var textNode = document.createTextNode("Update");
+	button.appendChild(textNode);
+	button.setAttribute("onclick", onClickFunction);
+	button.setAttribute("id", id);
+}
 function batchForm() {
 	formOpen("inputBatchForm");
 
@@ -64,15 +87,6 @@ function batchForm() {
 	cell.innerHTML = "<input type=\"text\" id=\"batchCountAdd\" size=\"3\" placeholder=\"Strengh\"> </input>";
 
 	cell = row.insertCell(-1);
-	/*var selectTag = document.createElement("select");
-	selectTag.setAttribute("id","classAdd");
-	var tag = createOptionTag("None", "None", false);		
-	selectTag.appendChild(tag);
-	for (k in classTable) {
-		var tag = createOptionTag(classTable[k]["classShortName"], classTable[k]["classShortName"], false);		
-		selectTag.appendChild(tag);
-	}
-	cell.appendChild(selectTag); */
 
 	cell = insertAddButton(row, "batchInsert()");
 
@@ -112,23 +126,8 @@ function batchForm() {
 		}
 		cell.appendChild(selectTag);
 
-		cell = row.insertCell(-1);
-		var button = document.createElement("button");
-		cell.appendChild(button);
-		button.value = "Update"; button.name = "bUpdateButton_"+count;
-		var textNode = document.createTextNode("Update");
-		button.appendChild(textNode);
-		button.setAttribute("onclick","batchUpdate("+count+")");
-		button.setAttribute("id","bUpdateButton_"+count);
-
-		cell = row.insertCell(-1);
-		var button = document.createElement("button");
-		cell.appendChild(button);
-		button.value = "Delete"; button.name = "bDeleteButton_"+count;
-		var textNode = document.createTextNode("Delete");
-		button.appendChild(textNode);
-		button.setAttribute("onclick","batchDelete("+count+")");
-		button.setAttribute("id","bDeleteButton_"+count);
+		insertUpdateButton(row, "bUpdateButton_" + count, "batchUpdate(" + count + ")");
+		insertDeleteButton(row, "bDeleteButton_" + count, "batchDelete(" + count + ")");
 
 		count++;
 	}
@@ -405,15 +404,9 @@ function batchCanOverlapForm() {
 		cell = row.insertCell(-1);
 		cell.innerHTML = currText;
 
-		cell = row.insertCell(-1);
-		var button = document.createElement("button");
-		cell.appendChild(button);
-		button.value = "Delete"; button.name = "bDeleteButton_"+count;
-		var textNode = document.createTextNode("Delete");
-		button.appendChild(textNode);
-		button.setAttribute("onclick","batchCanOverlapDelete("+count+")");
-		button.setAttribute("id","batchCanOverlapDeleteButton_"+count);
-		count++;
+		insertDeleteButton(row, "batchCanOverlapDeleteButton_" + count,
+							"batchCanOverlapDelete(" + count + ")");
+
 	}
 } 
 function batchCanOverlapDelete(i) {
@@ -428,17 +421,6 @@ function batchCanOverlapDelete(i) {
 			if(response["Success"] == "True") {
 				document.getElementById("batchCanOverlapDeleteButton_"+i).value = "Delete"
 				overlaps.splice(row, 1);
-				/* below, we can also call getOneTable alternatively */
-				/*alert("batchCanOverlap: " + JSON.stringify(batchCanOverlap));
-				for(k = 0; k < overlaps[row].length; k++) {
-					x = overlaps[row][k];
-					for(z in batchCanOverlap) {
-						if(batchCanOverlap[z]["batchId"] == x || batchCanOverlap[z]["batchOverlapId"] == x) {
-							batchCanOverlap.splice(z, 1);
-							alert("batchCanOverlap: " + JSON.stringify(batchCanOverlap));
-						}
-					}
-				}*/
 				batchCanOverlap = getOneTable("batchCanOverlap", false).batchCanOverlap;
 				fillTable2(true);
 				batchCanOverlapForm();
@@ -490,10 +472,6 @@ function batchRoomForm() {
 	formOpen("inputBatchRoomForm");
 	/* ---- Adding Header Row -----------------------*/
 	var table = insertHeaderRow("batchRoomTable", "ID", "Batch", "Room");
-
-	/* Two ways of adding elements are used: createElement+appendChild  and
-	 * insertRow+insertCell 
-	 */
 
 	/* ---- Adding "Add batchRoom Row" -----------------------*/
 	row = table.insertRow(1);
@@ -569,25 +547,10 @@ function batchRoomForm() {
 		cell.appendChild(selectTag);
 		//$("#room_"+i).select2();
 
-
-		cell = row.insertCell(-1);
-		var button = document.createElement("button");
-		cell.appendChild(button);
-		button.value = "Update"; button.name = "batchRoomUpdateButton_"+count;
-		var textNode = document.createTextNode("Update");
-		button.appendChild(textNode);
-		button.setAttribute("onclick","batchRoomUpdate("+count+")");
-		button.setAttribute("id","batchRoomUpdateButton_"+count);
-
-		cell = row.insertCell(-1);
-		var button = document.createElement("button");
-		cell.appendChild(button);
-		button.value = "Delete"; button.name = "batchRoomDeleteButton_"+count;
-		var textNode = document.createTextNode("Delete");
-		button.appendChild(textNode);
-		button.setAttribute("onclick","batchRoomDelete("+count+")");
-		button.setAttribute("id","batchRoomDeleteButton_"+count);
-
+		insertUpdateButton(row, "batchRoomUpdateButton_" + count,
+							"batchRoomUpdate(" + count + ")");
+		insertDeleteButton(row, "batchRoomDeleteButton_" + count,
+							"batchRoomDelete(" + count + ")");
 		count++;
 	}
 }
@@ -746,23 +709,10 @@ function classForm() {
 		cell = row.insertCell(-1);
 		cell.innerHTML = "<input type=\"text\" id=\"classCount_"+count+"\" size=\"3\" value=\""+currClass["classCount"]+"\"> </input>";
 
-		cell = row.insertCell(-1);
-		var button = document.createElement("button");
-		cell.appendChild(button);
-		button.value = "Update"; button.name = "cUpdateButton_"+count;
-		var textNode = document.createTextNode("Update");
-		button.appendChild(textNode);
-		button.setAttribute("onclick","classUpdate("+count+")");
-		button.setAttribute("id","cUpdateButton_"+count);
-
-		cell = row.insertCell(-1);
-		var button = document.createElement("button");
-		cell.appendChild(button);
-		button.value = "Delete"; button.name = "cDeleteButton_"+count;
-		var textNode = document.createTextNode("Delete");
-		button.appendChild(textNode);
-		button.setAttribute("onclick","classDelete("+count+")");
-		button.setAttribute("id","cDeleteButton_"+count);
+		insertUpdateButton(row, "cUpdateButton_" + count,
+							"classUpdate(" + count + ")");
+		insertDeleteButton(row, "cDeleteButton_" + count,
+							"classDelete(" + count + ")");
 
 		count++;
 	}
@@ -966,25 +916,10 @@ function classRoomForm() {
 		cell.appendChild(selectTag);
 		//$("#room_"+i).select2();
 
-
-		cell = row.insertCell(-1);
-		var button = document.createElement("button");
-		cell.appendChild(button);
-		button.value = "Update"; button.name = "classRoomUpdateButton_"+count;
-		var textNode = document.createTextNode("Update");
-		button.appendChild(textNode);
-		button.setAttribute("onclick","classRoomUpdate("+count+")");
-		button.setAttribute("id","classRoomUpdateButton_"+count);
-
-		cell = row.insertCell(-1);
-		var button = document.createElement("button");
-		cell.appendChild(button);
-		button.value = "Delete"; button.name = "classRoomDeleteButton_"+count;
-		var textNode = document.createTextNode("Delete");
-		button.appendChild(textNode);
-		button.setAttribute("onclick","classRoomDelete("+count+")");
-		button.setAttribute("id","classRoomDeleteButton_"+count);
-
+		insertUpdateButton(row, "classRoomUpdateButton_" + count,
+							"classRoomUpdate(" + count + ")");
+		insertDeleteButton(row, "classRoomDeleteButton_" + count,
+							"classRoomDelete(" + count + ")");
 		count++;
 	}
 }
@@ -1151,23 +1086,10 @@ function configForm() {
 		cell = row.insertCell(-1);
 		cell.innerHTML = "<input type=\"text\" id=\"incharge_"+count+"\" size=\"3\" value=\""+currConfig["incharge"]+"\"> </input>";
 
-		cell = row.insertCell(-1);
-		var button = document.createElement("button");
-		cell.appendChild(button);
-		button.value = "Update"; button.name = "configUpdateButton_"+count;
-		var textNode = document.createTextNode("Update");
-		button.appendChild(textNode);
-		button.setAttribute("onclick","configUpdate("+count+")");
-		button.setAttribute("id","configUpdateButton_"+count);
-
-		cell = row.insertCell(-1);
-		var button = document.createElement("button");
-		cell.appendChild(button);
-		button.value = "Delete"; button.name = "configDeleteButton_"+count;
-		var textNode = document.createTextNode("Delete");
-		button.appendChild(textNode);
-		button.setAttribute("onclick","configDelete("+count+")");
-		button.setAttribute("id","configDeleteButton_"+count);
+		insertUpdateButton(row, "configUpdateButton_" + count,
+							"configUpdate(" + count + ")");
+		insertDeleteButton(row, "configDeleteButton_" + count,
+							"configDelete(" + count + ")");
 
 		count++;
 	}
@@ -1398,15 +1320,8 @@ function overlappingSBTForm() {
 		centerTag.appendChild(centerText);
 		cell.appendChild(centerTag);
 
-		cell = row.insertCell(-1);
-		var button = document.createElement("button");
-		cell.appendChild(button);
-		button.value = "Delete"; button.name = "overlappingSBTDeleteButton_"+count;
-		var textNode = document.createTextNode("Delete");
-		button.appendChild(textNode);
-		button.setAttribute("onclick","overlappingSBTDelete("+count+")");
-		button.setAttribute("id","overlappingSBTDeleteButton_"+count);
-
+		insertDeleteButton(row, "overlappingSBTDeleteButton_" + count,
+							"overlappingSBTDelete(" + count + ")");
 		count++;
 	}
 }
@@ -1579,24 +1494,10 @@ function roomForm() {
 		cell = row.insertCell(-1);
 		cell.innerHTML = "<input type=\"text\" id=\"roomCount_"+count+"\" size=\"3\" value=\""+currRoom["roomCount"]+"\"> </input>";
 
-		cell = row.insertCell(-1);
-		var button = document.createElement("button");
-		cell.appendChild(button);
-		button.value = "Update"; button.name = "rUpdateButton_"+count;
-		var textNode = document.createTextNode("Update");
-		button.appendChild(textNode);
-		button.setAttribute("onclick","roomUpdate("+count+")");
-		button.setAttribute("id","rUpdateButton_"+count);
-
-		cell = row.insertCell(-1);
-		var button = document.createElement("button");
-		cell.appendChild(button);
-		button.value = "Delete"; button.name = "rDeleteButton_"+count;
-		var textNode = document.createTextNode("Delete");
-		button.appendChild(textNode);
-		button.setAttribute("onclick","roomDelete("+count+")");
-		button.setAttribute("id","rDeleteButton_"+count);
-
+		insertUpdateButton(row, "rUpdateButton_" + count,
+							"roomUpdate(" + count + ")");
+		insertDeleteButton(row, "rDeleteButton_" + count,
+							"roomDelete(" + count + ")");
 		count++;
 	}
 }
@@ -1823,25 +1724,8 @@ function sbtForm() {
 		centerTag.appendChild(centerText);
 		cell.appendChild(centerTag);
 			
-		/*cell = row.insertCell(-1);
-		var button = document.createElement("button");
-		cell.appendChild(button);
-		button.value = "Update"; button.name = "sbtUpdateButton_"+count;
-		var textNode = document.createTextNode("Update");
-		button.appendChild(textNode);
-		button.setAttribute("onclick","sbtUpdate("+count+")");
-		button.setAttribute("id","sbtUpdateButton_"+count);
-		*/
-
-		cell = row.insertCell(-1);
-		var button = document.createElement("button");
-		cell.appendChild(button);
-		button.value = "Delete"; button.name = "sbtDeleteButton_"+count;
-		var textNode = document.createTextNode("Delete");
-		button.appendChild(textNode);
-		button.setAttribute("onclick","sbtDelete("+count+")");
-		button.setAttribute("id","sbtDeleteButton_"+count);
-
+		insertDeleteButton(row, "sbtDeleteButton_" + count,
+							"sbtDelete(" + count + ")");
 		count++;
 	}
 }
@@ -2079,15 +1963,8 @@ function sctForm() {
 		centerTag.appendChild(centerText);
 		cell.appendChild(centerTag);
 	
-		cell = row.insertCell(-1);
-		var button = document.createElement("button");
-		cell.appendChild(button);
-		button.value = "Delete"; button.name = "sctDeleteButton_" + count;
-		var textNode = document.createTextNode("Delete");
-		button.appendChild(textNode);
-		button.setAttribute("onclick","sctDelete(" + count + ")");
-		button.setAttribute("id","sctDeleteButton_" + count);
-
+		insertDeleteButton(row, "sctDeleteButton_" + count,
+							"sctDelete(" + count + ")");
 		count++;
 	}
 }
@@ -2286,24 +2163,10 @@ function subjectForm() {
 		}
 		cell.appendChild(selectTag);
 
-		cell = row.insertCell(-1);
-		var button = document.createElement("button");
-		cell.appendChild(button);
-		button.value = "Update"; button.name = "sUpdateButton_"+count;
-		var textNode = document.createTextNode("Update");
-		button.appendChild(textNode);
-		button.setAttribute("onclick","subjectUpdate("+count+")");
-		button.setAttribute("id","sUpdateButton_"+count);
-
-		cell = row.insertCell(-1);
-		var button = document.createElement("button");
-		cell.appendChild(button);
-		button.value = "Delete"; button.name = "sDeleteButton_"+count;
-		var textNode = document.createTextNode("Delete");
-		button.appendChild(textNode);
-		button.setAttribute("onclick","subjectDelete("+count+")");
-		button.setAttribute("id","sDeleteButton_"+count);
-
+		insertUpdateButton(row, "sUpdateButton_" + count,
+							"subjectUpdate(" + count + ")");
+		insertDeleteButton(row, "sDeleteButton_" + count,
+							"subjectDelete(" + count + ")");
 		count++;
 	}
 }
@@ -2506,25 +2369,10 @@ function subjectRoomForm() {
 		cell.appendChild(selectTag);
 		//$("#room_"+i).select2();
 
-
-		cell = row.insertCell(-1);
-		var button = document.createElement("button");
-		cell.appendChild(button);
-		button.value = "Update"; button.name = "subjectRoomUpdateButton_"+count;
-		var textNode = document.createTextNode("Update");
-		button.appendChild(textNode);
-		button.setAttribute("onclick","subjectRoomUpdate("+count+")");
-		button.setAttribute("id","subjectRoomUpdateButton_"+count);
-
-		cell = row.insertCell(-1);
-		var button = document.createElement("button");
-		cell.appendChild(button);
-		button.value = "Delete"; button.name = "subjectRoomDeleteButton_"+count;
-		var textNode = document.createTextNode("Delete");
-		button.appendChild(textNode);
-		button.setAttribute("onclick","subjectRoomDelete("+count+")");
-		button.setAttribute("id","subjectRoomDeleteButton_"+count);
-
+		insertUpdateButton(row, "subjectRoomUpdateButton_" + count,
+							"subjectRoomUpdate(" + count + ")");
+		insertDeleteButton(row, "subjectRoomDeleteButton_" + count,
+							"subjectRoomDelete(" + count + ")");
 		count++;
 	}
 }
@@ -2708,24 +2556,10 @@ function teacherForm() {
 		}
 		cell.appendChild(selectTag);
 
-		cell = row.insertCell(-1);
-		var button = document.createElement("button");
-		cell.appendChild(button);
-		button.value = "Update"; button.name = "tUpdateButton_"+count;
-		var textNode = document.createTextNode("Update");
-		button.appendChild(textNode);
-		button.setAttribute("onclick","teacherUpdate("+count+")");
-		button.setAttribute("id","tUpdateButton_"+count);
-
-		cell = row.insertCell(-1);
-		var button = document.createElement("button");
-		cell.appendChild(button);
-		button.value = "Delete"; button.name = "tDeleteButton_"+count;
-		var textNode = document.createTextNode("Delete");
-		button.appendChild(textNode);
-		button.setAttribute("onclick","teacherDelete("+count+")");
-		button.setAttribute("id","tDeleteButton_"+count);
-
+		insertUpdateButton(row, "tUpdateButton_" + count,
+							"teacherUpdate(" + count + ")");
+		insertDeleteButton(row, "tDeleteButton_" + count,
+							"teacherDelete(" + count + ")");
 		count++;
 	}
 }
