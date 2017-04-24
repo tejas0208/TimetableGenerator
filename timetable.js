@@ -2687,7 +2687,8 @@ function classChange(createNewTable){
 	document.getElementById("title").innerHTML =  
 				"<h2> " + search(dept, "deptId", currentDeptId)["deptName"] + 
 				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-				"Timetable for Class: " + classShortName + " </h2>";
+				"Timetable for " +
+				"<span class=\"currTitle\"> Class: " + classShortName + " </span> </h2>";
 	fillTable2(createNewTable);
 
 }
@@ -2721,7 +2722,8 @@ function roomChange(createNewTable){
 	document.getElementById("title").innerHTML =  
 				"<h2> " + search(dept, "deptId", currentDeptId)["deptName"] + 
 				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-				"Timetable for Room: " + roomShortName + " </h2>";
+				"Timetable for " +
+				"<span class=\"currTitle\"> Room: " + roomShortName + " </span> </h2>";
 	type = "room";
 	currTableId = roomShortName;
 	getSupportObject();//fills supportObject correctly depending on type and id;
@@ -2739,7 +2741,8 @@ function batchChange(createNewTable){
 	document.getElementById("title").innerHTML =  
 				"<h2> " + search(dept, "deptId", currentDeptId)["deptName"] + 
 				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-				"Timetable for Batch: " + batchName + " </h2>";
+				"Timetable for " +
+				"<span class=\"currTitle\"> Batch: " + batchName + " </span> </h2>";
 	type = "batch";
 	currTableId = batchName;
 	getSupportObject();//fills supportObject correctly depending on type and id;
@@ -2753,7 +2756,8 @@ function teacherChange(createNewTable){
 	document.getElementById("title").innerHTML =  
 				"<h2> " + search(dept, "deptId", currentDeptId)["deptName"] + 
 				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-				"Timetable for Teacher: " + teacherShortName + " </h2>";
+				"Timetable for " +
+				"<span class=\"currTitle\"> Teacher: " + teacherShortName + " </span> </h2>";
 	type = "teacher";
 	currTableId = teacherShortName;
 	document.getElementById("room-menu").selectedIndex = "-1";

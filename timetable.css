@@ -74,6 +74,7 @@
 	font-weight: bold;
 	display: none;
 	background-color: #eeeeee;
+	text-align: center;
 }
 #title {
 	background-color: cyan;
@@ -269,4 +270,7 @@ textarea#tracker{
 .select2-container.select2-dropdown-open {
 	width: 200%;
 	margin-left: -70%;
+}
+.currTitle {
+	color: brown;
 }
