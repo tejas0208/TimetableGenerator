@@ -1938,9 +1938,10 @@ function batchOverlappingPossible(i, j, osbt, subjectRow) {
 function overlappingBatchBusyInThisSlot(i, j, sctOrSbtEntry, batchId, logOrNot) {
 	var currSubject= search(subject, "subjectId", sctOrSbtEntry["subjectId"]);
 	var osbt = searchMultipleRows(overlappingSBT, "sbtId1", sctOrSbtEntry["sbtId"]);
-	console.log("overlappingBatchBusyInThisSlot: i = " + i + " j = " + j +
+	/*console.log("overlappingBatchBusyInThisSlot: i = " + i + " j = " + j +
 				" searching for " + currSubject["subjectShortName"] +
 				"into osbt = " + JSON.stringify(osbt));
+	 */
 	if(osbt !== -1) {
 		for(var q in osbt) {
 			if(!batchOverlappingPossible(i, j, osbt[q], currSubject)) {
@@ -2913,6 +2914,21 @@ function load() {
 		/* do something */ 
 		fillTable2(true);
 	});
+	/*document.onkeydown = function(evt) {
+		evt = evt || window.event;
+		var isEscape = false;
+		if ("key" in evt) {
+			isEscape = (evt.key == "Escape" || evt.key == "Esc");
+		} else {
+			isEscape = (evt.keyCode == 27);
+		}
+		if (isEscape) {
+			formClose(currentFormName);
+		}
+	}; */
+	shortcut.add("Esc", function () {formClose(currentFormName)});
+	shortcut.add("Ctrl+s", function () { jsSaveSnapshot(false)});
+	shortcut.add("Ctrl+shift+s", function () { jsSaveNewSnapshot()});
 	return res;
 }
 /* Reload the select menu for snapshots. This is typically done
@@ -3027,6 +3043,10 @@ function jsSaveSnapshot(asynchronousOrNot) {
 		$("#waitMessage").show();
 		if(asynchronousOrNot === false) {
 			response = JSON.parse(xhttp.responseText);
+			$("#mainTimeTable").show();
+			$("#selection-menu-column").show();
+			$("#configuration-menu-column").show();
+			$("#waitMessage").hide();
 			if(response["Success"] == "True") {
 				alert("snapshot " + currentSnapshotName + " Saved. Press OK to continue");
 				document.getElementById("saveSnapshot").value = "Save snapshot";
@@ -3038,10 +3058,6 @@ function jsSaveSnapshot(asynchronousOrNot) {
 				document.getElementById("saveSnapshot").value = "Save snapshot";
 				document.getElementById("saveSnapshot").disabled = false;
 			}
-			$("#mainTimeTable").show();
-			$("#selection-menu-column").show();
-			$("#configuration-menu-column").show();
-			$("#waitMessage").hide();
 		}
 	} else {
 		alert("jsSaveSnapshot: can't find currentSnapshotName");
