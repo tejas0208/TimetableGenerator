@@ -5,7 +5,7 @@ $teacherForm = "
 			<td align=\"center\" > Teachers Configuration  
 			</td> 
 			<td  align=\"right\">  <a href=\"javascript:void(0)\" 
-					class=\"closebtn\" onclick=\"teacherFormClose()\"> 
+					class=\"closebtn\" onclick='formClose(\"inputTeacherForm\")'> 
 					Close &times; </a> 
 			</td> 
 	</table>
@@ -91,7 +91,7 @@ $subjectForm = "
 			<td align=\"center\" > Subjects Configuration  
 			</td> 
 			<td  align=\"right\">  <a href=\"javascript:void(0)\" 
-					class=\"closebtn\" onclick=\"subjectFormClose()\"> 
+					class=\"closebtn\" onclick='formClose(\"inputSubjectForm\")'> 
 					Close &times; </a> 
 			</td> 
 	</table>
@@ -168,7 +168,7 @@ $classForm = "
 			<td align=\"center\" > Classs Configuration  
 			</td> 
 			<td  align=\"right\">  <a href=\"javascript:void(0)\" 
-					class=\"closebtn\" onclick=\"classFormClose()\"> 
+					class=\"closebtn\" onclick='formClose(\"inputClassForm\")'> 
 					Close &times; </a> 
 			</td> 
 	</table>
@@ -244,7 +244,7 @@ $batchForm = "
 			<td align=\"center\" > Batch Configuration
 			</td> 
 			<td  align=\"right\"> <a href=\"javascript:void(0)\" 
-					class=\"closebtn\" onclick=\"batchFormClose()\"> 
+					class=\"closebtn\" onclick='formClose(\"inputBatchForm\")'> 
 					Close &times; </a> 
 			</td> 
 	</table>
@@ -258,7 +258,7 @@ $batchRoomForm = "
 			<td align=\"center\" >Room Preferences for Batches 
 			</td> 
 			<td  align=\"right\"> <a href=\"javascript:void(0)\" 
-					class=\"closebtn\" onclick=\"batchRoomFormClose()\"> 
+					class=\"closebtn\" onclick='formClose(\"inputBatchRoomForm\")'> 
 					Close &times; </a> 
 			</td> 
 	</table>
@@ -272,7 +272,8 @@ $batchCanOverlapForm = "
 			<td align=\"center\" >Overlapping Batches Configuration
 			</td> 
 			<td  align=\"right\"> <a href=\"javascript:void(0)\" 
-					class=\"closebtn\" onclick=\"batchCanOverlapFormClose()\"> 
+					class=\"closebtn\" onclick='formClose(\"".
+					"inputBatchCanOverlapForm\")'> 
 					Close &times; </a> 
 			</td> 
 	</table>
@@ -469,7 +470,7 @@ $roomForm = "
 			<td align=\"center\" > Rooms Configuration  
 			</td> 
 			<td  align=\"right\">  <a href=\"javascript:void(0)\" 
-					class=\"closebtn\" onclick=\"roomFormClose()\"> 
+					class=\"closebtn\" onclick='formClose(\"inputRoomForm\")'> 
 					Close &times; </a> 
 			</td> 
 	</table>
@@ -544,7 +545,7 @@ $sbtForm= "
 			<td align=\"center\"> Subject-Batch-Teacher Configuration  
 			</td> 
 			<td align=\"right\">  <a href=\"javascript:void(0)\" 
-					class=\"closebtn\" onclick=\"sbtFormClose()\"> 
+					class=\"closebtn\" onclick='formClose(\"inputSBTForm\")'> 
 					Close &times; </a> 
 			</td> 
 	</table>
@@ -634,7 +635,7 @@ $sctForm= "
 			<td align=\"center\"> Subject-Class-Teacher Configuration  
 			</td> 
 			<td align=\"right\">  <a href=\"javascript:void(0)\" 
-					class=\"closebtn\" onclick=\"sctFormClose()\"> 
+					class=\"closebtn\" onclick='formClose(\"inputSCTForm\")'> 
 					Close &times; </a> 
 			</td> 
 	</table>
@@ -723,7 +724,7 @@ $subjectRoomForm = "
 			<td align=\"center\" > Subjects Preferred Rooms 
 			</td> 
 			<td  align=\"right\">  <a href=\"javascript:void(0)\" 
-					class=\"closebtn\" onclick=\"subjectRoomFormClose()\"> 
+					class=\"closebtn\" onclick='formClose(\"inputSubjectRoomForm\")'> 
 					Close &times; </a> 
 			</td> 
 	</table>
@@ -797,7 +798,7 @@ $classRoomForm = "
 			<td align=\"center\" > Class: Preferred Rooms 
 			</td> 
 			<td  align=\"right\">  <a href=\"javascript:void(0)\" 
-					class=\"closebtn\" onclick=\"classRoomFormClose()\"> 
+					class=\"closebtn\" onclick='formClose(\"inputClassRoomForm\")'> 
 					Close &times; </a> 
 			</td> 
 	</table>
@@ -864,21 +865,6 @@ function updateClassRoom($type) {
 }
 ?>
 <?php
-$batchRoomForm = "
-	<div class=\"inputForm\" id=\"inputBatchRoomForm\">
-	<table width=\"60%\"> <tr> 
-			<td align=\"center\" > Batches Preferred Rooms 
-			</td> 
-			<td  align=\"right\">  <a href=\"javascript:void(0)\" 
-					class=\"closebtn\" onclick=\"batchRoomFormClose()\"> 
-					Close &times; </a> 
-			</td> 
-	</table>
-	<table width=\"60%\" id=\"batchRoomTable\" class=\"inputFormTable\">	
-	</table>
-	</div>	
-";
-
 function updateBatchRoom($type) {
 	global $CFG;
 	header("Content-Type: application/JSON: charset=UTF-8");
@@ -943,7 +929,7 @@ $configForm = "
 			<td align=\"center\" > Configs Configuration  
 			</td> 
 			<td  align=\"right\">  <a href=\"javascript:void(0)\" 
-					class=\"closebtn\" onclick=\"configFormClose()\"> 
+					class=\"closebtn\" onclick='formClose(\"inputConfigForm\")'> 
 					Close &times; </a> 
 			</td> 
 	</table>
@@ -1020,7 +1006,7 @@ $overlappingSBTForm= "
 			<td align=\"center\"> Overlapping Subject-Batches Configuration  
 			</td> 
 			<td align=\"right\">  <a href=\"javascript:void(0)\" 
-					class=\"closebtn\" onclick=\"overlappingSBTFormClose()\"> 
+					class=\"closebtn\" onclick='formClose(\"inputoverlappingSBTForm\")'> 
 					Close &times; </a> 
 			</td> 
 	</table>
