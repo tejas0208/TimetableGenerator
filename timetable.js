@@ -1905,16 +1905,16 @@ function subjectCantFitInRemainingSlots(sctOrSbtEntry, j, nSlotsPerDay, idText) 
  */
 function batchOverlappingPossible(i, j, osbt, subjectRow) {
 	var sbt = search(subjectBatchTeacher, "sbtId", osbt["sbtId2"]);
-	var overlappingBatchId = sbt["batchId"]; 
+	var overlappingBatchId = sbt["batchId"];
 	var overlappingClassId = search(batchClass, "batchId", sbt["batchId"])["classId"];
 	var bco = searchMultipleRows(batchCanOverlap, "batchId", sbt["batchId"]);
 	for(var p = 0; p < subjectRow["eachSlot"]; p++) {
 		var slotEntries = searchMultipleRows(timeTable, "day", i, "slotNo", (j + p),
-					"classId", overlappingClassId, "batchId", overlappingBatchId,
-					"snapshotId", currentSnapshotId);
+					//"classId", overlappingClassId, "batchId", overlappingBatchId,
+					"classId", overlappingClassId, "snapshotId", currentSnapshotId);
 		for(var q in slotEntries) {
-			console.log("batchOverlappingPossible: searching overlap of " + slotEntries[q]["batchId"] +
-						"with " + sbt["batchId"]);
+			/*console.log("batchOverlappingPossible: i = " + i + " j = " + j +
+						" slotBId = " + slotEntries[q]["batchId"]); */
 			/*Class entry present*/
 			if("" + slotEntries[q]["batchId"] == "null") {
 				return false;
