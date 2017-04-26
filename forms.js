@@ -78,6 +78,7 @@ function insertTextColumn(row, id, text) {
 	var centerText = document.createTextNode(text);
 	centerTag.appendChild(centerText);
 	cell.appendChild(centerTag);
+	return cell;
 }
 function insertSelectTag(cell, id, table, conditionContinue, conditionDefault,
 				valueId, displayId) {
@@ -1028,9 +1029,18 @@ function configForm() {
 	/* ---- Adding Header Row -----------------------*/
 	var table = insertHeaderRow("configTable", "configId", "Config Name", "Day Begins",
 						"Slot Duration", "No of Slots", "Dept", "Owner");
-
+	var count = 1;
+	if(config.length < 1) {
+		row = table.insertRow(count);
+		cell = insertTextColumn(row, "info", "Please create the first configuration before proceeding");
+		/*cell = row.insertCell(-1);
+		textNode = document.createTextNode("Please create the first configuration before proceeding");
+		cell.appendChild(textNode);  */
+		cell.setAttribute("colspan", "6");
+		count++;	
+	}
 	/* ---- Adding "Add Config Row" -----------------------*/
-	row = table.insertRow(1);
+	row = table.insertRow(count);
 	cell = row.insertCell(0);
 	cell.innerHTML = "<center> New</center>";
 	cell = row.insertCell(-1);
@@ -1046,18 +1056,22 @@ function configForm() {
 	cell.innerHTML = "<input type=\"text\" id=\"nSlotsAdd\" size=\"3\" " +
 						"placeholder=\"N Slots\"> </input>";
 	cell = row.insertCell(-1);
-	cell.innerHTML = "<input type=\"text\" id=\"deptIdAdd\" size=\"3\" " +
-						"placeholder=\"Department\"> </input>";
+	insertSelectTag(cell, "deptIdAdd", dept, false,
+				false, "deptId", "deptName");
+	/**cell.innerHTML = "<input type=\"text\" id=\"deptIdAdd\" size=\"3\" " +
+						"placeholder=\"Department\"> </input>"; */
+	/* TODO: This will be replaced by the current user Id when we implement users */
 	cell = row.insertCell(-1);
-	cell.innerHTML = "<input type=\"text\" id=\"inchargeAdd\" size=\"3\" " +
-						"placeholder=\"Incharge\"> </input>";
+	insertSelectTag(cell, "inchargeAdd", [[1]], false,
+				false, "0", "0");
+	/*cell.innerHTML = "<input type=\"text\" id=\"inchargeAdd\" size=\"3\" " +
+						"placeholder=\"Incharge\"> </input>"; */
 
 	cell = insertAddButton(row, "configInsert()");
 
 	/* Add the existing config entries */
 	tr = document.getElementById("configTable").rows[0];
 	var ncells = tr.cells.length;
-	var count = 2;
 
 	for (i in config) {
 		currConfig = config[i];
@@ -1099,6 +1113,9 @@ function configForm() {
 		count++;
 	}
 }
+function checkParameters(configName, dayBegin, slotDuration, nSlots, deptId, incharge) {
+	return true;
+}
 function configInsert() {
 	var configName, dayBegin, slotDuration, nSlots, deptId, incharge;
 	configName = document.getElementById("configNameAdd").value;
@@ -1107,7 +1124,8 @@ function configInsert() {
 	nSlots = document.getElementById("nSlotsAdd").value;
 	deptId = document.getElementById("deptIdAdd").value;
 	incharge = document.getElementById("inchargeAdd").value;
-
+	if(checkParameters(configName, dayBegin, slotDuration, nSlots, deptId, incharge) === false)
+		return;
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function () {
 		if(this.readyState == 4 && this.status == 200) {
@@ -1123,8 +1141,10 @@ function configInsert() {
 				newconfig["incharge"] = incharge;
 				newconfig["configId"] = response["configId"];
 				config.unshift(newconfig);
-				fillTable2(true);
-				configForm();
+				//fillTable2(true);
+				/* TODO: should we call load() or something else */
+				formClose("inputConfigForm");
+				getDeptConfigSnapshot();
 			} else {
 				alert("configInsert " + configName + " Failed. Error: " + response["Error"]);
 			}
@@ -1683,7 +1703,7 @@ function sbtInsert() {
 	subjectId = document.getElementById("subjectAdd").value;
 	teacherId = document.getElementById("teacherAdd").value;
 	if(batchId == -1 || subjectId == -1 || teacherId == -1) {
-		alert("Enter all values");
+		alert("Enter all values " + batchId + " " + subjectId + " " + teacherId);
 		return;
 	}
 	/* debug */
@@ -2415,7 +2435,6 @@ function getDeptId(deptShortName) {
 	return -1;
 }
 function teacherInsert() {
-	var row = i;
 	var teacherName, teacherShortName, minHrs, maxHrs, dept;
 	teacherName = document.getElementById("teacherNameAdd").value;
 	teacherShortName = document.getElementById("teacherShortNameAdd").value;

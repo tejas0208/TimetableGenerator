@@ -5,6 +5,7 @@ then
 	exit
 fi
 echo "---------------schema-----------------"
+mysql -u root -proot < database-create.sql
 mysql -u root -proot < schema.sql
 
 echo "---------------triggers-----------------"

@@ -3,11 +3,28 @@ require_once('config.php');
 function dbConnect() {
 	global $CFG;
 	$conn = new mysqli($CFG->server, $CFG->db_user, $CFG->db_pass, $CFG->db_database);
-	if($conn->error) {
-		die("db.php: Database connection error". $conn->error .""); 
+	if($conn->connect_error) {
+		return false;
 	}
 	$CFG->conn = $conn;
 	return $conn;
+}
+function dbConnectNoDatabase() {
+	global $CFG;
+	$conn = new mysqli($CFG->server, $CFG->db_user, $CFG->db_pass);
+	if($conn->connect_error) {
+		return false;
+	}
+	$CFG->conn = $conn;
+	return $conn;
+}
+function createDatabase($dbName) {
+	$conn = dbConnectNoDatabase();
+	$sqlQuery = "CREATE DATABASE ".$dbName.";";
+	$result = $conn->query($sqlQuery);
+	if($result === false)
+		return false;
+	return $result;
 }
 function sqlGetAllRows($query) {
 	global $CFG;
@@ -15,6 +32,9 @@ function sqlGetAllRows($query) {
 		$conn = dbConnect();
 	else
 		$conn = $CFG->conn;
+	if($conn === false) {
+		die("db.php: Database connection error");
+	}
 	$result = $conn->query($query);
 	if($result === false)  {
 		error_log("Query $query returned false", 0);
@@ -31,6 +51,9 @@ function sqlGetOneRow($query) {
 		$conn = dbConnect();
 	else
 		$conn = $CFG->conn;
+	if($conn === false) {
+		die("db.php: Database connection error");
+	}
 	$result = $conn->query($query);
 	if($result === false)  {
 		error_log("sqlGetOneRow: $query Failed");
@@ -52,6 +75,9 @@ function sqlUpdate($query) {
 		$conn = dbConnect();
 	else
 		$conn = $CFG->conn;
+	if($conn === false) {
+		die("db.php: Database connection error");
+	}
 	$result = $conn->query($query);
 	if($result === false) {
 		$CFG->last_query = $query;

@@ -58,6 +58,26 @@ function findTTId($ttId, $ttData, $snapshotId) {
 	$res = sqlGetOneRow($selectQuery);
 	return $res[0]["ttId"];
 }
+function insertSnapshotEntry() {
+	header("Content-Type: application/JSON: charset=UTF-8");
+	global $CFG;
+	$snapshotName = getArgument("snapshotName");
+	$snapshotCreator = getArgument("snapshotCreator");
+	$configId = getArgument("configId");
+
+	$query = "INSERT INTO snapshot (snapshotName, snapshotCreator, createTime,".
+				"modifyTime, configId) VALUES ('$snapshotName', $snapshotCreator,".
+				"\"080000\", \"080000\", $configId);";
+	$result = sqlUpdate($query);
+	if($result === false) {
+		error_log("insertSnapshotEntry: $query Failed", 0);
+		$resString = "{\"Success\": \"False\"}";
+		return $resString;
+	}	
+	error_log("insertSnapshotEntry: $query Success", 0);
+	$resString = "{\"Success\": \"True\"}";
+	return $resString;
+}
 function saveSnapshot() {
 	header("Content-Type: application/JSON: charset=UTF-8");
 	global $CFG;

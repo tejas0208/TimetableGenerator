@@ -13,9 +13,14 @@ $teacherForm = "
 	</table>
 	</div>	
 ";
+$checkMessage = "
+	<div id=\"checkMessage\" class=\"waitMessage\">
+	<h1> Checking Setup... </h1> 
+	</div>
+";
 
 $waitMessage = "
-	<div id=\"waitMessage\" class=\"waitMessage\">
+	<div id=\"waitMessage\" class=\"waitMessage\" display=\"\">
 	<table width=\"60%\"> 
 	<tr> 
 		<td> <h1> Wait till the operation completes ... </h1> </td> 
@@ -928,7 +933,7 @@ function updateBatchRoom($type) {
 $configForm = "
 	<div class=\"inputForm\" id=\"inputConfigForm\">
 	<table width=\"60%\"> <tr> 
-			<td align=\"center\" > Configs Configuration  
+			<td align=\"center\" > Manage timetable Configurations 
 			</td> 
 			<td  align=\"right\">  <a href=\"javascript:void(0)\" 
 					class=\"closebtn\" onclick='formClose(\"inputConfigForm\")'> 

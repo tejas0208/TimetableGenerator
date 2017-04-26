@@ -1,4 +1,8 @@
 <?php
+if(!file_exists('db.php'))
+	header("Location: install.php");
+if(!file_exists('config.php'))
+	header("Location: install.php");
 require_once('db.php');
 require_once('common.php');
 require_once('snapshot.php');
@@ -46,11 +50,15 @@ $page = $header.
 		$allForms.
 		$table.
 		$waitMessage.
+		$checkMessage.
 		$footer;
 
 $reqType = getArgument("reqType");
 error_log("reqType = ".$reqType, 0);
 switch($reqType) {
+	case "insertSnapshotEntry":
+		echo insertSnapshotEntry();
+		break;
 	case "getDataTables":
 		echo getDataTables();
 		break;

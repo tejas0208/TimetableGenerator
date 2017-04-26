@@ -783,7 +783,24 @@ function getSnapshotTable() {/*Loads data from server asynchronously*/
 	var db = JSON.parse(xhttp.responseText);
 	return db;  /* JS variables are pass by value */
 }
+function firstSnapshotForm() {
+	var snapshotName = prompt("No Snapshot exists. Enter first snapshot Name", "default");
+	var xhttp = new XMLHttpRequest();
+	xhttp.open("POST", "timetable.php", false);
+	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	/* TODO: Change snapshotCreator */
+	xhttp.send("reqType=insertSnapshotEntry" + "&configId=" + currentConfigId +
+				"&snapshotCreator=1" + "&snapshotName=" + snapshotName);
+	$("checkMessage").html("Creating Snapshot...Wait");
+	$("checkMessage").show();
+	var response = JSON.parse(xhttp.responseText);
+	if(response["Success"] == "True")
+		return true;
+	return false;
+}
 function getDeptConfigSnapshot() {
+	$("#waitMessage").hide();
+	$("#checkMessage").hide();
 	var xhttp = new XMLHttpRequest();
 	xhttp.open("POST", "timetable.php", false);
 	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -816,10 +833,18 @@ function getDeptConfigSnapshot() {
 		alert("Table: config not found. Check your Error Logs");
 		return false;
 	}
+	if(config.length < 1) {
+		configForm();
+		return false;
+	}
+	/* TODO: This should be configurable */
 	currentConfigId = config[0]["configId"];
-	//alert("config = " + JSON.stringify(config) + "\n currConfigId = " + currentConfigId);
-
+	
 	snapshot = getSnapshotTable().snapshot;
+	if(snapshot.length < 1) {
+		firstSnapshotForm();
+		getDeptConfigSnapshot();
+	}
 	if(typeof snapshot == "undefined") {
 		alert("Table: snapshot not found. Check your Error Logs");
 		return false;
@@ -2849,6 +2874,9 @@ function loadSelectMenus() {
 		loadRoomMenu();
 	}
 	else {
+		$("#mainTimeTable").html("<div align=center> Please select the Configuration Menu and " + 
+					"enter at least one room, teacher, class, batch, " +
+					"entry to see the select menus</div>");
 		$("#teacher-menu").css("display", "none");
 		$("#class-menu").css("display", "none");
 		$("#batch-menu").css("display", "none");
@@ -2893,47 +2921,6 @@ function loadNewSnapshot() {
 	fillTable2(true);
 	/* Settings for saving the snapshot */
 	return true;
-}
-/* Load all tables, including Dept, Config, Snapshot and Initialize
- * the display timeTable. Load default Snapshot
- */
-function load() {
-	var i;
-	if(getDeptConfigSnapshot() === false) {
-		alert("load(): Loading of Dept/Config/Snapshot Tables Failed. Check your Error Logs");
-		return false;
-	}
-	/*Load the default snapshot*/
-	res = loadNewSnapshot();
-	if(res === false) {
-		alert("load(): Loading of Snapshot Failed. Check your Error Logs.");
-		return false;
-	}
-	$("#mainTimeTable").append("<center><B>No TimeTable loaded </B><br>" +
-								"Please select option from above catgories</center>");
-	document.getElementById("title").innerHTML =  "<h2> Timetable for " +
-				search(dept, "deptId", currentDeptId)["deptName"] + "</h2>";
-	$("#waitMessage").hide();
-	$(window).resize(function () { 
-		/* do something */ 
-		fillTable2(true);
-	});
-	/*document.onkeydown = function(evt) {
-		evt = evt || window.event;
-		var isEscape = false;
-		if ("key" in evt) {
-			isEscape = (evt.key == "Escape" || evt.key == "Esc");
-		} else {
-			isEscape = (evt.keyCode == 27);
-		}
-		if (isEscape) {
-			formClose(currentFormName);
-		}
-	}; */
-	shortcut.add("Esc", function () {formClose(currentFormName)});
-	shortcut.add("Ctrl+s", function () { jsSaveSnapshot(false)});
-	shortcut.add("Ctrl+shift+s", function () { jsSaveNewSnapshot()});
-	return res;
 }
 /* Reload the select menu for snapshots. This is typically done
  * after a new snaphot is created, to accomodate for the new entry.
@@ -3053,13 +3040,13 @@ function jsSaveSnapshot(asynchronousOrNot) {
 			$("#waitMessage").hide();
 			if(response["Success"] == "True") {
 				alert("snapshot " + currentSnapshotName + " Saved. Press OK to continue");
-				document.getElementById("saveSnapshot").value = "Save snapshot";
+				document.getElementById("saveSnapshot").value = "Save";
 				document.getElementById("saveSnapshot").disabled = false;
 				loadSnapshotMenu(currentSnapshotName);
 				dirtyTimeTable = false;
 			} else {
 				alert("Saving snapshot failed. Error = " + response["Error"]);
-				document.getElementById("saveSnapshot").value = "Save snapshot";
+				document.getElementById("saveSnapshot").value = "Save";
 				document.getElementById("saveSnapshot").disabled = false;
 			}
 		}
@@ -3146,4 +3133,75 @@ function jsExport(type) {
 	//window.location='timetable.php';
 
 }
+/** 
+ * function wait():
+ * Attribution: http://stackoverflow.com/questions/14226803/javascript-wait-5-seconds-before-executing-next-line
+ */
+function wait(ms){
+	var start = new Date().getTime();
+	var end = start;
+	while(end < start + ms) {
+		end = new Date().getTime();
+	}
+}
+function checkInstallation() {
+	var xhttp = new XMLHttpRequest();
+	xhttp.open("POST", "install.php", false);
+	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xhttp.send("reqType=checkInstallation");
+	$("#checkMessage").hide();
+	$("#checkMessage").html("<h1>Checking Installation... Please wait</h1>");
+	$("#checkMessage").show();
+	wait(1000);
+	var response = JSON.parse(xhttp.responseText);
+	if(response["Success"] == "True")
+		return true;
+	else {
+		/* TODO: Check why the new message is displayed after wait is over */
+		$("#checkMessage").hide();
+		$("#checkMessage").html("<h1>Installation incomplete, redirecting to install.php</h1>");
+		$("#checkMessage").show();
+		wait(1000);
+		var currLocation = window.location.href;
+		window.location.replace("install.php");
+		/* Dead code */
+		return false;
+	}
+}
+/* Load all tables, including Dept, Config, Snapshot and Initialize
+ * the display timeTable. Load default Snapshot
+ */
+function load() {
+	var i;
+	if(checkInstallation() === false)
+		return false;
+	if(getDeptConfigSnapshot() === false) {
+		//alert("load(): Loading of Dept/Config/Snapshot Tables Failed. Check your Error Logs");
+		//window.location.replace("http://127.0.0.1/abhijittt/install.php")
+		return false;
+	}
+	/*Load the default snapshot*/
+	res = loadNewSnapshot();
+	if(res === false) {
+		alert("load(): Loading of Snapshot Failed. Check your Error Logs.");
+		return false;
+	}
+
+	$("#mainTimeTable").append("<center><B>No TimeTable loaded </B><br>" +
+								"Please select option from above catgories</center>");
+	document.getElementById("title").innerHTML =  "<h2> Timetable for " +
+				search(dept, "deptId", currentDeptId)["deptName"] + "</h2>";
+	$("#waitMessage").hide();
+
+	$(window).resize(function () { 
+		/* do something */ 
+		fillTable2(true);
+	});
+
+	shortcut.add("Esc", function () {formClose(currentFormName)});
+	shortcut.add("Ctrl+s", function () { jsSaveSnapshot(false)});
+	shortcut.add("Ctrl+shift+s", function () { jsSaveNewSnapshot()});
+	return res;
+}
+
 window.onload = load;
