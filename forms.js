@@ -80,8 +80,7 @@ function insertTextColumn(row, id, text) {
 	cell.appendChild(centerTag);
 	return cell;
 }
-function insertSelectTag(cell, id, table, conditionContinue, conditionDefault,
-				valueId, displayId) {
+function insertSelectTag(cell, id, table, valueId, displayId) {
 	/*var selectTag = document.createElement("select");
 	selectTag.setAttribute("id","subjectAdd");
 	var tag = createOptionTag(-1, "", false);
@@ -98,12 +97,7 @@ function insertSelectTag(cell, id, table, conditionContinue, conditionDefault,
 	var tag = createOptionTag(-1, "", false);
 	selectTag.appendChild(tag);
 	for (k in table) {
-		if(eval(conditionContinue)) /* don't show NON-batchable subjects here */
-			continue;
-		if(eval(conditionDefault))
-			var tag = createOptionTag(table[k][valueId], table[k][displayId], true);
-		else
-			var tag = createOptionTag(table[k][valueId], table[k][displayId], false);
+		var tag = createOptionTag(table[k][valueId], table[k][displayId], false);
 		selectTag.appendChild(tag);
 	}
 	cell.appendChild(selectTag);
@@ -381,8 +375,7 @@ function batchCanOverlapForm() {
 	cell.innerHTML = "<center> New</center>";
 
 	cell = row.insertCell(-1);
-	selectTag = insertSelectTag(cell, "batchCanOverlapAdd", batch, false,
-				false, "batchId", "batchName");
+	selectTag = insertSelectTag(cell, "batchCanOverlapAdd", batch, "batchId", "batchName");
 	selectTag.setAttribute("id","batchCanOverlapAdd");
 	selectTag.setAttribute("multiple","multiple");
 	selectTag.setAttribute("width", "100%");
@@ -523,15 +516,13 @@ function batchRoomForm() {
 	cell.innerHTML = "<center> New</center>";
 
 	cell = row.insertCell(-1);
-	selectTag = insertSelectTag(cell, "brBatchAdd", batch, false,
-				false, "batchId", "batchName");
+	selectTag = insertSelectTag(cell, "brBatchAdd", batch, "batchId", "batchName");
 	$("#brBatchAdd").select2({
 		placeholder: "Insert Batch Name"
 	});
 
 	cell = row.insertCell(-1);
-	selectTag = insertSelectTag(cell, "brRoomAdd", room, false,
-			false, "roomId", "roomShortName");
+	selectTag = insertSelectTag(cell, "brRoomAdd", room, "roomId", "roomShortName");
 	$("#brRoomAdd").select2({
 		placeholder: "Room Name"
 	});
@@ -549,12 +540,30 @@ function batchRoomForm() {
 		insertTextColumn(row, "center_" + count, currBatchRoom["brId"]);
 
 		cell = row.insertCell(-1);
-		selectTag = insertSelectTag(cell, "batch_" + count, batch, false,
-				'batch[k]["batchId"] == currBatchRoom["batchId"]', "batchId", "batchName");
+		var selectTag = document.createElement("select");
+		selectTag.setAttribute("id","batch_"+count);
+		for (k in batch) {
+			if(batch[k]["batchId"] == currBatchRoom["batchId"])
+				var tag = createOptionTag(batch[k]["batchId"], batch[k]["batchName"], true);
+			else
+				var tag = createOptionTag(batch[k]["batchId"], batch[k]["batchName"], false);
+			selectTag.appendChild(tag);
+		}
+		cell.appendChild(selectTag);
 
 		cell = row.insertCell(-1);
-		selectTag = insertSelectTag(cell, "room_" + count, room, 'room[k]["batches"] == 1',
-				'room[k]["roomId"] == currBatchRoom["roomId"]', "roomId", "roomName");
+		var selectTag = document.createElement("select");
+		selectTag.setAttribute("id","room_"+count);
+		for (k in room) {
+			if(room[k]["batches"] == 1) /* don't show batchable rooms here */
+				continue;
+			if(room[k]["roomId"] == currBatchRoom["roomId"])
+				var tag = createOptionTag(room[k]["roomId"], room[k]["roomName"], true);
+			else
+				var tag = createOptionTag(room[k]["roomId"], room[k]["roomName"], false);
+			selectTag.appendChild(tag);
+		}
+		cell.appendChild(selectTag);
 
 		insertUpdateButton(row, "batchRoomUpdateButton_" + count,
 							"batchRoomUpdate(" + count + ")");
@@ -869,15 +878,13 @@ function classRoomForm() {
 	cell.innerHTML = "<center> New</center>";
 
 	cell = row.insertCell(-1);
-	selectTag = insertSelectTag(cell, "crClassAdd", classTable, false,
-			false, "classId", "classShortName");
+	selectTag = insertSelectTag(cell, "crClassAdd", classTable,"classId", "classShortName");
 	$("#crClassAdd").select2({
 		placeholder: "Insert Class Name"
 	});
 
 	cell = row.insertCell(-1);
-	selectTag = insertSelectTag(cell, "crRoomAdd", room, false,
-			false, "roomId", "roomShortName");
+	selectTag = insertSelectTag(cell, "crRoomAdd", room, "roomId", "roomShortName");
 	$("#crRoomAdd").select2({
 		placeholder: "Room Name"
 	});
@@ -895,12 +902,32 @@ function classRoomForm() {
 		insertTextColumn(row, "center_" + count, currClassRoom["crId"]);
 
 		cell = row.insertCell(-1);
-		selectTag = insertSelectTag(cell, "class_" + count, classTable, false,
-			'classTable[k]["classId"] == currClassRoom["classId"]', "classId", "classShortName");
+		var selectTag = document.createElement("select");
+		selectTag.setAttribute("id","class_"+count);
+		for (k in classTable) {
+			if(classTable[k]["classId"] == currClassRoom["classId"])
+				var tag = createOptionTag(classTable[k]["classId"], classTable[k]["classShortName"], true);
+			else
+				var tag = createOptionTag(classTable[k]["classId"], classTable[k]["classShortName"], false);
+			selectTag.appendChild(tag);
+		}
+		cell.appendChild(selectTag);
+		//$("#class_"+i).select2();
 
 		cell = row.insertCell(-1);
-		selectTag = insertSelectTag(cell, "room_" + count, room, 'room[k]["batches"] == 1',
-			'room[k]["roomId"] == currClassRoom["roomId"]', "roomId", "roomName");
+		var selectTag = document.createElement("select");
+		selectTag.setAttribute("id","room_"+count);
+		for (k in room) {
+			if(room[k]["batches"] == 1) /* don't show batchable rooms here */
+				continue;
+			if(room[k]["roomId"] == currClassRoom["roomId"])
+				var tag = createOptionTag(room[k]["roomId"], room[k]["roomName"], true);
+			else
+				var tag = createOptionTag(room[k]["roomId"], room[k]["roomName"], false);
+			selectTag.appendChild(tag);
+		}
+		cell.appendChild(selectTag);
+		//$("#room_"+i).select2();
 
 		insertUpdateButton(row, "classRoomUpdateButton_" + count,
 							"classRoomUpdate(" + count + ")");
@@ -1037,7 +1064,7 @@ function configForm() {
 		textNode = document.createTextNode("Please create the first configuration before proceeding");
 		cell.appendChild(textNode);  */
 		cell.setAttribute("colspan", "6");
-		count++;	
+		count++;
 	}
 	/* ---- Adding "Add Config Row" -----------------------*/
 	row = table.insertRow(count);
@@ -1056,14 +1083,12 @@ function configForm() {
 	cell.innerHTML = "<input type=\"text\" id=\"nSlotsAdd\" size=\"3\" " +
 						"placeholder=\"N Slots\"> </input>";
 	cell = row.insertCell(-1);
-	insertSelectTag(cell, "deptIdAdd", dept, false,
-				false, "deptId", "deptName");
+	insertSelectTag(cell, "deptIdAdd", dept, "deptId", "deptName");
 	/**cell.innerHTML = "<input type=\"text\" id=\"deptIdAdd\" size=\"3\" " +
 						"placeholder=\"Department\"> </input>"; */
 	/* TODO: This will be replaced by the current user Id when we implement users */
 	cell = row.insertCell(-1);
-	insertSelectTag(cell, "inchargeAdd", [[1]], false,
-				false, "0", "0");
+	insertSelectTag(cell, "inchargeAdd", [[1]], "0", "0");
 	/*cell.innerHTML = "<input type=\"text\" id=\"inchargeAdd\" size=\"3\" " +
 						"placeholder=\"Incharge\"> </input>"; */
 
@@ -1638,7 +1663,30 @@ function roomDelete(i) {
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhttp.send("reqType=roomDelete&roomId=" + roomId + "&snapshotId=" + currentSnapshotId);
 }
+function sbtPossible() {
+	if(teacher.length < 1) {
+		return 0;
+	}	
+	if(batch.length < 1) {
+		return 0;
+	}
+	found = 0;
+	for(s in subject) {
+		if(subject[s]["batches"] == "1") {
+			found = 1;
+		}
+	}
+	if(found == 0) {
+		return 0;
+	}
+	return 1;
+}
 function sbtForm() {
+	if(!sbtPossible()) {
+		alert("This form is not available. Enter at least one batchable Subject, " +
+			  "One Teacher and One Batch using appropriate Forms");
+		return;
+	}
 	formOpen("inputSBTForm");
 
 	/* ---- Adding Header Row -----------------------*/
@@ -1650,22 +1698,29 @@ function sbtForm() {
 	cell.innerHTML = "<center> New</center>";
 
 	cell = row.insertCell(-1);
-	insertSelectTag(cell, "batchAdd", batch, false,
-				false, "batchId", "batchName");
+	insertSelectTag(cell, "batchAdd", batch, "batchId", "batchName");
 	$("#batchAdd").select2({
 		placeholder: "Insert Batch Name"
 	});
 
 	cell = row.insertCell(-1);
-	insertSelectTag(cell, "subjectAdd", subject, 'subject[k]["batches"] == 0',
-				false, "subjectId", "subjectName");
+	var selectTag = document.createElement("select");
+	selectTag.setAttribute("id","subjectAdd");
+	var tag = createOptionTag(-1, "", false);
+	selectTag.appendChild(tag);
+	for (k in subject) {
+		if(subject[k]["batches"] == 0) /* don't show NON-batchable subjects here */
+			continue;
+		var tag = createOptionTag(subject[k]["subjectId"], subject[k]["subjectName"], false);
+		selectTag.appendChild(tag);
+	}
+	cell.appendChild(selectTag);
 	$("#subjectAdd").select2({
 		placeholder: "Subject Name"
 	});
 
 	cell = row.insertCell(-1);
-	insertSelectTag(cell, "teacherAdd", teacher, false,
-				false, "teacherId", "teacherName");
+	insertSelectTag(cell, "teacherAdd", teacher, "teacherId", "teacherName");
 	$("#teacherAdd").select2({
 		placeholder: "Teacher Name"
 	});
@@ -1823,7 +1878,30 @@ function sbtDelete(i) {
 	xhttp.send("reqType=sbtDelete&sbtId=" + sbtId + "&snapshotId=" + currentSnapshotId
 				+ "&subjectId=" + subjectId + "&batchId=" + batchId + "&teacherId=" + teacherId);
 }
+function sctPossible() {
+	if(teacher.length < 1) {
+		return 0;
+	}	
+	if(classTable.length < 1) {
+		return 0;
+	}
+	found = 0;
+	for(s in subject) {
+		if(subject[s]["batches"] == "0") {
+			found = 1;
+		}
+	}
+	if(found == 0) {
+		return 0;
+	}
+	return 1;
+}
 function sctForm() {
+	if(!sctPossible()) {
+		alert("This form is not available. Enter at least Subject not having batches, " +
+			  "One Teacher and One Class using appropriate Forms");
+		return;
+	}
 	formOpen("inputSCTForm");
 	/* ---- Adding Header Row -----------------------*/
 	var table = insertHeaderRow("sctTable", "ID", "Class", "Subject", "Teacher");
@@ -1834,22 +1912,29 @@ function sctForm() {
 	cell.innerHTML = "<center> New</center>";
 
 	cell = row.insertCell(-1);
-	insertSelectTag(cell, "classAdd", classTable, false,
-				false, "classId", "className");
+	insertSelectTag(cell, "classAdd", classTable, "classId", "className");
 	$("#classAdd").select2({
 		placeholder: "Insert Class Name"
 	});
 
 	cell = row.insertCell(-1);
-	insertSelectTag(cell, "subjectAdd", subject, 'subject[k]["batches"] == 1',
-				false, "subjectId", "subjectName");
+	var selectTag = document.createElement("select");
+	selectTag.setAttribute("id","subjectAdd");
+	var tag = createOptionTag(-1, "", false);
+	selectTag.appendChild(tag);
+	for (k in subject) {
+		if(subject[k]["batches"] == 1) /* don't show batchable subjects here */
+			continue;
+		var tag = createOptionTag(subject[k]["subjectId"], subject[k]["subjectName"], false);
+		selectTag.appendChild(tag);
+	}
+	cell.appendChild(selectTag);
 	$("#subjectAdd").select2({
 		placeholder: "Subject Name"
 	});
 
 	cell = row.insertCell(-1);
-	insertSelectTag(cell, "teacherAdd", teacher, false,
-				false, "teacherId", "teacherName");
+	insertSelectTag(cell, "teacherAdd", teacher, "teacherId", "teacherName");
 	$("#teacherAdd").select2({
 		placeholder: "Teacher Name"
 	});
@@ -2031,8 +2116,7 @@ function subjectForm() {
 					"placeholder=\"N Slots\"> </input>";
 
 	cell = row.insertCell(-1);
-	insertSelectTag(cell, "batchesAdd", [[0], [1]], false,
-				false, "0", "0");
+	insertSelectTag(cell, "batchesAdd", [[0], [1]], "0", "0");
 
 	cell = insertAddButton(row, "subjectInsert()");
 
@@ -2065,8 +2149,17 @@ function subjectForm() {
 						"\"> </input>";
 
 		cell = row.insertCell(-1);
-		insertSelectTag(cell, "batches_" + count, [[0], [1]], false,
-				'currSubject["batches"] == table[k][0]', "0", "0");
+		var selectTag = document.createElement("select");
+		selectTag.setAttribute("id","batches_"+count);
+		batches = [0, 1];
+		for (k in batches) {
+			if(currSubject["batches"] == batches[k])
+				var tag = createOptionTag(batches[k], batches[k], true);
+			else
+				var tag = createOptionTag(batches[k], batches[k], false);
+			selectTag.appendChild(tag);
+		}
+		cell.appendChild(selectTag);
 
 		insertUpdateButton(row, "sUpdateButton_" + count,
 							"subjectUpdate(" + count + ")");
@@ -2207,15 +2300,13 @@ function subjectRoomForm() {
 	cell.innerHTML = "<center> New</center>";
 
 	cell = row.insertCell(-1);
-	insertSelectTag(cell, "crSubjectAdd", subject, false,
-			false, "subjectId", "subjectName");
+	insertSelectTag(cell, "crSubjectAdd", subject,"subjectId", "subjectName");
 	$("#crSubjectAdd").select2({
 		placeholder: "Insert Subject Name"
 	});
 
 	cell = row.insertCell(-1);
-	insertSelectTag(cell, "crRoomAdd", room, false,
-			false, "roomId", "roomShortName");
+	insertSelectTag(cell, "crRoomAdd", room, "roomId", "roomShortName");
 	$("#crRoomAdd").select2({
 		placeholder: "Room Name"
 	});
@@ -2233,12 +2324,32 @@ function subjectRoomForm() {
 		insertTextColumn(row, "center_" + count, currSubjectRoom["srId"]);
 
 		cell = row.insertCell(-1);
-		insertSelectTag(cell, "subject_" + count, subject, false,
-			'table[k]["subjectId"] == currSubjectRoom["subjectId"]', "subjectId", "subjectName");
+		var selectTag = document.createElement("select");
+		selectTag.setAttribute("id","subject_"+count);
+		for (k in subject) {
+			if(subject[k]["subjectId"] == currSubjectRoom["subjectId"])
+				var tag = createOptionTag(subject[k]["subjectId"], subject[k]["subjectName"], true);
+			else
+				var tag = createOptionTag(subject[k]["subjectId"], subject[k]["subjectName"], false);
+			selectTag.appendChild(tag);
+		}
+		cell.appendChild(selectTag);
+		//$("#subject_"+i).select2();
 
 		cell = row.insertCell(-1);
-		insertSelectTag(cell, "room_" + count, room, 'room[k]["subjects"] == 1',
-			'table[k]["roomId"] == currSubjectRoom["roomId"]', "roomId", "roomName");
+		var selectTag = document.createElement("select");
+		selectTag.setAttribute("id","room_"+count);
+		for (k in room) {
+			if(room[k]["subjectes"] == 1) /* don't show subjectable rooms here */
+				continue;
+			if(room[k]["roomId"] == currSubjectRoom["roomId"])
+				var tag = createOptionTag(room[k]["roomId"], room[k]["roomName"], true);
+			else
+				var tag = createOptionTag(room[k]["roomId"], room[k]["roomName"], false);
+			selectTag.appendChild(tag);
+		}
+		cell.appendChild(selectTag);
+		//$("#room_"+i).select2();
 
 		insertUpdateButton(row, "subjectRoomUpdateButton_" + count,
 							"subjectRoomUpdate(" + count + ")");
@@ -2382,8 +2493,16 @@ function teacherForm() {
 
 	cell = row.insertCell(-1);
 	currDeptId = 1; /* TODO: This should reflect the current dept under consideration */
-	insertSelectTag(cell, "deptAdd" , dept, false,
-		'dept[k]["deptId"] == 1', "deptShortName", "deptShortName");
+	var selectTag = document.createElement("select");
+	selectTag.setAttribute("id","deptAdd");
+	for (k in dept) {
+		if(dept[k]["deptId"] == currDeptId)
+			var tag = createOptionTag(dept[k]["deptShortName"], dept[k]["deptShortName"], true);
+		else 
+			var tag = createOptionTag(dept[k]["deptShortName"], dept[k]["deptShortName"]);
+		selectTag.appendChild(tag);
+	}
+	cell.appendChild(selectTag);
 
 	cell = insertAddButton(row, "teacherInsert()");
 
@@ -2415,8 +2534,17 @@ function teacherForm() {
 						"\"> </input>";
 
 		cell = row.insertCell(-1);
-		insertSelectTag(cell, "deptAdd" , dept, false,
-			'dept[k]["deptId"] == 1', "deptShortName", "deptShortName");
+		currDeptId = currTeacher["deptId"];
+		var selectTag = document.createElement("select");
+		selectTag.setAttribute("id","dept_"+count);
+		for (k in dept) {
+			if(dept[k]["deptId"] == currDeptId)
+				var tag = createOptionTag(dept[k]["deptShortName"], dept[k]["deptShortName"], true);
+			else 
+				var tag = createOptionTag(dept[k]["deptShortName"], dept[k]["deptShortName"]);
+			selectTag.appendChild(tag);
+		}
+		cell.appendChild(selectTag);
 
 		insertUpdateButton(row, "tUpdateButton_" + count,
 							"teacherUpdate(" + count + ")");
