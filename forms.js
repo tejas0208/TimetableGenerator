@@ -2097,12 +2097,14 @@ function subjectForm() {
 					"Subject Name", currSubject["subjectName"]);
 		insertInputBox(row, "text", "subjectShortName_" + count, "8",
 					"Short Name", currSubject["subjectShortName"]);
-		insertInputBox(row, "number", "eachSlot_" + count, "3",
-					"Each Entry #Slots", currSubject["eachSlot"]);
+		insertTextColumn(row, "eachSlot_" + count, currSubject["eachSlot"]);
+		/*insertInputBox(row, "number", "eachSlot_" + count, "3",
+					"Each Entry #Slots", currSubject["eachSlot"]); */
 		insertInputBox(row, "number", "nSlots_" + count, "3",
 					"#Entries", currSubject["nSlots"]);
 
-		var cell = insertCell(row);
+		insertTextColumn(row, "batches_" + count, currSubject["batches"] == "1"? "Yes": "No");
+		/*var cell = insertCell(row);
 		cell.setAttribute("align","center");
 		var selectTag = document.createElement("select");
 		selectTag.setAttribute("id","batches_"+count);
@@ -2114,7 +2116,7 @@ function subjectForm() {
 				var tag = createOptionTag(batches[k], batches[k], false);
 			selectTag.appendChild(tag);
 		}
-		cell.appendChild(selectTag);
+		cell.appendChild(selectTag); */
 
 		insertUpdateButton(row, "sUpdateButton_" + count,
 							"subjectUpdate(" + count + ")");
