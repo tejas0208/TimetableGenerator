@@ -29,9 +29,9 @@ if(isset($_POST['reqType']) && $_POST['reqType'] == "checkInstallation") {
 	return;
 }
 function checkPHPVersion() {
-	if (version_compare(phpversion(), '5.6.26') < 0) {
+	if (version_compare(phpversion(), '5.5.0') < 0) {
     	$phpversion = phpversion();
-    	echo "Need php version at least 5.6.26. Current verrsion is $phpversion).<br />";
+    	echo "Need php version at least 5.5.0. Current verrsion is $phpversion).<br />";
     	die;
 	}
 }
@@ -39,7 +39,12 @@ function checkWebServer() {
 
 }
 function checkMySqlSetup() {
-
+	/* This exntesion enables mysqli_result::fetch_all() function */
+	if(!extension_loaded('mysqlnd')) {
+		echo "Need php5-mysqlnd installed.  <br> ".
+			"On Ubuntu try running \"sudo apt-get install php5-mysqlnd\"";
+		die;
+	}
 }
 global $msgStr;
 function message($string) {
@@ -89,7 +94,10 @@ function createConfigFile() {
 		\$CFG->conn = false;
 	?>";
 	/* TODO: Ask the user to create this file manually */
-	fwrite($configFile, $text);
+	$result = fwrite($configFile, $text);
+	if($result === false) {
+		echo("Can't write config.php to current Folder, Please check permissions.");
+	}
 	return;
 }
 if(isset($_POST['createConfig'])) {

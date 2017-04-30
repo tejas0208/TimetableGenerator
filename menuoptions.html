@@ -8,26 +8,34 @@
 				Configuration	
 				<select id="configuration-menu" class="select-menu" display="none">
 					<option id = "selectOne" value = "selectOne" selected></option>
+					<optgroup label="Primary Data">
 					<option value = "teachers" onclick="teacherForm()">Teachers</option>
 					<option value = "subjects" onclick="subjectForm()">Subjects</option>
 					<option value = "classes" onclick="classForm()">Classes</option>
 					<option value = "batchs" onclick="batchForm()">Batches</option>
 					<option value = "rooms" onclick="roomForm()">Rooms</option>
 					<option value = "depts" onclick="deptForm()">Depts</option>
+					</optgroup>
+					<optgroup label="Mappings">
 					<option value = "subjectClassMapping" onclick="sctForm()"> 
-							Class-Subject-Teacher Mapping</option>
+							Class-Subject-Teacher</option>
 					<option value = "subjectBatchMapping" onclick="sbtForm()"> 
-							Batch-Subject-Teacher Mapping</option>
+							Batch-Subject-Teacher</option>
+					</optgroup>
+					<optgroup label="Overlaps">
 					<option value = "batchCanOverlap" onclick="batchCanOverlapForm()"> 
-							Batches: Alloweed Overlaps</option>
+							Overlaps Allowed</option>
 					<option value = "overlappingSBT" onclick="overlappingSBTForm()"> 
-							Overlapping Subject-Batches</option>
+							Overlaps Must</option>
+					</optgroup>
+					<optgroup label="Room Preferences">
 					<option value = "classRoom" onclick="classRoomForm()"> 
-							Room Preference for Classes</option>
+							For Classes</option>
 					<option value = "batchRoom" onclick="batchRoomForm()"> 
-							Room Preference for Batches</option>
+							For Batches</option>
 					<option value = "subjectRoom" onclick="subjectRoomForm()"> 
-							Room Preference for Subjects</option>
+							For Subjects</option>
+					</optgroup>
 					<option value = "config" onclick="configForm()"> 
 							Configure Timetable</option>
 					<option value = "user" onclick="userForm()">Users</option>

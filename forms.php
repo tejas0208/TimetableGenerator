@@ -1,23 +1,46 @@
 <?php
-$teacherForm = "
-	<div class=\"inputForm\" id=\"inputTeacherForm\">
-	<table>
-		</tr>
-		<td class=\"inputFormHeader\" width=\"90%\"> 
-			Teachers Configuration  
-		</td>
-		<td class=\"closebtn\" width=\"10%\">
-			<a href=\"javascript:void(0)\"
-				onclick='formClose(\"inputTeacherForm\")'> 
-				Close &times;
-			</a> 
-		</td>
-		</tr>
-	</table>
-	<table id=\"teacherTable\" class=\"inputFormTable\">	
-	</table>
-	</div>	
-";
+$formsList = array(
+	array("inputTeacherForm", "Teachers Configuration", "teacherTable"),
+	array("inputSubjectForm", "Subjects Configuration", "subjectTable"),
+	array("inputClassForm", "Classes Configuration", "classTable"),
+	array("inputRoomForm", "Rooms Configuration", "roomTable"),
+	array("inputBatchForm", "Batches Configuration", "batchTable"),
+	/* */
+	array("inputSBTForm", "Mapping: Subject, Batch, Teacher", "sbtTable"),
+	array("inputSCTForm", "Mapping: Subject, Class, Teacher", "sctTable"),
+	/* */
+	array("inputBatchCanOverlapForm", "Possibly Overlapping Batch-Groups", "batchCanOverlapTable"),
+	array("inputoverlappingSBTForm", "Must Overlapping Batch-Subjects", "overlappingSBTTable"),
+	/* */
+	array("inputBatchRoomForm", "Room Preferences for Batches", "batchRoomTable"),
+	array("inputClassRoomForm", "Room Preferences for Classes", "classRoomTable"),
+	array("inputSubjectRoomForm", "Room Preferences for Subjects", "subjectRoomTable"),
+	/* */
+	array("inputConfigForm", "Manage timetable Configurations", "configTable"),
+);
+$formsHTML = "";
+function generateInputForms() {
+	global $formsList;
+	global $formsHTML;
+	for($i = 0; $i < count($formsList); $i++) {
+		$formsHTML .=  
+			"<div class=\"inputForm\" id=\"".$formsList[$i][0]."\">".
+			"<table class=\"inputFormTitleTable\"> <tr> 
+					<td class=\"inputFormTitle\"> ".$formsList[$i][1].
+					"</td> 
+					<td class=\"closebtn\">  <a href=\"javascript:void(0)\" 
+							onclick='formClose(\"".$formsList[$i][0]."\")'> 
+							Close &times; </a> 
+					</td> 
+			</table>
+			<table id=\"".$formsList[$i][2]."\" class=\"inputFormTable\">	
+			</table>
+			</div>";
+	}
+	error_log("formsHTML: " . $formsHTML, 0);
+}
+?>
+<?php
 $checkMessage = "
 	<div id=\"checkMessage\" class=\"waitMessage\">
 	<h1> Checking Setup... </h1> 
@@ -95,20 +118,6 @@ function updateTeacher($type) {
 }
 ?>
 <?php
-$subjectForm = "
-	<div class=\"inputForm\" id=\"inputSubjectForm\">
-	<table width=\"60%\"> <tr> 
-			<td align=\"center\" > Subjects Configuration  
-			</td> 
-			<td  align=\"right\">  <a href=\"javascript:void(0)\" 
-					class=\"closebtn\" onclick='formClose(\"inputSubjectForm\")'> 
-					Close &times; </a> 
-			</td> 
-	</table>
-	<table width=\"60%\" id=\"subjectTable\" class=\"inputFormTable\">	
-	</table>
-	</div>	
-";
 
 function updateSubject($type) {
 	global $CFG;
@@ -172,21 +181,6 @@ function updateSubject($type) {
 }
 ?>
 <?php
-$classForm = "
-	<div class=\"inputForm\" id=\"inputClassForm\">
-	<table width=\"60%\"> <tr> 
-			<td align=\"center\" > Classs Configuration  
-			</td> 
-			<td  align=\"right\">  <a href=\"javascript:void(0)\" 
-					class=\"closebtn\" onclick='formClose(\"inputClassForm\")'> 
-					Close &times; </a> 
-			</td> 
-	</table>
-	<table width=\"60%\" id=\"classTable\" class=\"inputFormTable\">	
-	</table>
-	</div>	
-";
-
 function updateClass($type) {
 	global $CFG;
 	header("Content-Type: application/JSON: charset=UTF-8");
@@ -248,50 +242,6 @@ function updateClass($type) {
 }
 ?>
 <?php
-$batchForm = "
-	<div class=\"inputForm\" id=\"inputBatchForm\">
-	<table width=\"60%\"> <tr> 
-			<td align=\"center\" > Batch Configuration
-			</td> 
-			<td  align=\"right\"> <a href=\"javascript:void(0)\" 
-					class=\"closebtn\" onclick='formClose(\"inputBatchForm\")'> 
-					Close &times; </a> 
-			</td> 
-	</table>
-	<table width=\"60%\" id=\"batchTable\" class=\"inputFormTable\">	
-	</table>
-	</div>	
-";
-$batchRoomForm = "
-	<div class=\"inputForm\" id=\"inputBatchRoomForm\">
-	<table width=\"60%\"> <tr> 
-			<td align=\"center\" >Room Preferences for Batches 
-			</td> 
-			<td  align=\"right\"> <a href=\"javascript:void(0)\" 
-					class=\"closebtn\" onclick='formClose(\"inputBatchRoomForm\")'> 
-					Close &times; </a> 
-			</td> 
-	</table>
-	<table width=\"60%\" id=\"batchRoomTable\" class=\"inputFormTable\">	
-	</table>
-	</div>	
-";
-$batchCanOverlapForm = "
-	<div class=\"inputForm\" id=\"inputBatchCanOverlapForm\">
-	<table width=\"60%\"> <tr> 
-			<td align=\"center\" >Overlapping Batches Configuration
-			</td> 
-			<td  align=\"right\"> <a href=\"javascript:void(0)\" 
-					class=\"closebtn\" onclick='formClose(\"".
-					"inputBatchCanOverlapForm\")'> 
-					Close &times; </a> 
-			</td> 
-	</table>
-	<table width=\"60%\" id=\"batchCanOverlapTable\" class=\"inputFormTable\">	
-	</table>
-	</div>	
-";
-
 function updateBatchClass() {
 	global $CFG;
 	header("Content-Type: application/JSON: charset=UTF-8");
@@ -485,20 +435,6 @@ function batchCanOverlapInsert() {
 
 ?>
 <?php
-$roomForm = "
-	<div class=\"inputForm\" id=\"inputRoomForm\">
-	<table width=\"60%\"> <tr> 
-			<td align=\"center\" > Rooms Configuration  
-			</td> 
-			<td  align=\"right\">  <a href=\"javascript:void(0)\" 
-					class=\"closebtn\" onclick='formClose(\"inputRoomForm\")'> 
-					Close &times; </a> 
-			</td> 
-	</table>
-	<table width=\"60%\" id=\"roomTable\" class=\"inputFormTable\">	
-	</table>
-	</div>	
-";
 
 function updateRoom($type) {
 	global $CFG;
@@ -560,21 +496,6 @@ function updateRoom($type) {
 }
 ?>
 <?php
-$sbtForm= "
-	<div class=\"inputForm\" id=\"inputSBTForm\">
-	<table width=\"60%\"> <tr> 
-			<td align=\"center\"> Subject-Batch-Teacher Configuration  
-			</td> 
-			<td align=\"right\">  <a href=\"javascript:void(0)\" 
-					class=\"closebtn\" onclick='formClose(\"inputSBTForm\")'> 
-					Close &times; </a> 
-			</td> 
-	</table>
-	<table width=\"60%\" id=\"sbtTable\" class=\"inputFormTable\">	
-	</table>
-	</div>	
-";
-
 function updateSBT($type) {
 	global $CFG;
 	header("Content-Type: application/JSON: charset=UTF-8");
@@ -650,21 +571,6 @@ function updateSBT($type) {
 }
 ?>
 <?php
-$sctForm= "
-	<div class=\"inputForm\" id=\"inputSCTForm\">
-	<table width=\"60%\"> <tr> 
-			<td align=\"center\"> Subject-Class-Teacher Configuration  
-			</td> 
-			<td align=\"right\">  <a href=\"javascript:void(0)\" 
-					class=\"closebtn\" onclick='formClose(\"inputSCTForm\")'> 
-					Close &times; </a> 
-			</td> 
-	</table>
-	<table width=\"60%\" id=\"sctTable\" class=\"inputFormTable\">	
-	</table>
-	</div>	
-";
-
 function updateSCT($type) {
 	global $CFG;
 	header("Content-Type: application/JSON: charset=UTF-8");
@@ -943,22 +849,9 @@ function updateBatchRoom($type) {
 	return $resString;
 }
 ?>
-<?php
-$configForm = "
-	<div class=\"inputForm\" id=\"inputConfigForm\">
-	<table width=\"60%\"> <tr> 
-			<td align=\"center\" > Manage timetable Configurations 
-			</td> 
-			<td  align=\"right\">  <a href=\"javascript:void(0)\" 
-					class=\"closebtn\" onclick='formClose(\"inputConfigForm\")'> 
-					Close &times; </a> 
-			</td> 
-	</table>
-	<table width=\"60%\" id=\"configTable\" class=\"inputFormTable\">	
-	</table>
-	</div>	
-";
 
+
+<?Php
 function updateConfig($type) {
 	global $CFG;
 	header("Content-Type: application/JSON: charset=UTF-8");
@@ -1021,21 +914,6 @@ function updateConfig($type) {
 }
 ?>
 <?php
-$overlappingSBTForm= "
-	<div class=\"inputForm\" id=\"inputoverlappingSBTForm\">
-	<table width=\"60%\"> <tr> 
-			<td align=\"center\"> Overlapping Subject-Batches Configuration  
-			</td> 
-			<td align=\"right\">  <a href=\"javascript:void(0)\" 
-					class=\"closebtn\" onclick='formClose(\"inputoverlappingSBTForm\")'> 
-					Close &times; </a> 
-			</td> 
-	</table>
-	<table width=\"60%\" id=\"overlappingSBTTable\" class=\"inputFormTable\">	
-	</table>
-	</div>	
-";
-
 function updateOverlappingSBT($type) {
 	global $CFG;
 	header("Content-Type: application/JSON: charset=UTF-8");
@@ -1141,11 +1019,4 @@ function updateOverlappingSBT($type) {
 	$resString .= "\"Error\" : \"Bad Type\"}";
 	return $resString;
 }
-$allForms = 		
-		$teacherForm.  $subjectForm.  $classForm. 
-		$batchForm. $batchRoomForm. $batchCanOverlapForm.
-		$roomForm. $classRoomForm. $batchRoomForm. $subjectRoomForm.
-		$sctForm. $sbtForm.
-		$overlappingSBTForm.
-		$configForm;
 ?>
