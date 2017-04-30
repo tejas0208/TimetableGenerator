@@ -66,122 +66,22 @@ switch($reqType) {
 		$tableName = getArgument("tableName");
 		echo getOneTable($tableName);	
 		break;
-	case "teacherUpdate":
-		echo updateTeacher("update");
-		break;
-	case "teacherDelete":
-		echo updateTeacher("delete");
-		break;
-	case "teacherInsert":
-		echo updateTeacher("insert");
-		break;
-	case "subjectUpdate":
-		echo updateSubject("update");
-		break;
-	case "subjectDelete":
-		echo updateSubject("delete");
-		break;
-	case "subjectInsert":
-		echo updateSubject("insert");
-		break;
-	case "classUpdate":
-		echo updateClass("update");
-		break;
-	case "classDelete":
-		echo updateClass("delete");
-		break;
-	case "classInsert":
-		echo updateClass("insert");
-		break;
-	case "batchUpdate":
-		echo updateBatch("update");
-		break;
-	case "batchDelete":
-		echo updateBatch("delete");
-		break;
-	case "batchInsert":
-		echo updateBatch("insert");
-		break;
+	case "teacherUpdate": case "teacherDelete": case "teacherInsert":
+	case "subjectUpdate": case "subjectDelete": case "subjectInsert":
+	case "classUpdate": case "classDelete": case "classInsert":
+	case "batchUpdate": case "batchDelete": case "batchInsert":
 	case "batchClassUpdate":
-		echo updateBatchClass("");
-		break;
-	case "sctDelete":
-		echo updateSCT("delete");
-		break;
-	case "sctInsert":
-		echo updateSCT("insert");
-		break;
-	case "sctUpdate":
-		echo updateSCT("update");
-		break;
-	case "sbtDelete":
-		echo updateSBT("delete");
-		break;
-	case "sbtInsert":
-		echo updateSBT("insert");
-		break;
-	case "sbtUpdate":
-		echo updateSBT("update");
-		break;
-	case "roomDelete":
-		echo updateRoom("delete");
-		break;
-	case "roomInsert":
-		echo updateRoom("insert");
-		break;
-	case "roomUpdate":
-		echo updateRoom("update");
-		break;
-	case "batchCanOverlapDelete":
-		echo batchCanOverlapDelete("");
-		break;
-	case "batchCanOverlapInsert":
-		echo batchCanOverlapInsert("");
-		break;
-	case "classRoomDelete":
-		echo updateClassRoom("delete");
-		break;
-	case "classRoomInsert":
-		echo updateClassRoom("insert");
-		break;
-	case "classRoomUpdate":
-		echo updateClassRoom("update");
-		break;
-	case "batchRoomDelete":
-		echo updateBatchRoom("delete");
-		break;
-	case "batchRoomInsert":
-		echo updateBatchRoom("insert");
-		break;
-	case "batchRoomUpdate":
-		echo updateBatchRoom("update");
-		break;
-	case "subjectRoomDelete":
-		echo updateSubjectRoom("delete");
-		break;
-	case "subjectRoomInsert":
-		echo updateSubjectRoom("insert");
-		break;
-	case "subjectRoomUpdate":
-		echo updateSubjectRoom("update");
-		break;
-	case "overlappingSBTDelete":
-		echo updateOverlappingSBT("delete");
-		break;
-	case "overlappingSBTInsert":
-		echo updateOverlappingSBT("insert");
-		break;
-	case "overlappingSBTUpdate":
-		echo updateOverlappingSBT("update");
-		break;
-	case "configDelete":
-		echo updateConfig("delete");
-		break;
-	case "configInsert":
-		echo updateConfig("insert");
-		break;
-	case "configUpdate":
-		echo updateConfig("update");
+	case "sctDelete": case "sctInsert": case "sctUpdate":
+	case "sbtDelete": case "sbtInsert": case "sbtUpdate":
+	case "roomDelete": case "roomInsert": case "roomUpdate":
+	case "batchCanOverlapDelete": case "batchCanOverlapInsert":
+	case "classRoomDelete": case "classRoomInsert": case "classRoomUpdate":
+	case "batchRoomDelete": case "batchRoomInsert": case "batchRoomUpdate":
+	case "subjectRoomDelete": case "subjectRoomInsert": case "subjectRoomUpdate":
+	case "overlappingSBTDelete": case "overlappingSBTInsert": case "overlappingSBTUpdate":
+	case "configDelete": case "configInsert": case "configUpdate":
+		/* call the function which has same name as reqType */
+		echo $reqType();
 		break;
 	case "export":
 		$filename = exportFile();
