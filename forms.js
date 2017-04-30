@@ -18,7 +18,7 @@ function insertHeaderRow(tableName) {
 	var tr = document.createElement("tr");
 	table.appendChild(tr);
 
-	for(var j = 1; j < arguments.length; j++) {
+	for(var j = 1; j < arguments.length - 1; j++) {
 		var th = document.createElement("th");
 		tr.appendChild(th);
 		var tc = document.createTextNode(arguments[j]);
@@ -26,15 +26,17 @@ function insertHeaderRow(tableName) {
 	}
 
 	th = document.createElement("th");
-	th.setAttribute("colspan","2");
+	th.setAttribute("colspan", arguments[j]);
+	th.setAttribute("text-align", "center");
 	tr.appendChild(th);
 	tc = document.createTextNode("Actions");
 	th.appendChild(tc);
 	return table;
 }
-function insertAddButton(row, onClickFunction) {
+function insertAddButton(row, onClickFunction, colspan) {
 	var cell = row.insertCell(-1);
-	cell.setAttribute("colspan","2");
+	cell.setAttribute("colspan", colspan);
+	cell.setAttribute("align","center");
 
 	var button = document.createElement("button");
 	button.value = "Add";
@@ -49,6 +51,7 @@ function insertAddButton(row, onClickFunction) {
 }
 function insertDeleteButton(row, id, onClickFunction){
 	cell = row.insertCell(-1);
+	cell.setAttribute("align","center");
 	var button = document.createElement("button");
 	cell.appendChild(button);
 	button.value = "Delete";
@@ -61,6 +64,7 @@ function insertDeleteButton(row, id, onClickFunction){
 }
 function insertUpdateButton(row, id, onClickFunction) {
 	cell = row.insertCell(-1);
+	cell.setAttribute("align","center");
 	var button = document.createElement("button");
 	cell.appendChild(button);
 	button.value = "Update";
@@ -80,7 +84,7 @@ function insertTextColumn(row, id, text) {
 	cell.appendChild(centerTag);
 	return cell;
 }
-function insertSelectTag(cell, id, table, valueId, displayId) {
+function insertSelectTag(row, id, table, valueId, displayId) {
 	/*var selectTag = document.createElement("select");
 	selectTag.setAttribute("id","subjectAdd");
 	var tag = createOptionTag(-1, "", false);
@@ -92,6 +96,8 @@ function insertSelectTag(cell, id, table, valueId, displayId) {
 		selectTag.appendChild(tag);
 	} */
 
+	cell = row.insertCell(-1);
+	cell.setAttribute("align","center");
 	var selectTag = document.createElement("select");
 	selectTag.setAttribute("id", id);
 	var tag = createOptionTag(-1, "", false);
@@ -103,29 +109,33 @@ function insertSelectTag(cell, id, table, valueId, displayId) {
 	cell.appendChild(selectTag);
 	return selectTag;
 }
+function insertInputBox(row, type, id, size, placeholder, value) {
+	cell = row.insertCell(-1);
+	inputTag = document.createElement("input");
+	inputTag.setAttribute("type", type);	
+	inputTag.setAttribute("id", id);	
+	inputTag.setAttribute("size", size);	
+	inputTag.setAttribute("placeholder", placeholder);
+	inputTag.setAttribute("value", value);	
+	cell.appendChild(inputTag);
+}
 function batchForm() {
 	formOpen("inputBatchForm");
 
 	/* ---- Adding Header Row -----------------------*/
-	var table = insertHeaderRow("batchTable", "Id", "Name", "Strenght", "Class");
+	var table = insertHeaderRow("batchTable", "Id", "Name", "Strength", "Class", "1");
 	/* Two ways of adding elements are used: createElement + appendChild  and
 	 * insertRow + insertCell
 	 */
 
 	/* ---- Adding "Add Batch Row" -----------------------*/
 	row = table.insertRow(1);
-	cell = row.insertCell(0);
-	cell.innerHTML = "<center> New</center>";
-	cell = row.insertCell(-1);
-	cell.innerHTML = "<input type=\"text\" id=\"batchNameAdd\" size=\"32\" " +
-					"placeholder=\"Name\"> </input>";
-	cell = row.insertCell(-1);
-	cell.innerHTML = "<input type=\"text\" id=\"batchCountAdd\" size=\"3\" " +
-					"placeholder=\"Strengh\"> </input>";
+	insertTextColumn(row, "", "New");//currBatchRoom["brId"]);
+	insertInputBox(row, "text", "batchNameAdd", "32", "Enter Batch Name", "");
+	insertInputBox(row, "number", "batchCountAdd", "3", "Strength", "");
+	insertSelectTag(row, "batchClassAdd", classTable, "classId", "classShortName");
 
-	cell = row.insertCell(-1);
-
-	cell = insertAddButton(row, "batchInsert()");
+	cell = insertAddButton(row, "batchInsert()", 1);
 
 	/* Add the existing batch entries */
 	tr = document.getElementById("batchTable").rows[0];
@@ -137,16 +147,13 @@ function batchForm() {
 
 		insertTextColumn(row, "center_" + count, currBatch["batchId"]);
 
-		cell = row.insertCell(-1);
-		cell.innerHTML = "<input type=\"text\" id=\"batchName_" + count +
-						"\" size=\"32\" value=\"" + currBatch["batchName"] +
-						"\"> </input>";
-		cell = row.insertCell(-1);
-		cell.innerHTML = "<input type=\"text\" id=\"batchCount_" + count +
-						"\" size=\"3\" value=\"" + currBatch["batchCount"] +
-						"\"> </input>";
+		insertInputBox(row, "text", "batchName_" + count, "32",
+					"Batch Name", currBatch["batchName"]);
+		insertInputBox(row, "number", "batchCount_" + count, "3",
+					"Strength", currBatch["batchCount"]);
 
 		cell = row.insertCell(-1);
+		cell.setAttribute("align","center");
 		var selectTag = document.createElement("select");
 		selectTag.setAttribute("id","classShortName_" + count);
 		var tag = createOptionTag("None", "None", true);
@@ -164,7 +171,7 @@ function batchForm() {
 		}
 		cell.appendChild(selectTag);
 
-		insertUpdateButton(row, "bUpdateButton_" + count, "batchUpdate(" + count + ")");
+		//insertUpdateButton(row, "bUpdateButton_" + count, "batchUpdate(" + count + ")");
 		insertDeleteButton(row, "bDeleteButton_" + count, "batchDelete(" + count + ")");
 
 		count++;
@@ -174,6 +181,7 @@ function batchInsert() {
 	var batchName, batchCount;
 	batchName = document.getElementById("batchNameAdd").value;
 	batchCount = document.getElementById("batchCountAdd").value;
+	classId = document.getElementById("batchClassAdd").value;
 
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function () {
@@ -187,6 +195,7 @@ function batchInsert() {
 				newbatch["snapshotId"] = currentSnapshotId;
 				newbatch["batchCount"] = batchCount;
 				batch.unshift(newbatch);
+				batchClass = getOneTable("batchClass", false).batchClass;
 				loadSelectMenus();
 				fillTable2(true);
 				batchForm();
@@ -198,7 +207,7 @@ function batchInsert() {
 	xhttp.open("POST", "timetable.php", false); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhttp.send("reqType=batchInsert&batchName=" + batchName + "&batchCount=" +
-				batchCount + "&snapshotId=" + currentSnapshotId);
+				batchCount + "&snapshotId=" + currentSnapshotId +"&classId=" + classId);
 
 }
 function batchClassUpdate(i, currBatchId, currBatchClassId) {
@@ -236,9 +245,9 @@ function batchClassUpdate(i, currBatchId, currBatchClassId) {
 				currBatchClassId + "&snapshotId=" + currentSnapshotId);
 	response = JSON.parse(xhttp.responseText);
 	if(response["Success"] == "True") {
-		document.getElementById("bUpdateButton_" + i).childNodes[0].nodeValue = "Updated";
+		//document.getElementById("bUpdateButton_" + i).childNodes[0].nodeValue = "Updated";
 		document.getElementById("bDeleteButton_" + i).disabled = false;
-		document.getElementById("bUpdateButton_" + i).disabled = false;
+		//document.getElementById("bUpdateButton_" + i).disabled = false;
 		var index = response["bcId"];
 		if(index != -1) {// insert was done
 			newBatchClass = {};
@@ -254,7 +263,7 @@ function batchClassUpdate(i, currBatchId, currBatchClassId) {
 	else {
 		alert("Batch " + currBatchId + ": Update Failed.\nError:\n" + response["Error"]);
 		document.getElementById("bDeleteButton_" + i).disabled = false;
-		document.getElementById("bUpdateButton_" + i).disabled = false;
+		//document.getElementById("bUpdateButton_" + i).disabled = false;
 	}
 }
 function batchUpdate(i) {
@@ -263,9 +272,9 @@ function batchUpdate(i) {
 	batchName = document.getElementById("batchName_" + row).value;
 	batchCount = document.getElementById("batchCount_" + row).value;
 	batchId = document.getElementById("center_" + row).childNodes[0].nodeValue;
-	document.getElementById("bUpdateButton_" + row).childNodes[0].nodeValue = "Updating";
+	//document.getElementById("bUpdateButton_" + row).childNodes[0].nodeValue = "Updating";
 	document.getElementById("bDeleteButton_" + row).disabled = true;
-	document.getElementById("bUpdateButton_" + row).disabled = true;
+	//document.getElementById("bUpdateButton_" + row).disabled = true;
 
 	newClassName = document.getElementById("classShortName_" + row).value;
 	newClassId = search(classTable, "classShortName", newClassName)["classId"];
@@ -286,9 +295,9 @@ function batchUpdate(i) {
 		if(this.readyState == 4 && this.status == 200) {
 			response = JSON.parse(this.responseText);
 			if(response["Success"] == "True") {
-				document.getElementById("bUpdateButton_" + i).childNodes[0].nodeValue = "Updated";
+				//document.getElementById("bUpdateButton_" + i).childNodes[0].nodeValue = "Updated";
 				document.getElementById("bDeleteButton_" + i).disabled = false;
-				document.getElementById("bUpdateButton_" + i).disabled = false;
+				//document.getElementById("bUpdateButton_" + i).disabled = false;
 				batch[row]["batchName"] = batchName; /* new name inserted in array */
 				batch[row]["batchCount"] = batchCount;
 				loadSelectMenus();
@@ -296,10 +305,10 @@ function batchUpdate(i) {
 				batchForm();
 			}
 			else {
-				document.getElementById("bUpdateButton_" + i).childNodes[0].nodeValue = "Update";
+				//document.getElementById("bUpdateButton_" + i).childNodes[0].nodeValue = "Update";
 				alert("Batch " + batchName + ": Update Failed.\nError:\n" + response["Error"]);
 				document.getElementById("bDeleteButton_" + i).disabled = false;
-				document.getElementById("bUpdateButton_" + i).disabled = false;
+				//document.getElementById("bUpdateButton_" + i).disabled = false;
 				batchForm();
 			}
 		}
@@ -323,7 +332,7 @@ function batchDelete(i) {
 	batchId = document.getElementById("center_" + row).childNodes[0].nodeValue;
 	document.getElementById("bDeleteButton_" + row).childNodes[0].nodeValue = "Deleting";
 	document.getElementById("bDeleteButton_" + row).disabled = true;
-	document.getElementById("bUpdateButton_" + row).disabled = true;
+	//document.getElementById("bUpdateButton_" + row).disabled = true;
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function () {
 		if(this.readyState == 4 && this.status == 200) {
@@ -337,7 +346,7 @@ function batchDelete(i) {
 			} else {
 				alert("Batch " + batchName + ": Deletion Failed.\nError:\n" + response["Error"]);
 				document.getElementById("bDeleteButton_" + row).value = "Delete"
-				document.getElementById("bUpdateButton_" + row).disabled = false;
+				//document.getElementById("bUpdateButton_" + row).disabled = false;
 				document.getElementById("bDeleteButton_" + row).childNodes[0].nodeValue = "Can't Delete";
 			}
 		}
@@ -363,7 +372,7 @@ function batchCanOverlapForm() {
 	formOpen("inputBatchCanOverlapForm");
 
 	/* ---- Adding Header Row -----------------------*/
-	var table = insertHeaderRow("batchCanOverlapTable", "SN", "Select Batches Which Can Overlap");
+	var table = insertHeaderRow("batchCanOverlapTable", "SN", "Select Batches Which Can Overlap", 1);
 
 	/* Two ways of adding elements are used: createElement + appendChild  and
 	 * insertRow + insertCell
@@ -371,19 +380,22 @@ function batchCanOverlapForm() {
 
 	/* ---- Adding "Add Batch Row" -----------------------*/
 	row = table.insertRow(1);
-	cell = row.insertCell(0);
-	cell.innerHTML = "<center> New</center>";
+	insertTextColumn(row, "", "New");//currBatchRoom["brId"]);
 
-	cell = row.insertCell(-1);
-	selectTag = insertSelectTag(cell, "batchCanOverlapAdd", batch, "batchId", "batchName");
+	selectTag = insertSelectTag(row, "batchCanOverlapAdd", batch, "batchId", "batchName");
 	selectTag.setAttribute("id","batchCanOverlapAdd");
 	selectTag.setAttribute("multiple","multiple");
 	selectTag.setAttribute("width", "100%");
-	cell.setAttribute("width", "100%");
+	/* Remove the -1 entry */
+	document.getElementById("batchCanOverlapAdd").removeChild(
+		document.getElementById("batchCanOverlapAdd")[0]);
 	$("#batchCanOverlapAdd").select2({
-		tokenSeparators: [',']});
-
-	cell = insertAddButton(row, "batchCanOverlapInsert()");
+		tokenSeparators: [','],
+		width: 'resolve',
+	});
+	$("#batchCanOverlapAdd").on("change", filterBatchCanOverlapSelect); 
+	
+	cell = insertAddButton(row, "batchCanOverlapInsert()", 1);
 
 	/* Add the existing batch entries */
 	tr = document.getElementById("batchCanOverlapTable").rows[0];
@@ -393,6 +405,7 @@ function batchCanOverlapForm() {
 	 * sets of overlapping batches from batchCanOverlap table
 	 */
 	var count = -1;
+	overlaps = [];
 	for (i in batchCanOverlap) {
 		curr = batchCanOverlap[i];
 		/* debug */
@@ -404,7 +417,7 @@ function batchCanOverlapForm() {
 		//alert("index1 = " + index1 + " index2 = " + index2);
 		if(index1 != -1 && index2 != -1)
 			if(index1 != index2)
-				alert("index mismatch");
+				alert("ERROR: index mismatch");
 			else
 				;//already exists
 		else if(index1 != -1) {
@@ -421,8 +434,8 @@ function batchCanOverlapForm() {
 			overlaps[count].push(curr["batchId"]);
 			overlaps[count].push(curr["batchOverlapId"]);
 		}
-		//alert(JSON.stringify(overlaps));
 	}
+
 	var count = 2;
 	for(i = 0; i < overlaps.length; i++) {
 		curr = overlaps[i];
@@ -432,10 +445,12 @@ function batchCanOverlapForm() {
 		}
 		//alert("currText = " + currText);
 		var row = table.insertRow(count);
-		var cell = row.insertCell(0);
-		cell.innerHTML = "<center> " + (count - 1) + "</center>";
-		cell = row.insertCell(-1);
-		cell.innerHTML = currText;
+		//var cell = row.insertCell(0);
+		//cell.innerHTML = "<center> " + (count - 1) + "</center>";
+		insertTextColumn(row, "center1_" + count, count - 1);//currBatchRoom["brId"]);
+		insertTextColumn(row, "center1_" + count, currText);//currBatchRoom["brId"]);
+		//cell = row.insertCell(-1);
+		//cell.innerHTML = currText;
 
 		insertDeleteButton(row, "batchCanOverlapDeleteButton_" + count,
 							"batchCanOverlapDelete(" + count + ")");
@@ -475,10 +490,32 @@ function batchCanOverlapDelete(i) {
 
 
 }
+function filterBatchCanOverlapSelect() {
+	var batchNames;
+	save = $("#batchCanOverlapAdd").val(); 
+	batchNames = "" + $("#batchCanOverlapAdd").val(); // to convert object to a string
+	nEntries = batchNames.split(',');
+	if(nEntries.length < 1) {
+		return;
+	}
+	selectTag = document.getElementById("batchCanOverlapAdd");
+	entry = nEntries[0];
+	classEntry = search(batchClass, "batchId", entry)["classId"];
+	for(i = 0; i < selectTag.childNodes.length; i++) {
+		currOption = selectTag.childNodes[i];
+		currClass = search(batchClass, "batchId", currOption.value)["classId"];
+		if(currClass != classEntry) {
+			selectTag.remove(i);
+			i--;
+		}
+	}
+	$("#batchCanOverlapAdd").val(save); // to convert object to a string
+}
 function batchCanOverlapInsert() {
 	var batchNames;
 	batchNames = "" + $("#batchCanOverlapAdd").val(); // to convert object to a string
 	nEntries = batchNames.split(',');
+	/* Remove the -1 entry */
 	if(nEntries.length < 2) {
 		alert("minimum 2 entries required");
 		return;
@@ -499,35 +536,34 @@ function batchCanOverlapInsert() {
 			}
 		}
 	}
-	xhttp.open("POST", "timetable.php", false); // asynchronous
+	xhttp.open("POST", "timetable.php", true); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("reqType=batchCanOverlapInsert&batches=" + batchNames +
+	xhttp.send("reqType=batchCanOverlapInsert&batches=" + nEntries +
 				"&snapshotId=" + currentSnapshotId);
 
 }
 function batchRoomForm() {
 	formOpen("inputBatchRoomForm");
 	/* ---- Adding Header Row -----------------------*/
-	var table = insertHeaderRow("batchRoomTable", "ID", "Batch", "Room");
+	var table = insertHeaderRow("batchRoomTable", "ID", "Batch", "Room", 2);
 
 	/* ---- Adding "Add batchRoom Row" -----------------------*/
 	row = table.insertRow(1);
-	cell = row.insertCell(0);
-	cell.innerHTML = "<center> New</center>";
+	insertTextColumn(row, "", "New");//currBatchRoom["brId"]);
 
-	cell = row.insertCell(-1);
-	selectTag = insertSelectTag(cell, "brBatchAdd", batch, "batchId", "batchName");
+	selectTag = insertSelectTag(row, "brBatchAdd", batch, "batchId", "batchName");
 	$("#brBatchAdd").select2({
-		placeholder: "Insert Batch Name"
+		placeholder: "Insert Batch Name",
+		width: 'resolve'
 	});
 
-	cell = row.insertCell(-1);
-	selectTag = insertSelectTag(cell, "brRoomAdd", room, "roomId", "roomShortName");
+	selectTag = insertSelectTag(row, "brRoomAdd", room, "roomId", "roomShortName");
 	$("#brRoomAdd").select2({
-		placeholder: "Room Name"
+		placeholder: "Room Name",
+		width: 'resolve'
 	});
 
-	cell = insertAddButton(row, "batchRoomInsert()");
+	cell = insertAddButton(row, "batchRoomInsert()", 2);
 
 	/* Add the existing batchRoom entries */
 	tr = document.getElementById("batchRoomTable").rows[0];
@@ -540,6 +576,7 @@ function batchRoomForm() {
 		insertTextColumn(row, "center_" + count, currBatchRoom["brId"]);
 
 		cell = row.insertCell(-1);
+		cell.setAttribute("align","center");
 		var selectTag = document.createElement("select");
 		selectTag.setAttribute("id","batch_"+count);
 		for (k in batch) {
@@ -552,6 +589,7 @@ function batchRoomForm() {
 		cell.appendChild(selectTag);
 
 		cell = row.insertCell(-1);
+		cell.setAttribute("align","center");
 		var selectTag = document.createElement("select");
 		selectTag.setAttribute("id","room_"+count);
 		for (k in room) {
@@ -689,26 +727,16 @@ function classForm() {
 	formOpen("inputClassForm");
 
 	/* ---- Adding Header Row -----------------------*/
-	var table = insertHeaderRow("classTable", "SN", "Name", "Short Name", "Semester", "Strength");
+	var table = insertHeaderRow("classTable", "SN", "Name", "Short Name", "Semester", "Strength", 2);
 
 	/* ---- Adding "Add Class Row" -----------------------*/
 	row = table.insertRow(1);
-	cell = row.insertCell(0);
-	cell.innerHTML = "<center> New</center>";
-	cell = row.insertCell(-1);
-	cell.innerHTML = "<input type=\"text\" id=\"classNameAdd\" size=\"32\" " +
-						"placeholder=\"Write Name\"> </input>";
-	cell = row.insertCell(-1);
-	cell.innerHTML = "<input type=\"text\" id=\"classShortNameAdd\" size=\"8\" " +
-						"placeholder=\"Short Name\"> </input>";
-	cell = row.insertCell(-1);
-	cell.innerHTML = "<input type=\"text\" id=\"semesterAdd\" size=\"3\" " +
-						"placeholder=\"semester\"> </input>";
-	cell = row.insertCell(-1);
-	cell.innerHTML = "<input type=\"text\" id=\"classCountAdd\" size=\"3\" " +
-						"placeholder=\"Strength\"> </input>";
-
-	cell = insertAddButton(row, "classInsert()");
+	insertTextColumn(row, "", "New");//currBatchRoom["brId"]);
+	insertInputBox(row, "text", "classNameAdd", "32", "Enter Class Name", "");
+	insertInputBox(row, "text", "classShortNameAdd", "8", "Enter Short Name", "");
+	insertInputBox(row, "number", "semesterAdd", "3", "Semester", "");
+	insertInputBox(row, "number", "classCountAdd", "3", "Strength", "");
+	cell = insertAddButton(row, "classInsert()", 2);
 
 	/* Add the existing class entries */
 	tr = document.getElementById("classTable").rows[0];
@@ -721,22 +749,14 @@ function classForm() {
 
 		insertTextColumn(row, "center_" + count, currClass["classId"]);
 
-		cell = row.insertCell(-1);
-		cell.innerHTML = "<input type=\"text\" id=\"className_" + count +
-						"\" size=\"32\" value=\"" + currClass["className"] +
-						"\"> </input>";
-		cell = row.insertCell(-1);
-		cell.innerHTML = "<input type=\"text\" id=\"classShortName_" + count +
-						"\" size=\"8\" value=\"" + currClass["classShortName"] +
-						"\"> </input>";
-		cell = row.insertCell(-1);
-		cell.innerHTML = "<input type=\"text\" id=\"semester_" + count +
-						"\" size=\"3\" value=\"" + currClass["semester"] +
-						"\"> </input>";
-		cell = row.insertCell(-1);
-		cell.innerHTML = "<input type=\"text\" id=\"classCount_" + count +
-						"\" size=\"3\" value=\"" + currClass["classCount"] +
-						"\"> </input>";
+		insertInputBox(row, "text", "className_" + count, "32",
+					"Class Name", currClass["className"]);
+		insertInputBox(row, "text", "classShortName_" + count, "8",
+					"Class Short Name", currClass["classShortName"]);
+		insertInputBox(row, "number", "semester_" + count, "3",
+					"Semester", currClass["semester"]);
+		insertInputBox(row, "number", "classCount_" + count, "3",
+					"Strength", currClass["classCount"]);
 
 		insertUpdateButton(row, "cUpdateButton_" + count,
 							"classUpdate(" + count + ")");
@@ -870,26 +890,25 @@ function classDelete(i) {
 function classRoomForm() {
 	formOpen("inputClassRoomForm");
 	/* ---- Adding Header Row -----------------------*/
-	var table = insertHeaderRow("classRoomTable", "ID", "Class", "Room");
+	var table = insertHeaderRow("classRoomTable", "ID", "Class", "Room", 2);
 
 	/* ---- Adding "Add classRoom Row" -----------------------*/
 	row = table.insertRow(1);
-	cell = row.insertCell(0);
-	cell.innerHTML = "<center> New</center>";
+	insertTextColumn(row, "", "New");//currBatchRoom["brId"]);
 
-	cell = row.insertCell(-1);
-	selectTag = insertSelectTag(cell, "crClassAdd", classTable,"classId", "classShortName");
+	selectTag = insertSelectTag(row, "crClassAdd", classTable,"classId", "classShortName");
 	$("#crClassAdd").select2({
-		placeholder: "Insert Class Name"
+		placeholder: "Insert Class Name",
+		width: 'resolve'
 	});
 
-	cell = row.insertCell(-1);
-	selectTag = insertSelectTag(cell, "crRoomAdd", room, "roomId", "roomShortName");
+	selectTag = insertSelectTag(row, "crRoomAdd", room, "roomId", "roomShortName");
 	$("#crRoomAdd").select2({
-		placeholder: "Room Name"
+		placeholder: "Room Name",
+		width: 'resolve'
 	});
 
-	cell = insertAddButton(row, "classRoomInsert()");
+	cell = insertAddButton(row, "classRoomInsert()", 2);
 
 	/* Add the existing classRoom entries */
 	tr = document.getElementById("classRoomTable").rows[0];
@@ -902,6 +921,7 @@ function classRoomForm() {
 		insertTextColumn(row, "center_" + count, currClassRoom["crId"]);
 
 		cell = row.insertCell(-1);
+		cell.setAttribute("align","center");
 		var selectTag = document.createElement("select");
 		selectTag.setAttribute("id","class_"+count);
 		for (k in classTable) {
@@ -915,6 +935,7 @@ function classRoomForm() {
 		//$("#class_"+i).select2();
 
 		cell = row.insertCell(-1);
+		cell.setAttribute("align","center");
 		var selectTag = document.createElement("select");
 		selectTag.setAttribute("id","room_"+count);
 		for (k in room) {
@@ -1055,7 +1076,7 @@ function configForm() {
 	formOpen("inputConfigForm");
 	/* ---- Adding Header Row -----------------------*/
 	var table = insertHeaderRow("configTable", "configId", "Config Name", "Day Begins",
-						"Slot Duration", "No of Slots", "Dept", "Owner");
+						"Slot Duration(Secs)", "No of Slots Per Day", "Dept", "Owner", 2);
 	var count = 1;
 	if(config.length < 1) {
 		row = table.insertRow(count);
@@ -1068,31 +1089,16 @@ function configForm() {
 	}
 	/* ---- Adding "Add Config Row" -----------------------*/
 	row = table.insertRow(count);
-	cell = row.insertCell(0);
-	cell.innerHTML = "<center> New</center>";
-	cell = row.insertCell(-1);
-	cell.innerHTML = "<input type=\"text\" id=\"configNameAdd\" size=\"32\" " +
-						"placeholder=\"Name\"> </input>";
-	cell = row.insertCell(-1);
-	cell.innerHTML = "<input type=\"text\" id=\"dayBeginAdd\" size=\"8\" " +
-						"placeholder=\"day Begin\"> </input>";
-	cell = row.insertCell(-1);
-	cell.innerHTML = "<input type=\"text\" id=\"slotDurationAdd\" size=\"3\" " +
-						"placeholder=\"Each Slot\"> </input>";
-	cell = row.insertCell(-1);
-	cell.innerHTML = "<input type=\"text\" id=\"nSlotsAdd\" size=\"3\" " +
-						"placeholder=\"N Slots\"> </input>";
-	cell = row.insertCell(-1);
-	insertSelectTag(cell, "deptIdAdd", dept, "deptId", "deptName");
-	/**cell.innerHTML = "<input type=\"text\" id=\"deptIdAdd\" size=\"3\" " +
-						"placeholder=\"Department\"> </input>"; */
+	insertTextColumn(row, "", "New");//currBatchRoom["brId"]);
+	insertInputBox(row, "text", "configNameAdd", "32", "Enter Config Name", "");
+	insertInputBox(row, "time", "dayBeginAdd", "8", "Day Begins At", "");
+	insertInputBox(row, "number", "slotDurationAdd", "3", "Each Slot Minutes", "");
+	insertInputBox(row, "number", "nSlotsAdd", "3", "No of Slots Per Day", "");
+	insertSelectTag(row, "deptIdAdd", dept, "deptId", "deptName");
 	/* TODO: This will be replaced by the current user Id when we implement users */
-	cell = row.insertCell(-1);
-	insertSelectTag(cell, "inchargeAdd", [[1]], "0", "0");
-	/*cell.innerHTML = "<input type=\"text\" id=\"inchargeAdd\" size=\"3\" " +
-						"placeholder=\"Incharge\"> </input>"; */
+	insertSelectTag(row, "inchargeAdd", [[1]], "0", "0");
 
-	cell = insertAddButton(row, "configInsert()");
+	cell = insertAddButton(row, "configInsert()", 1);
 
 	/* Add the existing config entries */
 	tr = document.getElementById("configTable").rows[0];
@@ -1105,33 +1111,21 @@ function configForm() {
 
 		insertTextColumn(row, "center_" + count, currConfig["configId"]);
 
-		cell = row.insertCell(-1);
-		cell.innerHTML = "<input type=\"text\" id=\"configName_" + count +
-						"\" size=\"32\" value=\"" + currConfig["configName"] +
-						"\"> </input>";
-		cell = row.insertCell(-1);
-		cell.innerHTML = "<input type=\"text\" id=\"dayBegin_" + count +
-						"\" size=\"8\" value=\"" + currConfig["dayBegin"] +
-						"\"> </input>";
-		cell = row.insertCell(-1);
-		cell.innerHTML = "<input type=\"text\" id=\"slotDuration_" + count +
-						"\" size=\"3\" value=\"" + currConfig["slotDuration"] +
-						"\"> </input>";
-		cell = row.insertCell(-1);
-		cell.innerHTML = "<input type=\"text\" id=\"nSlots_" + count +
-						"\" size=\"3\" value=\"" + currConfig["nSlots"] +
-						"\"> </input>";
-		cell = row.insertCell(-1);
-		cell.innerHTML = "<input type=\"text\" id=\"deptId_" + count +
-						"\" size=\"3\" value=\"" + currConfig["deptId"] +
-						"\"> </input>";
-		cell = row.insertCell(-1);
-		cell.innerHTML = "<input type=\"text\" id=\"incharge_" + count +
-						"\" size=\"3\" value=\"" + currConfig["incharge"] +
-						"\"> </input>";
+		insertInputBox(row, "text", "configName_" + count, "32",
+					"Config Name", currConfig["configName"]);
+		insertInputBox(row, "time", "dayBegin_" + count, "8",
+					"Day Begins At", currConfig["dayBegin"]);
+		insertInputBox(row, "number", "slotDuration_" + count, "3",
+					"Slot Duration(Secs)", currConfig["slotDuration"]);
+		insertInputBox(row, "number", "nSlots_" + count, "3",
+					"No. of Slots per Day", currConfig["nSlots"]);
+		insertInputBox(row, "text", "deptId_" + count, "8",
+					"Dept Id", search(dept, "deptId", currConfig["deptId"])["deptShortName"]);
+		insertInputBox(row, "text", "incharge_" + count, "8",
+					"Incharge", currConfig["incharge"]);
 
-		insertUpdateButton(row, "configUpdateButton_" + count,
-							"configUpdate(" + count + ")");
+		/*insertUpdateButton(row, "configUpdateButton_" + count,
+							"configUpdate(" + count + ")"); */
 		insertDeleteButton(row, "configDeleteButton_" + count,
 							"configDelete(" + count + ")");
 
@@ -1270,14 +1264,14 @@ function overlappingSBTForm() {
 
 	/* ---- Adding Header Row -----------------------*/
 	var table = insertHeaderRow("overlappingSBTTable", "ID", "Sub-Batch-Teacher1",
-						"Sub-Batch-Teacher2");
+						"Sub-Batch-Teacher2", 2);
 
 	/* ---- Adding "Add overlappingSBT Row" -----------------------*/
 	row = table.insertRow(1);
-	cell = row.insertCell(0);
-	cell.innerHTML = "<center> New</center>";
+	insertTextColumn(row, "", "New");//currBatchRoom["brId"]);
 
 	cell = row.insertCell(-1);
+	cell.setAttribute("align","center");
 	var selectTag = document.createElement("select");
 	selectTag.setAttribute("id","sbtAdd1");
 	var tag = createOptionTag("-1", "", false);
@@ -1301,6 +1295,7 @@ function overlappingSBTForm() {
 	$("#sbtAdd1").on("change", makesbtAdd2);
 
 	cell = row.insertCell(-1);
+	cell.setAttribute("align","center");
 	var selectTag = document.createElement("select");
 	selectTag.setAttribute("id","sbtAdd2");
 	cell.appendChild(selectTag);
@@ -1312,7 +1307,7 @@ function overlappingSBTForm() {
 		width: 'resolve'
 	});
 
-	cell = insertAddButton(row, "overlappingSBTInsert()");
+	cell = insertAddButton(row, "overlappingSBTInsert()", 1);
 
 	/* Add the existing overlappingSBT entries */
 	tr = document.getElementById("overlappingSBTTable").rows[0];
@@ -1499,23 +1494,15 @@ function roomForm() {
 	formOpen("inputRoomForm");
 
 	/* ---- Adding Header Row -----------------------*/
-	var table = insertHeaderRow("roomTable", "ID", "Name", "Short Name", "Strength");
+	var table = insertHeaderRow("roomTable", "ID", "Name", "Short Name", "Strength", 2);
 
 	/* ---- Adding "Add Room Row" -----------------------*/
 	row = table.insertRow(1);
-	cell = row.insertCell(0);
-	cell.innerHTML = "<center> New</center>";
-	cell = row.insertCell(-1);
-	cell.innerHTML = "<input type=\"text\" id=\"roomNameAdd\" size=\"32\" " +
-					"placeholder=\"Write Name\"> </input>";
-	cell = row.insertCell(-1);
-	cell.innerHTML = "<input type=\"text\" id=\"roomShortNameAdd\" size=\"8\" " +
-					"placeholder=\"Short Name\"> </input>";
-	cell = row.insertCell(-1);
-	cell.innerHTML = "<input type=\"text\" id=\"roomCountAdd\" size=\"3\" " +
-					"placeholder=\"Strength\"> </input>";
-
-	cell = insertAddButton(row, "roomInsert()");
+	insertTextColumn(row, "", "New");//currBatchRoom["brId"]);
+	insertInputBox(row, "text", "roomNameAdd", "32", "Enter Room Name", "");
+	insertInputBox(row, "text", "roomShortNameAdd", "8", "Enter Short Name", "");
+	insertInputBox(row, "number", "roomCountAdd", "3", "Room Size", "");
+	cell = insertAddButton(row, "roomInsert()", 2);
 
 	/* Add the existing room entries */
 	tr = document.getElementById("roomTable").rows[0];
@@ -1528,18 +1515,12 @@ function roomForm() {
 
 		insertTextColumn(row, "center_" + count, currRoom["roomId"]);
 
-		cell = row.insertCell(-1);
-		cell.innerHTML = "<input type=\"text\" id=\"roomName_" + count +
-						"\" size=\"32\" value=\"" + currRoom["roomName"] +
-						"\"> </input>";
-		cell = row.insertCell(-1);
-		cell.innerHTML = "<input type=\"text\" id=\"roomShortName_" + count +
-						"\" size=\"8\" value=\"" + currRoom["roomShortName"] +
-						"\"> </input>";
-		cell = row.insertCell(-1);
-		cell.innerHTML = "<input type=\"text\" id=\"roomCount_" + count +
-						"\" size=\"3\" value=\"" + currRoom["roomCount"] +
-						"\"> </input>";
+		insertInputBox(row, "text", "roomName_" + count, "32",
+					"Room Name", currRoom["roomName"]);
+		insertInputBox(row, "text", "roomShortName_" + count, "8",
+					"Short Name", currRoom["roomShortName"]);
+		insertInputBox(row, "number", "roomCount_" + count, "3",
+					"Capacity", currRoom["roomCount"]);
 
 		insertUpdateButton(row, "rUpdateButton_" + count,
 							"roomUpdate(" + count + ")");
@@ -1690,20 +1671,20 @@ function sbtForm() {
 	formOpen("inputSBTForm");
 
 	/* ---- Adding Header Row -----------------------*/
-	var table = insertHeaderRow("sbtTable", "ID", "Batch", "Subject", "Teacher");
+	var table = insertHeaderRow("sbtTable", "ID", "Batch", "Subject", "Teacher", 2);
 
 	/* ---- Adding "Add sbt Row" -----------------------*/
 	row = table.insertRow(1);
-	cell = row.insertCell(0);
-	cell.innerHTML = "<center> New</center>";
+	insertTextColumn(row, "", "New");//currBatchRoom["brId"]);
 
-	cell = row.insertCell(-1);
-	insertSelectTag(cell, "batchAdd", batch, "batchId", "batchName");
+	insertSelectTag(row, "batchAdd", batch, "batchId", "batchName");
 	$("#batchAdd").select2({
-		placeholder: "Insert Batch Name"
+		placeholder: "Insert Batch Name",
+		width: 'resolve'
 	});
 
 	cell = row.insertCell(-1);
+	cell.setAttribute("align","center");
 	var selectTag = document.createElement("select");
 	selectTag.setAttribute("id","subjectAdd");
 	var tag = createOptionTag(-1, "", false);
@@ -1716,16 +1697,17 @@ function sbtForm() {
 	}
 	cell.appendChild(selectTag);
 	$("#subjectAdd").select2({
-		placeholder: "Subject Name"
+		placeholder: "Subject Name",
+		width: 'resolve'
 	});
 
-	cell = row.insertCell(-1);
-	insertSelectTag(cell, "teacherAdd", teacher, "teacherId", "teacherName");
+	insertSelectTag(row, "teacherAdd", teacher, "teacherId", "teacherName");
 	$("#teacherAdd").select2({
-		placeholder: "Teacher Name"
+		placeholder: "Teacher Name",
+		width: 'resolve'
 	});
 
-	cell = insertAddButton(row, "sbtInsert()");
+	cell = insertAddButton(row, "sbtInsert()", 1);
 
 	/* Add the existing sbt entries */
 	tr = document.getElementById("sbtTable").rows[0];
@@ -1904,20 +1886,20 @@ function sctForm() {
 	}
 	formOpen("inputSCTForm");
 	/* ---- Adding Header Row -----------------------*/
-	var table = insertHeaderRow("sctTable", "ID", "Class", "Subject", "Teacher");
+	var table = insertHeaderRow("sctTable", "ID", "Class", "Subject", "Teacher", 1);
 
 	/* ---- Adding "Add sct Row" -----------------------*/
 	row = table.insertRow(1);
-	cell = row.insertCell(0);
-	cell.innerHTML = "<center> New</center>";
+	insertTextColumn(row, "", "New");//currBatchRoom["brId"]);
 
-	cell = row.insertCell(-1);
-	insertSelectTag(cell, "classAdd", classTable, "classId", "className");
+	insertSelectTag(row, "classAdd", classTable, "classId", "className");
 	$("#classAdd").select2({
-		placeholder: "Insert Class Name"
+		placeholder: "Insert Class Name",
+		width: 'resolve'
 	});
 
 	cell = row.insertCell(-1);
+	cell.setAttribute("align","center");
 	var selectTag = document.createElement("select");
 	selectTag.setAttribute("id","subjectAdd");
 	var tag = createOptionTag(-1, "", false);
@@ -1930,16 +1912,17 @@ function sctForm() {
 	}
 	cell.appendChild(selectTag);
 	$("#subjectAdd").select2({
-		placeholder: "Subject Name"
+		placeholder: "Subject Name",
+		width: 'resolve'
 	});
 
-	cell = row.insertCell(-1);
-	insertSelectTag(cell, "teacherAdd", teacher, "teacherId", "teacherName");
+	insertSelectTag(row, "teacherAdd", teacher, "teacherId", "teacherName");
 	$("#teacherAdd").select2({
-		placeholder: "Teacher Name"
+		placeholder: "Teacher Name",
+		width: 'resolve'
 	});
 
-	cell = insertAddButton(row, "sctInsert()");
+	cell = insertAddButton(row, "sctInsert()", 1);
 
 	/* Add the existing sct entries */
 	tr = document.getElementById("sctTable").rows[0];
@@ -2096,29 +2079,19 @@ function sctDelete(i) {
 function subjectForm() {
 	formOpen("inputSubjectForm");
 	/* ---- Adding Header Row -----------------------*/
-	var table = insertHeaderRow("subjectTable", "ID", "Name", "Short Name", "Each Slot",
-				"#Slots", "Batches?");
+	var table = insertHeaderRow("subjectTable", "ID", "Name", "Short Name", "Each Entry #Slots",
+				"#Entries", "Batches?", 2);
 	/* ---- Adding "Add Subject Row" -----------------------*/
 	row = table.insertRow(1);
-	cell = row.insertCell(0);
-	cell.innerHTML = "<center> New</center>";
-	cell = row.insertCell(-1);
-	cell.innerHTML = "<input type=\"text\" id=\"subjectNameAdd\" size=\"32\" " +
-					"placeholder=\"Name\"> </input>";
-	cell = row.insertCell(-1);
-	cell.innerHTML = "<input type=\"text\" id=\"subjectShortNameAdd\" size=\"8\" " +
-					"placeholder=\"Short Name\"> </input>";
-	cell = row.insertCell(-1);
-	cell.innerHTML = "<input type=\"text\" id=\"eachSlotAdd\" size=\"3\" " +
-					"placeholder=\"Each Slot\"> </input>";
-	cell = row.insertCell(-1);
-	cell.innerHTML = "<input type=\"text\" id=\"nSlotsAdd\" size=\"3\" " +
-					"placeholder=\"N Slots\"> </input>";
+	insertTextColumn(row, "", "New");//currBatchRoom["brId"]);
+	insertInputBox(row, "text", "subjectNameAdd", "32", "Enter Subject Name", "");
+	insertInputBox(row, "text", "subjectShortNameAdd", "8", "Enter Short Name", "");
+	insertInputBox(row, "number", "eachSlotAdd", "3", "Each Entry #Slots", "");
+	insertInputBox(row, "number", "nSlotsAdd", "3", "#Entries", "");
 
-	cell = row.insertCell(-1);
-	insertSelectTag(cell, "batchesAdd", [[0], [1]], "0", "0");
+	insertSelectTag(row, "batchesAdd", [[0], [1]], "0", "0");
 
-	cell = insertAddButton(row, "subjectInsert()");
+	cell = insertAddButton(row, "subjectInsert()", 2);
 
 	/* Add the existing subject entries */
 	tr = document.getElementById("subjectTable").rows[0];
@@ -2131,24 +2104,17 @@ function subjectForm() {
 
 		insertTextColumn(row, "center_" + count, currSubject["subjectId"]);
 
-		cell = row.insertCell(-1);
-		cell.innerHTML = "<input type=\"text\" id=\"subjectName_" + count +
-						"\" size=\"32\" value=\"" + currSubject["subjectName"] +
-						"\"> </input>";
-		cell = row.insertCell(-1);
-		cell.innerHTML = "<input type=\"text\" id=\"subjectShortName_" + count +
-						"\" size=\"8\" value=\"" + currSubject["subjectShortName"] +
-						"\"> </input>";
-		cell = row.insertCell(-1);
-		cell.innerHTML = "<input type=\"text\" id=\"eachSlot_" + count +
-						"\" size=\"3\" value=\"" + currSubject["eachSlot"] +
-						"\"> </input>";
-		cell = row.insertCell(-1);
-		cell.innerHTML = "<input type=\"text\" id=\"nSlots_" + count +
-						"\" size=\"3\" value=\"" + currSubject["nSlots"] +
-						"\"> </input>";
+		insertInputBox(row, "text", "subjectName_" + count, "32",
+					"Subject Name", currSubject["subjectName"]);
+		insertInputBox(row, "text", "subjectShortName_" + count, "8",
+					"Short Name", currSubject["subjectShortName"]);
+		insertInputBox(row, "number", "eachSlot_" + count, "3",
+					"Each Entry #Slots", currSubject["eachSlot"]);
+		insertInputBox(row, "number", "nSlots_" + count, "3",
+					"#Entries", currSubject["nSlots"]);
 
 		cell = row.insertCell(-1);
+		cell.setAttribute("align","center");
 		var selectTag = document.createElement("select");
 		selectTag.setAttribute("id","batches_"+count);
 		batches = [0, 1];
@@ -2292,26 +2258,25 @@ function subjectDelete(i) {
 function subjectRoomForm() {
 	formOpen("inputSubjectRoomForm");
 	/* ---- Adding Header Row -----------------------*/
-	var table = insertHeaderRow("subjectRoomTable", "ID", "Subject", "Room");
+	var table = insertHeaderRow("subjectRoomTable", "ID", "Subject", "Room", 2);
 
 	/* ---- Adding "Add subjectRoom Row" -----------------------*/
 	row = table.insertRow(1);
-	cell = row.insertCell(0);
-	cell.innerHTML = "<center> New</center>";
+	insertTextColumn(row, "", "New");//currBatchRoom["brId"]);
 
-	cell = row.insertCell(-1);
-	insertSelectTag(cell, "crSubjectAdd", subject,"subjectId", "subjectName");
+	insertSelectTag(row, "crSubjectAdd", subject,"subjectId", "subjectName");
 	$("#crSubjectAdd").select2({
-		placeholder: "Insert Subject Name"
+		placeholder: "Insert Subject Name",
+		width: 'resolve'
 	});
 
-	cell = row.insertCell(-1);
-	insertSelectTag(cell, "crRoomAdd", room, "roomId", "roomShortName");
+	insertSelectTag(row, "crRoomAdd", room, "roomId", "roomShortName");
 	$("#crRoomAdd").select2({
-		placeholder: "Room Name"
+		placeholder: "Room Name",
+		width: 'resolve'
 	});
 
-	cell = insertAddButton(row, "subjectRoomInsert()");
+	cell = insertAddButton(row, "subjectRoomInsert()", 2);
 
 	/* Add the existing subjectRoom entries */
 	tr = document.getElementById("subjectRoomTable").rows[0];
@@ -2324,6 +2289,7 @@ function subjectRoomForm() {
 		insertTextColumn(row, "center_" + count, currSubjectRoom["srId"]);
 
 		cell = row.insertCell(-1);
+		cell.setAttribute("align","center");
 		var selectTag = document.createElement("select");
 		selectTag.setAttribute("id","subject_"+count);
 		for (k in subject) {
@@ -2337,6 +2303,7 @@ function subjectRoomForm() {
 		//$("#subject_"+i).select2();
 
 		cell = row.insertCell(-1);
+		cell.setAttribute("align","center");
 		var selectTag = document.createElement("select");
 		selectTag.setAttribute("id","room_"+count);
 		for (k in room) {
@@ -2473,25 +2440,17 @@ function teacherForm() {
 	formOpen("inputTeacherForm");
 	/* ---- Adding Header Row -----------------------*/
 	var table = insertHeaderRow("teacherTable", "ID", "Full Name", "Short Name",
-					"Min Hrs", "Max Hrs", "Dept");
+					"Min Hrs", "Max Hrs", "Dept", 2);
 	/* ---- Adding "Add Teacher Row" -----------------------*/
 	row = table.insertRow(1);
-	cell = row.insertCell(0);
-	cell.innerHTML = "<center> New</center>";
-	cell = row.insertCell(-1);
-	cell.innerHTML = "<input type=\"text\" id=\"teacherNameAdd\" " +
-					"placeholder=\"Full Name\"> </input>";
-	cell = row.insertCell(-1);
-	cell.innerHTML = "<input type=\"text\" id=\"teacherShortNameAdd\" size=\"8\" " +
-					"placeholder=\"Short Name\"> </input>";
-	cell = row.insertCell(-1);
-	cell.innerHTML = "<input type=\"text\" id=\"minHrsAdd\" size=\"3\" " +
-					"placeholder=\"Min Hrs\"> </input>";
-	cell = row.insertCell(-1);
-	cell.innerHTML = "<input type=\"text\" id=\"maxHrsAdd\" size=\"3\" " +
-					"placeholder=\"Max Hrs\"> </input>";
+	insertTextColumn(row, "", "New");//currBatchRoom["brId"]);
+	insertInputBox(row, "text", "teacherNameAdd", "32", "Enter Teacher Name", "");
+	insertInputBox(row, "text", "teacherShortNameAdd", "8", "Enter Short Name", "");
+	insertInputBox(row, "number", "minHrsAdd", "3", "Min Hrs of Work", "");
+	insertInputBox(row, "number", "maxHrsAdd", "3", "Max Hrs of Work", "");
 
 	cell = row.insertCell(-1);
+	cell.setAttribute("align","center");
 	currDeptId = 1; /* TODO: This should reflect the current dept under consideration */
 	var selectTag = document.createElement("select");
 	selectTag.setAttribute("id","deptAdd");
@@ -2504,7 +2463,7 @@ function teacherForm() {
 	}
 	cell.appendChild(selectTag);
 
-	cell = insertAddButton(row, "teacherInsert()");
+	cell = insertAddButton(row, "teacherInsert()", 2);
 
 	/* Add the existing teacher entries */
 	tr = document.getElementById("teacherTable").rows[0];
@@ -2517,23 +2476,17 @@ function teacherForm() {
 
 		insertTextColumn(row, "center_" + count, currTeacher["teacherId"]);
 
-		cell = row.insertCell(-1);
-		cell.innerHTML = "<input type=\"text\" id=\"teacherName_" + count +
-						"\" value=\"" + currTeacher["teacherName"] + "\"> </input>";
-		cell = row.insertCell(-1);
-		cell.innerHTML = "<input type=\"text\" id=\"teacherShortName_" + count +
-						"\" size=\"8\" value=\"" + currTeacher["teacherShortName"] +
-						"\"> </input>";
-		cell = row.insertCell(-1);
-		cell.innerHTML = "<input type=\"text\" id=\"minHrs_" + count +
-						"\" size=\"3\" value=\"" + currTeacher["minHrs"] +
-						"\"> </input>";
-		cell = row.insertCell(-1);
-		cell.innerHTML = "<input type=\"text\" id=\"maxHrs_" + count +
-						"\" size=\"3\" value=\"" + currTeacher["maxHrs"] +
-						"\"> </input>";
+		insertInputBox(row, "text", "teacherName_" + count, "32",
+					"Teacher Name", currTeacher["teacherName"]);
+		insertInputBox(row, "text", "teacherShortName_" + count, "8",
+					"Short Name", currTeacher["teacherShortName"]);
+		insertInputBox(row, "number", "minHrs_" + count, "32",
+					"Min Hrs of Work", currTeacher["minHrs"]);
+		insertInputBox(row, "number", "maxHrs_" + count, "32",
+					"Max Hrs of Work", currTeacher["maxHrs"]);
 
 		cell = row.insertCell(-1);
+		cell.setAttribute("align","center");
 		currDeptId = currTeacher["deptId"];
 		var selectTag = document.createElement("select");
 		selectTag.setAttribute("id","dept_"+count);

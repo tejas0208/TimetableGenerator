@@ -1,15 +1,20 @@
 <?php
 $teacherForm = "
 	<div class=\"inputForm\" id=\"inputTeacherForm\">
-	<table width=\"60%\"> <tr> 
-			<td align=\"center\" > Teachers Configuration  
-			</td> 
-			<td  align=\"right\">  <a href=\"javascript:void(0)\" 
-					class=\"closebtn\" onclick='formClose(\"inputTeacherForm\")'> 
-					Close &times; </a> 
-			</td> 
+	<table>
+		</tr>
+		<td class=\"inputFormHeader\" width=\"90%\"> 
+			Teachers Configuration  
+		</td>
+		<td class=\"closebtn\" width=\"10%\">
+			<a href=\"javascript:void(0)\"
+				onclick='formClose(\"inputTeacherForm\")'> 
+				Close &times;
+			</a> 
+		</td>
+		</tr>
 	</table>
-	<table width=\"60%\" id=\"teacherTable\" class=\"inputFormTable\">	
+	<table id=\"teacherTable\" class=\"inputFormTable\">	
 	</table>
 	</div>	
 ";
@@ -343,6 +348,7 @@ function updateBatch($type) {
 	header("Content-Type: application/JSON: charset=UTF-8");
 
 	$batchId = getArgument("batchId");
+	$classId = getArgument("classId");
 	$batchName = getArgument("batchName");
 	$batchOrigName = getArgument("batchOrigName");
 	$batchCount = getArgument("batchCount");
@@ -385,6 +391,14 @@ function updateBatch($type) {
 		} else {
 			$resString = "{\"Success\": \"True\",";
 			$resString .= "\"batchId\" : \"".$result2[0]["batchId"]."\"}";
+			$insertBatchClassQuery = 
+				"INSERT INTO batchClass (batchId, classId, snapshotId) VALUES ( ".
+					$result2[0]["batchId"].  ", $classId, $snapshotId)";
+			$result = sqlUpdate($insertBatchClassQuery);
+			if($result === false) {
+				$resString = "{\"Success\": \"False\",";
+				$resString .= "\"Error\" : ".json_encode($CFG->conn->error)."}";
+			}
 		}
 	} else {
 		$resString = "{\"Success\": \"True\"}";

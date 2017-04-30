@@ -90,9 +90,8 @@ toggle {
 	width: 100%;
 }
 th {
-	border: 1px dotted black;
 	text-align: center;
-	text: bold 13px Times;
+	text: bold 16px Times;
 }
 option, select{
 	font-size: 13px;
@@ -164,16 +163,18 @@ option, select{
 	vertical-align: middle;
 }
 .inputForm{
-	background-color: #ddd;
+	background-color: #d3c8c8;
 	width: auto;
 	height: 0%;
 	z-index: 1;
 	text-align: left;
 	transition: 0.5s;
-	border: 2px solid #333;
 	display: none;
 	overflow-y: scroll;
 	overflow: auto;
+	position: absolute;
+	left:5%;
+	right:5%;
 }
 .inputFormField {
 	text-align: left;
@@ -184,7 +185,6 @@ option, select{
 	color: red;
 }
 .inputFormTable {
-	border: 1px solid black;
 	padding: 3;
 	font-size: 13px;
 	font-family: courier;
@@ -301,4 +301,15 @@ textarea#tracker{
 .installMessage {
 	background-color: cyan;
 	font: 14px courier black;	
+}
+.inputFormHeader {
+	font: 20px Times bold;
+	color: brown;
+	text-align: center;
+	vertical-align: middle;
+}
+.closebtn {
+	text-align: right;
+	vertical-align: middle;
+	font: 13px Tahoma bold;
 }
