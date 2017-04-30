@@ -796,6 +796,7 @@ function classUpdate(i) {
 	var row = i;
 	var className, classShortName, semester, classCount;
 	classId = document.getElementById("center_" + row).childNodes[0].nodeValue;
+	alert(classId);
 	className = document.getElementById("className_" + row).value;
 	classShortName = document.getElementById("classShortName_" + row).value;
 	semester = document.getElementById("semester_" + row).value;
@@ -2252,14 +2253,14 @@ function subjectRoomForm() {
 	row = insertRow(table, 1);
 	insertTextColumn(row, "", "New");//currBatchRoom["brId"]);
 
-	insertSelectTag(row, "crSubjectAdd", subject,"subjectId", "subjectName");
-	$("#crSubjectAdd").select2({
+	insertSelectTag(row, "srSubjectAdd", subject,"subjectId", "subjectName");
+	$("#srSubjectAdd").select2({
 		placeholder: "Insert Subject Name",
 		width: 'resolve'
 	});
 
-	insertSelectTag(row, "crRoomAdd", room, "roomId", "roomShortName");
-	$("#crRoomAdd").select2({
+	insertSelectTag(row, "srRoomAdd", room, "roomId", "roomShortName");
+	$("#srRoomAdd").select2({
 		placeholder: "Room Name",
 		width: 'resolve'
 	});
@@ -2315,8 +2316,8 @@ function subjectRoomForm() {
 }
 function subjectRoomInsert() {
 	var subjectId, roomId,  srId;
-	subjectId = document.getElementById("crSubjectAdd").value;
-	roomId = document.getElementById("crRoomAdd").value;
+	subjectId = document.getElementById("srSubjectAdd").value;
+	roomId = document.getElementById("srRoomAdd").value;
 	/* debug */
 	roomShortName = search(room, "roomId", roomId)["roomShortName"];
 	subjectName= search(subject, "subjectId", subjectId)["subjectName"];

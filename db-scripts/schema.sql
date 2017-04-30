@@ -73,7 +73,7 @@ CONSTRAINT c_teacherShortName UNIQUE(teacherShortName, snapshotId)
 
 CREATE VIEW teacherReadable
 AS
-SELECT  t.teacherId, t.teacherName, t.teacherShortName,t.minHrs, t.maxHrs, d.deptShortName, s.snapshotName
+SELECT  t.teacherId, t.teacherName, t.teacherShortName, t.minHrs, t.maxHrs, d.deptShortName, s.snapshotName
 FROM teacher t, dept d, snapshot s
 WHERE t.deptId = d.deptId AND
 	  t.snapshotId = s.snapshotId
