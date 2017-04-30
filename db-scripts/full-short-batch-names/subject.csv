@@ -1,0 +1,70 @@
+Fundamentals of Mathematics-II,FM-II,1,3,TRUE
+Electronics and Computer Workshop,ECW,2,1,TRUE
+Fundamentals of Computer Programming,FCP,1,3,FALSE
+Fundamentals of Computer Programming Laboratory,FCP-Lab,2,2,TRUE
+Applied Biology,AB,1,3,FALSE
+Theory of Computer Science,TCS,1,3,FALSE
+Microprocessor techniques,MPT,1,3,FALSE
+Principles of Programming language,PPL,1,3,FALSE
+Data Communication,DC,1,3,FALSE
+Institute Level Open Elective Sem4,ILOE-Sem4,1,3,FALSE
+Microprocessor techniques lab,MPT-Lab,3,1,TRUE
+Principles of Programming language lab,PPL-Lab,3,1,TRUE
+Numerical Methods,NM,1,3,FALSE
+Liberal Learning Course-1,LLC1,1,3,FALSE
+Professional Science Course,PSC,1,3,FALSE
+Liberal Learning Course2,LLC2,1,3,FALSE
+open elective 3 yr-Information Systems,OE,1,3,FALSE
+Operating Systems,OS,1,3,FALSE
+Operating Systems Lab,OS-Lab,3,1,TRUE
+Computer Aided Signal Processing,CASP,1,3,FALSE
+Software Engineering,SE,1,3,FALSE
+Computer Aided Signal Processing Laboratory,CASP-Lab,3,1,TRUE
+Software Engineering Laboratory,SE-Lab,3,1,TRUE
+Free and Open Source Software Development,FOSS,1,3,TRUE
+Computer Graphics,CG,1,3,TRUE
+Cloud and Big Data,CBD,1,3,TRUE
+Concurrent Programming in Embedded Systems,CPES,1,3,TRUE
+Data Mining,DM,1,3,TRUE
+Free and Open Source Software Development Laboratory,FOSS-Lab,3,1,TRUE
+Cloud and Big Data Laboratory,CBD-Lab,3,1,TRUE
+Concurrent Programming in Embedded Systems  Laboratory,CPES-Lab,3,1,TRUE
+Computer Graphics Laboratory,CG-Lab,3,1,TRUE
+Data Mining  Laboratory,DM-Lab,3,1,TRUE
+Open Elective Third Year,OE-TY,1,3,FALSE
+Language processors,LP,1,3,FALSE
+Algorithm and complexity,AnC,1,3,FALSE
+Software development process lab,SDP-Lab,3,1,TRUE
+Software development process,SDP,1,3,FALSE
+Language processors Laboratory,LP-Lab,3,1,TRUE
+Algorithm and complexity lab,AnC-Lab,3,1,TRUE
+Liberal Learning Course3,LLC3,1,3,FALSE
+open elective final yr,OE-BTECH,1,3,FALSE
+Cyber Security Forensics and Legal Perspective,CSFLP,1,3,FALSE
+Cyber Security Forensics and Legal Perspective lab,CSFLP-Lab,2,1,TRUE
+E-Commerce,EC,1,3,FALSE
+E-Commerce lab,EC-Lab,2,1,TRUE
+Natural Language Processing,NLP,1,3,FALSE
+Natural Language Processing lab,NLP-Lab,2,1,TRUE
+Web Systems and Technologies,WST,1,3,FALSE
+Web Systems and Technologies  Laboratory,WST-Lab,2,1,TRUE
+Project Work,Project,1,3,FALSE
+Intellectual Property Rights,IPR,1,3,FALSE
+Advanced Algorithms,AA,1,3,FALSE
+Security in computing,SIC,1,3,FALSE
+Data Mining and Machine Learning,DMML,1,3,FALSE
+DE-Cloud Virtualization and Big Data,CVBD,1,3,FALSE
+DE-Advanced Graph Theory,AGT,1,3,FALSE
+DE-Embedded system,ES,1,3,FALSE
+PG lab II,PG-Lab-II,2,2,FALSE
+Institute Level Open Elective Sem6,ILOE-Sem6,1,3,FALSE
+Massively Open Onlie Course,MOOC,1,3,FALSE
+Institute Level Open Elective Sem8,ILOE-Sem8,1,3,FALSE
+Bioinformatics,BI,1,3,FALSE
+Internet of Things,IOT,1,3,FALSE
+Applied Cyber Security,ACS,1,3,FALSE
+Web Technology,WT,1,3,FALSE
+Wireless and Mobile Security,WMS,1,3,FALSE
+Network Security,NS,1,3,FALSE
+Advanced Database and Information Retrieval,ADIR,1,3,FALSE
+Cloud Computing and Security,CCS,1,3,FALSE
