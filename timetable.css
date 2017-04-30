@@ -130,6 +130,10 @@ option, select{
 	width: 80%;
 	padding: 0;
 	vertical-align: top;
+	top: 0%;
+}
+#outerTable {
+	vertical-align: top;
 }
 /*-----------------------------------------------------------------------/
 /* Tracker Related */
@@ -202,6 +206,7 @@ option, select{
 	overflow: auto;
 	position: absolute;
 	left:5%;
+	vertical-align:top;
 }
 .inputFormTitleTable {
 	width: 100%;

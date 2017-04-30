@@ -306,6 +306,7 @@ function showTrackerList() {
 			}
 			break;
 		case "room":
+			break;
 			for(i = 0; i < tracker.length; i++) {
 				curr = tracker[i];
 				trackerStr += "<tr class=\"trackerrow\">";
