@@ -8,9 +8,9 @@ function rollback() {
 	global $CFG;
 	$res = sqlUpdate("ROLLBACK;");
 	if($res === false) {
-		error_log("rollback: Failed", 0);
+		ttlog("rollback: Failed");
 	} else
-		error_log("rollback: Success", 0);
+		ttlog("rollback: Success");
 	$resString = "{\"Success\": \"False\",";
 	$resString .= "\"Error\" : ".json_encode($CFG->conn->error);
 	$resString .= "\"Query\" : \"".$CFG->last_query."\"}";
@@ -70,11 +70,11 @@ function insertSnapshotEntry() {
 				"\"080000\", \"080000\", $configId);";
 	$result = sqlUpdate($query);
 	if($result === false) {
-		error_log("insertSnapshotEntry: $query Failed", 0);
+		ttlog("insertSnapshotEntry: $query Failed");
 		$resString = "{\"Success\": \"False\"}";
 		return $resString;
 	}	
-	error_log("insertSnapshotEntry: $query Success", 0);
+	ttlog("insertSnapshotEntry: $query Success");
 	$resString = "{\"Success\": \"True\"}";
 	return $resString;
 }
@@ -96,24 +96,24 @@ function saveSnapshot() {
 		return rollback();
 	
 	$snapshotFindQuery = "SELECT snapshotId FROM snapshot WHERE snapshotName = \"$snapshotName\"";
-	error_log("saveSnapShot: query: $snapshotFindQuery", 0);
+	ttlog("saveSnapShot: query: $snapshotFindQuery");
 
 	$result = sqlGetOneRow($snapshotFindQuery);	
 	$snapshotId = $result[0]["snapshotId"];
 	if($result != true)
 		return rollback();
 
-	error_log("saveSnapShot: ttData: ".json_encode($ttData), 0);
-	error_log("saveSnapShot: fixedEntries: ".json_encode($feData), 0);
+	ttlog("saveSnapShot: ttData: ".json_encode($ttData));
+	ttlog("saveSnapShot: fixedEntries: ".json_encode($feData));
 
 	$snapshotDeleteQuery = "DELETE FROM timeTable where snapshotId = $snapshotId;";	
-	error_log("saveSnapShot: query: $snapshotDeleteQuery", 0);
+	ttlog("saveSnapShot: query: $snapshotDeleteQuery");
 	$result = sqlUpdate($snapshotDeleteQuery);
 	if($result != true)
 		return rollback();
 
 	$snapshotDeleteQuery = "DELETE FROM fixedEntry where snapshotId = $snapshotId;";	
-	error_log("saveSnapShot: query: $snapshotDeleteQuery", 0);
+	ttlog("saveSnapShot: query: $snapshotDeleteQuery");
 	$result = sqlUpdate($snapshotDeleteQuery);
 	if($result != true)
 		return rollback();
@@ -142,7 +142,7 @@ function saveSnapshot() {
 							$currRow["isFixed"].");";
 		}
 		$result = sqlUpdate($ttInsertQuery);
-		error_log("saveSnapShot: query: $ttInsertQuery", 0);
+		ttlog("saveSnapShot: query: $ttInsertQuery");
 		if($result != true )
 			return rollback();
 	}
@@ -152,13 +152,13 @@ function saveSnapshot() {
 		$feInsertQuery = "INSERT INTO fixedEntry(ttId, fixedText, snapshotId) VALUES (".
 						$ttId.",\"".$currRow["fixedText"]."\",".$snapshotId.");";
 		$result = sqlUpdate($feInsertQuery);
-		error_log("saveSnapShot: query: $feInsertQuery", 0);
+		ttlog("saveSnapShot: query: $feInsertQuery");
 		if($result != true)
 			return rollback();
 	}
 	sqlUpdate("COMMIT;");
 	$resString = "{\"Success\": \"True\"}";
-	error_log("saveSnapShot: Success True".  $resString, 0);
+	ttlog("saveSnapShot: Success True".  $resString);
 	return $resString;
 }
 global $newIDs;
@@ -182,7 +182,7 @@ function cloneAllTables($currentSnapshotId, $newSnapshotId) {
 		$columnNamesQuery = " SELECT `COLUMN_NAME`  FROM `INFORMATION_SCHEMA`.`COLUMNS`  WHERE ".
 							"`TABLE_SCHEMA`='timeTable'      AND `TABLE_NAME`='$currTableName';";
 		$allColumnNames = sqlGetAllRows($columnNamesQuery);
-		error_log("clone: got column Names: ". json_encode($allColumnNames));
+		ttlog("clone: got column Names: ". json_encode($allColumnNames));
 
 		/* Make list of column names for INSERT query */
 		$columnNames = "";
@@ -211,9 +211,9 @@ function cloneAllTables($currentSnapshotId, $newSnapshotId) {
 			$selQueryStr .= " snapshotId = '".$newSnapshotId."';";
 			$selQuery = $selectQueryHeader.$selQueryStr;
 			//$allColumnNames[$nColumns - 1]["COLUMN_NAME"]." = ".$allRows[$i][$nColumns - 1].";";
-			error_log("clone: select query: ".$selQuery, 0);
+			ttlog("clone: select query: ".$selQuery);
 
-			if($i < 3) error_log("clone: Insert Query = ".$insertQuery, 0);
+			if($i < 3) ttlog("clone: Insert Query = ".$insertQuery);
 			$result = sqlUpdate($insertQuery);
 			if($result === false) {
 				return rollback();
@@ -235,7 +235,7 @@ function cloneAllTables($currentSnapshotId, $newSnapshotId) {
 	/* batchClass Table */
 	$getAllQuery = "SELECT * FROM batchClass WHERE snapshotId = $currentSnapshotId";
 	$allRows = sqlGetAllRows($getAllQuery);
-	error_log($getAllQuery, 0);
+	ttlog($getAllQuery);
 	for($i = 0; $i < count($allRows); $i++) {
 		$insertQuery = "INSERT INTO batchClass(batchId, classId, snapshotId) VALUES ".
 				"(".
@@ -245,7 +245,7 @@ function cloneAllTables($currentSnapshotId, $newSnapshotId) {
 				"(SELECT classId FROM class WHERE classShortName=".
 					"(SELECT classShortName from class WHERE classId=".$allRows[$i]["classId"]." AND snapshotId = $currentSnapshotId)".
 				" AND snapshotId = $newSnapshotId), $newSnapshotId) "; 
-		//error_log($insertQuery, 0);
+		//ttlog($insertQuery);
 		$result = sqlUpdate($insertQuery);
 		if($result === false)
 			return false; 
@@ -255,7 +255,7 @@ function cloneAllTables($currentSnapshotId, $newSnapshotId) {
 	/* classRoom Table */
 	$getAllQuery = "SELECT * FROM classRoom WHERE snapshotId = $currentSnapshotId";
 	$allRows = sqlGetAllRows($getAllQuery);
-	error_log($getAllQuery, 0);
+	ttlog($getAllQuery);
 	for($i = 0; $i < count($allRows); $i++) {
 		$insertQuery = "INSERT INTO classRoom(classId, roomId, snapshotId) VALUES ".
 				"(".
@@ -266,7 +266,7 @@ function cloneAllTables($currentSnapshotId, $newSnapshotId) {
 					"(SELECT roomShortName from room WHERE roomId=".$allRows[$i]["roomId"]." AND snapshotId = $currentSnapshotId)".
 				" AND snapshotId = $newSnapshotId), ". 
 				"$newSnapshotId) "; 
-		//error_log($insertQuery, 0);
+		//ttlog($insertQuery);
 		$result = sqlUpdate($insertQuery);
 		if($result === false)
 			return false; 
@@ -275,7 +275,7 @@ function cloneAllTables($currentSnapshotId, $newSnapshotId) {
 	/* batchRoom Table */
 	$getAllQuery = "SELECT * FROM batchRoom WHERE snapshotId = $currentSnapshotId";
 	$allRows = sqlGetAllRows($getAllQuery);
-	error_log($getAllQuery, 0);
+	ttlog($getAllQuery);
 	for($i = 0; $i < count($allRows); $i++) {
 		$insertQuery = "INSERT INTO batchRoom(batchId, roomId, snapshotId) VALUES ".
 				"(".
@@ -286,7 +286,7 @@ function cloneAllTables($currentSnapshotId, $newSnapshotId) {
 					"(SELECT roomShortName from room WHERE roomId=".$allRows[$i]["roomId"]." AND snapshotId = $currentSnapshotId)".
 				" AND snapshotId = $newSnapshotId), ". 
 				"$newSnapshotId) "; 
-		//error_log($insertQuery, 0);
+		//ttlog($insertQuery);
 		$result = sqlUpdate($insertQuery);
 		if($result === false)
 			return false; 
@@ -295,7 +295,7 @@ function cloneAllTables($currentSnapshotId, $newSnapshotId) {
 	/* subjectRoom Table */
 	$getAllQuery = "SELECT * FROM subjectRoom WHERE snapshotId = $currentSnapshotId";
 	$allRows = sqlGetAllRows($getAllQuery);
-	error_log($getAllQuery, 0);
+	ttlog($getAllQuery);
 	for($i = 0; $i < count($allRows); $i++) {
 		$insertQuery = "INSERT INTO subjectRoom(subjectId, roomId, snapshotId) VALUES ".
 				"(".
@@ -306,7 +306,7 @@ function cloneAllTables($currentSnapshotId, $newSnapshotId) {
 					"(SELECT roomShortName from room WHERE roomId=".$allRows[$i]["roomId"]." AND snapshotId = $currentSnapshotId)".
 				" AND snapshotId = $newSnapshotId), ". 
 				"$newSnapshotId) "; 
-		//error_log($insertQuery, 0);
+		//ttlog($insertQuery);
 		$result = sqlUpdate($insertQuery);
 		if($result === false)
 			return false; 
@@ -316,8 +316,8 @@ function cloneAllTables($currentSnapshotId, $newSnapshotId) {
 	/* batchCanOverlap Table */
 	$getAllQuery = "SELECT * FROM batchCanOverlap WHERE snapshotId = $currentSnapshotId";
 	$allRows = sqlGetAllRows($getAllQuery);
-	//error_log(json_encode($allRows), 0);
-	error_log($getAllQuery, 0);
+	//ttlog(json_encode($allRows));
+	ttlog($getAllQuery);
 	for($i = 0; $i < count($allRows); $i++) {
 		$insertQuery = "INSERT INTO batchCanOverlap(batchId, batchOverlapId, snapshotId) VALUES ".
 				"(".
@@ -327,7 +327,7 @@ function cloneAllTables($currentSnapshotId, $newSnapshotId) {
 				"(SELECT batchId FROM batch WHERE batchName=".
 					"(SELECT batchName from batch WHERE batchId=".$allRows[$i]["batchOverlapId"]." AND snapshotId = $currentSnapshotId)".
 				" AND snapshotId = $newSnapshotId), $newSnapshotId) "; 
-		//error_log($insertQuery), 0);
+		//ttlog($insertQuery));
 		$result = sqlUpdate($insertQuery);
 		if($result === false)
 			return false; 
@@ -337,10 +337,10 @@ function cloneAllTables($currentSnapshotId, $newSnapshotId) {
 	/* subjectBatchTeacher Table */
 	$getAllQuery = "SELECT * FROM subjectBatchTeacher WHERE snapshotId = $currentSnapshotId";
 	$allRows = sqlGetAllRows($getAllQuery);
-	//error_log(json_encode($allRows), 0);
-	error_log($getAllQuery, 0);
+	//ttlog(json_encode($allRows));
+	ttlog($getAllQuery);
 	for($i = 0; $i < count($allRows); $i++) {
-		error_log(json_encode($allRows[$i]), 0);
+		ttlog(json_encode($allRows[$i]));
 		if($allRows[$i]["teacherId"] == null)
 			$teacherStr = "null,";
 		else
@@ -358,7 +358,7 @@ function cloneAllTables($currentSnapshotId, $newSnapshotId) {
 				" AND snapshotId = $newSnapshotId), ".
 				$teacherStr.
 				"$newSnapshotId) "; 
-		error_log($insertQuery, 0);
+		ttlog($insertQuery);
 		$result = sqlUpdate($insertQuery);
 		if($result === false)
 			return false; 
@@ -368,10 +368,10 @@ function cloneAllTables($currentSnapshotId, $newSnapshotId) {
 	/* subjectClassTeacher Table */
 	$getAllQuery = "SELECT * FROM subjectClassTeacher WHERE snapshotId = $currentSnapshotId";
 	$allRows = sqlGetAllRows($getAllQuery);
-	//error_log(json_encode($allRows), 0);
-	error_log($getAllQuery, 0);
+	//ttlog(json_encode($allRows));
+	ttlog($getAllQuery);
 	for($i = 0; $i < count($allRows); $i++) {
-		error_log(json_encode($allRows[$i]), 0);
+		ttlog(json_encode($allRows[$i]));
 		if($allRows[$i]["teacherId"] == null)
 			$teacherStr = "null, ";
 		else
@@ -389,7 +389,7 @@ function cloneAllTables($currentSnapshotId, $newSnapshotId) {
 				" AND snapshotId = $newSnapshotId), ".
 				$teacherStr.
 				"$newSnapshotId) "; 
-		error_log($insertQuery, 0);
+		ttlog($insertQuery);
 		$result = sqlUpdate($insertQuery);
 		if($result === false)
 			return false; 
@@ -485,7 +485,7 @@ function cloneAllTables($currentSnapshotId, $newSnapshotId) {
 
 		$insertQuery = "INSERT INTO overlappingSBT (sbtId1, sbtId2, snapshotId) VALUES ".
 						"($newsbtId1, $newsbtId2, $newSnapshotId)";
-		error_log($insertQuery, 0);
+		ttlog($insertQuery);
 		$result = sqlUpdate($insertQuery);
 		if($result === false)
 			return false; 
@@ -515,7 +515,7 @@ function saveNewSnapshot() {
 							"VALUES (\"".
 							$newSnapshotName."\",1,1000,2000, $configId);";
 	$result = sqlUpdate($snapshotCreateQuery);	
-	error_log("saveNewSnapshot: query: ". $result);
+	ttlog("saveNewSnapshot: query: ". $result);
 	if($result === false)
 		return rollback();
 
@@ -532,7 +532,7 @@ function saveNewSnapshot() {
 
 	for($k = 0; $k < count($ttData); $k++) {
 			$currRow = $ttData[$k];
-			error_log("row: ".json_encode($currRow), 0);
+			ttlog("row: ".json_encode($currRow));
 
 			$classId = $currRow["classId"];
 			$roomId = $currRow["roomId"];
@@ -616,7 +616,7 @@ function saveNewSnapshot() {
 								$currRow["isFixed"].");";
 			}
 			$result = sqlUpdate($ttInsertQuery);
-			error_log("saveNewSnapshot: query: ". $ttInsertQuery, 0);
+			ttlog("saveNewSnapshot: query: ". $ttInsertQuery);
 			if($result != true )
 				return rollback();
 	}
@@ -626,7 +626,7 @@ function saveNewSnapshot() {
 		$feInsertQuery = "INSERT INTO fixedEntry(ttId, fixedText, snapshotId) VALUES (".
 						$ttId.",\"".$currRow["fixedText"]."\",".$newSnapshotId.");";
 		$result = sqlUpdate($feInsertQuery);
-		error_log("saveSnapShot: query: $feInsertQuery", 0);
+		ttlog("saveSnapShot: query: $feInsertQuery");
 		if($result != true)
 			return rollback();
 	}
@@ -634,7 +634,7 @@ function saveNewSnapshot() {
 	sqlUpdate("COMMIT;");
 	$resString = "{\"Success\": \"True\",";
 	$resString .= "\"snapshotId\": \"$newSnapshotId\"}";
-	error_log("saveNewSnapShot: Success True".  $resString, 0);
+	ttlog("saveNewSnapShot: Success True".  $resString);
 	return $resString;
 }
 

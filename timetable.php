@@ -18,10 +18,10 @@ function getTimeTable() {
 	
 	$query = "SELECT * FROM timeTable where snapshotId = (SELECT snapshotId 
 				from snapshot where snapshotName = $snapshotName)"; 
-	error_log("getTimeTable: Query: ". $query);
+	ttlog("getTimeTable: Query: ". $query);
 	$outp = sqlGetAllRows($query);
 	$tables["timeTable"] = $outp;
-	error_log("getTimeTable: returning table: ".json_encode($tables));
+	//ttlog("getTimeTable: returning table: ".json_encode($tables));
 	return json_encode($tables);
 }
 
@@ -44,7 +44,6 @@ $page = $header.
 		$footer;
 
 $reqType = getArgument("reqType");
-error_log("reqType = ".$reqType, 0);
 switch($reqType) {
 	case "insertSnapshotEntry":
 		echo insertSnapshotEntry();

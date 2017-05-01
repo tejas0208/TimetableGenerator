@@ -28,7 +28,7 @@ function getDataTables() {
 		$outp = sqlGetAllRows($query);
 		$tables[$tableNames[$i]] = $outp;
 	}
-	//error_log(json_encode($tables), 0);
+	//ttlog(json_encode($tables));
 	return json_encode($tables);
 }
 function getOneTable($tableName) {
@@ -40,8 +40,38 @@ function getOneTable($tableName) {
 		$query = "SELECT * FROM $tableName ";
 	$outp = sqlGetAllRows($query);
 	$tables[$tableName] = $outp;
-	error_log("getOneTable: Returning: ".json_encode($tables));
+	ttlog("getOneTable: Returning: ".json_encode($tables));
 	return json_encode($tables);
 }
+function ttlog($string) {
+	global $CFG;
 
+	if($CFG->logfile) {
+		$logfile = $CFG->logfile;
+	}
+	else {
+		if($CFG->logfileName)
+			$logfileName = $CFG->logfileName;
+		else {
+			/* TODO: if the name was /tmp/timetable.log or /var/log/timetable.log
+			 * Then fwrite succeeds, but file is not written. Check this 
+			 */
+			$logfileName = "timetable.log";
+			$CFG->logfileName = $logfileName;
+		}
+		$logfile = fopen($logfileName, "a");
+		if($logfile == False) {
+			error_log("could not open timetable log file", 0);
+		}
+		$CFG->logfile = $logfile;
+	}
+
+	$currTime = date("d-m-Y:H-i-s");
+	$string = $currTime.":".$string."\n";
+	$result = fwrite($logfile, $string);	
+
+	if($result === false) {
+		error_log("could not write to timetable log file", 0);
+	} 
+}
 ?>

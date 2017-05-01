@@ -78,18 +78,18 @@ function teacherInsert() {
 	$query = "INSERT INTO teacher (teacherName, teacherShortName, minHrs, maxHrs, deptId, snapshotId) ".
 		     "VALUES (\"$teacherName\", \"$teacherShortName\", $minHrs, $maxHrs, $deptId, $snapshotId)";
 	$selectQuery = "SELECT * from teacher WHERE teacherShortName = \"$teacherShortName\" AND snapshotId = $snapshotId";
-	error_log("updateTeacher: Query: ".$query, 0);
+	ttlog("updateTeacher: Query: ".$query);
 
 	$result = sqlUpdate($query);
-	error_log("teacherInsert(): $query Result: $result", 0);
+	ttlog("teacherInsert(): $query Result: $result");
 
 	if($result === false) {
-		error_log("teacherInsert(): resString: ".$resString, 0);
+		ttlog("teacherInsert(): resString: ".$resString);
 		return failMessage();
 	}
 
 	$result = sqlGetAllRows($selectQuery);
-	error_log("teacherInsert(): $selectQuery: Result: ".json_encode($result), 0);
+	ttlog("teacherInsert(): $selectQuery: Result: ".json_encode($result));
 	if($result === false) {
 		return failMessage();
 	} else {
@@ -109,13 +109,13 @@ function teacherDelete() {
 	$query = "DELETE FROM teacher WHERE teacherId = \"$teacherId\" AND snapshotId = $snapshotId;";
 
 	$result = sqlUpdate($query);
-	error_log("teacherDelete(): $query Result: $result", 0);
+	ttlog("teacherDelete(): $query Result: $result");
 
 	if($result === false) {
-		error_log("teacherDelete(): resString: ".failMessage(), 0);
+		ttlog("teacherDelete(): resString: ".failMessage());
 		return failMessage();
 	}
-	error_log("teacherDelete(): resString: ".successMessage(), 0);
+	ttlog("teacherDelete(): resString: ".successMessage());
 	return successMessage();;
 }
 
@@ -137,13 +137,13 @@ function teacherUpdate() {
 			 "deptId = \"$deptId\" WHERE teacherId = \"$teacherId\" AND snapshotId = $snapshotId";
 
 	$result = sqlUpdate($query);
-	error_log("teacherUpdate(): $query Result: $result", 0);
+	ttlog("teacherUpdate(): $query Result: $result");
 
 	if($result === false) {
-		error_log("teacherUpdate(): resString: ".failMessage(), 0);
+		ttlog("teacherUpdate(): resString: ".failMessage());
 		return failMessage();
 	}
-	error_log("teacherUpdate(): resString: ".successMessage(), 0);
+	ttlog("teacherUpdate(): resString: ".successMessage());
 	return successMessage(); 
 }
 
@@ -164,14 +164,14 @@ function subjectInsert() {
 	$selectQuery = "SELECT * from subject where subjectShortName = \"$subjectShortName\" AND snapshotId = $snapshotId";
 
 	$result = sqlUpdate($query);	
-	error_log("insertSubject(): $query Result: ".json_encode($result), 0);
+	ttlog("insertSubject(): $query Result: ".json_encode($result));
 	if($result === false) {
-		error_log("insertSubject(): resString: ".failMessage(), 0);
+		ttlog("insertSubject(): resString: ".failMessage());
 		return failMessage();
 	}
 
 	$result = sqlGetAllRows($selectQuery);
-	error_log("insertSubject(): $selectQuery: Result: ".json_encode($result), 0);
+	ttlog("insertSubject(): $selectQuery: Result: ".json_encode($result));
 	if($result === false) {
 		return failMessage();
 	} else {
@@ -190,10 +190,10 @@ function subjectDelete() {
 	$query = "DELETE FROM subject WHERE subjectId = \"$subjectId\" AND snapshotId = $snapshotId;";
 
 	$result = sqlUpdate($query);	
-	error_log("subjectDelete(): $query Result: ".json_encode($result), 0);
+	ttlog("subjectDelete(): $query Result: ".json_encode($result));
 
 	if($result === false) {
-		error_log("subjectDelete(): resString: ".failMessage());
+		ttlog("subjectDelete(): resString: ".failMessage());
 		return failMessage();
 	}
 	return successMessage();
@@ -215,13 +215,13 @@ function subjectUpdate() {
 			 "batches= \"$batches\" WHERE subjectId = \"$subjectId\" AND snapshotId = $snapshotId";
 
 	$result = sqlUpdate($query);	
-	error_log("subjectUpdate(): $query Result: ".json_encode($result), 0);
+	ttlog("subjectUpdate(): $query Result: ".json_encode($result));
 
 	if($result === false) {
-		error_log("subjectUpdate(): resString: ".failMessage());
+		ttlog("subjectUpdate(): resString: ".failMessage());
 		return failMessage();
 	}
-	error_log("subjectUpdate(): resString: ".successMessage());
+	ttlog("subjectUpdate(): resString: ".successMessage());
 	return successMessage();
 }
 
@@ -241,17 +241,17 @@ function classInsert() {
 	$selectQuery = "SELECT * from class where classShortName = \"$classShortName\" AND snapshotId = $snapshotId";
 
 	$result = sqlUpdate($query);	
-	error_log("classInsert(): $query Result :".json_encode($result), 0);
+	ttlog("classInsert(): $query Result :".json_encode($result));
 
 	if($result === false) {
-		error_log("classInsert(): resString: ".failMessage());
+		ttlog("classInsert(): resString: ".failMessage());
 		return failMessage();
 	}
 
 	$result = sqlGetAllRows($selectQuery);
-	error_log("classInsert(): $selectQuery: Result: ".json_encode($result), 0);
+	ttlog("classInsert(): $selectQuery: Result: ".json_encode($result));
 	if($result === false) {
-		error_log("classInsert(): resString: ".failMessage());
+		ttlog("classInsert(): resString: ".failMessage());
 		return failMessage();
 	} else {
 		$resString = "{\"Success\": \"True\",";
@@ -270,13 +270,13 @@ function classDelete() {
 	$query = "DELETE FROM class WHERE classId = \"$classId\" AND snapshotId = $snapshotId;";
 
 	$result = sqlUpdate($query);	
-	error_log("classDelete(): $query Result :".json_encode($result), 0);
+	ttlog("classDelete(): $query Result :".json_encode($result));
 
 	if($result === false) {
-		error_log("classDelete(): resString: ".failMessage());
+		ttlog("classDelete(): resString: ".failMessage());
 		return failMessage();
 	}
-	error_log("classDelete(): resString: ".successMessage(), 0);
+	ttlog("classDelete(): resString: ".successMessage());
 	return successMessage();
 }
 
@@ -296,13 +296,13 @@ function classUpdate() {
 			 "WHERE classId = \"$classId\" and snapshotId = $snapshotId";
 
 	$result = sqlUpdate($query);	
-	error_log("classUpdate(): $query Result :".json_encode($result), 0);
+	ttlog("classUpdate(): $query Result :".json_encode($result));
 
 	if($result === false) {
-		error_log("classUpdate(): resString: ".failMessage());
+		ttlog("classUpdate(): resString: ".failMessage());
 		return failMessage();
 	}
-	error_log("classUpdate(): resString: ".successMessage(), 0);
+	ttlog("classUpdate(): resString: ".successMessage());
 	return successMessage();
 }
 /* TODO: We have made compulsory to enter a batch with class. 
@@ -328,22 +328,22 @@ function batchClassUpdate() {
 	}
 	else
 		$query = "ERORR-Query: Not found $batchId"; 
-	error_log("batchClassUpdate: Query: ".$query, 0);
+	ttlog("batchClassUpdate: Query: ".$query);
 
 	$result = sqlUpdate($query);	
-	error_log("batchClassUpdate: $query Result: ".json_encode($result), 0);
+	ttlog("batchClassUpdate: $query Result: ".json_encode($result));
 
 	if($result === false) {
-		error_log("subjectUpdate(): resString: ".failMessage());
+		ttlog("subjectUpdate(): resString: ".failMessage());
 		return failMessage();
 	}
 
 	$result = false;
 	if($selectQuery != "") {
 		$result = sqlGetAllRows($selectQuery);
-		error_log("batchClassUpdate: $selectQuery: Result: ".json_encode($result), 0);
+		ttlog("batchClassUpdate: $selectQuery: Result: ".json_encode($result));
 		if($result === false) { // either query failed
-			error_log("batchClassUpdate(): resString: ".failMessage());
+			ttlog("batchClassUpdate(): resString: ".failMessage());
 			return failMessage();
 		} else {// both queries succeeded
 			$resString = "{\"Success\": \"True\",";
@@ -370,16 +370,16 @@ function batchInsert() {
 	$selectQuery = "SELECT * FROM batch where batchName = \"$batchName\" AND snapshotId = $snapshotId";
 
 	$result = sqlUpdate($query);	
-	error_log("batchInsert(): $query Result: ".json_encode($result), 0);
+	ttlog("batchInsert(): $query Result: ".json_encode($result));
 
 	if($result === false) {
-		error_log("batchInsert(): resString: ".failMessage());
+		ttlog("batchInsert(): resString: ".failMessage());
 		return failMessage();
 	}
 	$result = sqlGetAllRows($selectQuery);
-	error_log("batchInsert(): $selectQuery: Result: ".json_encode($result), 0);
+	ttlog("batchInsert(): $selectQuery: Result: ".json_encode($result));
 	if($result === false) {
-		error_log("batchInsert(): resString: ".failMessage());
+		ttlog("batchInsert(): resString: ".failMessage());
 		return failMessage();
 	} else {
 		$insertBatchClassQuery = 
@@ -387,7 +387,7 @@ function batchInsert() {
 				$result[0]["batchId"].  ", $classId, $snapshotId)";
 		$result = sqlUpdate($insertBatchClassQuery);
 		if($result === false) {
-			error_log("batchInsert(): resString: ".failMessage());
+			ttlog("batchInsert(): resString: ".failMessage());
 			return failMessage();
 		} else {
 			$resString = "{\"Success\": \"True\",";
@@ -406,13 +406,13 @@ function batchDelete() {
 	$query = "DELETE FROM batch WHERE batchId = \"$batchId\" AND snapshotId = $snapshotId;";
 
 	$result = sqlUpdate($query);	
-	error_log("batchDelete(): $query Result: ".json_encode($result), 0);
+	ttlog("batchDelete(): $query Result: ".json_encode($result));
 
 	if($result === false) {
-		error_log("batchDelete(): resString: ".failMessage());
+		ttlog("batchDelete(): resString: ".failMessage());
 		return failMessage();
 	}
-	error_log("batchDelete(): resString: ".successMessage(), 0);
+	ttlog("batchDelete(): resString: ".successMessage());
 	return successMessage();
 
 }
@@ -431,13 +431,13 @@ function batchUpdate() {
 			 "WHERE batchId = \"$batchId\" AND snapshotId = $snapshotId";
 
 	$result = sqlUpdate($query);	
-	error_log("batchUpdate(): Result: ".json_encode($result), 0);
+	ttlog("batchUpdate(): Result: ".json_encode($result));
 
 	if($result === false) {
-		error_log("batchUpdate(): resString: ".failMessage());
+		ttlog("batchUpdate(): resString: ".failMessage());
 		return failMessage();
 	}
-	error_log("batchUpdate(): resString: ".successMessage(), 0);
+	ttlog("batchUpdate(): resString: ".successMessage());
 	return successMessage();
 
 }
@@ -448,7 +448,7 @@ function batchCanOverlapDelete() {
 	$batchesJSON = getArgument("batches");
 	$snapshotId = getArgument("snapshotId");
 	$batches = json_decode($batchesJSON);
-	error_log("batchCanOverlapDelete: received batches for deletion: $batchesJSON", 0);
+	ttlog("batchCanOverlapDelete: received batches for deletion: $batchesJSON");
 
 	$query = "DELETE FROM batchCanOverlap WHERE  snapshotId = $snapshotId AND ";
 	$query .= " batchId = ".$batches[0]." OR batchOverlapId = ".$batches[0]." ";
@@ -456,16 +456,16 @@ function batchCanOverlapDelete() {
 			$query .= "OR batchId = ".$batches[$i]." OR batchOverlapId = ".$batches[$i]." ";
 	}
 	$query .= ";";
-	error_log("batchCanOverlapDelete: Created Query: ".$query, 0);
+	ttlog("batchCanOverlapDelete: Created Query: ".$query);
 
 	$result = sqlUpdate($query);	
-	error_log("batchCanOverlapDelete: $query Result: ".json_encode($result), 0);
+	ttlog("batchCanOverlapDelete: $query Result: ".json_encode($result));
 
 	if($result === false) {
-		error_log("batchCanOverlapDelete(): resString: ".failMessage());
+		ttlog("batchCanOverlapDelete(): resString: ".failMessage());
 		return failMessage();
 	}
-	error_log("batchCanOverlapDelete(): resString: ".successMessage(), 0);
+	ttlog("batchCanOverlapDelete(): resString: ".successMessage());
 	return successMessage();
 }
 function batchCanOverlapInsert() {
@@ -482,7 +482,7 @@ function batchCanOverlapInsert() {
 		if($tok !== false)
 			$batches[count($batches)] = $tok;
 	} 
-	error_log("batchCanOverlapInsert: received batches for deletion: ".json_encode($batches), 0);
+	ttlog("batchCanOverlapInsert: received batches for deletion: ".json_encode($batches));
 	$query = "INSERT INTO batchCanOverlap (batchId, batchOverlapId, snapshotId) VALUES ";
 	for($i = 0; $i < count($batches); $i++) { // 0 special case, to match the "OR" in query
 			for($j = 0; $j < count($batches); $j++) {
@@ -496,16 +496,16 @@ function batchCanOverlapInsert() {
 			}
 	}
 	$query .= ";"; // remove the last comma  
-	error_log("batchCanOverlapInsert: Query Created: ".$query, 0);
+	ttlog("batchCanOverlapInsert: Query Created: ".$query);
 
 	$result = sqlUpdate($query);	
-	error_log("batchCanOverlapInsert: Result: ".json_encode($result), 0);
+	ttlog("batchCanOverlapInsert: Result: ".json_encode($result));
 
 	if($result === false) {
-		error_log("batchCanOverlapInsert(): resString: ".failMessage());
+		ttlog("batchCanOverlapInsert(): resString: ".failMessage());
 		return failMessage();
 	}
-	error_log("batchCanOverlapInsert(): resString: ".successMessage(), 0);
+	ttlog("batchCanOverlapInsert(): resString: ".successMessage());
 	return successMessage();
 }
 function roomInsert() {
@@ -523,17 +523,17 @@ function roomInsert() {
 	$selectQuery = "SELECT * from room where roomShortName = \"$roomShortName\" AND snapshotId = $snapshotId";
 
 	$result = sqlUpdate($query);	
-	error_log("roomInsert(): $query Result :".json_encode($result), 0);
+	ttlog("roomInsert(): $query Result :".json_encode($result));
 
 	if($result === false) {
-		error_log("roomInsert(): resString: ".failMessage());
+		ttlog("roomInsert(): resString: ".failMessage());
 		return failMessage();
 	}
 
 	$result = sqlGetAllRows($selectQuery);
-	error_log("roomInsert(): $selectQuery: Result: ".json_encode($result), 0);
+	ttlog("roomInsert(): $selectQuery: Result: ".json_encode($result));
 	if($result === false) {
-		error_log("roomInsert(): resString: ".failMessage());
+		ttlog("roomInsert(): resString: ".failMessage());
 		return failMessage();
 	}else {
 		$resString = "{\"Success\": \"True\",";
@@ -552,13 +552,13 @@ function roomDelete() {
 	$query = "DELETE FROM room WHERE roomId = \"$roomId\" AND snapshotId = $snapshotId;";
 
 	$result = sqlUpdate($query);	
-	error_log("roomDelete(): $query Result :".json_encode($result), 0);
+	ttlog("roomDelete(): $query Result :".json_encode($result));
 
 	if($result === false) {
-		error_log("roomDelete(): resString: ".failMessage());
+		ttlog("roomDelete(): resString: ".failMessage());
 		return failMessage();
 	}
-	error_log("roomDelete(): resString: ".successMessage(), 0);
+	ttlog("roomDelete(): resString: ".successMessage());
 	return successMessage();
 }
 
@@ -577,13 +577,13 @@ function roomUpdate() {
 			 "WHERE roomId = \"$roomId\" AND snapshotId = $snapshotId";
 
 	$result = sqlUpdate($query);	
-	error_log("roomUpdate(): $query Result :".json_encode($result), 0);
+	ttlog("roomUpdate(): $query Result :".json_encode($result));
 
 	if($result === false) {
-		error_log("roomUpdate(): resString: ".failMessage());
+		ttlog("roomUpdate(): resString: ".failMessage());
 		return failMessage();
 	}
-	error_log("roomUpdate(): resString: ".successMessage(), 0);
+	ttlog("roomUpdate(): resString: ".successMessage());
 	return successMessage();
 }
 function sbtInsert() {
@@ -595,7 +595,7 @@ function sbtInsert() {
 	$batchId = getArgument("batchId");
 	$sbtId = getArgument("sbtId");
 	$snapshotId = getArgument("snapshotId");
-	error_log("sbtInsert(): arguments: ".json_encode($_POST), 0);
+	ttlog("sbtInsert(): arguments: ".json_encode($_POST));
 
 	$query = "INSERT INTO subjectBatchTeacher (teacherId, subjectId, batchId, snapshotId) ".
 		     "VALUES ($teacherId, $subjectId, $batchId, $snapshotId)";
@@ -603,17 +603,17 @@ function sbtInsert() {
 			  " AND batchId = $batchId AND subjectId = $subjectId AND snapshotId = $snapshotId";
 
 	$result = sqlUpdate($query);
-	error_log("sbtInsert(): $query Result: $result", 0);
+	ttlog("sbtInsert(): $query Result: $result");
 
 	if($result === false) {
-		error_log("sbtInsert(): resString: ".failMessage());
+		ttlog("sbtInsert(): resString: ".failMessage());
 		return failMessage();
 	}
 
 	$result = sqlGetAllRows($selectQuery);
-	error_log("sbtInsert(): $selectQuery: Result: ".json_encode($result), 0);
+	ttlog("sbtInsert(): $selectQuery: Result: ".json_encode($result));
 	if($result === false) {
-		error_log("sbtInsert(): resString: ".failMessage());
+		ttlog("sbtInsert(): resString: ".failMessage());
 		return failMessage();
 	} else {
 		$resString = "{\"Success\": \"True\",";
@@ -630,26 +630,26 @@ function sbtDelete() {
 	$batchId = getArgument("batchId");
 	$sbtId = getArgument("sbtId");
 	$snapshotId = getArgument("snapshotId");
-	error_log("sbtDelete(): arguments: ".json_encode($_POST), 0);
+	ttlog("sbtDelete(): arguments: ".json_encode($_POST));
 
 	$query = "DELETE FROM subjectBatchTeacher WHERE sbtId = $sbtId AND snapshotId = $snapshotId;";
 	$delTTQuery = "DELETE FROM timeTable WHERE subjectId = $subjectId AND teacherId = $teacherId ".
 					" and batchId = $batchId AND snapshotId = $snapshotId;";
 
 	$result = sqlUpdate($query);
-	error_log("sbtDelete(): $query Result: $result", 0);
+	ttlog("sbtDelete(): $query Result: $result");
 
 	if($result === false) {
-		error_log("sbtDelete(): resString: ".failMessage());
+		ttlog("sbtDelete(): resString: ".failMessage());
 		return failMessage();
 	}
 	$result = sqlUpdate($delTTQuery);
-	error_log("sbtDelete: $delTTQuery Result: $result", 0);
+	ttlog("sbtDelete: $delTTQuery Result: $result");
 	if($result === false) {
-		error_log("sbtDelete(): resString: ".failMessage());
+		ttlog("sbtDelete(): resString: ".failMessage());
 		return failMessage();
 	}
-	error_log("sbtDelete(): resString: ".successMessage(), 0);
+	ttlog("sbtDelete(): resString: ".successMessage());
 	return successMessage();
 }
 function sbtUpdate() {
@@ -661,20 +661,20 @@ function sbtUpdate() {
 	$batchId = getArgument("batchId");
 	$sbtId = getArgument("sbtId");
 	$snapshotId = getArgument("snapshotId");
-	error_log("sbtUpdate(): arguments: ".json_encode($_POST), 0);
+	ttlog("sbtUpdate(): arguments: ".json_encode($_POST));
 
 	$query = "UPDATE subjectBatchTeacher SET teacherId = $teacherId, ".
 			  "subjectId = $subjectId, batchId = $batchId".
 			 " WHERE sbtId = $sbtId AND snapshotId = $snapshotId";
 
 	$result = sqlUpdate($query);
-	error_log("sbtUpdate(): $query Result: $result", 0);
+	ttlog("sbtUpdate(): $query Result: $result");
 
 	if($result === false) {
-		error_log("sbtUpdate(): resString: ".failMessage());
+		ttlog("sbtUpdate(): resString: ".failMessage());
 		return failMessage();
 	}
-	error_log("sbtUpdate(): resString: ".successMessage(), 0);
+	ttlog("sbtUpdate(): resString: ".successMessage());
 	return successMessage();
 }
 function sctInsert() {
@@ -694,16 +694,16 @@ function sctInsert() {
 			  " AND classId = $classId AND subjectId = $subjectId AND snapshotId = $snapshotId";
 
 	$result = sqlUpdate($query);
-	error_log("sctInsert(): $query Result: $result", 0);
+	ttlog("sctInsert(): $query Result: $result");
 
 	if($result === false) {
-		error_log("sctInsert(): resString: ".failMessage());
+		ttlog("sctInsert(): resString: ".failMessage());
 		return failMessage();
 	}
 	$result = sqlGetAllRows($selectQuery);
-	error_log("sctInsert(): $selectQuery: Result: ".json_encode($result), 0);
+	ttlog("sctInsert(): $selectQuery: Result: ".json_encode($result));
 	if($result === false) {
-		error_log("sctInsert(): resString: ".failMessage());
+		ttlog("sctInsert(): resString: ".failMessage());
 		return failMessage();
 	} else {
 		$resString = "{\"Success\": \"True\",";
@@ -727,19 +727,19 @@ function sctDelete() {
 						" and classId = $classId AND snapshotId = $snapshotId;";
 
 	$result = sqlUpdate($query);
-	error_log("sctDelete(): $query Result: $result", 0);
+	ttlog("sctDelete(): $query Result: $result");
 
 	if($result === false) {
-		error_log("sctDelete(): resString: ".failMessage());
+		ttlog("sctDelete(): resString: ".failMessage());
 		return failMessage();
 	}
 	$result = sqlUpdate($delTTQuery);
-	error_log("sctDelete(): $delTTQuery Result: $result", 0);
+	ttlog("sctDelete(): $delTTQuery Result: $result");
 	if($result === false) {
-		error_log("sctDelete(): resString: ".failMessage());
+		ttlog("sctDelete(): resString: ".failMessage());
 		return failMessage();
 	}
-	error_log("sctDelete(): resString: ".successMessage(), 0);
+	ttlog("sctDelete(): resString: ".successMessage());
 	return successMessage();
 }
 
@@ -758,13 +758,13 @@ function sctUpdate() {
 			 " WHERE sctId = $sctId AND snapshotId = $snapshotId";
 
 	$result = sqlUpdate($query);
-	error_log("sctUpdate(): $query Result: $result", 0);
+	ttlog("sctUpdate(): $query Result: $result");
 
 	if($result === false) {
-		error_log("sctUpdate(): resString: ".failMessage());
+		ttlog("sctUpdate(): resString: ".failMessage());
 		return failMessage();
 	}
-	error_log("sctUpdate(): resString: ".successMessage(), 0);
+	ttlog("sctUpdate(): resString: ".successMessage());
 	return successMessage();
 }
 function subjectRoomInsert() {
@@ -782,17 +782,17 @@ function subjectRoomInsert() {
 			  " roomId = $roomId AND snapshotId = $snapshotId";
 
 	$result = sqlUpdate($query);	
-	error_log("subjectRoomInsert(): $query Result :".json_encode($result), 0);
+	ttlog("subjectRoomInsert(): $query Result :".json_encode($result));
 
 	if($result === false) {
-		error_log("subjectRoomInsert(): resString: ".failMessage());
+		ttlog("subjectRoomInsert(): resString: ".failMessage());
 		return failMessage();
 	}
 
 	$result = sqlGetAllRows($selectQuery);
-	error_log("subjectRoomInsert(): $selectQuery: Result: ".json_encode($result), 0);
+	ttlog("subjectRoomInsert(): $selectQuery: Result: ".json_encode($result));
 	if($result === false) {
-		error_log("subjectRoomInsert(): resString: ".failMessage());
+		ttlog("subjectRoomInsert(): resString: ".failMessage());
 		return failMessage();
 	} else {
 		$resString = "{\"Success\": \"True\",";
@@ -811,13 +811,13 @@ function subjectRoomDelete() {
 	$query = "DELETE FROM subjectRoom WHERE srId = $srId AND snapshotId = $snapshotId;";
 
 	$result = sqlUpdate($query);	
-	error_log("subjectRoomDelete(): $query Result :".json_encode($result), 0);
+	ttlog("subjectRoomDelete(): $query Result :".json_encode($result));
 
 	if($result === false) {
-		error_log("subjectRoomDelete(): resString: ".failMessage());
+		ttlog("subjectRoomDelete(): resString: ".failMessage());
 		return failMessage();
 	}
-	error_log("subjectRoomDelete(): resString: ".successMessage(), 0);
+	ttlog("subjectRoomDelete(): resString: ".successMessage());
 	return successMessage();
 }
 
@@ -835,13 +835,13 @@ function subjectRoomUpdate() {
 			 "WHERE srId = $srId AND snapshotId = $snapshotId";
 
 	$result = sqlUpdate($query);	
-	error_log("subjectRoomUpdate(): $query Result :".json_encode($result), 0);
+	ttlog("subjectRoomUpdate(): $query Result :".json_encode($result));
 
 	if($result === false) {
-		error_log("subjectRoomUpdate(): resString: ".failMessage());
+		ttlog("subjectRoomUpdate(): resString: ".failMessage());
 		return failMessage();
 	}
-	error_log("subjectRoomUpdate(): resString: ".successMessage(), 0);
+	ttlog("subjectRoomUpdate(): resString: ".successMessage());
 	return successMessage();
 }
 function classRoomInsert() {
@@ -858,23 +858,23 @@ function classRoomInsert() {
 	$selectQuery = "SELECT * from classRoom where classId = $classId AND roomId = $roomId AND snapshotId = $snapshotId";
 
 	$result = sqlUpdate($query);	
-	error_log("classRoomInsert(): $query Result :".json_encode($result), 0);
+	ttlog("classRoomInsert(): $query Result :".json_encode($result));
 
 	if($result === false) {
-		error_log("classRoomInsert(): resString: ".failMessage());
+		ttlog("classRoomInsert(): resString: ".failMessage());
 		return failMessage();
 	}
 	$result = sqlGetAllRows($selectQuery);
-	error_log("classRoomInsert(): $selectQuery: Result: ".json_encode($result), 0);
+	ttlog("classRoomInsert(): $selectQuery: Result: ".json_encode($result));
 	if($result === false) {
-		error_log("classRoomInsert(): resString: ".failMessage());
+		ttlog("classRoomInsert(): resString: ".failMessage());
 		return failMessage();
 	} else {
 		$resString = "{\"Success\": \"True\",";
 		$resString .= "\"crId\"   : \"".$result[0]["crId"]."\"}";
 		return $resString;
 	}
-	error_log("classRoomInsert(): resString: ".successMessage(), 0);
+	ttlog("classRoomInsert(): resString: ".successMessage());
 	return successMessage();
 }
 
@@ -888,13 +888,13 @@ function classRoomDelete() {
 	$query = "DELETE FROM classRoom WHERE crId = $crId AND snapshotId = $snapshotId;";
 
 	$result = sqlUpdate($query);	
-	error_log("classRoomDelete(): $query Result :".json_encode($result), 0);
+	ttlog("classRoomDelete(): $query Result :".json_encode($result));
 
 	if($result === false) {
-		error_log("classRoomDelete(): resString: ".failMessage());
+		ttlog("classRoomDelete(): resString: ".failMessage());
 		return failMessage();
 	}
-	error_log("classRoomDelete(): resString: ".successMessage(), 0);
+	ttlog("classRoomDelete(): resString: ".successMessage());
 	return successMessage();
 }
 
@@ -912,13 +912,13 @@ function classRoomUpdate() {
 			 "WHERE crId = $crId AND snapshotId = $snapshotId";
 
 	$result = sqlUpdate($query);	
-	error_log("classRoomUpdate(): $query Result :".json_encode($result), 0);
+	ttlog("classRoomUpdate(): $query Result :".json_encode($result));
 
 	if($result === false) {
-		error_log("classRoomUpdate(): resString: ".failMessage());
+		ttlog("classRoomUpdate(): resString: ".failMessage());
 		return failMessage();
 	}
-	error_log("classRoomUpdate(): resString: ".successMessage(), 0);
+	ttlog("classRoomUpdate(): resString: ".successMessage());
 	return successMessage();
 }
 function batchRoomInsert() {
@@ -935,24 +935,24 @@ function batchRoomInsert() {
 	$selectQuery = "SELECT * from batchRoom where batchId = $batchId AND roomId = $roomId AND snapshotId = $snapshotId";
 
 	$result = sqlUpdate($query);	
-	error_log("batchRoomInsert(): $query Result :".json_encode($result), 0);
+	ttlog("batchRoomInsert(): $query Result :".json_encode($result));
 
 	if($result === false) {
-		error_log("batchRoomInsert(): resString: ".failMessage());
+		ttlog("batchRoomInsert(): resString: ".failMessage());
 		return failMessage();
 	}
 
 	$result = sqlGetAllRows($selectQuery);
-	error_log("batchRoomInsert: $selectQuery: Result: ".json_encode($result), 0);
+	ttlog("batchRoomInsert: $selectQuery: Result: ".json_encode($result));
 	if($result === false) {
-		error_log("batchRoomInsert(): resString: ".failMessage());
+		ttlog("batchRoomInsert(): resString: ".failMessage());
 		return failMessage();
 	} else {
 		$resString = "{\"Success\": \"True\",";
 		$resString .= "\"brId\"   : \"".$result[0]["brId"]."\"}";
 		return $resString;
 	}
-	error_log("batchRoomInsert(): resString: ".successMessage(), 0);
+	ttlog("batchRoomInsert(): resString: ".successMessage());
 	return successMessage();
 }
 
@@ -966,13 +966,13 @@ function batchRoomDelete() {
 	$query = "DELETE FROM batchRoom WHERE brId = $brId AND snapshotId = $snapshotId;";
 
 	$result = sqlUpdate($query);	
-	error_log("batchRoomDelete(): $query : Result :".json_encode($result), 0);
+	ttlog("batchRoomDelete(): $query : Result :".json_encode($result));
 
 	if($result === false) {
-		error_log("batchRoomDelete(): resString: ".failMessage());
+		ttlog("batchRoomDelete(): resString: ".failMessage());
 		return failMessage();
 	}
-	error_log("batchRoomDelete(): resString: ".successMessage(), 0);
+	ttlog("batchRoomDelete(): resString: ".successMessage());
 	return successMessage();
 }
 
@@ -990,13 +990,13 @@ function batchRoomUpdate() {
 			 "WHERE brId = $brId AND snapshotId = $snapshotId";
 
 	$result = sqlUpdate($query);	
-	error_log("batchRoomUpdate(): $query : Result :".json_encode($result), 0);
+	ttlog("batchRoomUpdate(): $query : Result :".json_encode($result));
 
 	if($result === false) {
-		error_log("batchRoomUpdate(): resString: ".failMessage());
+		ttlog("batchRoomUpdate(): resString: ".failMessage());
 		return failMessage();
 	}
-	error_log("batchRoomUpdate(): resString: ".successMessage(), 0);
+	ttlog("batchRoomUpdate(): resString: ".successMessage());
 	return successMessage();
 }
 
@@ -1017,17 +1017,17 @@ function configInsert() {
 	$selectQuery = "SELECT * from config where configName = \"$configName\"";
 
 	$result = sqlUpdate($query);	
-	error_log("configInsert(): $query Result: ".json_encode($result), 0);
+	ttlog("configInsert(): $query Result: ".json_encode($result));
 
 	if($result === false) {
-		error_log("configInsert(): resString: ".failMessage());
+		ttlog("configInsert(): resString: ".failMessage());
 		return failMessage();
 	}
 
 	$result = sqlGetAllRows($selectQuery);
-	error_log("configInsert(): $selectQuery: Result: ".json_encode($result), 0);
+	ttlog("configInsert(): $selectQuery: Result: ".json_encode($result));
 	if($result === false) {
-		error_log("configInsert(): resString: ".failMessage());
+		ttlog("configInsert(): resString: ".failMessage());
 		return failMessage();
 	} else {
 		$resString = "{\"Success\": \"True\",";
@@ -1045,13 +1045,13 @@ function configDelete() {
 	$query = "DELETE FROM config WHERE configId = $configId;";
 
 	$result = sqlUpdate($query);	
-	error_log("configDelete(): $query Result: ".json_encode($result), 0);
+	ttlog("configDelete(): $query Result: ".json_encode($result));
 
 	if($result === false) {
-		error_log("configDelete(): resString: ".failMessage());
+		ttlog("configDelete(): resString: ".failMessage());
 		return failMessage();
 	}
-	error_log("configDelete(): resString: ".successMessage(), 0);
+	ttlog("configDelete(): resString: ".successMessage());
 	return successMessage();
 }
 
@@ -1073,13 +1073,13 @@ function configUpdate() {
 			 "deptId= $deptId, incharge=$incharge WHERE configId = \"$configId\"";
 	
 	$result = sqlUpdate($query);	
-	error_log("configUpdate(): $query Result: ".json_encode($result), 0);
+	ttlog("configUpdate(): $query Result: ".json_encode($result));
 
 	if($result === false) {
-		error_log("configUpdate(): resString: ".failMessage());
+		ttlog("configUpdate(): resString: ".failMessage());
 		return failMessage();
 	}
-	error_log("configUpdate(): resString: ".successMessage(), 0);
+	ttlog("configUpdate(): resString: ".successMessage());
 	return successMessage();
 }
 function overlappingSBTInsert() {
@@ -1101,23 +1101,23 @@ function overlappingSBTInsert() {
 			  " AND sbtId2 = $sbtId1 AND snapshotId = $snapshotId";
 
 	$result = sqlUpdate($queryInsert1);
-	error_log("overlappingSBTInsert(): $queryInsert1 Result: $result", 0);
+	ttlog("overlappingSBTInsert(): $queryInsert1 Result: $result");
 	if($result === false) { 
-		error_log("overlappingSBTInsert(): resString: ".failMessage());
+		ttlog("overlappingSBTInsert(): resString: ".failMessage());
 		return failMessage();
 	}
 
 	$result = sqlUpdate($queryInsert2);
-	error_log("overlappingSBTInsert: $queryInsert2 Result: $result", 0);
+	ttlog("overlappingSBTInsert: $queryInsert2 Result: $result");
 	if($result === false) {
-		error_log("overlappingSBTInsert(): resString: ".failMessage());
+		ttlog("overlappingSBTInsert(): resString: ".failMessage());
 		return failMessage();
 	}
 
 	$result1 = sqlGetAllRows($querySelect1);
-	error_log("overlappingSBTInsert: $querySelect1: Result: ".json_encode($result1), 0);
+	ttlog("overlappingSBTInsert: $querySelect1: Result: ".json_encode($result1));
 	if($result1 === false) {
-		error_log("overlappingSBTInsert(): resString: ".failMessage());
+		ttlog("overlappingSBTInsert(): resString: ".failMessage());
 		return failMessage();
 	} else {
 		$resString = "{\"Success\": \"True\",";
@@ -1125,9 +1125,9 @@ function overlappingSBTInsert() {
 	}
 
 	$result = sqlGetAllRows($querySelect2);
-	error_log("overlappingSBTInsert(): $querySelect2: Result: ".json_encode($result), 0);
+	ttlog("overlappingSBTInsert(): $querySelect2: Result: ".json_encode($result));
 	if($result === false) {
-		error_log("overlappingSBTInsert(): resString: ".failMessage());
+		ttlog("overlappingSBTInsert(): resString: ".failMessage());
 		return failMessage();
 	} else {
 		$resString .= "\"osbtId2\"   : \"".$result[0]["osbtId"]."\"}";
@@ -1152,15 +1152,15 @@ function overlappingSBTDelete() {
 	$query = "DELETE FROM overlappingSBT WHERE sbtId1 = $sbtId1 OR sbtId2 = $sbtId2 " .
 			" OR sbtId2 = $sbtId1 OR sbtId1 = $sbtId2 ".
 			" AND snapshotId = $snapshotId;";
-	error_log("overlappingSBTDelete(): Query: ".$query, 0);
+	ttlog("overlappingSBTDelete(): Query: ".$query);
 
 	$result = sqlUpdate($query);
-	error_log("overlappingSBTDelete(): $query Result: $result", 0);
+	ttlog("overlappingSBTDelete(): $query Result: $result");
 	if($result === false) {
-		error_log("overlappingSBTDelete(): resString: ".failMessage());
+		ttlog("overlappingSBTDelete(): resString: ".failMessage());
 		return failMessage();
 	} else {
-		error_log("overlappingSBTDelete(): resString: ".successMessage(), 0);
+		ttlog("overlappingSBTDelete(): resString: ".successMessage());
 		return successMessage();
 	}
 }
@@ -1177,12 +1177,12 @@ function overlappingSBTUpdate() {
 	$query = "UPDATE overlappingSBT SET sbtId1 = $sbtId1, ".
 			  "sbtId2 = $sbtId2".
 			 " WHERE osbtId = $osbtId AND snapshotId = $snapshotId";
-	error_log("overlappingSBTUpdate(): Query: ".$query, 0);
+	ttlog("overlappingSBTUpdate(): Query: ".$query);
 
 	$result = sqlUpdate($query);
-	error_log("overlappingSBTUpdate(): $query Result: $result", 0);
+	ttlog("overlappingSBTUpdate(): $query Result: $result");
 	if($result === false) {
-		error_log("overlappingSBTUpdate(): resString: ".failMessage());
+		ttlog("overlappingSBTUpdate(): resString: ".failMessage());
 		return failMessage();
 	} else {
 		return successMessage();

@@ -26,7 +26,7 @@ function find($allrows, $day, $slotNo) {
 /* Generates one worksheet for teacher=teacherShortName, class=classShortName, etc. */
 function generate_timetable_worksheet($currTableName, $searchParam, $sheetCount, $allrows2, $nSlots) {
 	global $objPHPExcel; 
-	//error_log("generate_timetable_worksheet: $currTableName $searchParam $sheetCount $nSlots", 0);
+	//ttlog("generate_timetable_worksheet: $currTableName $searchParam $sheetCount $nSlots");
 	global $objPHPExcel;
 	$myWorkSheet = new PHPExcel_Worksheet($objPHPExcel, $currTableName."_".$searchParam);
 	$objPHPExcel->addSheet($myWorkSheet, $sheetCount);
@@ -192,7 +192,7 @@ function generate_timetable_worksheet($currTableName, $searchParam, $sheetCount,
 				$height = 68.55;// * count($thisSlotEntries);//12.75 * count($thisSlotEntries);
 			$objPHPExcel->getActiveSheet()->getRowDimension($row)->setRowHeight($height);
 			//$width = 12.75;
-			//error_log("export: $currTableName $searchParam $day $slotNo width = $width", 0);
+			//ttlog("export: $currTableName $searchParam $day $slotNo width = $width");
 			$objPHPExcel->getActiveSheet()->getColumnDimension($col)->setWidth($width);
 			$objPHPExcel->getActiveSheet()->getStyle($col.$row)->getAlignment()->
 									setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
@@ -226,7 +226,7 @@ function generate_timetable_spreadsheet() {
 			$query = "SELECT * FROM timeTableReadable WHERE  $currParam = \"$searchParam\" ".
 					 "AND snapshotName = \"$currentSnapshotName\"";
 			$allrows2 = sqlGetAllRows($query);
-			//error_log("export: allrows2: ".json_encode($allrows2));
+			//ttlog("export: allrows2: ".json_encode($allrows2));
 			generate_timetable_worksheet($currTableName, $searchParam, $sheetCount, $allrows2, $nSlots);
 
 			# print information about subject shortcut names, subject-teacher mapping	
@@ -367,7 +367,7 @@ function saveFile($savefilename) {
 	$objPHPWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $format);
 	$filename = str_replace('EXT', $extension, $savefilename); 
 	$objPHPWriter->save($filename); //str_extension('php',$extension, basename(__FILE__)));
-	//error_log("export: Saving file $filename", 0);
+	//ttlog("export: Saving file $filename");
 	return $filename; 
 }
 function exportFile() {

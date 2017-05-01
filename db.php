@@ -37,7 +37,7 @@ function sqlGetAllRows($query) {
 	}
 	$result = $conn->query($query);
 	if($result === false)  {
-		error_log("Query $query returned false", 0);
+		ttlog("sqlGetAllRows: Query $query returned false");
 		$CFG->last_query = $query;
 		die("Query $query returned false");
 	}
@@ -56,13 +56,13 @@ function sqlGetOneRow($query) {
 	}
 	$result = $conn->query($query);
 	if($result === false)  {
-		error_log("sqlGetOneRow: $query Failed");
+		ttlog("sqlGetOneRow: $query Failed");
 		die("sqlGetOneRow: Query $query returned false");
 	}
 	$allrows = array();
 	$allrows = $result->fetch_all(MYSQLI_ASSOC);
 	if(count($allrows) != 1) {
-		error_log("sqlGetOneRow: $query returned ".count($allrows)." rows");
+		ttlog("sqlGetOneRow: $query returned ".count($allrows)." rows");
 		$CFG->last_query = $query;
 		die("sqlGetOneRow: $query returned ".count($allrows)." rows");
 	}
@@ -81,7 +81,7 @@ function sqlUpdate($query) {
 	$result = $conn->query($query);
 	if($result === false) {
 		$CFG->last_query = $query;
-		error_log("sqlUpdate: Query $query returned false\n",0);	
+		ttlog("sqlUpdate: Query $query returned false\n");	
 		return $result;
 	}
 	return true;
