@@ -2091,7 +2091,10 @@ function getEligibleSubjects(i, j, k) {
 			continue;
 		}
 		
-		subjectsList.push(currSubject);
+		subjectsList.push([currSubject["subjectShortName"],
+						search(classTable, "classId", sctlist[m]["classId"])["classShortName"],
+						search(teacher, "teacherId", sctlist[m]["teacherId"])["teacherShortName"]
+						]);
 	} 
 
 	/* Handle all SBT Entries */
@@ -2132,7 +2135,10 @@ function getEligibleSubjects(i, j, k) {
 			search(batch, "batchId", sbtlist[m]["batchId"])["batchCount"])) {
 			continue;
 		}
-		subjectsList.push(currSubject);
+		subjectsList.push([currSubject["subjectShortName"],
+						search(batch, "batchId", sbtlist[m]["batchId"])["classShortName"],
+						search(teacher, "teacherId", sbtlist[m]["teacherId"])["teacherShortName"]
+						]);
 	}
 	if(subjectsList.length == 0) {
 		var select = "<select disabled=true id=\"subject" + makeIdFromIJK(i, j, k) + "\" " +
@@ -2154,8 +2160,10 @@ function getEligibleSubjects(i, j, k) {
 		return select;
 	}
 	for(var r in subjectsList) {
-		var subj = subjectsList[r]["subjectShortName"];
-		select += "<option value =\"" + subj + "\">" + subj + "</option>";
+		var subj = subjectsList[r][0];
+		select += "<option value =\"" + subj + "\" " +
+					"title=\"" + subjectsList[r][1] + "," + subjectsList[r][2] + "\"" +
+					">" + subj + "</option>";
 	}
 	if((type == "batch" || type == "class") &&  cellEmpty(i, j)) {
 		select += "<option title=\"Insert a fixed slot/ LUNCH slot\" " + 
