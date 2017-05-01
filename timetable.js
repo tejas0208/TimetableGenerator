@@ -1069,6 +1069,7 @@ function createTable(days, nSlots, slotTablePerDay, startTime, timePerSlot) {
 				div.setAttribute("class", "div"+ i + j);
 				var slottable = document.createElement("table");
 				slottable.setAttribute("id", "slottable"+ makeIdFromIJK(i, j, k));
+				slottable.setAttribute("class", "slottable");
 				slottable.setAttribute("width", "90%");
 				//slottable.setAttribute("class", "slottable" + k);
 				td.setAttribute("ondragenter", "dragEnterHandler(event)");
