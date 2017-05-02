@@ -143,6 +143,12 @@ option, select{
 #outerTable {
 	vertical-align: top;
 }
+#hideButton {
+	font: 13px courier bold;
+}
+.mainTableRow {
+	height: 0px; 
+}
 /*-----------------------------------------------------------------------/
 /* Tracker Related */
 .trackerrow {

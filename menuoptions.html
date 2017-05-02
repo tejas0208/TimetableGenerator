@@ -4,55 +4,74 @@
 			<div id="title" align="center"> <h2> COEP TimeTable </h2> </div>
 		</td>
 		<td class="outercol2" rowspan="3" border="1" id="configuration-menu-column">
-			<div class="selection-menu">
-				Configuration	
-				<select id="configuration-menu" class="select-menu" display="none">
-					<option id = "selectOne" value = "selectOne" selected></option>
-					<optgroup label="Primary Data">
-					<option value = "teachers" onclick="teacherForm()">Teachers</option>
-					<option value = "subjects" onclick="subjectForm()">Subjects</option>
-					<option value = "classes" onclick="classForm()">Classes</option>
-					<option value = "batchs" onclick="batchForm()">Batches</option>
-					<option value = "rooms" onclick="roomForm()">Rooms</option>
-					<option value = "depts" onclick="deptForm()">Depts</option>
-					</optgroup>
-					<optgroup label="Mappings">
-					<option value = "subjectClassMapping" onclick="sctForm()"> 
-							Class-Subject-Teacher</option>
-					<option value = "subjectBatchMapping" onclick="sbtForm()"> 
-							Batch-Subject-Teacher</option>
-					</optgroup>
-					<optgroup label="Overlaps">
-					<option value = "batchCanOverlap" onclick="batchCanOverlapForm()"> 
-							Overlaps Allowed</option>
-					<option value = "overlappingSBT" onclick="overlappingSBTForm()"> 
-							Overlaps Must</option>
-					</optgroup>
-					<optgroup label="Room Preferences">
-					<option value = "classRoom" onclick="classRoomForm()"> 
-							For Classes</option>
-					<option value = "batchRoom" onclick="batchRoomForm()"> 
-							For Batches</option>
-					<option value = "subjectRoom" onclick="subjectRoomForm()"> 
-							For Subjects</option>
-					</optgroup>
-					<option value = "config" onclick="configForm()"> 
-							Configure Timetable</option>
-					<option value = "user" onclick="userForm()">Users</option>
-				</select>
-			</div>
-			<div id="trackerdiv" class="selection-menu"> 
-				Dashboard	
-				<div id="tracker" rows = "3" cols = "20" readonly="readonly">
-				</div>
-			</div>
-			<div class="selection-menu">
-				Warnings
-			</div>
-		
+			<table class="outercol2Table" id="outercol2Table">
+			<tr>
+				<td>
+					<div id="hideButton" class="hideButton">
+						<a href="javascript:void(0)" onclick='toggleHide()'> Hide &gt;
+						</a>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div id="configurationDiv" class="selection-menu">
+						Configuration	
+						<select id="configuration-menu" class="select-menu" display="none">
+							<option id = "selectOne" value = "selectOne" selected></option>
+							<optgroup label="Primary Data">
+							<option value = "teachers" onclick="teacherForm()">Teachers</option>
+							<option value = "subjects" onclick="subjectForm()">Subjects</option>
+							<option value = "classes" onclick="classForm()">Classes</option>
+							<option value = "batchs" onclick="batchForm()">Batches</option>
+							<option value = "rooms" onclick="roomForm()">Rooms</option>
+							<option value = "depts" onclick="deptForm()">Depts</option>
+							</optgroup>
+							<optgroup label="Mappings">
+							<option value = "subjectClassMapping" onclick="sctForm()"> 
+									Class-Subject-Teacher</option>
+							<option value = "subjectBatchMapping" onclick="sbtForm()"> 
+									Batch-Subject-Teacher</option>
+							</optgroup>
+							<optgroup label="Overlaps">
+							<option value = "batchCanOverlap" onclick="batchCanOverlapForm()"> 
+									Overlaps Allowed</option>
+							<option value = "overlappingSBT" onclick="overlappingSBTForm()"> 
+									Overlaps Must</option>
+							</optgroup>
+							<optgroup label="Room Preferences">
+							<option value = "classRoom" onclick="classRoomForm()"> 
+									For Classes</option>
+							<option value = "batchRoom" onclick="batchRoomForm()"> 
+									For Batches</option>
+							<option value = "subjectRoom" onclick="subjectRoomForm()"> 
+									For Subjects</option>
+							</optgroup>
+							<option value = "config" onclick="configForm()"> 
+									Configure Timetable</option>
+							<option value = "user" onclick="userForm()">Users</option>
+						</select>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div id="trackerDiv" class="selection-menu"> 
+						Dashboard	
+						<div id="tracker" rows = "3" cols = "20" readonly="readonly">
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div id="warningsDiv" class="selection-menu">
+						Warnings
+					</div>
+				</td>
+			</tr>
+		</table>	
 		</td>
-
-
 	</tr>
 	<tr>
 	<!-- The Menus -->

@@ -1582,7 +1582,7 @@ function fixedSlotEntry(i, j, k) {
 		}
 
 		slottable.innerHTML =
-			"<tr>" +
+			"<tr class=\"mainTableRow\">" +
 				"<td>" +
 					"<div class= \"box\" id = \"box" +  makeIdFromIJK(i, j, k) + "\">" +
 						"<span class = \"fixedEntry\"" +
@@ -2062,8 +2062,14 @@ function getEligibleSubjects(i, j, k) {
 	for(var m = 0; m < sctlist.length; m++) {
 		var currSubject= search(subject, "subjectId", sctlist[m]["subjectId"]);
 		/* Skip if already included in the list */
-		if(subjectsList.indexOf(currSubject) != -1) {
-			continue;
+		for(i = 0; i < subjectsList.length; i++) {
+			if(subjectsList[0] == currSubject &&
+					subjectsList[1] == search(classTable, "classId", sctlist[m]["classId"])
+									["classShortName"] &&
+					subjectsList[2] == search(teacher, "teacherId", sctlist[m]["teacherId"])
+									["teacherShortName"]
+			)
+				continue;
 		}
 		/* Skip if all required entries are already done */
 		if(allEntriesAlreadyDoneForSubject(sctlist[m], "classId", sctlist[m]["classId"],
@@ -2101,8 +2107,14 @@ function getEligibleSubjects(i, j, k) {
 	for(var m = 0; m < sbtlist.length; m++) {
 		var currSubject= search(subject, "subjectId", sbtlist[m]["subjectId"]);
 		/* Skip if already included in the list */
-		if(subjectsList.indexOf(currSubject) != -1) {
-			continue;
+		for(i = 0; i < subjectsList.length; i++) {
+			if(subjectsList[0] == currSubject &&
+					subjectsList[1] == search(batch, "batchId", sctlist[m]["batchId"])
+									["batchName"] &&
+					subjectsList[2] == search(teacher, "teacherId", sctlist[m]["teacherId"])
+									["teacherShortName"]
+			)
+				continue;
 		}
 		/* Skip if all required entries are already done */
 		if(allEntriesAlreadyDoneForSubject(sbtlist[m], "batchId" ,
@@ -2136,7 +2148,7 @@ function getEligibleSubjects(i, j, k) {
 			continue;
 		}
 		subjectsList.push([currSubject["subjectShortName"],
-						search(batch, "batchId", sbtlist[m]["batchId"])["classShortName"],
+						search(batch, "batchId", sbtlist[m]["batchId"])["batchName"],
 						search(teacher, "teacherId", sbtlist[m]["teacherId"])["teacherShortName"]
 						]);
 	}
@@ -2494,7 +2506,7 @@ function fillTable2(createNewTable) {
 							}
 						}
 						slottable.innerHTML =
-							"<tr>" +
+							"<tr class=\"mainTableRow\">" +
 								"<td class=\"slottd\">" +
 									"<div class= \"box\" id = \"box" + makeIdFromIJK(i, j, position) + "\">"+
 										"<span class = \"fixedEntry\"" +
@@ -2552,7 +2564,7 @@ function fillTable2(createNewTable) {
 						alert("ERROR: undefined batchName");
 					/* Display the Non-fixed Slot Entry in colspan = eachSlot */
 					slottable.innerHTML =
-						"<tr>" +
+						"<tr class=\"mainTableRow\">" +
 							"<td colspan=\"" + eachSlot + "\" class=\"slottd\">"+
 								"<div class= \"box\" id = \"box" + makeIdFromIJK(i, j, position) + "\">"+
 									"<span class = \"subjectentry\""+
@@ -2608,27 +2620,27 @@ function fillTable2(createNewTable) {
 					}
 					slottable = document.getElementById("slottable" + makeIdFromIJK(i, j, position));
 					slottable.innerHTML =
-					"<tr>" +
+					"<tr class=\"mainTableRow\">" +
 						"<td class=\"slottd\">" + getEligibleSubjects(i, j, position) + "</td>" +
 					"</tr>" +
-					"<tr>" +
+					"<tr class=\"mainTableRow\">" +
 						"<td class=\"slottd\">" +
 							"<select id=\"batch" + makeIdFromIJK(i, j, position) + "\" style=\"display:none;\" " +
 							"onchange=\"batchSelected(this)\"/>" +
 						"</td>" +
 					"</tr>" +
-					"<tr>" +
+					"<tr class=\"mainTableRow\">" +
 						"<td class=\"slottd\">" +
 							"<select id=\"teacher" + makeIdFromIJK(i, j, position) + "\" style=\"display:none;\"/>" +
 						"</td>" +
 					"</tr>" +
-					"<tr>" +
+					"<tr class=\"mainTableRow\">" +
 						"<td class=\"slottd\">" +
 							"<select id=\"class" + makeIdFromIJK(i, j, position) + "\" style=\"display:none;\"" +
 							"onchange=\"classSelected(this)\"/>" +
 						"</td>" +
 					"</tr>" +
-					"<tr>" +
+					"<tr class=\"mainTableRow\">" +
 						"<td class=\"slottd\">" +
 							"<select id=\"room" + makeIdFromIJK(i, j, position) + "\" " + "style=\"display:none;\" />" +
 							"Done" +
@@ -2658,32 +2670,32 @@ function fillTable2(createNewTable) {
 				}
 				// Note: inside i=days * j=NoOfSlots loop, subjectHasBatches !=0
 				slottable.innerHTML =
-					"<tr>" +
+					"<tr class=\"mainTableRow\">" +
 						"<td class=\"slottd\">" +
 							getEligibleSubjects(i, j, k) +
 						"</td>" +
 					"</tr>" +
-					"<tr>" +
+					"<tr class=\"mainTableRow\">" +
 						"<td class=\"slottd\">" +
 							"<select id=\"batch" + makeIdFromIJK(i, j, k) + "\"" +
 								"onchange=\"batchSelected(this)\"" +
 								"style=\"display:none;\"/>" +
 						"</td>" +
 					"</tr>" +
-					"<tr>" +
+					"<tr class=\"mainTableRow\">" +
 						"<td class=\"slottd\">" +
 							"<select id=\"teacher" + makeIdFromIJK(i, j, k) + "\"" +
 								"style=\"display:none;\"/>" +
 						"</td>" +
 					"</tr>" +
-					"<tr>" +
+					"<tr class=\"mainTableRow\">" +
 						"<td class=\"slottd\">" +
 							"<select id=\"class" + makeIdFromIJK(i, j, k) + "\"" +
 								"onchange=\"classSelected(this)\" " +
 								"style=\"display:none;\"/>" +
 						"</td>" +
 					"</tr>" +
-					"<tr>" +
+					"<tr class=\"mainTableRow\">" +
 						"<td class=\"slottd\">" +
 							"<select id=\"room" + makeIdFromIJK(i, j, k) + "\"" +
 								"style=\"display:none;\" />" +
@@ -3176,6 +3188,24 @@ function checkInstallation() {
 		window.location.replace("install.php");
 		/* Dead code */
 		return false;
+	}
+}
+hidden = 0;
+function toggleHide() {
+	if(!hidden) {
+		$("#configurationDiv").hide();
+		$("#trackerDiv").hide();
+		$("#warningsDiv").hide();
+		$(".outercol2").css("width", "1%");
+		$("#hideButton").html("<a href=\"javascript:void(0)\" onclick='toggleHide()'> Show &lt; </a>");
+		hidden = 1;
+	} else {
+		$("#configurationDiv").show();
+		$("#trackerDiv").show();
+		$("#warningsDiv").show();
+		$(".outercol2").css("width", "20%");
+		$("#hideButton").html("<a href=\"javascript:void(0)\" onclick='toggleHide()'> Hide &gt; </a>");
+		hidden = 0;
 	}
 }
 /* Load all tables, including Dept, Config, Snapshot and Initialize
