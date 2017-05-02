@@ -1393,21 +1393,46 @@ function getEligibleRoom(i, j, k, capacity, subjectRow, roomFound) {
 	return optionString;
 }
 
-function classSelected(selecttag) {/*Final stage for room type*/
-	var classShortName = selecttag.options[selecttag.selectedIndex].text;
-	var Id = selecttag.getAttribute("id");
-	[iid, jid, kid ] = makeIJKFromId(Id);
-	Id = makeIdFromIJK(iid, jid, kid);
+/*Final stage for room/teacher type*/
+function classSelected(selecttag) {
+	if(type == "room") {
+		var classShortName = selecttag.options[selecttag.selectedIndex].text;
+		var Id = selecttag.getAttribute("id");
+		[iid, jid, kid ] = makeIJKFromId(Id);
+		Id = makeIdFromIJK(iid, jid, kid);
 
-	var classRow = search(classTable, "classShortName", classShortName);
-	var subjectShortName = document.getElementById("subject" + Id).innerHTML;
-	//alert(subjectShortName);
-	var subjectRow = search(subject, "subjectShortName", subjectShortName);
-	var teacherRow = search(subjectClassTeacher, "subjectId", subjectRow["subjectId"],
-				"classId", classRow["classId"]);
-	makeTimeTableEntry(iid, jid, supportObject["roomId"], classRow["classId"], subjectRow["subjectId"],
-		teacherRow["teacherId"], null, currentSnapshotId, 0, parseInt(subjectRow["eachSlot"]));
-	fillTable2(false);
+		var classRow = search(classTable, "classShortName", classShortName);
+		var subjectShortName = document.getElementById("subject" + Id).innerHTML;
+		//alert(subjectShortName);
+		var subjectRow = search(subject, "subjectShortName", subjectShortName);
+		var teacherRow = search(subjectClassTeacher, "subjectId", subjectRow["subjectId"],
+					"classId", classRow["classId"]);
+		makeTimeTableEntry(iid, jid, supportObject["roomId"], classRow["classId"], subjectRow["subjectId"],
+			teacherRow["teacherId"], null, currentSnapshotId, 0, parseInt(subjectRow["eachSlot"]));
+		fillTable2(false);
+	} else if(type == "teacher") {
+		var classShortName = selecttag.options[selecttag.selectedIndex].text;
+		var Id = selecttag.getAttribute("id");
+		[iid, jid, kid ] = makeIJKFromId(Id);
+		Id = makeIdFromIJK(iid, jid, kid);
+		capacity = search(classTable, "classShortName", classShortName)["classCount"];
+		var subjectShortName = document.getElementById("subject" + Id).innerHTML;
+		var subjectRow = search(subject, "subjectShortName", subjectShortName);
+		var roomSelect = document.getElementById("room" + Id);
+		roomSelect.style.display = "";
+		document.getElementById("checkbox" + Id).style.display = "";
+		selecttag.parentElement.innerHTML = "" +
+		"<div id= \"class" + Id + "\"class= \"box\">" +
+			classShortName+
+		"</div>";
+
+		roomFound = search(classRoom, "classId", search(classTable,
+						"classShortName", classShortName)["classId"]);
+		roomSelect.innerHTML = getEligibleRoom(parseInt(iid), parseInt(jid), parseInt(kid),
+								 capacity, subjectRow, roomFound);/*room option*/
+	} else {
+		alert("ERROR: classSelected wrong type");
+	}
 }
 
 /* Called only from "room" page after selecting a Subject 
@@ -1421,37 +1446,24 @@ function getEligibleClass(i, j, k, subjectRow) {
 	var existingEntries;
 	var optionString = "<option value=\"NOT_SELECTED\">--Class--</option>";
 	var disabledClasses = [];
-next_class:
 	for(var l in sct) {
 		var classId = sct[l]["classId"];
 
-		/* Check if nSlots of subject excceded for this class*/
-		res = searchMultipleRows(timeTable, "classId", classId,"subjectId",
-					subjectRow["subjectId"],"snapshotId", currentSnapshotId);
-		if(res === -1){
-			existingEntries = 0;
+		if(allEntriesAlreadyDoneForSubject(sct[l], "classId", sct[l]["classId"],
+				search(classTable, "classId", sct[l]["classId"])["classShortName"], 0)) {
+			disabledClasses.push([search(classTable, "classId", sct[l]["classId"])
+						["classShortName"], "Full"]);
+			console.log("getEligibleClass: Done. skipping " + search(classTable, "classId", sct[l]["classId"])
+						["classShortName"]);
+				continue;
 		}
-		else {
-			existingEntries = (res.length/subjectRow["eachSlot"]);
-		}
-		if(existingEntries >= subjectRow["nSlots"]) {
-			console.log("getEligibleClass: subject " + subjectRow["subjectShortName"] + " class: " +
-						search(classTable, "classId", classId)["classShortName"] +
-						" has no pending entries");
-			disabledClasses.push([search(classTable, "classId", sct[l]["classId"])["classShortName"], 
-								"Full"]);
+	
+		if(classBusyInThisSlot(i, j, sct[l], sct[l]["classId"], 0)) {
+			disabledClasses.push([search(classTable, "classId", sct[l]["classId"])
+				["classShortName"], "Busy"]);
+			console.log("getEligibleClass: Busy. skipping " + search(classTable, "classId", sct[l]["classId"])
+						["classShortName"]);
 			continue;
-		}
-		
-		/* Check Whether this class is free in each required slot out of j + eachSlot */
-		for(var n = 0; n < subjectRow["eachSlot"]; n++) {
-			var res = search(timeTable, "day", i, "slotNo", (j + n), "classId", classId,
-					"snapshotId", currentSnapshotId);
-			if(res !== -1) {
-				disabledClasses.push([search(classTable, "classId", sct[l]["classId"])["classShortName"], 
-								"Busy"]);
-				continue next_class;
-			}
 		}
 		classlist.push(search(classTable, "classId", classId));
 	}
@@ -1628,39 +1640,21 @@ function subjectSelected(selecttag) {
 	var roomFound;
 	switch(type) {
 		case "class" :
-		case "teacher" :
 			if(batches === "0") { /* Non Batchable Subject*/
 				var roomSelect = document.getElementById("room" + Id);
 				roomSelect.style.display = "";
 				document.getElementById("checkbox" + Id).style.display = "";
 				var capacity = parseInt(supportObject["classCount"]);
 				/* On class page, show teacher's info*/
-				if(type == "class") {
-					var sctEntry = search(subjectClassTeacher,
-									"subjectId", subjectRow["subjectId"],
-									"classId", supportObject["classId"]);
-					var teacherRow = search(teacher, "teacherId", sctEntry["teacherId"]);
-					extraInfo += "<div id=\"teacher"+ Id + 
-									"\" class=\"box\">" +
-									teacherRow["teacherShortName"] +
-						"</div>";
-					roomFound = search(classRoom, "classId", supportObject["classId"]);
-				}
-				/* On teacher's page, show class's info*/
-				else {
-					/* TODO: Abhijit: different classes, same subject, same teacher is possible 
-					 * e.g. DSA sycomp, syit taught by Abhijit
-					 */
-					var sctEntry = search(subjectClassTeacher,
-									"subjectId", subjectRow["subjectId"],
-									"teacherId", supportObject["teacherId"]);
-					var classRow = search(classTable, "classId", sctEntry["classId"]);
-					extraInfo += "<div id=\"class"+ Id +
-									"\" class=\"box\">" +
-									classRow["classShortName"] +
-									"</div>";
-					roomFound = search(classRoom, "classId", classRow["classId"]);
-				}
+				var sctEntry = search(subjectClassTeacher,
+								"subjectId", subjectRow["subjectId"],
+								"classId", supportObject["classId"]);
+				var teacherRow = search(teacher, "teacherId", sctEntry["teacherId"]);
+				extraInfo += "<div id=\"teacher"+ Id + 
+								"\" class=\"box\">" +
+								teacherRow["teacherShortName"] +
+					"</div>";
+				roomFound = search(classRoom, "classId", supportObject["classId"]);
 				if(roomFound == -1) {
 					roomFound = search(subjectRoom, "subjectId", subjectRow["subjectId"]);
 				}
@@ -1669,6 +1663,31 @@ function subjectSelected(selecttag) {
 											parseInt(kid), capacity, subjectRow, roomFound);
 			}
 			else {/*Subject Having Batches*/
+				var batchSelect = document.getElementById("batch" + Id);
+				batchSelect.style.display = "";
+				batchSelect.innerHTML = getEligibleBatches(parseInt(iid), parseInt(jid),
+											parseInt(kid), subjectRow);/*batch option*/
+			}
+			break;
+		case "teacher" :
+			if(batches === "0") { /* Non Batchable Subject*/
+				var sctEntry = searchMultipleRows(subjectClassTeacher,
+								"subjectId", subjectRow["subjectId"],
+								"teacherId", supportObject["teacherId"]);
+				if(sctEntry.length == 1) {
+					var classRow = search(classTable, "classId", sctEntry["classId"]);
+					extraInfo += "<div id=\"class"+ Id +
+								"\" class=\"box\">" +
+								classRow["classShortName"] +
+								"</div>";
+					roomFound = search(classRoom, "classId", classRow["classId"]);
+				} else {
+					var classSelect = document.getElementById("class" + Id);
+					classSelect.style.display = "";
+					classSelect.innerHTML = getEligibleClass(parseInt(iid), parseInt(jid),
+									parseInt(kid), subjectRow);
+				}
+			} else {
 				var batchSelect = document.getElementById("batch" + Id);
 				batchSelect.style.display = "";
 				batchSelect.innerHTML = getEligibleBatches(parseInt(iid), parseInt(jid),
@@ -1808,7 +1827,7 @@ function teacherBusyInThisSlot(i, j, sctOrSbtEntry, teacherId, logOrNot) {
 	}
 	return false;
 }
-function classBusyInThisSlot(i, j, sctOrSbtEntry, classId, batchId) {
+function classBusyInThisSlot(i, j, sctOrSbtEntry, classId, logOrNot) {
 	var currSubject= search(subject, "subjectId", sctOrSbtEntry["subjectId"]);
 	if(currSubject["batches"] == "0") {
 		/* Skip subject because already a theory lecture in that slot 
@@ -1824,7 +1843,8 @@ function classBusyInThisSlot(i, j, sctOrSbtEntry, classId, batchId) {
 				"classId", classId, "snapshotId", currentSnapshotId);
 			if(slotEntries !== -1) {
 				//console.log("getEligibleSubject: Batched-subject " + supportObject["classShortName"] + " in slot");
-				disabledSubjectAdd(disabledSubjects, currSubject["subjectShortName"],
+				if(logOrNot == 1)
+					disabledSubjectAdd(disabledSubjects, currSubject["subjectShortName"],
 						search(classTable, "classId", classId)["classShortName"], "Busy");
 				return true;
 			}
@@ -2015,6 +2035,7 @@ function disableSelect(enabledSelect) {
  * 
  */
 function getEligibleSubjects(i, j, k) {
+	console.log("getEligibleSubjects: i = " + i + " j = " + j + " k = " + k);
 	var configrow = search(config, "configId", currentConfigId);
 	var nSlotsPerDay = configrow["nSlots"];
 	var select = "<select id= \"subject" + makeIdFromIJK(i, j, k) +
@@ -2061,11 +2082,11 @@ function getEligibleSubjects(i, j, k) {
 	for(var m = 0; m < sctlist.length; m++) {
 		var currSubject= search(subject, "subjectId", sctlist[m]["subjectId"]);
 		/* Skip if already included in the list */
-		for(i = 0; i < subjectsList.length; i++) {
-			if(subjectsList[0] == currSubject &&
-					subjectsList[1] == search(classTable, "classId", sctlist[m]["classId"])
+		for(x = 0; x < subjectsList.length; x++) {
+			if(subjectsList[x][0] == currSubject &&
+					subjectsList[x][1] == search(classTable, "classId", sctlist[m]["classId"])
 									["classShortName"] &&
-					subjectsList[2] == search(teacher, "teacherId", sctlist[m]["teacherId"])
+					subjectsList[x][2] == search(teacher, "teacherId", sctlist[m]["teacherId"])
 									["teacherShortName"]
 			)
 				continue;
@@ -2088,7 +2109,7 @@ function getEligibleSubjects(i, j, k) {
 		if(roomBusyOnRoomPageInThisSlot(i, j, sctlist[m])) {
 			continue;
 		}
-		if(classBusyInThisSlot(i, j, sctlist[m], sctlist[m]["classId"], sctlist[m]["batchId"])) {
+		if(classBusyInThisSlot(i, j, sctlist[m], sctlist[m]["classId"], 1)) {
 			continue;
 		}
 		if(roomSmallOnRoomPageForThisClassOrBatch(sctlist[m], "classId",
@@ -2106,11 +2127,11 @@ function getEligibleSubjects(i, j, k) {
 	for(var m = 0; m < sbtlist.length; m++) {
 		var currSubject= search(subject, "subjectId", sbtlist[m]["subjectId"]);
 		/* Skip if already included in the list */
-		for(i = 0; i < subjectsList.length; i++) {
-			if(subjectsList[0] == currSubject &&
-					subjectsList[1] == search(batch, "batchId", sctlist[m]["batchId"])
+		for(x = 0; x < subjectsList.length; x++) {
+			if(subjectsList[x][0] == currSubject &&
+					subjectsList[x][1] == search(batch, "batchId", sctlist[m]["batchId"])
 									["batchName"] &&
-					subjectsList[2] == search(teacher, "teacherId", sctlist[m]["teacherId"])
+					subjectsList[x][2] == search(teacher, "teacherId", sctlist[m]["teacherId"])
 									["teacherShortName"]
 			)
 				continue;
@@ -2197,6 +2218,7 @@ function getEligibleSubjects(i, j, k) {
 /* cell is empty if all helperTable entries for i.j are 0 or null 
  */ 
 function cellEmpty(i, j) {
+	console.log("cellEmpty: i = " + i + " j = " + j);
 	for(var k = 0 ; k < helperTable[i - 1][j].length; k++) {
 		if(helperTable[i - 1][j][k] !== 0 && helperTable[i - 1][j][k] != null) {
 			return false;
@@ -3189,22 +3211,38 @@ function checkInstallation() {
 		return false;
 	}
 }
-hidden = 0;
-function toggleHide() {
-	if(!hidden) {
+hiddenTracker = 0;
+function hideTracker() {
+	if(!hiddenTracker)  {
+		$("#trackerDiv").hide();
+		$("#trackerDiv").html("Dashboard <a href=\"javascript:void(0)\" onclick='hideTracker()'> Show </a>");
+		$("#trackerDiv").show();
+		hiddenTracker = 1;
+	} else {
+		$("#trackerDiv").hide();
+		$("#trackerDiv").html("Dashboard <a href=\"javascript:void(0)\" onclick='hideTracker()'> Hide </a>" +
+						"<div id=\"tracker\" rows = \"3\" cols = \"20\" readonly=\"readonly\">");
+		$("#trackerDiv").show();
+		showTrackerList();
+		hiddenTracker = 0;
+	}
+}
+hiddenSidePane = 0;
+function hideSidePane() {
+	if(!hiddenSidePane) {
 		$("#configurationDiv").hide();
 		$("#trackerDiv").hide();
 		$("#warningsDiv").hide();
 		$(".outercol2").css("width", "1%");
-		$("#hideButton").html("<a href=\"javascript:void(0)\" onclick='toggleHide()'> Show &lt; </a>");
-		hidden = 1;
+		$("#hideButton").html("<a href=\"javascript:void(0)\" onclick='hideSidePane()'> Show &lt; </a>");
+		hiddenSidePane = 1;
 	} else {
 		$("#configurationDiv").show();
 		$("#trackerDiv").show();
 		$("#warningsDiv").show();
 		$(".outercol2").css("width", "20%");
-		$("#hideButton").html("<a href=\"javascript:void(0)\" onclick='toggleHide()'> Hide &gt; </a>");
-		hidden = 0;
+		$("#hideButton").html("<a href=\"javascript:void(0)\" onclick='hideSidePane()'> Hide &gt; </a>");
+		hiddenSidePane = 0;
 	}
 }
 /* Load all tables, including Dept, Config, Snapshot and Initialize
