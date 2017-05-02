@@ -147,7 +147,8 @@ option, select{
 	font: 13px courier bold;
 }
 .mainTableRow {
-	height: 0px; 
+	margin: 0px;
+	padding: 0px;
 }
 /*-----------------------------------------------------------------------/
 /* Tracker Related */

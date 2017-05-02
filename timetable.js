@@ -1044,8 +1044,7 @@ function createTable(days, nSlots, slotTablePerDay, startTime, timePerSlot) {
 		for(k = 0; k < slotTablePerDay; k++) {/*slottable row per day*/
 			tr = document.createElement("tr");
 			tr.setAttribute("id", "row" + i + k);
-			tr.setAttribute("class", "row" + i);
-			//tr.setAttribute("class", "row"); //TODO: you may add this to enable rowwise css
+			tr.setAttribute("class", "mainTableRow");
 			if(k == 0) {/*slottable per day*/
 				td = document.createElement("td");
 				td.setAttribute("id", "" + i);
