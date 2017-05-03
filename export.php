@@ -2,10 +2,10 @@
 error_reporting(E_ALL);
 ini_set('display_errors', TRUE);
 ini_set('display_startup_errors', TRUE);
-//date_default_timezone_set('Asia/Kolkata');
+#date_default_timezone_set('Asia/Kolkata');
 
-//define('EOL',(PHP_SAPI == 'cli') ? PHP_EOL : '<br />');
-//require_once('../PHPExcel/Build/PHPExcel.phar');
+#define('EOL',(PHP_SAPI == 'cli') ? PHP_EOL : '<br />');
+#require_once('../PHPExcel/Build/PHPExcel.phar');
 require_once('./PHPExcel/Classes/PHPExcel.php');
 require_once('./db.php');
 
@@ -24,16 +24,17 @@ function find($allrows, $day, $slotNo) {
 	return $result;
 }
 /* Generates one worksheet for teacher=teacherShortName, class=classShortName, etc. */
-function generate_timetable_worksheet($currTableName, $searchParam, $sheetCount, $allrows2, $nSlots) {
+function generate_timetable_worksheet($currTableName, $searchParam, $sheetCount,
+		$allrows2, $nSlots, $dayBegin, $slotDuration) {
 	global $objPHPExcel; 
-	//ttlog("generate_timetable_worksheet: $currTableName $searchParam $sheetCount $nSlots");
+	#ttlog("generate_timetable_worksheet: $currTableName $searchParam $sheetCount $nSlots");
 	global $objPHPExcel;
 	$myWorkSheet = new PHPExcel_Worksheet($objPHPExcel, $currTableName."_".$searchParam);
 	$objPHPExcel->addSheet($myWorkSheet, $sheetCount);
 	$objPHPExcel->setActiveSheetIndex($sheetCount);
 	$objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
 	$objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_PageSetup::PAPERSIZE_A4);
-	$objPHPExcel->getActiveSheet()->getPageMargins()->setTop(0.5); //inches
+	$objPHPExcel->getActiveSheet()->getPageMargins()->setTop(0.5); #inches
 	$objPHPExcel->getActiveSheet()->getPageMargins()->setRight(0.3);
 	$objPHPExcel->getActiveSheet()->getPageMargins()->setLeft(0.3);
 	$objPHPExcel->getActiveSheet()->getPageMargins()->setBottom(0.5);
@@ -71,12 +72,17 @@ function generate_timetable_worksheet($currTableName, $searchParam, $sheetCount,
 		 ),
 	 ),
 	);
+	$currSlotTime = strtotime($dayBegin);
+	$currSlotTimeFormatted = date("H:i", $currSlotTime);
 
 	# Generate the Slots-Labels and Day-Wise Labels
 	$cols = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O','P','Q','R','S');
 	for($k = 0; $k < $nSlots; $k++) { 	# Column Labels  Slot -1, etc. 
 		$objRichText = new PHPExcel_RichText();
-		$currText = $objRichText->createTextRun("Slot ".$k);
+		//$currText = $objRichText->createTextRun("Slot ".$k);
+		$currText = $objRichText->createTextRun($currSlotTimeFormatted);
+		$currSlotTime += $slotDuration;
+		$currSlotTimeFormatted = date("H:i", $currSlotTime);
 		$currText->getFont()->setBold(true);
 		$currText->getFont()->setColor( new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_BLACK) );
 		$objPHPExcel->getActiveSheet()->getCell($cols[$k+$colshift].$rowshift)->setValue($objRichText);
@@ -187,12 +193,12 @@ function generate_timetable_worksheet($currTableName, $searchParam, $sheetCount,
 			$objPHPExcel->getActiveSheet()->getCell($col.$row)->setValue($objRichText);
 			/* 1 Point is 0.35 mm, 0 is hidden row, max value is 409*/
 			if($nEntries > 1)
-				$height = (34.27 * $nEntries) / 2;// * count($thisSlotEntries);//12.75 * count($thisSlotEntries);
+				$height = (34.27 * $nEntries) / 2;# * count($thisSlotEntries);#12.75 * count($thisSlotEntries);
 			else
-				$height = 68.55;// * count($thisSlotEntries);//12.75 * count($thisSlotEntries);
+				$height = 68.55;# * count($thisSlotEntries);#12.75 * count($thisSlotEntries);
 			$objPHPExcel->getActiveSheet()->getRowDimension($row)->setRowHeight($height);
-			//$width = 12.75;
-			//ttlog("export: $currTableName $searchParam $day $slotNo width = $width");
+			#$width = 12.75;
+			#ttlog("export: $currTableName $searchParam $day $slotNo width = $width");
 			$objPHPExcel->getActiveSheet()->getColumnDimension($col)->setWidth($width);
 			$objPHPExcel->getActiveSheet()->getStyle($col.$row)->getAlignment()->
 									setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
@@ -212,7 +218,11 @@ function generate_timetable_spreadsheet() {
 	$currentSnapshotId = getArgument("snapshotId");
 	# consider having a timetable class with derived classes 
 	# on teacherTT, classTT, batchTT, etc. and have a specific code in each.
+	
+	/* TODO: Change this to use currentConfigId */
 	$nSlots = $allrows[0]["nSlots"];
+	$dayBegin = $allrows[0]["dayBegin"];
+	$slotDuration = $allrows[0]["slotDuration"];
 	$sheetCount = 0;
 	for($i = 0; $i < count($tableNames); $i += 2) { 
 		# Generate worksheets for each table: teachers, classes, batches, rooms
@@ -226,8 +236,9 @@ function generate_timetable_spreadsheet() {
 			$query = "SELECT * FROM timeTableReadable WHERE  $currParam = \"$searchParam\" ".
 					 "AND snapshotName = \"$currentSnapshotName\"";
 			$allrows2 = sqlGetAllRows($query);
-			//ttlog("export: allrows2: ".json_encode($allrows2));
-			generate_timetable_worksheet($currTableName, $searchParam, $sheetCount, $allrows2, $nSlots);
+			#ttlog("export: allrows2: ".json_encode($allrows2));
+			generate_timetable_worksheet($currTableName, $searchParam, $sheetCount,
+				$allrows2, $nSlots, $dayBegin, $slotDuration);
 
 			# print information about subject shortcut names, subject-teacher mapping	
 
@@ -264,7 +275,7 @@ function generate_data_worksheet($currTableName, $sheetCount, $nameOrId) {
 	$objPHPExcel->getActiveSheet()->getStyle('A1:Z100')->getAlignment()->setWrapText(true);
 	$objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
 	$objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_PageSetup::PAPERSIZE_A4);
-	$objPHPExcel->getActiveSheet()->getPageMargins()->setTop(1); //inches
+	$objPHPExcel->getActiveSheet()->getPageMargins()->setTop(1); #inches
 	$objPHPExcel->getActiveSheet()->getPageMargins()->setRight(0.3);
 	$objPHPExcel->getActiveSheet()->getPageMargins()->setLeft(0.8);
 	$objPHPExcel->getActiveSheet()->getPageMargins()->setBottom(0.5);
@@ -292,10 +303,10 @@ function generate_data_worksheet($currTableName, $sheetCount, $nameOrId) {
 		$currText->getFont()->setColor( new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKGREEN ) );
 		$objPHPExcel->getActiveSheet()->getCell($col.$row)->setValue($objRichText);
 		/* 1 Point is 0.35 mm, 0 is hidden row, max value is 409*/
-		$height = 12.75;//12.75 * count($thisSlotEntries);
+		$height = 12.75;#12.75 * count($thisSlotEntries);
 		$objPHPExcel->getActiveSheet()->getRowDimension($row)->setRowHeight($height);
 		$width = 12.75;
-		//$objPHPExcel->getActiveSheet()->getColumnDimension($col)->setWidth($width);
+		#$objPHPExcel->getActiveSheet()->getColumnDimension($col)->setWidth($width);
 		$objPHPExcel->getActiveSheet()->getColumnDimension($col)->setAutoSize(true);
 		$objPHPExcel->getActiveSheet()->getStyle($col.$row)->getAlignment()->
 								setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
@@ -316,10 +327,10 @@ function generate_data_worksheet($currTableName, $sheetCount, $nameOrId) {
 			$currText->getFont()->setColor( new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_BLACK) );
 			$objPHPExcel->getActiveSheet()->getCell($col.$row)->setValue($objRichText);
 			/* 1 Point is 0.35 mm, 0 is hidden row, max value is 409*/
-			$height = 12.75;//12.75 * count($thisSlotEntries);
+			$height = 12.75;#12.75 * count($thisSlotEntries);
 			$objPHPExcel->getActiveSheet()->getRowDimension($row)->setRowHeight($height);
 			$width = 12.75;
-			//$objPHPExcel->getActiveSheet()->getColumnDimension($col)->setWidth($width);
+			#$objPHPExcel->getActiveSheet()->getColumnDimension($col)->setWidth($width);
 			$objPHPExcel->getActiveSheet()->getColumnDimension($col)->setAutoSize(true);
 			$objPHPExcel->getActiveSheet()->getStyle($col.$row)->getAlignment()->
 									setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
@@ -366,8 +377,8 @@ function saveFile($savefilename) {
 	}
 	$objPHPWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $format);
 	$filename = str_replace('EXT', $extension, $savefilename); 
-	$objPHPWriter->save($filename); //str_extension('php',$extension, basename(__FILE__)));
-	//ttlog("export: Saving file $filename");
+	$objPHPWriter->save($filename); #str_extension('php',$extension, basename(__FILE__)));
+	#ttlog("export: Saving file $filename");
 	return $filename; 
 }
 function exportFile() {
