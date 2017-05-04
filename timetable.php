@@ -10,7 +10,7 @@ require_once('forms.php');
 require_once('export.php');
 require_once('exportsql.php');
 
-function getTimeTable() {
+function getTimetable() {
 	header("Content-Type: application/JSON; charset=UTF-8");
 	$snapshotName = getArgument("snapshotName");
 	if($snapshotName == "")
@@ -18,10 +18,10 @@ function getTimeTable() {
 	
 	$query = "SELECT * FROM timeTable where snapshotId = (SELECT snapshotId 
 				from snapshot where snapshotName = $snapshotName)"; 
-	ttlog("getTimeTable: Query: ". $query);
+	ttlog("getTimetable: Query: ". $query);
 	$outp = sqlGetAllRows($query);
 	$tables["timeTable"] = $outp;
-	//ttlog("getTimeTable: returning table: ".json_encode($tables));
+	//ttlog("getTimetable: returning table: ".json_encode($tables));
 	return json_encode($tables);
 }
 
@@ -46,25 +46,11 @@ $page = $header.
 $reqType = getArgument("reqType");
 switch($reqType) {
 	case "insertSnapshotEntry":
-		echo insertSnapshotEntry();
-		break;
 	case "getDataTables":
-		echo getDataTables();
-		break;
 	case "getTimetable":
-		$snapname = getArgument("snapname");
-		echo getTimeTable();
-		break;
 	case "saveSnapshot":
-		echo saveSnapshot();
-		break;
 	case "saveNewSnapshot":
-		echo saveNewSnapshot();
-		break;
 	case "getOneTable":
-		$tableName = getArgument("tableName");
-		echo getOneTable($tableName);	
-		break;
 	case "teacherUpdate": case "teacherDelete": case "teacherInsert":
 	case "subjectUpdate": case "subjectDelete": case "subjectInsert":
 	case "classUpdate": case "classDelete": case "classInsert":
@@ -79,11 +65,12 @@ switch($reqType) {
 	case "subjectRoomDelete": case "subjectRoomInsert": case "subjectRoomUpdate":
 	case "overlappingSBTDelete": case "overlappingSBTInsert": case "overlappingSBTUpdate":
 	case "configDelete": case "configInsert": case "configUpdate":
+	case "exportSQL":
 		/* call the function which has same name as reqType */
 		echo $reqType();
 		break;
-	case "export":
-		$filename = exportFile();
+	case "exportConfigXLSX":
+		$filename = exportConfigXLSX();
 		header("Cache-Control: public");
 		header("Content-Description: File Transfer");
 		header("Content-disposition: attachment");
@@ -92,8 +79,25 @@ switch($reqType) {
 		header("Content-Transfer-Encoding: binary");
 		readfile($filename);
 		break;
-	case "exportSQL":
-		exportDatabase();
+	case "exportXLSX":
+		$filename = exportXLSX();
+		header("Cache-Control: public");
+		header("Content-Description: File Transfer");
+		header("Content-disposition: attachment");
+		header("filename:". $filename);	
+		header('Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		header("Content-Transfer-Encoding: binary");
+		readfile($filename);
+		break;
+	case "exportCSV":
+		$filename = exportCSV();
+		header("Cache-Control: public");
+		header("Content-Description: File Transfer");
+		header("Content-disposition: attachment");
+		header("filename:". $filename);	
+		header('Content-type: application/zip');
+		header("Content-Transfer-Encoding: binary");
+		readfile($filename);
 		break;
 	default:
 		echo $page;

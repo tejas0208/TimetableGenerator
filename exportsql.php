@@ -4,7 +4,7 @@
 // License, terms and conditions of stackoverflow.com apply. 
 require_once('./db.php');
 
-    function exportDatabase($tables=false, $backup_name=false )
+    function exportSQL($tables=false, $backup_name=false )
     {
 		$mysqli = dbConnect();
         $mysqli->query("SET NAMES 'utf8'");

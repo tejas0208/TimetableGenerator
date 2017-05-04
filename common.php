@@ -31,9 +31,10 @@ function getDataTables() {
 	//ttlog(json_encode($tables));
 	return json_encode($tables);
 }
-function getOneTable($tableName) {
+function getOneTable() {
 	header("Content-Type: application/JSON; charset=UTF-8");
 	$snapshotId = getArgument("snapshotId");
+	$tableName = getArgument("tableName");
 	if($snapshotId != "")
 		$query = "SELECT * FROM $tableName WHERE snapshotId = $snapshotId";
 	else 
@@ -66,7 +67,7 @@ function ttlog($string) {
 		$CFG->logfile = $logfile;
 	}
 
-	$currTime = date("d-m-Y:H-i-s");
+	$currTime = date("d-M-Y:H-i-s");
 	$string = $currTime.":".$string."\n";
 	$result = fwrite($logfile, $string);	
 

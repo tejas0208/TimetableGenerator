@@ -392,7 +392,7 @@ function saveFile($savefilename) {
 	#ttlog("export: Saving file $filename");
 	return $filename; 
 }
-function exportFile() {
+function exportConfigXLSX() {
 	global $objPHPExcel; 
 	$objPHPExcel = new PHPExcel();
 	$objPHPExcel->getProperties()->setCreator("Abhijit A.M.")
@@ -402,17 +402,131 @@ function exportFile() {
 						->setDescription("This is description of timetable")
 						->setKeywords("timetable generated");
 
-	$type = getArgument("type");
-	if($type == "config") {
-		generate_data_spreadsheet();
-		$savefilename = "config.EXT";
-	} else if($type == "timetable") {
-		generate_timetable_spreadsheet();
-		$savefilename = "timetable.EXT";
-	} else {
-		$savefilename = "something.EXT";
-	}
+	generate_data_spreadsheet();
+	$savefilename = "config.EXT";
 	$filename = saveFile($savefilename);
 	return $filename;
+}
+function exportXLSX() {
+	global $objPHPExcel; 
+	$objPHPExcel = new PHPExcel();
+	$objPHPExcel->getProperties()->setCreator("Abhijit A.M.")
+						->setLastModifiedBy("Abhijit A. M.")
+						->setTitle("Timetable for COEP")
+						->setSubject("Subject for Timetable")
+						->setDescription("This is description of timetable")
+						->setKeywords("timetable generated");
+
+	generate_timetable_spreadsheet();
+	$savefilename = "timetable.EXT";
+	$filename = saveFile($savefilename);
+	return $filename;
+}
+function exportCSV() {
+	$filename = "timetable.zip";
+	$tempDir =	sys_get_temp_dir();
+	/* TODO: check why files not getting created in tmp folder */
+	/*$res = mkdir("$tempDir/timetable/");	
+	if($res === false) {
+		ttlog("mkdir Failed");
+	} */
+	//$currentSnapshotName = getArgument("currentSnapshotId");
+	$currentSnapshotName = "default";
+	$currentSnapshotId = "1";
+
+	if(!file_exists("tmp"))
+		mkdir("tmp");
+	if(!file_exists("tmp/timetable"))
+		mkdir("tmp/timetable");
+	$tableNames = array(
+		"teacherReadable", "name",
+			["teacherShortName", "teacherName", "minHrs", "maxHrs", "deptShortName"],
+		"class", "id", ["classShortName", "className", "classCount"],
+		"batch","id", ["batchName", "batchCount"], 
+		"batchClassReadable", "name", ["batchName", "classShortName"],
+		"batchCanOverlapReadable", "name",
+			["b1Name", "b2Name"],
+		"subjectClassTeacherReadable", "name",
+			["classShortName", "subjectShortName", "teacherShortName"],
+		"subjectBatchTeacherReadable", "name",
+			["batchName", "subjectShortName", "teacherShortName"],
+		"config", "none",["configName", "dayBegin", "slotDuration", "nSlots", "incharge"]
+	); 
+	for($i = 0; $i < count($tableNames); $i += 3) { 
+
+		$currTableName = $tableNames[$i];
+		if($tableNames[$i + 1] == "name")
+			$query = "SELECT * FROM $currTableName WHERE snapshotName = \"$currentSnapshotName\";";
+		else if($tableNames[$i + 1] == "none")
+			$query = "SELECT * FROM $currTableName";
+		else
+		$query = "SELECT * FROM $currTableName WHERE snapshotId = $currentSnapshotId;";
+		$allRows = sqlGetAllRows($query);
+
+		$nameOrId = $tableNames[$i + 1];
+		$selectedColumns = $tableNames[$i + 2];
+		$file = fopen("tmp/timetable/$currTableName.csv", "w");
+		for($j = 0; $j < count($allRows); $j++) {
+			$currRow = $allRows[$j];
+			for($k = 0; $k < count($selectedColumns) - 1 ; $k++) {
+				fwrite($file, $currRow[$selectedColumns[$k]].",");
+			}
+			fwrite($file, $currRow[$selectedColumns[$k]]);
+			fwrite($file, "\n");
+		}
+		HZip::zipDir('tmp/timetable', 'timetable.zip');
+		# print information about subject shortcut names, subject-teacher mapping	
+	}
+	
+	return $filename;
+}
+/* Credit: http://php.net/manual/en/class.ziparchive.php */
+class HZip
+{
+  /**
+   * Add files and sub-directories in a folder to zip file.
+   * @param string $folder
+   * @param ZipArchive $zipFile
+   * @param int $exclusiveLength Number of text to be exclusived from the file path.
+   */
+  private static function folderToZip($folder, &$zipFile, $exclusiveLength) {
+    $handle = opendir($folder);
+    while (false !== $f = readdir($handle)) {
+      if ($f != '.' && $f != '..') {
+        $filePath = "$folder/$f";
+        // Remove prefix from file path before add to zip.
+        $localPath = substr($filePath, $exclusiveLength);
+        if (is_file($filePath)) {
+          $zipFile->addFile($filePath, $localPath);
+        } elseif (is_dir($filePath)) {
+          // Add sub-directory.
+          $zipFile->addEmptyDir($localPath);
+          self::folderToZip($filePath, $zipFile, $exclusiveLength);
+        }
+      }
+    }
+    closedir($handle);
+  }
+
+  /**
+   * Zip a folder (include itself).
+   * Usage:
+   *   HZip::zipDir('/path/to/sourceDir', '/path/to/out.zip');
+   *
+   * @param string $sourcePath Path of directory to be zip.
+   * @param string $outZipPath Path of output zip file.
+   */
+  public static function zipDir($sourcePath, $outZipPath)
+  {
+    $pathInfo = pathInfo($sourcePath);
+    $parentPath = $pathInfo['dirname'];
+    $dirName = $pathInfo['basename'];
+
+    $z = new ZipArchive();
+    $z->open($outZipPath, ZIPARCHIVE::CREATE);
+    $z->addEmptyDir($dirName);
+    self::folderToZip($sourcePath, $z, strlen("$parentPath/"));
+    $z->close();
+  }
 }
 ?>

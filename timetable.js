@@ -3171,8 +3171,8 @@ function jsExport(type) {
 	xhttp.responseType = "blob";
 	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	//xhttp.setRequestHeader("Content-Type", "application/json");
-	xhttp.send("reqType=export&snapshotName=" + currentSnapshotName+ "&type=" +
-				type + "&snapshotId=" + currentConfigId);
+	xhttp.send("reqType=" + type + "&snapshotName=" + currentSnapshotName + 
+			"&snapshotId=" + currentConfigId);
 	//window.location='timetable.php';
 
 }
