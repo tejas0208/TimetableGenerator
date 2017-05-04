@@ -24,7 +24,7 @@ INSERT INTO subjectClassTeacher(subjectId, classId, teacherId, snapshotId) VALUE
 				1
 			);
 INSERT INTO subjectClassTeacher(subjectId, classId, teacherId, snapshotId) VALUES (
-				(SELECT subjectId FROM subject WHERE subjectShortName="ILOE-Sem4"), 
+				(SELECT subjectId FROM subject WHERE subjectShortName="ILOE-4"), 
 				(SELECT classId FROM class WHERE classShortName="SYBT-CE"),
 				(SELECT teacherId from teacher WHERE teacherShortName="Insti1"),
 				1
@@ -60,7 +60,7 @@ INSERT INTO subjectClassTeacher(subjectId, classId, teacherId, snapshotId) VALUE
 				1
 			);
 INSERT INTO subjectClassTeacher(subjectId, classId, teacherId, snapshotId) VALUES (
-				(SELECT subjectId FROM subject WHERE subjectShortName="ILOE-Sem4"), 
+				(SELECT subjectId FROM subject WHERE subjectShortName="ILOE-4"), 
 				(SELECT classId FROM class WHERE classShortName="SYBT-IT"),
 				(SELECT teacherId from teacher WHERE teacherShortName="Insti2"),
 				1
