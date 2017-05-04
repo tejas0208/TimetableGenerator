@@ -1,3 +1,4 @@
+.gitignore
 other-department-timetables
 tmp
 export.xls
@@ -9,3 +10,4 @@ books
 timetable.xlsx
 config.xlsx
 backup.sql
+config.php
