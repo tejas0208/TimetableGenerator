@@ -92,6 +92,8 @@ function createConfigFile() {
 		\$CFG->server = \"$dbhost\";
 		\$CFG->port = \"$dbport\";
 		\$CFG->conn = false;
+		\$CFG->logfile = false;
+		\$CFG->logfileName = false;
 	?>";
 	/* TODO: Ask the user to create this file manually */
 	$result = fwrite($configFile, $text);

@@ -11,4 +11,6 @@
 		$CFG->server = "localhost";
 		$CFG->port = "3306";
 		$CFG->conn = false;
+		$CFG->logfile = false;
+		$CFG->logfileName = false;
 	?>

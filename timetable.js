@@ -3280,5 +3280,11 @@ function load() {
 	shortcut.add("Ctrl+shift+s", function () { jsSaveNewSnapshot()});
 	return res;
 }
-
+function jsAutomate() {
+	alert('1');
+	var strWindowFeatures = "location=yes,height=570,width=520,scrollbars=yes,status=yes";
+	var URL = "automate.php?snapshotId= " + currentSnapshotId + "&configId=" + currentConfigId;
+	alert('2');
+	var win = window.open(URL, "_blank", strWindowFeatures);	
+}
 window.onload = load;

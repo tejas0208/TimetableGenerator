@@ -1,5 +1,6 @@
 <?php
 require_once('config.php');
+require_once('common.php');
 function dbConnect() {
 	global $CFG;
 	$conn = new mysqli($CFG->server, $CFG->db_user, $CFG->db_pass, $CFG->db_database);
