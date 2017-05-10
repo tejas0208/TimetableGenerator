@@ -1,6 +1,8 @@
 <?php 
-// Credit: Code borrowed from http://stackoverflow.com/questions/22195493/export-mysql-database-using-php-only
-// Copyright Author, as per stackoverflow http://stackoverflow.com/users/1518921/guilherme-nascimento
+// Credit: Lage part of Code borrowed from
+// http://stackoverflow.com/questions/22195493/export-mysql-database-using-php-only
+// Author, as per stackoverflow
+// 		http://stackoverflow.com/users/1518921/guilherme-nascimento
 // License, terms and conditions of stackoverflow.com apply. 
 require_once('./db.php');
 

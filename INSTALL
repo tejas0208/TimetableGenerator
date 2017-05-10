@@ -1,0 +1,38 @@
+Installation of 'Samay' Timetabling Software
+--------------------------------------------
+A rough guide to installing 'Samay'. 
+Lines begining with '>' indicate GNU/Linux commands.
+
+* On Ubuntu based systems, first install the LAMP stack.
+Refer to: http://howtoubuntu.org/how-to-install-lamp-on-ubuntu
+
+* Install the needed php packages
+> sudo apt-get install php5-mysqlnd
+
+* Copy the code of 'samay' into any folder
+> cd 
+> mkdir ~/src/
+> cd src
+> git clone git@gitlab.com:abhijit13/samay.git
+
+* Give write permissions to 'samay' code folder.
+Note: This is a security risk. This requirement will be changed later.
+> chmod 777 ~/src/samay 
+
+* Create a link from your DocumentRoot (typically /var/www/html)
+to the samay code
+> sudo ln -s ~/src/samay /var/www/html/
+
+* Access the 'Samay' code.  Type in your browser
+http://127.0.0.1/samay/
+
+Follow the onscreen installation instructions.
+Note: the installation is not very robust and often breaks!
+
+
+Installation of Test-data
+------------------------
+After the installation is done, developers can install the test data
+to run and test the software. 
+
+Read the README.txt in test-data folder.

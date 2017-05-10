@@ -1,4 +1,27 @@
 <?php
+// This file is part of Samay - a timetabling software for 
+// schools, colleges/universities.
+//
+// Samay is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Samay is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Samay.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Samay frontpage.
+ *
+ * Copyright 2007 Abhijit A. M.(abhijit13@gmail.com)
+ */
+
+
 if(!file_exists('db.php'))
 	header("Location: install.php");
 if(!file_exists('config.php'))
@@ -25,12 +48,12 @@ function getTimetable() {
 	return json_encode($tables);
 }
 
-$header = file_get_contents("header.html");
+$header = file_get_contents("html/header.html");
 $bodystart="
 	</head>
 	<body>
 ";
-$table= file_get_contents("./menuoptions.html");
+$table= file_get_contents("html/menuoptions.html");
 $footer = "</body> </html>";
 
 generateInputForms();

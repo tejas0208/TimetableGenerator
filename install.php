@@ -1,6 +1,26 @@
 <?php
-/*@error_reporting(E_ALL);
-@ini_set('display_errors', '1'); */
+
+// This file is part of Samay - a timetabling software for 
+// schools, colleges/universities.
+//
+// Samay is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Samay is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Samay.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ *
+ * Copyright 2007 Abhijit A. M.(abhijit13@gmail.com)
+ */
+
 
 if(isset($_POST['reqType']) && $_POST['reqType'] == "checkInstallation") {
 	$resultFail = "{\"Success\": \"False\"}";
@@ -67,7 +87,7 @@ function configFileExists() {
 	}
 }
 function showConfigFileForm() {
-	$configFileHTML = file_get_contents("configFileForm.html");
+	$configFileHTML = file_get_contents("html/configFileForm.html");
 	echo $configFileHTML;
 	die;
 }
@@ -92,6 +112,8 @@ function createConfigFile() {
 		\$CFG->server = \"$dbhost\";
 		\$CFG->port = \"$dbport\";
 		\$CFG->conn = false;
+		\$CFG->logfile = false;
+		\$CFG->logfileName = false;
 	?>";
 	/* TODO: Ask the user to create this file manually */
 	$result = fwrite($configFile, $text);
@@ -140,7 +162,7 @@ function tablesExist() {
 }
 function createTables() {
 	$conn = dbConnect();
-	$createSchemaQuery = file_get_contents("db-scripts/schema.sql");		
+	$createSchemaQuery = file_get_contents("db-schema/schema.sql");		
 	$result = $conn->multi_query($createSchemaQuery);
 	if($result === false) {
 		die("Creation of tables failed");
@@ -164,7 +186,7 @@ function atLeastOneDeptExists() {
 }
 function showDeptForm() {
 	global $msgStr;
-	$deptFormHTML = file_get_contents("deptForm.html");	
+	$deptFormHTML = file_get_contents("html/deptForm.html");	
 	$deptFormHTML = str_replace("Messages", $msgStr, $deptFormHTML);
 	echo $deptFormHTML;
 	die;
@@ -203,7 +225,7 @@ message("Department Exists...");
 
 function showUserForm() {
 	global $msgStr;
-	$userFormHTML = file_get_contents("userForm.html");
+	$userFormHTML = file_get_contents("html/userForm.html");
 	$userFormHTML = str_replace("Messages", $msgStr, $userFormHTML);
 	echo $userFormHTML;
 	die;
