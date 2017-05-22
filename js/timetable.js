@@ -57,7 +57,7 @@ var enabledRows = [];
  * is a cube-cell.
  * It stores timeTable[] entries as objects, as they appear on screen.
  * Thus, if DSA-Lab_SY-IT appears on Monday,at Slot2 for 2 hours as third entry in cell, 
- * then it stores, two entries at [0, 2, 3], [2, 3, 3]. Note the change in j, but no
+ * then it stores, two entries at [0, 2, 3], [0, 3, 3]. Note the change in j, but no
  * change in k index.
  * It is initialized to zero. When a cube-cell is ready to be occupied, it is set to null.
  * It is heavily used in drag-drop, display of table properly.
@@ -467,6 +467,7 @@ function dragLeaveHandler(e) {
 /*i, j of destn slot and source object*/
 /*There is no need to check for max entry of subject*/
 function checkValidity(i, j, source) {
+	//alert(""+i+","+j+", "+JSON.stringify(source));
 	var subjectRow = search(subject, "subjectId", source["subjectId"]);
 	var bco = searchMultipleRows(batchCanOverlap, "batchId", source["batchId"]);
 	if((j + parseInt(subjectRow["eachSlot"])) > parseInt(NoOfSlots)) {
@@ -483,8 +484,7 @@ function checkValidity(i, j, source) {
 			alert("Operation Not Possible.\nReason: Teacher Busy");
 			break;
 		}
-		tEntry = search(timeTable, "day", i, "slotNo", (j + p), "roomId", source["roomId"],
-				 "snapshotId", currentSnapshotId);
+		tEntry = search(timeTable, "day", i, "slotNo", (j + p), "roomId", source["roomId"]);
 		if(tEntry !== -1) {
 			valid = false;
 			alert("Operation Not Possible.\nReason: Room not free");
@@ -573,8 +573,7 @@ function dropHandler(e) {
 				temp2[r]["day"] = "-1";
 				temp2[r]["slotNo"] = "-1";
 			}
-			valid2 = checkValidity(parseInt(srcSlotEntry["day"]), slotNo,
-						 destSlotEntry);
+			valid2 = checkValidity(srcI, slotNo, destSlotEntry); 
 		}
 		if(!valid2 || !valid1) {
 			if(temp2.length !== 0) {/*If operation fails*/
@@ -1189,7 +1188,7 @@ function makeTimeTableEntry(day, slotNo, roomId, classId, subjectId,
 		console.log("makeTimeTableEntry: " + debugPrint("timeTable", newEntry));
 	}
 	if((""+ batchId) != "null") {
-	/* TODO: Abhijit. Check this if condition. For overlapping sbt*/ 
+	/* TODO: Abhijit. Check this if condition. For overlapping sbt: Done*/
 		var sbt = search(subjectBatchTeacher, "subjectId", subjectId,
 							 "batchId", batchId);
 		var osbt;
