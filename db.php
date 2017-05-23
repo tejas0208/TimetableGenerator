@@ -24,7 +24,8 @@ require_once('common.php');
 function dbConnect() {
 	global $CFG;
 	$conn = new mysqli($CFG->server, $CFG->db_user, $CFG->db_pass, $CFG->db_database);
-	if($conn->connect_error) {
+	if($conn->error) {
+		die("connection error ". $conn->error . "<br>"); 
 		return false;
 	}
 	$CFG->conn = $conn;

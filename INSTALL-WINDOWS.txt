@@ -1,0 +1,20 @@
+On Windows 7 and greater:
+
+Need Apache server installed and MySQL installed (preferablly use XAMPP package)
+
+Need PHP version more than or equal to 5.4.7
+
+If using XAMPP, copy taasika folder in C:\xampp\htdocs\
+
+Go to your browser and type http:\\localhost\taasika
+
+install.php loads.
+Enter DB configuration details.
+
+If you're going to use test-data, close the tab and open new tab. Run csvInsert.php located in test-data folder
+
+If you're not going to use test-data, on the install.php page itself:
+Create department.
+Create user.
+Enter timetable configuration details.
+

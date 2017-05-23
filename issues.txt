@@ -1,0 +1,16 @@
+
+snapshot save as: create time, modify time not correct
+snapshot save: modify time not getting updated
+also it should not just be time, it should be date time
+
+errors in triggers.sql file
+
+validate input fields in Creating Config File step in install.php
+
+getting duplicate entries errors for fixedentry table when inserting timetable.csv, when running csvInsert.php
+
+
+typo:
+
+version in install.php in checkPhpversion line 54 - fixed
+extension in install.php checkmysqlsetup line 62- fixed

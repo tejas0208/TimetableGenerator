@@ -49,9 +49,9 @@ if(isset($_POST['reqType']) && $_POST['reqType'] == "checkInstallation") {
 	return;
 }
 function checkPHPVersion() {
-	if (version_compare(phpversion(), '5.5.0') < 0) {
+	if (version_compare(phpversion(), '5.4.0') < 0) {
     	$phpversion = phpversion();
-    	echo "Need php version at least 5.5.0. Current verrsion is $phpversion).<br />";
+    	echo "Need php version at least 5.4.0. Current version is $phpversion).<br />";
     	die;
 	}
 }
@@ -59,7 +59,7 @@ function checkWebServer() {
 
 }
 function checkMySqlSetup() {
-	/* This exntesion enables mysqli_result::fetch_all() function */
+	/* This extension enables mysqli_result::fetch_all() function */
 	if(!extension_loaded('mysqlnd')) {
 		echo "Need php5-mysqlnd installed.  <br> ".
 			"On Ubuntu try running \"sudo apt-get install php5-mysqlnd\"";
