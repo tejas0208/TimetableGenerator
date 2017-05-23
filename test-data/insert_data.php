@@ -1,9 +1,30 @@
 <?php
 
 /*
+
+	Copyright 2017 Aniket Bhadane
+
+    This file is part of Taasika - A Timetable generation software.
+
+    Taasika is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Taasika is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Taasika.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
+
+/*
  *	Author: Aniket Bhadane
  *  
- *	Description: Use for loading test-data. Drop and Create database. Read CSV files and insert into database. Can be used on any platform
+ *	Description: Use for loading database schema and test-data. Drop and Create database. Read CSV files and insert into database. Can be used on any platform
 */
 	
 require_once('../config.php');
