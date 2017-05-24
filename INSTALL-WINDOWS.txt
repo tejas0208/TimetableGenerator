@@ -11,7 +11,7 @@ Go to your browser and type http:\\localhost\taasika
 install.php loads.
 Enter DB configuration details.
 
-If you're going to use test-data, close the tab and open new tab. Run csvInsert.php located in test-data folder
+If you're going to use test-data, close the tab and open new tab. Run insert_data.php located in test-data folder
 
 If you're not going to use test-data, on the install.php page itself:
 Create department.
