@@ -20,3 +20,9 @@ Create department.
 Create user.
 Enter timetable configuration details.
 
+7. Curl is used in automate.php to call saveNewSnapshot function in snapshot.php
+If using XAMPP, uncomment (remove semicolon) on this line:
+;extension=php_curl.dll
+in file C:\xampp\php\php.ini
+Then restart Apache service
+

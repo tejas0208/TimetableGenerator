@@ -27,6 +27,14 @@
  *	Description: Prepares an automated timetable using a genetic-like algoritm
 */
 
+/*
+Curl is used to call saveNewSnapshot function in snapshot.php
+If using XAMPP, uncomment (remove semicolon) on this line:
+;extension=php_curl.dll
+in file C:\xampp\php\php.ini
+Then restart Apache service
+*/
+
 require_once('db.php');
 
 $conn = dbConnect();
@@ -103,6 +111,8 @@ Make entry in snapshot table with default config default (1). Display this on pa
 Future work: accept config from user, as dropdown
 
 dept -> config -> snapshot -> timetable
+
+use if(!empty($rooms3d[][][])) to check if a field contains some data
 
 */
 
@@ -225,7 +235,7 @@ for ($i=0; $i < count($entries); $i++) {
 //  Algorithm starts here
 //
 
-initialize($population, $POPSIZE, $fitness, $entries, $nSlots, $rooms, $snapshotId, $conn);
+initialize($population, $POPSIZE, $fitness, $entries, $nSlots, $rooms, $classes, $batches, $snapshotId, $conn);
 
 repair();
 
@@ -244,12 +254,61 @@ for ( $generation = 0; $generation < $MAXGENS; $generation++ )  { // MAXGENS is 
     evaluate( $population, $POPSIZE, $fitness, $weight, $teachers );
 }
 
+/*
+//
+//  Create New Snapshot
+//
+
+echo "<br/>Creating New Snapshot...";
+
+// Initialize curl object
+$ch = curl_init();
+
+// Create post data
+$data = array(
+    'reqType' => saveNewSnapshot,
+    'newSnapshotName' => $newSnapshotName,
+    'currentSnapshotName' => $currentSnapshotName,
+    'configId' => $currentConfigId,
+    'ttData' => $timeTable,
+    'feData' => $fixedEntry
+);
+
+// Set curl options
+curl_setopt_array($ch, array(
+    CURLOPT_RETURNTRANSFER => 1, // Return information from server
+    CURLOPT_URL => 'snapshot.php',
+    CURLOPT_POST => 1, // Normal HTTP post 
+    CURLOPT_POSTFIELDS => $data
+));
+
+// Execute curl and return result to $response
+$response = curl_exec($ch);
+
+echo "<br/>Save Snapshot response: $response";
+
+// Close request
+curl_close($ch);
+
+//
+//  Insert timetable entries to timetable table
+//
+
+echo "<br/><br/>Inserting entries to database...";
+
+
+
+echo "done";
+
+echo "<br/><br/>Program Complete.";
+
+*/
 
 //
 //  Function definitions used in the algorithm starts here
 //
 
-function initialize(&$population, $POPSIZE, &$fitness, $entries, $nSlots, $rooms, $snapshotId, $conn) {
+function initialize(&$population, $POPSIZE, &$fitness, $entries, $nSlots, $rooms, $classes, $batches, $snapshotId, $conn) {
 
     echo "<br/>Initializing...";
 
@@ -281,9 +340,15 @@ function initialize(&$population, $POPSIZE, &$fitness, $entries, $nSlots, $rooms
                     if($rId == -1)
                         $rId = searchRoom($classroom, "classId", $entries[$j]["cId"]);
 
-                    if($rId == -1)
-                        $rId = mt_rand(1, count($rooms)); // find random room 
-                    // TODO: while assigning random room check whether capacity of room is enough to fill in class/batch
+                    if($rId == -1) {
+
+                        for ($t=0; $t < count($classes); $t++) { 
+                            if($classes[$t]["classId"] == $cId)
+                                $min_capacity = $classes[$t]["classCount"];
+                        }
+
+                        $rId = getRandomRoom($rooms, $min_capacity); // find random room with enough capacity
+                    }
 
                     for ( $k = 0; $k < count($eachSlot); $k++) { 
                         // make entries in room, teacher and class table at slots $slot + $k
@@ -300,9 +365,15 @@ function initialize(&$population, $POPSIZE, &$fitness, $entries, $nSlots, $rooms
                     if($rId == -1)
                         $rId = searchRoom($batchroom, "batchId", $entries[$j]["bId"]);
 
-                    if($rId == -1)
-                        $rId = mt_rand(1, count($rooms)); // find random room
-                    // TODO: while assigning random room check whether capacity of room is enough to fill in class/batch
+                    if($rId == -1) {
+
+                        for ($t=0; $t < count($batches); $t++) { 
+                            if($batches[$t]["batchId"] == $bId)
+                                $min_capacity = $batches[$t]["batchCount"];
+                        }
+
+                        $rId = getRandomRoom($rooms, $min_capacity); // find random room with enough capacity
+                    }
 
                     for ( $k = 0; $k < count($eachSlot); $k++) { 
                         // make entries in room, teacher and batch table at slots $slot + $k
@@ -337,46 +408,24 @@ function searchRoom($array, $field, $id) {
     return -1;
 }
 
+function getRandomRoom($rooms, $min_capacity) {
 
-        // intialize the 3d arrays to null, in first loop of initialize
-        //init3d($rooms, $teachers, $classes, $batches, $rooms3d, $teachers3d, $classes3d, $batches3d);
-        // not needed, just use if(empty($rooms3d[][][]))
-/*
-function init3d($rooms, $teachers, $classes, $batches, &$rooms3d, &$teachers3d, &$classes3d, &$batches3d) {
+    $array = array();
 
-    for ($t1=0; $t1 < count($rooms); $t1++) { 
-        for ($t2=0; $t2 < 5; $t2++) { 
-            for ($t3=0; $t3 < $nSlots; $t3++) { 
-                $rooms3d[$t1][$t2][$t3] = NULL;
-            }
-        }
+    for ($i=0; $i < count($rooms); $i++) { 
+            
+        if($rooms[$i]["roomCount"] >= $min_capacity)
+            array_push($array, $rooms[$i]["roomId"]);
     }
 
-    for ($t1=0; $t1 < count($teachers); $t1++) { 
-        for ($t2=0; $t2 < 5; $t2++) { 
-            for ($t3=0; $t3 < $nSlots; $t3++) { 
-                $teachers3d[$t1][$t2][$t3] = NULL;
-            }
-        }
-    }
+    //$k = array_rand($array);
 
-    for ($t1=0; $t1 < count($classes); $t1++) { 
-        for ($t2=0; $t2 < 5; $t2++) { 
-            for ($t3=0; $t3 < $nSlots; $t3++) { 
-                $classes3d[$t1][$t2][$t3] = NULL;
-            }
-        }
-    }
+    //return $array[$k];
 
-    for ($t1=0; $t1 < count($batches); $t1++) { 
-        for ($t2=0; $t2 < 5; $t2++) { 
-            for ($t3=0; $t3 < $nSlots; $t3++) { 
-                $batches3d[$t1][$t2][$t3] = NULL;
-            }
-        }
-    }
+    return $array[mt_rand(0, count($array) - 1)];
+
 }
-*/
+
 
 function selector( &$population, $POPSIZE, $fitness ) {
 
