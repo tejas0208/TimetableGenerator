@@ -39,82 +39,6 @@ require_once('db.php');
 
 $conn = dbConnect();
 
-/*
-
-$entries
-
-*** refer the ese exam genetic answer pics and quiz2 pdf
-
-data structures to use for storing timetable?
-
-clash types: room, teacher, class(theory subjects), batch. Each 3d array. ex. a particular rooms[roomId][dayId][slotId] field should have only one entry. more than one entry in a field means room clash
-
-initialize
-repair
-evaluate
-loop {
-selector
-crossover
-repair
-evaluate
-}
-
-To detect clashes, use room array (multiple entries in the same field of the 3d array) :
-use rooms 3d array as the primary.
-Teachers, theory, batches as secondary
-
-linearly traverse rooms array. Start checking rooms array linearly, if a free room found, check whether teacher available at that day slot using teachers array, whether theory/batch not already scheduled at that day slot using theory/batches array.
-
-when repairing, in new day slot, if cid exists, when checking whether class free in that day slot, also check whether no batch of that class has entry in that day slot
-if bid exists, when checking whether batch free in that day slot, also check whether class of that batch does not have entry in that day slot
-for both cases, traverse linearly in batchclass array
-
-also check whether new room has capacity to fill all students in class/batch
-
-*** entries in overlappingbt always have to be together, handle this in repair
-
-how to handle eachSlot!!!
-subjects with eachslot more than 1: during initialization itself make them in consecutive slots
-
-day = random between 1 and 5
-slot = random between 0 and max_slots - eachSlot
-room = random
-fill respective fields, equal to number of eachSlot, in all arrays. 
-
-how to handle batches? how to randomize them in intialization?
-how to make batches together?
-allocate batches like normal subjects. Not necessary all batches in a overlapping batch set always have to together. During checking overlaps, if a batch overlaps with a batch it can overlap as per database, its allowed and not considered as a clash.
-Also its allowed if overlapping batches are present together in overlappingsbt table
-
-
-rooms[rId][dId][sId] = array(classId, subjectId, teacherId, batchId, nSlots=1/2/3/...) - this is any entry in entries array
-
-Maintain consecutive slots in other operations: crossover, mutate, repair
-
-Dont do mutate. Omit mutate for the time being
-
-Initial
-
-crossover:
-
-replace 2 worst tts with children of 2 best tts
-
-select random k subjects. 
-
-tmp = tt1
-
-Replace day,slot of these subjects in tt1 with day,slot of the respective subject in tt2. This is child 1.
-
-Replace day,slot of these subjects in tt2 with day,slot of the respective subject in tmp. This is child 2. 
-
-Make entry in snapshot table with default config default (1). Display this on page.
-Future work: accept config from user, as dropdown
-
-dept -> config -> snapshot -> timetable
-
-use if(!empty($rooms3d[][][])) to check if a field contains some data
-
-*/
 
 function fetch($conn, $query) {     
     //echo $query . "<br/>";
@@ -136,7 +60,6 @@ function fetch($conn, $query) {
 
 $POPSIZE = 50;
 $MAXGENS = 20; // should be 1000, reduced to 100 for testing purposes
-$PXOVER = 0.8;  // max probability value for a crossover to occur
 
 $weight = array(); // weights for constraints' violations
 $weight["Overlaps"] = 500;
@@ -144,10 +67,11 @@ $weight["Lunch"] = 15;  // no lunch in a day
 $weight["Multiple_Lectures"] = 300; // multiple lectures of same subject in a day
 $weight["Class_Room"] = 20; // class not having same room in a day
 $weight["Teacher_Workload"] = 10; // teacher not having minimum workload
-$weight["Compact"] = 12; // 40 timetable not being compact
+$weight["Compact"] = 12; // timetable not being compact
     
 $population = array();
 $fitness = array();
+
 
 
 $snapshotId = 1; // TODO: have a dropdown for this
@@ -241,7 +165,7 @@ repair();
 
 evaluate( $population, $POPSIZE, $fitness, $weight, $teachers ); // finds fitness value of all timetables in the population
 
-for ( $generation = 0; $generation < $MAXGENS; $generation++ )  { // MAXGENS is max iterations
+for ( $generation = 0; $generation < $MAXGENS; $generation++ )  { // MAXGENS is maximum number of iterations
 
     echo "<br/><br/>Generation " . ($generation+1);
 
@@ -351,8 +275,7 @@ function initialize(&$population, $POPSIZE, &$fitness, $entries, $nSlots, $rooms
                     }
 
                     for ( $k = 0; $k < count($eachSlot); $k++) { 
-                        // make entries in room, teacher and class table at slots $slot + $k
-                        // entry will have just index $j
+                        
                         $rooms3d[$rId][$day][$slot + $k] = $j;
                         $teachers3d[$tId][$day][$slot + $k] = $j;
                         $classes3d[$cId][$day][$slot + $k] = $j;
@@ -376,8 +299,7 @@ function initialize(&$population, $POPSIZE, &$fitness, $entries, $nSlots, $rooms
                     }
 
                     for ( $k = 0; $k < count($eachSlot); $k++) { 
-                        // make entries in room, teacher and batch table at slots $slot + $k
-                        // entry will have just index $j
+
                         $rooms3d[$rId][$day][$slot + $k] = $j;
                         $teachers3d[$tId][$day][$slot + $k] = $j;
                         $batches3d[$bId][$day][$slot + $k] = $j;
@@ -419,7 +341,6 @@ function getRandomRoom($rooms, $min_capacity) {
     }
 
     //$k = array_rand($array);
-
     //return $array[$k];
 
     return $array[mt_rand(0, count($array) - 1)];
