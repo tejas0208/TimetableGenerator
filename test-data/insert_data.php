@@ -2,7 +2,7 @@
 
 /*
 
-	Copyright 2017 Aniket Bhadane
+	Copyright 2017 Aniket Bhadane (aniketbhadane93@gmail.com)
 
     This file is part of Taasika - A Timetable generation software.
 
@@ -22,7 +22,7 @@
 */
 
 /*
- *	Author: Aniket Bhadane
+ *	Author: Aniket Bhadane (aniketbhadane93@gmail.com)
  *  
  *	Description: Use for loading database schema and test-data. Drop and Create database. Read CSV files and insert into database. Can be used on any platform
 */
