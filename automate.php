@@ -24,35 +24,24 @@
 /*
  *	Author: Aniket Bhadane (aniketbhadane93@gmail.com)
  *  
- *	Description: Prepares an automated timetable using a genetic-like algoritm
+ *	Description: 
+ *  Prepares an automated timetable using a genetic-like algoritm. 
+ *  The program expects 'currentSnapshotId' to be received as POST/GET argument.
+ *  If it does not receive 'currentSnapshotId', it assumes snapshotId to be 1 (which is default snapshot)
 */
 
 /*
-Curl is used to call saveNewSnapshot function in snapshot.php
-If using XAMPP, uncomment (remove semicolon) on this line:
-;extension=php_curl.dll
-in file C:\xampp\php\php.ini
-Then restart Apache service
+    Curl is used to call saveNewSnapshot function defined in snapshot.php
+    If using XAMPP, uncomment (remove semicolon) on this line:
+    ;extension=php_curl.dll
+    in file C:\xampp\php\php.ini
+    Then restart Apache service
 */
+
 
 require_once('db.php');
 
 $conn = dbConnect();
-
-
-function fetch($conn, $query) {     
-    //echo $query . "<br/>";
-    $results = $conn->query($query);
-    if($conn->error or $results === FALSE)
-        die("Could not execute $query " . $conn->error. $results);
-    while($rows[] = mysqli_fetch_assoc($results));
-    array_pop($rows); // remove last empty entry
-    return $rows;
-}
-
-//
-//  Execution starts here
-//
 
 // 
 //  Change these parameters to match your needs 
@@ -73,8 +62,10 @@ $population = array();
 $fitness = array();
 
 
+$snapshotId = getArgument("currentSnapshotId");
 
-$snapshotId = 1; // TODO: have a dropdown for this
+if(empty($snapshotId))  // if currentSnapshotId is not passed
+    $snapshotId = 1;    // consider default snapshot
 
 // fetch configId
 $temp = fetch($conn, "SELECT * FROM snapshot WHERE snapshotId = $snapshotId");
@@ -183,6 +174,10 @@ for ( $generation = 0; $generation < $MAXGENS; $generation++ )  { // MAXGENS is 
 //  Create New Snapshot
 //
 
+while sending data to saveNewSNapshot, json_encode timetable data, 'ttData' => json_encode($timeTable)
+What to do of fixed entries? Maybe make lunch entries as fixed entries, also json_encode these
+
+
 echo "<br/>Creating New Snapshot...";
 
 // Initialize curl object
@@ -214,23 +209,24 @@ echo "<br/>Save Snapshot response: $response";
 // Close request
 curl_close($ch);
 
-//
-//  Insert timetable entries to timetable table
-//
-
-echo "<br/><br/>Inserting entries to database...";
-
-
-
-echo "done";
 
 echo "<br/><br/>Program Complete.";
 
 */
 
 //
-//  Function definitions used in the algorithm starts here
+//  Function definitions of the functions used in the program starts here
 //
+
+function fetch($conn, $query) {     
+    //echo $query . "<br/>";
+    $results = $conn->query($query);
+    if($conn->error or $results === FALSE)
+        die("Could not execute $query " . $conn->error. $results);
+    while($rows[] = mysqli_fetch_assoc($results));
+    array_pop($rows); // remove last empty entry
+    return $rows;
+}
 
 function initialize(&$population, $POPSIZE, &$fitness, $entries, $nSlots, $rooms, $classes, $batches, $snapshotId, $conn) {
 
@@ -275,7 +271,7 @@ function initialize(&$population, $POPSIZE, &$fitness, $entries, $nSlots, $rooms
                     }
 
                     for ( $k = 0; $k < count($eachSlot); $k++) { 
-                        
+
                         $rooms3d[$rId][$day][$slot + $k] = $j;
                         $teachers3d[$tId][$day][$slot + $k] = $j;
                         $classes3d[$cId][$day][$slot + $k] = $j;
