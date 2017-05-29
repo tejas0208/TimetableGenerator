@@ -47,16 +47,17 @@ $conn = dbConnect();
 //  Change these parameters to match your needs 
 //
 
-$POPSIZE = 50;
+$POPSIZE = 50; // number of timetables (population size) in a generation
 $MAXGENS = 20; // should be 1000, reduced to 100 for testing purposes
+$PXOVER = 0.8; // maximum probability value for a crossover to occur
 
-$weight = array(); // weights for constraints' violations
-$weight["Overlaps"] = 500;
-$weight["Lunch"] = 15;  // no lunch in a day
-$weight["Multiple_Lectures"] = 300; // multiple lectures of same subject in a day
-$weight["Class_Room"] = 20; // class not having same room in a day
-$weight["Teacher_Workload"] = 10; // teacher not having minimum workload
-$weight["Compact"] = 12; // timetable not being compact
+$weight = array();                      // weights for constraints' violations
+$weight["Overlaps"] = 500;              // no overlaps
+$weight["Lunch"] = 15;                  // no lunch in a day
+$weight["Multiple_Lectures"] = 300;     // multiple lectures of same subject in a day
+$weight["Class_Room"] = 20;             // class not having same room in a day
+$weight["Teacher_Workload"] = 10;       // teacher not having minimum workload
+$weight["Compact"] = 12;                // timetable not being compact
     
 $population = array();
 $fitness = array();
@@ -73,7 +74,7 @@ $configId = $temp[0]["configId"];
 
 // fetch nSlots from config
 $temp = fetch($conn, "SELECT * FROM config WHERE configId = $configId");
-$nSlots = $temp[0]["nSlots"];
+$config_nSlots = $temp[0]["nSlots"];
 
 $rooms = fetch($conn, "SELECT * FROM room WHERE snapshotId = $snapshotId");
 
@@ -139,7 +140,7 @@ for ($i=0; $i < count($subjects); $i++) {
     
 }
 
-echo "<br/>To Schedule:<br/>";
+echo "<br/>To Schedule " . count($entries) . " entries:<br/>";
 for ($i=0; $i < count($entries); $i++) { 
     print_r($entries[$i]);
     echo "<br/>";
@@ -150,7 +151,7 @@ for ($i=0; $i < count($entries); $i++) {
 //  Algorithm starts here
 //
 
-initialize($population, $POPSIZE, $fitness, $entries, $nSlots, $rooms, $classes, $batches, $snapshotId, $conn);
+initialize($population, $POPSIZE, $fitness, $entries, $config_nSlots, $rooms, $classes, $batches, $snapshotId, $conn);
 
 repair();
 
@@ -162,7 +163,7 @@ for ( $generation = 0; $generation < $MAXGENS; $generation++ )  { // MAXGENS is 
 
     selector ( $population, $POPSIZE, $fitness ); 
     
-    crossover ( $population, $POPSIZE, $subjects ); 
+    crossover ( $population, $POPSIZE, $entries, $PXOVER, $config_nSlots ); 
 
     repair();
 
@@ -228,7 +229,7 @@ function fetch($conn, $query) {
     return $rows;
 }
 
-function initialize(&$population, $POPSIZE, &$fitness, $entries, $nSlots, $rooms, $classes, $batches, $snapshotId, $conn) {
+function initialize(&$population, $POPSIZE, &$fitness, $entries, $config_nSlots, $rooms, $classes, $batches, $snapshotId, $conn) {
 
     echo "<br/>Initializing...";
 
@@ -251,7 +252,7 @@ function initialize(&$population, $POPSIZE, &$fitness, $entries, $nSlots, $rooms
                 $eachSlot = $entries[$j]["eachSlot"];
 
                 $day = mt_rand(1,5);
-                $slot = mt_rand(1, $nSlots - $eachSlot + 1);
+                $slot = mt_rand(1, $config_nSlots - $eachSlot + 1);
 
                 if($entries[$j]["bId"] == -1) { // not batch, so a class
 
@@ -271,6 +272,8 @@ function initialize(&$population, $POPSIZE, &$fitness, $entries, $nSlots, $rooms
                     }
 
                     for ( $k = 0; $k < count($eachSlot); $k++) { 
+
+                        // storing index of entry
 
                         $rooms3d[$rId][$day][$slot + $k] = $j;
                         $teachers3d[$tId][$day][$slot + $k] = $j;
@@ -296,6 +299,8 @@ function initialize(&$population, $POPSIZE, &$fitness, $entries, $nSlots, $rooms
 
                     for ( $k = 0; $k < count($eachSlot); $k++) { 
 
+                        // storing index of entry
+
                         $rooms3d[$rId][$day][$slot + $k] = $j;
                         $teachers3d[$tId][$day][$slot + $k] = $j;
                         $batches3d[$bId][$day][$slot + $k] = $j;
@@ -306,7 +311,8 @@ function initialize(&$population, $POPSIZE, &$fitness, $entries, $nSlots, $rooms
 
         }
 
-        $population[$i] = array("rooms" => $rooms3d, "teachers" => $teachers3d, "class" => $classes3d, "batches" => $batches3d);
+        $population[$i] = array("rooms3d" => $rooms3d, "teachers3d" => $teachers3d, 
+                                "classes3d" => $classes3d, "batches3d" => $batches3d);
 
         $fitness[$i] = PHP_INT_MAX;
     }
@@ -442,34 +448,193 @@ function selector( &$population, $POPSIZE, $fitness ) {
 
 }
 
-function crossover(&$population, $POPSIZE, $subjects) {
+function crossover(&$population, $POPSIZE, $entries, $PXOVER, $config_nSlots) {
 
     echo "<br/>Crossover...";
 
-    // $k = mt_rand(1, count($subjects));
-    // then select random k subjects
-/*
+    /*
+        You can adopt any other strategy you want for making pairs, and then call Xover for each pair
+        My strategy to make pairs for crossover: make random pairs traversing sequentially in population irrespective of ascending or descending order of fitness values.
+        Start traversing linearly, make pairs depending on comparison of random value and PXOVER        
+    */
 
-use subjects3d as primary array for crossover. take all not null day,slot in selected subject and swap with all not null day,slot of other tt.
-change day,slot of the room in rooms3d. room remains the same. rooms3d[rid][newday][newslot] = $j. rooms3d[rid][oldday][oldslot]=NULL
-same for classes3d, batches3d
+    $first = 0;
 
-replace 2 worst tts with children of 2 best tts
+    for ( $i = 0; $i < $POPSIZE; $i++ ) {
 
-select random k subjects. 
+        $x = mt_rand() / mt_getrandmax(); // get random number between 0 and 1
 
-tmp = tt1
+        if ( $x < $PXOVER ) {
+        
+            $first++;
 
-Replace day,slot of these subjects in tt1 with day,slot of the respective subject in tt2. This is child 1.
+            if ( $first % 2 == 0 ) {
 
-Replace day,slot of these subjects in tt2 with day,slot of the respective subject in tmp. This is child 2. 
-*/
+                $children = Xover( $population[$one], $population[$i], $entries, $config_nSlots );
+                
+                $population[$one] = $children[0];
+                $population[$i] = $children[1];
+            
+            }
+            else {
+                $one = $i;
+            }
 
-    /*for ( $i = 0; $i < $POPSIZE; $i++ ) {
+        }
 
-    }*/
+    }
 
     echo "done";
+}
+
+// Xover function accepts two timetables whose crossover is to be done
+
+function Xover ($parent1, $parent2, $entries, $config_nSlots) {
+
+    // doing crossover of entries
+
+    // select random k entries : generate random number k, create array having indices of entries array, select random k indices
+
+    $rooms3d_1 = $parent1["rooms3d"];
+    $teachers3d_1 = $parent1["teachers3d"];
+    $classes3d_1 = $parent1["classes3d"];
+    $batches3d_1 = $parent1["batches3d"];
+
+    $rooms3d_2 = $parent2["rooms3d"];
+    $teachers3d_2 = $parent2["teachers3d"];
+    $classes3d_2 = $parent2["classes3d"];
+    $batches3d_2 = $parent2["batches3d"];
+
+    $k = mt_rand(1, count($entries));
+
+    for ($i=0; $i < count($entries); $i++) { 
+        $entries_index[$i] = $i;
+    }
+
+    $rand_keys = array_rand($entries_index, $k); // select random k values
+
+    for ($i=0; $i < $k; $i++) { 
+
+        /*
+        strategy:
+
+        get tId, cId, bId from entry
+
+        find all room,day,slot occurences of this entry in rooms3d_1
+        push r,d,s to array temp1 and make rooms3d_1[][][] = NULL and t3d_1[tId][][] = NULL and c3d_1[cId][][] / b3d_1[bId][][] one by one as you find the entries 
+        
+        find all room,day,slot occurences of this entry in rooms3d_2
+        push r,d,s to array temp2 and make rooms3d_2[][][] = NULL and t3d_2[tId][][] = NULL and c3d_2[cId][][] / b3d_2[bId][][] one by one as you find the entries
+
+        for each element(r,d,s) in temp1
+            make rooms3d_2[r][d][s] = entry index
+            make t3d_2[tId][d][s] = entry index
+            if entry bid==-1
+                make c3d_2[cId][d][s] = entry index
+            else
+                make b3d_2[bId][d][s] = entry index
+
+        for each element(r,d,s) in temp2
+            make rooms3d_1[r][d][s] = entry index
+            make t3d_1[tId][d][s] = entry index
+            if entry bid==-1
+                make c3d_1[cId][d][s] = entry index
+            else
+                make b3d_1[bId][d][s] = entry index
+        */
+
+        $tId = $entries[$i]["tId"];
+        $cId = $entries[$i]["cId"];
+        $bId = $entries[$i]["bId"];
+
+        $temp1 = array();
+        $temp2 = array();      
+
+        /*
+        Not using for($room=0; $room < count($rooms3d_1); $room++)
+        Not every rooms3d_1[room] may exist and there may exixt k greater than count(rooms3d_1)
+        Happens when a roomId is missing. Example roomIds: 1 2 3 4 6 8 9
+        roomIds 5 and 7 are missing. rooms3d_1[9] will never be reached because count(rooms3d_1) will be 7
+        Hence using foreach which gives all existing rooms
+        But days and slot numbers are fixed, so can use normal for loop
+        */
+
+        foreach ($rooms3d_1 as $rId => $room) {
+            for ($day=1; $day <= 5; $day++) { 
+                for ($slot=1; $slot <= $config_nSlots; $slot++) { 
+                    
+                    if(!empty($room[$day][$slot]) AND $room[$day][$slot] == $rand_keys[$i]) {
+                        
+                        array_push($temp1, array("rId" => $rId, "day" => $day, "slot" => $slot));
+                        
+                        $room[$day][$slot] = NULL;
+                        $teachers3d_1[$tId][$day][$slot] = NULL;
+                        if($bId == -1)
+                            $classes3d_1[$cId][$day][$slot] = NULL;
+                        else
+                            $batches3d_1[$bId][$day][$slot] = NULL;
+                    }
+                }
+            }
+        }
+
+        foreach ($rooms3d_2 as $rId => $room) {
+            for ($day=1; $day <= 5; $day++) { 
+                for ($slot=1; $slot <= $config_nSlots; $slot++) { 
+                    
+                    if(!empty($room[$day][$slot]) AND $room[$day][$slot] == $rand_keys[$i]) {
+                        
+                        array_push($temp2, array("rId" => $rId, "day" => $day, "slot" => $slot));
+                        
+                        $room[$day][$slot] = NULL;
+                        $teachers3d_2[$tId][$day][$slot] = NULL;
+                        if($bId == -1)
+                            $classes3d_2[$cId][$day][$slot] = NULL;
+                        else
+                            $batches3d_2[$bId][$day][$slot] = NULL;
+                    }
+                }
+            }
+        }
+
+        for ($j=0; $j < count($temp1); $j++) { 
+
+            $rId = $temp1[$j]["rId"];
+            $day = $temp1[$j]["day"];
+            $slot = $temp1[$j]["slot"];
+
+            $rooms3d_2[$rId][$day][$slot] = $rand_keys[$i];
+            $teachers3d_2[$tId][$day][$slot] = $rand_keys[$i];
+            if($bId == -1)
+                $classes3d_2[$cId][$day][$slot] = $rand_keys[$i];
+            else
+                $batches3d_2[$bId][$day][$slot] = $rand_keys[$i];
+        }
+
+        for ($j=0; $j < count($temp2); $j++) { 
+
+            $rId = $temp2[$j]["rId"];
+            $day = $temp2[$j]["day"];
+            $slot = $temp2[$j]["slot"];
+
+            $rooms3d_1[$rId][$day][$slot] = $rand_keys[$i];
+            $teachers3d_1[$tId][$day][$slot] = $rand_keys[$i];
+            if($bId == -1)
+                $classes3d_1[$cId][$day][$slot] = $rand_keys[$i];
+            else
+                $batches3d_1[$bId][$day][$slot] = $rand_keys[$i];
+        }
+        
+    }
+
+    $child1 = array("rooms3d" => $rooms3d_1, "teachers3d" => $teachers3d_1, 
+                    "classes3d" => $classes3d_1, "batches3d" => $batches3d_1);
+
+    $child2 = array("rooms3d" => $rooms3d_2, "teachers3d" => $teachers3d_2, 
+                    "classes3d" => $classes3d_2, "batches3d" => $batches3d_2);
+
+    return array($child1, $child2);
+    
 }
 
 function repair() {
@@ -520,5 +685,87 @@ function get_teacher_workload_viol($tt, $dbhrs) {
 
 function get_compactness_viol($tt) {
 }
+
+
+/*
+
+These comments are for my reference
+
+$entries
+
+*** refer the ese exam genetic answer pics and quiz2 pdf
+
+data structures to use for storing timetable?
+
+clash types: room, teacher, class(theory subjects), batch. Each 3d array. ex. a particular rooms[roomId][dayId][slotId] field should have only one entry. more than one entry in a field means room clash
+
+initialize
+repair
+evaluate
+loop {
+selector
+crossover
+repair
+evaluate
+}
+
+To detect clashes, use room array (multiple entries in the same field of the 3d array) :
+use rooms 3d array as the primary.
+Teachers, theory, batches as secondary
+
+linearly traverse rooms array. Start checking rooms array linearly, if a free room found, check whether teacher available at that day slot using teachers array, whether theory/batch not already scheduled at that day slot using theory/batches array.
+
+when repairing, in new day slot, if cid exists, when checking whether class free in that day slot, also check whether no batch of that class has entry in that day slot
+if bid exists, when checking whether batch free in that day slot, also check whether class of that batch does not have entry in that day slot
+for both cases, traverse linearly in batchclass array
+
+also check whether new room has capacity to fill all students in class/batch
+
+*** entries in overlappingbt always have to be together, handle this in repair
+
+what to do when no free slot available when repairing? keep tt as it is, its fitness cost will be too high
+
+how to handle eachSlot!!!
+subjects with eachslot more than 1: during initialization itself make them in consecutive slots
+
+day = random between 1 and 5
+slot = random between 0 and max_slots - eachSlot
+room = random
+fill respective fields, equal to number of eachSlot, in all arrays. 
+
+how to handle batches? how to randomize them in intialization?
+how to make batches together?
+allocate batches like normal subjects. Not necessary all batches in a overlapping batch set always have to together. During checking overlaps, if a batch overlaps with a batch it can overlap as per database, its allowed and not considered as a clash.
+Also its allowed if overlapping batches are present together in overlappingsbt table
+
+
+rooms[rId][dId][sId] = array(classId, subjectId, teacherId, batchId, nSlots=1/2/3/...) - this is any entry in entries array
+
+Maintain consecutive slots in other operations: crossover, mutate, repair
+
+Dont do mutate. Omit mutate for the time being
+
+Initial
+
+crossover:
+
+replace 2 worst tts with children of 2 best tts
+
+select random k subjects. 
+
+tmp = tt1
+
+Replace day,slot of these subjects in tt1 with day,slot of the respective subject in tt2. This is child 1.
+
+Replace day,slot of these subjects in tt2 with day,slot of the respective subject in tmp. This is child 2. 
+
+Make entry in snapshot table with default config default (1). Display this on page.
+Future work: accept config from user, as dropdown
+
+dept -> config -> snapshot -> timetable
+
+use if(!empty($rooms3d[][][])) to check if a field contains some data
+
+*/
 
 ?>
