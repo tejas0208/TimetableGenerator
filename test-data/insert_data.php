@@ -64,57 +64,72 @@ function insertCSV($conn, $filename) {
 			case "class.csv":
 
 				if( isset($arg[0]) AND isset($arg[1]) AND isset($arg[2]) AND isset($arg[3]) )
-					$sql = "INSERT INTO class(className, classShortName, semester, classCount, snapshotId) VALUES (\"$arg[0]\", \"$arg[1]\", $arg[2], $arg[3], 1);";
+					$sql = "INSERT INTO class(className, classShortName, semester, classCount, 
+							snapshotId) VALUES (\"$arg[0]\", \"$arg[1]\", $arg[2], $arg[3], 1);";
 
 				break;
 
 			case "subject.csv":
 
-				if( isset($arg[0]) AND isset($arg[1]) AND isset($arg[2]) AND isset($arg[3])  AND isset($arg[4]))
-					$sql = "INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, batches, snapshotId) VALUES (\"$arg[0]\", \"$arg[1]\", $arg[2], $arg[3], 
-						$arg[4], 1);";
+				if( isset($arg[0]) AND isset($arg[1]) AND isset($arg[2]) AND isset($arg[3]) AND 
+					isset($arg[4]))
+					$sql = "INSERT INTO subject(subjectName, subjectShortName, eachSlot, nSlots, 
+							batches, snapshotId) VALUES (\"$arg[0]\", \"$arg[1]\", $arg[2], 
+							$arg[3], $arg[4], 1);";
 				break;
 
 			case "teacher.csv":
 
-				if( isset($arg[0]) AND isset($arg[1]) AND isset($arg[2]) AND isset($arg[3])  AND isset($arg[4]))
-					$sql = "INSERT INTO teacher(teacherName, teacherShortName, minHrs, maxHrs, deptId, snapshotId) VALUES (\"$arg[0]\", \"$arg[1]\", $arg[2], $arg[3], 
-						$arg[4], 1);";
+				if( isset($arg[0]) AND isset($arg[1]) AND isset($arg[2]) AND isset($arg[3]) 
+					AND isset($arg[4]))
+					$sql = "INSERT INTO teacher(teacherName, teacherShortName, minHrs, maxHrs, 
+							deptId, snapshotId) VALUES (\"$arg[0]\", \"$arg[1]\", $arg[2], 
+							$arg[3], $arg[4], 1);";
 				break;
 
 			case "room.csv":
 
 				if( isset($arg[0]) AND isset($arg[1]) AND isset($arg[2]) )
-					$sql = "INSERT INTO room(roomName, roomShortName, roomCount, snapshotId) VALUES (\"$arg[0]\", \"$arg[1]\", $arg[2], 1);";
+					$sql = "INSERT INTO room(roomName, roomShortName, roomCount, snapshotId) VALUES
+							(\"$arg[0]\", \"$arg[1]\", $arg[2], 1);";
 				break;
 
 			case "batch.csv":
 
 				if( isset($arg[0]) AND isset($arg[1]) AND isset($arg[2]) ) {
-					$sql = "INSERT INTO batch(batchName, batchCount, snapshotId) VALUES (\"$arg[1]\", $arg[2], 1);";
-					$sql1 = "INSERT INTO batchClass(batchId, classId, snapshotId) VALUES ((SELECT batchId FROM batch WHERE batchName=\"$arg[1]\"),(SELECT classId from class WHERE classShortName=\"$arg[0]\"), 1);";
+					$sql = "INSERT INTO batch(batchName, batchCount, snapshotId) VALUES (
+							\"$arg[1]\", $arg[2], 1);";
+					$sql1 = "INSERT INTO batchClass(batchId, classId, snapshotId) VALUES ((SELECT 
+							batchId FROM batch WHERE batchName=\"$arg[1]\"),(SELECT classId from 
+							class WHERE classShortName=\"$arg[0]\"), 1);";
 				}
 				break;
 
 			case "batch-can-overlap.csv":
 
 				if( isset($arg[0]) AND isset($arg[1]) )
-					$sql = "INSERT INTO batchCanOverlap(batchId, batchOverlapId, snapshotId) VALUES ((SELECT batchId FROM batch WHERE batchName=\"$arg[0]\"), ( (SELECT batchId FROM batch WHERE batchName=\"$arg[1]\")), 1);";
+					$sql = "INSERT INTO batchCanOverlap(batchId, batchOverlapId, snapshotId) VALUES
+							((SELECT batchId FROM batch WHERE batchName=\"$arg[0]\"), ( (SELECT 
+							batchId FROM batch WHERE batchName=\"$arg[1]\")), 1);";
 				break;
 
 			case "subject-class-teacher.csv":
 
 				if( isset($arg[0]) AND isset($arg[1]) )
 					if (isset($arg[2]))
-							$sql = "INSERT INTO subjectClassTeacher(subjectId, classId, teacherId, snapshotId) VALUES (
-								(SELECT subjectId FROM subject WHERE subjectShortName=\"$arg[1]\"), 
+							$sql = "INSERT INTO subjectClassTeacher(subjectId, classId, teacherId, 
+								snapshotId) VALUES (
+								(SELECT subjectId FROM subject WHERE subjectShortName=
+								\"$arg[1]\"), 
 								(SELECT classId FROM class WHERE classShortName=\"$arg[0]\"),
 								(SELECT teacherId from teacher WHERE teacherShortName=\"$arg[2]\"),
 								1
 							);";
 					else
-							$sql = "INSERT INTO subjectClassTeacher(subjectId, classId, teacherId, snapshotId) VALUES (
-								(SELECT subjectId FROM subject WHERE subjectShortName=\"$arg[1]\"), 
+							$sql = "INSERT INTO subjectClassTeacher(subjectId, classId, teacherId, 
+								snapshotId) VALUES (
+								(SELECT subjectId FROM subject WHERE subjectShortName=
+								\"$arg[1]\"), 
 								(SELECT classId FROM class WHERE classShortName=\"$arg[0]\"),
 								NULL,
 								1
@@ -124,7 +139,8 @@ function insertCSV($conn, $filename) {
 			case "subject-batch-teacher.csv":
 
 				if( isset($arg[0]) AND isset($arg[1]) AND isset($arg[2]) )
-					$sql = "INSERT INTO subjectBatchTeacher(subjectId, batchId, teacherId, snapshotId) VALUES (
+					$sql = "INSERT INTO subjectBatchTeacher(subjectId, batchId, teacherId, 
+							snapshotId) VALUES (
 							(SELECT subjectId FROM subject WHERE subjectShortName=\"$arg[0]\"),
 							(SELECT batchId FROM batch WHERE batchName=\"$arg[1]\"),
 							(SELECT teacherId FROM teacher WHERE teacherShortName=\"$arg[2]\"),
@@ -134,22 +150,33 @@ function insertCSV($conn, $filename) {
 
 			case "overlappingSBT.csv":
 
-				if( isset($arg[0]) AND isset($arg[1]) AND isset($arg[2]) AND isset($arg[3]) AND isset($arg[4]) AND isset($arg[5]) ) {
+				if( isset($arg[0]) AND isset($arg[1]) AND isset($arg[2]) AND isset($arg[3]) 
+					AND isset($arg[4]) AND isset($arg[5]) ) {
 
-					$qs1="SELECT subjectId from subject where subjectShortName = \"$arg[0]\" and snapshotId = 1";
-					$qs2="SELECT subjectId from subject where subjectShortName = \"$arg[3]\" and snapshotId = 1";
-					$qb1="SELECT batchId from batch where batchName = \"$arg[1]\" and snapshotId = 1";
-					$qb2="SELECT batchId from batch where batchName = \"$arg[4]\" and snapshotId = 1";
-					$qt1="SELECT teacherId from teacher where teacherShortName = \"$arg[2]\" and snapshotId = 1";
-					$qt2="SELECT teacherId from teacher where teacherShortName= \"$arg[5]\" and snapshotId = 1";
+					$qs1="SELECT subjectId from subject where subjectShortName = \"$arg[0]\" and 
+							snapshotId = 1";
+					$qs2="SELECT subjectId from subject where subjectShortName = \"$arg[3]\" and 
+							snapshotId = 1";
+					$qb1="SELECT batchId from batch where batchName = \"$arg[1]\" and 
+							snapshotId = 1";
+					$qb2="SELECT batchId from batch where batchName = \"$arg[4]\" and 
+							snapshotId = 1";
+					$qt1="SELECT teacherId from teacher where teacherShortName = \"$arg[2]\" and 
+							snapshotId = 1";
+					$qt2="SELECT teacherId from teacher where teacherShortName= \"$arg[5]\" and 
+							snapshotId = 1";
 					$sql = "INSERT INTO overlappingSBT(sbtId1, sbtId2, snapshotId) VALUES (
-							(SELECT sbtId from subjectBatchTeacher WHERE subjectId = ($qs1) AND batchId = ($qb1) AND teacherId = ($qt1)),
-							(SELECT sbtId from subjectBatchTeacher WHERE subjectId = ($qs2) AND batchId = ($qb2) AND teacherId = ($qt2)),
+							(SELECT sbtId from subjectBatchTeacher WHERE subjectId = ($qs1) AND 
+								batchId = ($qb1) AND teacherId = ($qt1)),
+							(SELECT sbtId from subjectBatchTeacher WHERE subjectId = ($qs2) AND 
+								batchId = ($qb2) AND teacherId = ($qt2)),
 							1
 						);";
 					$sql1 = "INSERT INTO overlappingSBT(sbtId1, sbtId2, snapshotId) VALUES (
-							(SELECT sbtId from subjectBatchTeacher WHERE subjectId = ($qs2) AND batchId = ($qb2) AND teacherId = ($qt2)),
-							(SELECT sbtId from subjectBatchTeacher WHERE subjectId = ($qs1) AND batchId = ($qb1) AND teacherId = ($qt1)),
+							(SELECT sbtId from subjectBatchTeacher WHERE subjectId = ($qs2) AND 
+								batchId = ($qb2) AND teacherId = ($qt2)),
+							(SELECT sbtId from subjectBatchTeacher WHERE subjectId = ($qs1) AND 
+								batchId = ($qb1) AND teacherId = ($qt1)),
 							1
 						);";
 				}
@@ -158,19 +185,25 @@ function insertCSV($conn, $filename) {
 			case "classRoom.csv":
 
 				if( isset($arg[0]) AND isset($arg[1]) )
-					$sql = "INSERT INTO classRoom(classId, roomId, snapshotId) VALUES ((SELECT classId FROM class WHERE classShortName=\"$arg[0]\"),(SELECT roomId from room WHERE roomShortName=\"$arg[1]\"), 1);";
+					$sql = "INSERT INTO classRoom(classId, roomId, snapshotId) VALUES ((SELECT 
+							classId FROM class WHERE classShortName=\"$arg[0]\"),(SELECT roomId 
+							from room WHERE roomShortName=\"$arg[1]\"), 1);";
 				break;
 
 			case "batchRoom.csv":
 
 				if( isset($arg[0]) AND isset($arg[1]) )
-					$sql = "INSERT INTO batchRoom(batchId, roomId, snapshotId) VALUES ((SELECT batchId FROM batch WHERE batchName=\"$arg[0]\"),(SELECT roomId from room WHERE roomShortName=\"$arg[1]\"), 1);";
+					$sql = "INSERT INTO batchRoom(batchId, roomId, snapshotId) VALUES ((SELECT 
+							batchId FROM batch WHERE batchName=\"$arg[0]\"),(SELECT roomId from 
+							room WHERE roomShortName=\"$arg[1]\"), 1);";
 				break;
 
 			case "subjectRoom.csv":
 
 				if( isset($arg[0]) AND isset($arg[1]) )
-					$sql = "INSERT INTO subjectRoom(subjectId, roomId, snapshotId) VALUES ((SELECT subjectId FROM subject WHERE subjectShortName=\"$arg[0]\"),(SELECT roomId from room WHERE roomShortName=\"$arg[1]\"), 1);";
+					$sql = "INSERT INTO subjectRoom(subjectId, roomId, snapshotId) VALUES ((SELECT 
+							subjectId FROM subject WHERE subjectShortName=\"$arg[0]\"),(SELECT 
+							roomId from room WHERE roomShortName=\"$arg[1]\"), 1);";
 				break;
 
 			case "timetable.csv":
@@ -178,41 +211,44 @@ function insertCSV($conn, $filename) {
 				// not adding any isset checks here since some fields are allowed to be blank/null
 
 				if ( $arg[7] == "TRUE" ) {
-					$sql = "INSERT INTO timeTable(day, slotNo, classId, batchId, snapshotId, isFixed) VALUES 
+					$sql = "INSERT INTO timeTable(day, slotNo, classId, batchId, snapshotId, 
+							isFixed) VALUES 
 							($arg[0], $arg[1], 
-							(SELECT classId from class where classShortName=\"$arg[3]\"),
-							NULL,  
+							(SELECT classId from class where classShortName=\"$arg[3]\"), NULL,  
 							(SELECT snapshotId from snapshot where snapshotName=\"default\"),
 							$arg[7]);";
 					$sql1 = "INSERT INTO fixedEntry(ttId, fixedText, snapshotId) VALUES
-							((SELECT ttId FROM timeTable WHERE day = $arg[0] AND slotNo = $arg[1] AND 
-							classId = (SELECT classId from class WHERE classShortName=\"$arg[3]\")  
+							((SELECT ttId FROM timeTable WHERE day = $arg[0] AND slotNo = $arg[1] 
+							AND 
+							classId = (SELECT classId from class WHERE classShortName=\"$arg[3]\")
 							AND isFixed = $arg[7]), \"LUNCH\", 1);";
 				}
 				else {
 					if (!isset($arg[6]))		
-						$sql = "INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-									batchId, snapshotId, isFixed) VALUES
-				 		($arg[0], $arg[1], 
-						(SELECT roomId from room WHERE roomShortName=\"$arg[2]\"),
-						(SELECT classId from class WHERE classShortName=\"$arg[3]\"), 
-						(SELECT subjectId from subject WHERE subjectShortName=\"$arg[4]\"),
-						(SELECT teacherId from teacher WHERE teacherShortName=\"$arg[5]\"), 
-						NULL, 
-						(SELECT snapshotId from snapshot where snapshotName=\"default\"),
-						$arg[7]);";
+						$sql = "INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, 
+								teacherId, batchId, snapshotId, isFixed) VALUES
+						 		($arg[0], $arg[1], 
+								(SELECT roomId from room WHERE roomShortName=\"$arg[2]\"),
+								(SELECT classId from class WHERE classShortName=\"$arg[3]\"), 
+								(SELECT subjectId from subject WHERE subjectShortName=
+								\"$arg[4]\"),
+								(SELECT teacherId from teacher WHERE teacherShortName=
+								\"$arg[5]\"), 
+								NULL, 
+								(SELECT snapshotId from snapshot where snapshotName=\"default\"),
+								$arg[7]);";
 					
 					else
-						$sql = "INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, teacherId, 
-									batchId, snapshotId, isFixed) VALUES 		
-						($arg[0], $arg[1], 
-						(SELECT roomId from room WHERE roomShortName=\"$arg[2]\"),
-						(SELECT classId from class WHERE classShortName=\"$arg[3]\"), 
-						(SELECT subjectId from subject WHERE subjectShortName=\"$arg[4]\"),
-						(SELECT teacherId from teacher WHERE teacherShortName=\"$arg[5]\"), 
-						(SELECT batchId from batch WHERE batchName=\"$arg[6]\"), 
-						(SELECT snapshotId from snapshot where snapshotName=\"default\"),
-						$arg[7]);";
+						$sql = "INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, 
+								teacherId, batchId, snapshotId, isFixed) VALUES 		
+								($arg[0], $arg[1], 
+								(SELECT roomId from room WHERE roomShortName=\"$arg[2]\"),
+								(SELECT classId from class WHERE classShortName=\"$arg[3]\"), 
+								(SELECT subjectId from subject WHERE subjectShortName=\"$arg[4]\"),
+								(SELECT teacherId from teacher WHERE teacherShortName=\"$arg[5]\"),
+								(SELECT batchId from batch WHERE batchName=\"$arg[6]\"), 
+								(SELECT snapshotId from snapshot where snapshotName=\"default\"),
+								$arg[7]);";
 
 				}
 
@@ -250,7 +286,8 @@ function insertPDO($db, $file) {
 	$qr = $db->exec($sql);
 }
 
-$db = new PDO('mysql:host='.$CFG->server.';dbname='.$CFG->db_database, $CFG->db_user, $CFG->db_pass);
+$db = new PDO('mysql:host='.$CFG->server.';dbname='.$CFG->db_database, $CFG->db_user,
+$CFG->db_pass);
 
 
 echo "<br/>---------------schema-----------------------";

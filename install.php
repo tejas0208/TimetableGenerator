@@ -49,9 +49,9 @@ if(isset($_POST['reqType']) && $_POST['reqType'] == "checkInstallation") {
 	return;
 }
 function checkPHPVersion() {
-	if (version_compare(phpversion(), '5.4.0') < 0) {
+	if (version_compare(phpversion(), '5.4.7') < 0) {
     	$phpversion = phpversion();
-    	echo "Need php version at least 5.4.0. Current version is $phpversion).<br />";
+    	echo "Need php version at least 5.4.7. Current version is $phpversion).<br />";
     	die;
 	}
 }
