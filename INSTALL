@@ -1,0 +1,70 @@
+Installation of 'Taasika' Timetabling Software
+--------------------------------------------
+A rough guide to installing 'Taasika'.
+
+--------------------------------------------
+On Ubuntu:
+--------------------------------------------
+
+Lines begining with '>' indicate GNU/Linux commands.
+
+* On Ubuntu based systems, first install the LAMP stack.
+Refer to: http://howtoubuntu.org/how-to-install-lamp-on-ubuntu
+
+* Install the needed php packages
+> sudo apt-get install php5-mysqlnd
+
+* Copy the code of 'samay' into any folder
+> cd 
+> mkdir ~/src/
+> cd src
+> git clone git@gitlab.com:abhijit13/samay.git
+
+* Give write permissions to 'samay' code folder.
+Note: This is a security risk. This requirement will be changed later.
+> chmod 777 ~/src/samay 
+
+* Create a link from your DocumentRoot (typically /var/www/html)
+to the samay code
+> sudo ln -s ~/src/samay /var/www/html/
+
+* Access the 'Samay' code.  Type in your browser
+http://127.0.0.1/samay/
+
+Follow the onscreen installation instructions.
+Note: the installation is not very robust and often breaks!
+
+Installation of Test-data:
+After the installation is done, developers can install the test data
+to run and test the software. 
+Read the README.txt in test-data folder.
+
+--------------------------------------------
+On Windows 7 and greater:
+--------------------------------------------
+
+1. Need Apache server installed and MySQL installed (preferably use XAMPP package)
+
+2. Need PHP version more than or equal to 5.4.7
+
+3. If using XAMPP, copy taasika folder in C:\xampp\htdocs\
+
+4. Go to your browser and type http:\\localhost\taasika
+
+5. install.php loads.
+Enter DB configuration details.
+
+6. If you're going to use test-data, close the tab and open new tab. Run insert_data.php located in test-data folder:
+http:\\localhost\taasika\test-data\insert_data.php
+Or you can even just import timetable.sql located in root folder
+
+6. If you're not going to use test-data, then on the install.php page itself:
+Create department.
+Create user.
+Enter timetable configuration details.
+
+7. Curl is used in automate.php to call saveNewSnapshot function in snapshot.php
+If using XAMPP, uncomment (remove semicolon) on this line:
+;extension=php_curl.dll
+in file C:\xampp\php\php.ini
+Then restart Apache service
