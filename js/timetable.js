@@ -1337,7 +1337,7 @@ function getEligibleBatches(i, j, k, subjectRow) {
 		if(overlappingBatchBusyInThisSlot(i, j, sbtlist[m], sbtlist[m]["batchId"], 0)) {
 			disabledBatches.push([search(batch, "batchId", sbtlist[m]["batchId"])["batchName"],
 				"OLBusy"]);
-			continue
+			continue;
 		}
 
 		eligibleBatches.push(search(batch, "batchId", sbtlist[m]["batchId"]));
@@ -1925,35 +1925,28 @@ function BatchBusyInThisSlot(i, j, sctOrSbtEntry, classId, batchId, logOrNot) {
 	/* If some batches overlap with current batch-subject's batch,
 	 * check that only those batches exist in the n + j slots */
 	for(var n = 0; n < currSubject["eachSlot"]; n++) {
-		if(bco !== -1) {
-			var thisSlotEntries = searchMultipleRows(timeTable, "day", i, "slotNo", (j + n),
-				"classId", classId, "snapshotId", currentSnapshotId);
-			if(thisSlotEntries != -1)
-				var overlappingPossible = false;
-			/* No entries in this slot, so overlapping is obviously possible */
-			else
-				var overlappingPossible = true;
+		var thisSlotEntries = searchMultipleRows(timeTable, "day", i, "slotNo", (j + n),
+			"classId", classId, "snapshotId", currentSnapshotId);
+		var overlappingPossible;
+		if(thisSlotEntries != -1) {
+			overlappingPossible = true;
 			for(var q in thisSlotEntries) {
 				/* TODO: Abhijit: Check. This may be impossible condition */
 				if(search(bco, "batchOverlapId", thisSlotEntries[q]["batchId"]) === -1) {
-						continue;
-				} else {
-					overlappingPossible = true;
-					break;
+						overlappingPossible = false;
+						break;
 				}
 			}
-			if(overlappingPossible == false) {
-				if(logOrNot == 1)
-					disabledSubjectAdd(disabledSubjects, currSubject["subjectShortName"],
-						search(batch, "batchId", batchId)["batchName"], "NoOverlap");
-				return true;
-			}
-			return false;
-		} else {
-			/* This batch-subject's batch has no overlapping entries
-			 * So continue doing other checks for remaining slots 
-			 */
-			continue;
+		}
+		/* No entries in this slot, so overlapping is obviously possible */
+		else
+			overlappingPossible = true;
+		
+		if(overlappingPossible == false) {
+			if(logOrNot == 1)
+				disabledSubjectAdd(disabledSubjects, currSubject["subjectShortName"],
+					search(batch, "batchId", batchId)["batchName"], "BatchOverlap");
+			return true;
 		}
 	}
 	return false; 
