@@ -573,7 +573,7 @@ function dropHandler(e) {
 				temp2[r]["day"] = "-1";
 				temp2[r]["slotNo"] = "-1";
 			}
-			valid2 = checkValidity(srcI, slotNo, destSlotEntry); 
+			valid2 = checkValidity(srcI, slotNo, destSlotEntry);
 
 		}
 		if(!valid2 || !valid1) {
@@ -2767,6 +2767,12 @@ function fillTable2(createNewTable) {
 
 function classChange(createNewTable){
 	var index = document.getElementById("class-menu").selectedIndex; /*Setting the select tag*/
+	if(index === 0) {
+		document.getElementById("class-menu").selectedIndex = "-1";
+		classForm();
+		selectoption();
+		return;
+	}
 	var classShortName = document.getElementById("class-menu").options[index].text;
 	type = "class";
 	currTableId = classShortName;
@@ -2810,6 +2816,12 @@ function roomChange(createNewTable){
 	document.getElementById("class-menu").selectedIndex = "-1";
 	document.getElementById("batch-menu").selectedIndex = "-1";
 	var index = document.getElementById("room-menu").selectedIndex; /*Setting the select tag*/
+	if(index === 0) {
+		document.getElementById("room-menu").selectedIndex = "-1";
+		roomForm();
+		selectoption();
+		return;
+	}
 	var roomShortName = document.getElementById("room-menu").options[index].text;
 	document.getElementById("title").innerHTML =
 				"<h2> " + search(dept, "deptId", currentDeptId)["deptName"] +
@@ -2829,6 +2841,12 @@ function batchChange(createNewTable){
 	document.getElementById("class-menu").selectedIndex = "-1";
 	//document.getElementById("subject-menu").selectedIndex = "-1";
 	var index = document.getElementById("batch-menu").selectedIndex; /*Setting the select tag*/
+	if(index === 0) {
+		document.getElementById("batch-menu").selectedIndex = "-1";
+		batchForm();
+		selectoption();
+		return;
+	}
 	var batchName = document.getElementById("batch-menu").options[index].text;
 	document.getElementById("title").innerHTML =
 				"<h2> " + search(dept, "deptId", currentDeptId)["deptName"] +
@@ -2844,6 +2862,12 @@ function batchChange(createNewTable){
 
 function teacherChange(createNewTable){
 	var index = document.getElementById("teacher-menu").selectedIndex; /*Setting the select tag*/
+	if(index === 0) {
+		document.getElementById("teacher-menu").selectedIndex = "-1";
+		teacherForm();
+		selectoption();
+		return;
+	}
 	var teacherShortName = document.getElementById("teacher-menu").options[index].text;
 	document.getElementById("title").innerHTML =
 				"<h2> " + search(dept, "deptId", currentDeptId)["deptName"] +
@@ -2858,6 +2882,41 @@ function teacherChange(createNewTable){
 	getSupportObject();//fills supportObject correctly depending on type and id;
 	/*Filling the table*/
 	fillTable2(createNewTable);
+}
+/*if a snapshot was displayed before selecting add option then
+this function will reselect the option which was selected before selcting add option*/
+function selectoption() {
+	if(type == undefined)
+		return;
+	switch(type) {
+		case "class":
+			var selectTag = document.getElementById("class-menu");
+			var value = supportObject["classShortName"];
+			var table = "classTable";
+			break;
+		case "batch":
+			var selectTag = document.getElementById("batch-menu");
+			var value = supportObject["batchName"];
+			var table = "batch";
+			break;
+		case "room":
+			var selectTag = document.getElementById("room-menu");
+			var value = supportObject["roomShortName"];
+			var table = "room";
+			break;
+		case "teacher":
+			var selectTag = document.getElementById("teacher-menu");
+			var value = supportObject["teacherShortName"];
+			var table = "teacher";
+			break;
+	}
+	for(i = 0;i < selectTag.options.length;i++) {
+		if(selectTag.options[i].value === value) {
+			selectTag.selectedIndex = "" + i;
+			return;
+		}
+	}
+	selectTag.selectedIndex = "-1";
 }
 function sortSelect(selElem) {
     var tmpAry = new Array();
@@ -2888,6 +2947,7 @@ function loadTeacherMenu() {
 	//sortSelect(selectTag);
 	selectTag.setAttribute("onchange", "teacherChange(true)");
 	sortSelect(selectTag);
+	selectTag.add(createOptionTag("Add Teacher", "Add Teacher", "false"), 0);
 	document.getElementById("teacher-menu").selectedIndex = -1; /*Setting the select tag*/
 	//$("#teacher-menu").select2();
 }
@@ -2901,6 +2961,7 @@ function loadClassMenu() {
 								classTable[i]["classShortName"], "false"));
 	}
 	selectTag.setAttribute("onchange", "classChange(true)");
+	selectTag.add(createOptionTag("Add Class", "Add Class", "false"), 0);
 	document.getElementById("class-menu").selectedIndex = -1; /*Setting the select tag*/
 	//$("#class-menu").select2();
 	//sortSelect(selectTag);
@@ -2917,6 +2978,7 @@ function loadBatchMenu() {
 	//sortSelect(selectTag);
 	selectTag.setAttribute("onchange", "batchChange(true)");
 	sortSelect(selectTag);
+	selectTag.add(createOptionTag("Add Batch", "Add Batch", "false"), 0);
 	document.getElementById("batch-menu").selectedIndex = -1; /*Setting the select tag*/
 	//$("#batch-menu").select2();
 }
@@ -2932,37 +2994,26 @@ function loadRoomMenu() {
 	//sortSelect(selectTag);
 	selectTag.setAttribute("onchange", "roomChange(true)");
 	sortSelect(selectTag);
+	selectTag.add(createOptionTag("Add Room", "Add Room", "false"), 0);
 	document.getElementById("room-menu").selectedIndex = -1; /*Setting the select tag*/
 	//$("#room-menu").select2();
 }
 function loadSelectMenus() {
-	if(room.length > 0) {
-		$("#room-menu").css("display", "block");
-		loadRoomMenu();
-	}
-	else {
+	loadRoomMenu();
+	$("#room-menu").css("display", "block");
+	if(room.length  === 0) {
 		$("#mainTimeTable").html("<div align=center> Please select the Configuration Menu and " +
 					"enter at least one room, teacher, class, batch, " +
 					"entry to see the select menus</div>");
-		$("#teacher-menu").css("display", "none");
-		$("#class-menu").css("display", "none");
-		$("#batch-menu").css("display", "none");
-		$("#room-menu").css("display", "none");
-		return;
 	}
-	if(teacher.length > 0) {
-		$("#teacher-menu").css("display", "block");
-		//$("#teacher-menu").setAttribute("disabled", "false");
-		loadTeacherMenu();
-	}
-	if(classTable.length > 0) {
-		$("#class-menu").css("display", "block");
-		loadClassMenu();
-	}
-	if(batch.length > 0) {
-		$("#batch-menu").css("display", "block");
-		loadBatchMenu();
-	}
+	$("#teacher-menu").css("display", "block");
+	//$("#teacher-menu").setAttribute("disabled", "false");
+	loadTeacherMenu();
+	$("#class-menu").css("display", "block");
+	loadClassMenu();
+	$("#batch-menu").css("display", "block");
+	loadBatchMenu();
+	selectoption();
 }
 /* Loads a new snapshot in JS variables.
  * Snapshot includes all Data Tables. Teacher, Class, Subject, ..., Timetable. and mappinngs.
