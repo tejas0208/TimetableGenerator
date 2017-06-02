@@ -208,7 +208,7 @@ function insertCSV($conn, $filename) {
 
 			case "timetable.csv":
 
-				// not adding any isset checks here since some fields are allowed to be blank/null
+				// not adding any checks here since some fields are allowed to be empty
 
 				if ( $arg[7] == "TRUE" ) {
 					$sql = "INSERT INTO timeTable(day, slotNo, classId, batchId, snapshotId, 
@@ -224,16 +224,14 @@ function insertCSV($conn, $filename) {
 							AND isFixed = $arg[7]), \"LUNCH\", 1);";
 				}
 				else {
-					if (!isset($arg[6]))		
+					if (!isset($arg[6]))		// can be if(empty($arg[6]))
 						$sql = "INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, 
 								teacherId, batchId, snapshotId, isFixed) VALUES
 						 		($arg[0], $arg[1], 
 								(SELECT roomId from room WHERE roomShortName=\"$arg[2]\"),
 								(SELECT classId from class WHERE classShortName=\"$arg[3]\"), 
-								(SELECT subjectId from subject WHERE subjectShortName=
-								\"$arg[4]\"),
-								(SELECT teacherId from teacher WHERE teacherShortName=
-								\"$arg[5]\"), 
+								(SELECT subjectId from subject WHERE subjectShortName=\"$arg[4]\"),
+								(SELECT teacherId from teacher WHERE teacherShortName=\"$arg[5]\"),
 								NULL, 
 								(SELECT snapshotId from snapshot where snapshotName=\"default\"),
 								$arg[7]);";
