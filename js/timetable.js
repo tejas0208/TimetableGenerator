@@ -1,4 +1,4 @@
-// This file is part of Samay - a timetabling software for 
+// This file is part of Samay - a timetabling software for
 // schools, colleges/universities.
 //
 // Samay is free software: you can redistribute it and/or modify
@@ -18,7 +18,7 @@
  * Samay frontpage.
  *
  * Copyright 2007 Abhijit A. M. (abhijit13@gmail.com),
- * Copyright 2007 Vinay Desai (desaivinay1997@gmail.com) 
+ * Copyright 2007 Vinay Desai (desaivinay1997@gmail.com)
  */
 
 
@@ -33,7 +33,7 @@ var srcSlotEntry;
 /* These global variables represent one table each from the database */
 var database;
 var dept, config, snapshot;
-var teacher, classTable, batch, batchCanOverlap, batchClass; 
+var teacher, classTable, batch, batchCanOverlap, batchClass;
 var room, classRoom, batchRoom, subjectRoom;
 var subject, subjectBatchTeacher, subjectClassTeacher, overlappingSBT;
 var fixedEntry;
@@ -56,7 +56,7 @@ var enabledRows = [];
 /* helperTable has size 6 * nSlots * maxPossibleRows. It's a cube. Let's say each entry
  * is a cube-cell.
  * It stores timeTable[] entries as objects, as they appear on screen.
- * Thus, if DSA-Lab_SY-IT appears on Monday,at Slot2 for 2 hours as third entry in cell, 
+ * Thus, if DSA-Lab_SY-IT appears on Monday,at Slot2 for 2 hours as third entry in cell,
  * then it stores, two entries at [0, 2, 3], [2, 3, 3]. Note the change in j, but no
  * change in k index.
  * It is initialized to zero. When a cube-cell is ready to be occupied, it is set to null.
@@ -78,7 +78,7 @@ function makeTrackerList() {
 		curr = subjectClassTeacher[i];
 
 		entry["subjectId"] =  curr["subjectId"];
-		entry["batchId"] = ""; 
+		entry["batchId"] = "";
 		entry["classId"] = curr["classId"];
 		entry["teacherId"] = curr["teacherId"];
 		subjectRow =  search(subject, "subjectId", subjectClassTeacher[i]["subjectId"]);
@@ -86,15 +86,15 @@ function makeTrackerList() {
 		entry["eachSlot"] = subjectRow["eachSlot"];
 		entry["sbtId"] = null;
 		entry["done"] = 0;
-		tracker.push(entry);		
-	}	
+		tracker.push(entry);
+	}
 	for (i in subjectBatchTeacher) {
 		entry = {}
 		curr = subjectBatchTeacher[i];
 
 		entry["subjectId"] =  curr["subjectId"];
-		entry["batchId"] = curr["batchId"]; 
-		entry["classId"] = search(batchClass, "batchId", curr["batchId"])["classId"]; 
+		entry["batchId"] = curr["batchId"];
+		entry["classId"] = search(batchClass, "batchId", curr["batchId"])["classId"];
 		entry["teacherId"] = curr["teacherId"];
 		subjectRow =  search(subject, "subjectId", curr["subjectId"]);
 		entry["nSlots"] = subjectRow["nSlots"];
@@ -106,12 +106,12 @@ function makeTrackerList() {
 	for(i = 0; i < timeTable.length; i++) {
 		curr = timeTable[i];
 		/* 3 types of entries. (a) isFixed = 1 (b) isFixed = 0, batchId != null
-		 * (c) isFixed = 0, batchId = null 
+		 * (c) isFixed = 0, batchId = null
 		 */
 		if(curr["isFixed"] == "1")
 			continue;
 		if("" + curr["batchId"] != "null") {
-			index = searchIndex(tracker, "subjectId", curr["subjectId"], 
+			index = searchIndex(tracker, "subjectId", curr["subjectId"],
 						"batchId", curr["batchId"], "classId", curr["classId"]);
 			if(index == -1) {
 				alert("ERROR: index -1 in makeTrackerList i = . " + i + " curr = " +
@@ -121,7 +121,7 @@ function makeTrackerList() {
 							search(tracker, "subjectId", curr["subjectId"])) + JSON.stringify(
 							search(subjectBatchTeacher, "subjectId", curr["subjectId"])) + JSON.stringify(
 							search(subjectBatchTeacher, "teacherId", curr["teacherId"])) + JSON.stringify(
-							search(subjectBatchTeacher, "batchId", curr["batchId"])) 
+							search(subjectBatchTeacher, "batchId", curr["batchId"]))
 						);
 			}
 			eachSlot = tracker[index]["eachSlot"];
@@ -129,9 +129,9 @@ function makeTrackerList() {
 			//console.log("makeTrackerList: " + JSON.stringify(curr));
 			//tracker[index]["done"] = parseInt(tracker[index]["done"]);
 			continue;
-		} 
+		}
 		if("" + curr["batchId"] == "null") {
-			index = searchIndex(tracker, "subjectId", curr["subjectId"], 
+			index = searchIndex(tracker, "subjectId", curr["subjectId"],
 						"classId", curr["classId"]);
 			if(index == -1) {
 				alert("ERROR: index -1 in makeTrackerList i = . " + i + " curr = " +
@@ -186,7 +186,7 @@ function sortTrackerOnBatch() {
 		if(x > y)
 			return ((batchSort == 1? 1 : -1) * (1));
 	});
-	batchSort = 1 - batchSort; 
+	batchSort = 1 - batchSort;
 	showTrackerList();
 }
 function sortTrackerOnDone() {
@@ -239,16 +239,16 @@ function showTrackerList() {
 	trackerStr = "<table class=\"trackertable\">";
 	trackerStr += "<tr class=\"trackerrow\">";
 	trackerStr += "<td class=\"trackercol\"> <a href=\"javascript:void(0) " +
-					"\"class=\"closebtn\" onclick=\"sortTrackerOnSub()\">" + 
+					"\"class=\"closebtn\" onclick=\"sortTrackerOnSub()\">" +
 					"Sub^ </a></td>";
 	trackerStr += "<td class=\"trackercol\"> <a href=\"javascript:void(0) " +
-					"\"class=\"closebtn\" onclick=\"sortTrackerOnBatch()\">" + 
+					"\"class=\"closebtn\" onclick=\"sortTrackerOnBatch()\">" +
 					"Batch^ <br> Class^ </a></td>";
 	trackerStr += "<td class=\"trackercol\"> <a href=\"javascript:void(0) " +
-					"\"class=\"closebtn\" onclick=\"sortTrackerOnTeacher()\">" + 
+					"\"class=\"closebtn\" onclick=\"sortTrackerOnTeacher()\">" +
 					"Teacher^ </a></td>";
 	trackerStr += "<td class=\"trackercol\"> <a href=\"javascript:void(0) " +
-					"\"class=\"closebtn\" onclick=\"sortTrackerOnDone()\">" + 
+					"\"class=\"closebtn\" onclick=\"sortTrackerOnDone()\">" +
 					"Done^ </a></td>";
 	trackerStr += "</tr>";
 	switch(type) {
@@ -731,7 +731,7 @@ function insertAfter(elem, refElem) {
 	var next = refElem.nextSibling;
 	if (next)
 		return parent.insertBefore(elem, next);
-	else 
+	else
 		return parent.appendChild(elem);
 }
 
@@ -776,7 +776,7 @@ function getTimetable(snapshotName) {
 	xhttp.send("reqType=getTimetable&snapshotName=\"" + snapshotName + "\"");
 	var db = JSON.parse(xhttp.responseText);
 	timeTable = db.timeTable;
-	if(typeof timeTable == "undefined") 
+	if(typeof timeTable == "undefined")
 		timeTable = [];
 	currentSnapshotName = snapshotName;
 	//classChange(true);
@@ -864,7 +864,7 @@ function getDeptConfigSnapshot() {
 	}
 	/* TODO: This should be configurable */
 	currentConfigId = config[0]["configId"];
-	
+
 	snapshot = getSnapshotTable().snapshot;
 	if(snapshot.length < 1) {
 		firstSnapshotForm();
@@ -1024,7 +1024,7 @@ function createOptionTag(value, textString, selected) {
 }
 
 /*Returns time in needed format*/
-function displayTime(date) { 
+function displayTime(date) {
 	var hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
 	var am_pm = date.getHours() >= 12 ? "PM" : "AM";
 	hours = hours < 10 ? "0" + hours : hours;
@@ -1032,7 +1032,7 @@ function displayTime(date) {
 	return hours + ":" + minutes +" " + am_pm;
 }
 
-/* initializeEnableRowArray: 
+/* initializeEnableRowArray:
  * slottableCount is set to no. of actual rows needed per day,
  * which is no. of batches for a class, 1 otherwise.
  * initial_value is 0 in the only call() we have, so it can be removed.
@@ -1081,7 +1081,7 @@ function createTable(days, nSlots, slotTablePerDay, startTime, timePerSlot) {
 				td.appendChild(document.createElement("br"));
 				td.appendChild(document.createTextNode(daysName[i]));
 				tr.appendChild(td);
-			} 
+			}
 			for(j = 0; j < nSlots; j++) {
 				/*i=noOfDays * k=slottable-row-per-day * j=nSlots */
 				td = document.createElement("td");
@@ -1105,10 +1105,10 @@ function createTable(days, nSlots, slotTablePerDay, startTime, timePerSlot) {
 				td.appendChild(div);
 				tr.appendChild(td);
 			}
-			//document.getElementsByClassName("cell").style.width = window.width * 0.8 / nSlots; 
+			//document.getElementsByClassName("cell").style.width = window.width * 0.8 / nSlots;
 			table.appendChild(tr);
 			if(k != 0) {
-				tr.style.display = "none";                                                       
+				tr.style.display = "none";
 			}
 		}
 	}
@@ -1146,7 +1146,7 @@ function createTimeTableEntry(day, slotNo, roomId, classId, subjectId,
 		this.ttId = 1;
 	else
 		this.ttId = "" + (parseInt(timeTable[timeTable.length - 1]["ttId"]) + 1);
-	dirtyTimeTable = true; 
+	dirtyTimeTable = true;
 }
 
 function createClassRoomEntry(classId, roomId) {
@@ -1183,18 +1183,18 @@ function makeTimeTableEntry(day, slotNo, roomId, classId, subjectId,
 	}
 	for(var i = 0; i < eachSlot; i++) {
 		var newEntry = new createTimeTableEntry(day, (parseInt(slotNo) + i),
-						roomId, classId, subjectId, teacherId, batchId, 
+						roomId, classId, subjectId, teacherId, batchId,
 						currentSnapshotId, isFixed);
 		timeTable.push(newEntry);
 		console.log("makeTimeTableEntry: " + debugPrint("timeTable", newEntry));
 	}
 	if((""+ batchId) != "null") {
-	/* TODO: Abhijit. Check this if condition. For overlapping sbt*/ 
+	/* TODO: Abhijit. Check this if condition. For overlapping sbt*/
 		var sbt = search(subjectBatchTeacher, "subjectId", subjectId,
 							 "batchId", batchId);
 		var osbt;
 		/* TODO: Abhijit. This should be done in a loop over each entry of sbt.
-		 * use searchMultipleRows instead of search() above 
+		 * use searchMultipleRows instead of search() above
 		 */
 		if(sbt !== -1) {
 			var osbt = searchMultipleRows(overlappingSBT, "sbtId1", sbt["sbtId"]);
@@ -1225,7 +1225,7 @@ function roomSelected(selecttag) {
 		return;
 	var roomRow = search(room, "roomShortName", roomShortName);
 
-	var batchId = null; 
+	var batchId = null;
 	var classId;
 	var teacherId;
 	var temp = document.getElementById("subject"+ Id );
@@ -1239,12 +1239,12 @@ function roomSelected(selecttag) {
 	}
 	if(type == "teacher")
 		teacherId = supportObject["teacherId"];
-	else 
+	else
 		teacherId = search(teacher, "teacherShortName",
 				document.getElementById("teacher" + Id).innerHTML)["teacherId"];/*teacher*/
 	if(type == "class")
 		classId = supportObject["classId"];
-	else 
+	else
 		classId = search(classTable, "classShortName",
 					document.getElementById("class" + Id).innerHTML)["classId"];
 	if(type == "batch") {
@@ -1300,7 +1300,7 @@ function getEligibleBatches(i, j, k, subjectRow) {
 		sbtlist = searchMultipleRows(subjectBatchTeacher, "subjectId", subjectRow["subjectId"],
 					"teacherId", supportObject["teacherId"]);
 	}
-	else if(type == "room") { 
+	else if(type == "room") {
 		sbtlist = searchMultipleRows(subjectBatchTeacher, "subjectId", subjectRow["subjectId"]);
 	} else {
 		alert("ERROR: getEligibleBatches: type = " + type + ". Should not come here");
@@ -1315,7 +1315,7 @@ function getEligibleBatches(i, j, k, subjectRow) {
 			continue;
 		}
 
-		if(allEntriesAlreadyDoneForSubject(sbtlist[m], "batchId" , sbtlist[m]["batchId"], 
+		if(allEntriesAlreadyDoneForSubject(sbtlist[m], "batchId" , sbtlist[m]["batchId"],
 			search(batch, "batchId", sbtlist[m]["batchId"])["batchName"], 0)) {
 				disabledBatches.push([search(batch, "batchId", sbtlist[m]["batchId"])["batchName"],
 				"Done"]);
@@ -1326,7 +1326,7 @@ function getEligibleBatches(i, j, k, subjectRow) {
 				"TchrBusy"]);
 			continue;
 		}
-		
+
 		if(BatchBusyInThisSlot(i, j, currSubject, sbtlist[m]["classId"],
 						sbtlist[m]["batchId"], 0)) {
 			disabledBatches.push([search(batch, "batchId", sbtlist[m]["batchId"])["batchName"],
@@ -1376,8 +1376,8 @@ function getEligibleRoom(i, j, k, capacity, subjectRow, roomFound) {
 			}
 		}
 		if(validPreferred == 1) {
-			optionString += "<option value = \"" + roomRow["roomShortName"] + 
-						"\" selected=\"selected\">" + roomRow["roomShortName"] + 
+			optionString += "<option value = \"" + roomRow["roomShortName"] +
+						"\" selected=\"selected\">" + roomRow["roomShortName"] +
 						"</option>";
 		}
 	}
@@ -1397,21 +1397,21 @@ function getEligibleRoom(i, j, k, capacity, subjectRow, roomFound) {
 				valid = 0;
 				disabledRooms.push([room[y]["roomShortName"], "Small"]);
 				break;
-			} 
+			}
 		}
 		if(valid == 0)
 			continue;
 		/* TODO: The capacity check needs to be more flexible
 		if(parseInt(room[y]["roomCount"]) >= capacity)  */
 		if(room[y]["roomId"] != roomFound["roomId"] || validPreferred == 0) {
-			 optionString += "<option value = \"" + room[y]["roomShortName"] + 
+			 optionString += "<option value = \"" + room[y]["roomShortName"] +
 							"\">" + room[y]["roomShortName"] + "</option>";
 		}
 	}
-	for(z in disabledRooms) { 
-		 optionString += "<option disabled=true class=\"disabledEntries1\"" + 
+	for(z in disabledRooms) {
+		 optionString += "<option disabled=true class=\"disabledEntries1\"" +
 					"\">" + disabledRooms[z][0] + "</option>";
-		 optionString += "<option disabled=true class=\"disabledEntries2\"" + 
+		 optionString += "<option disabled=true class=\"disabledEntries2\"" +
 					"\">&nbsp;&nbsp" + disabledRooms[z][1] + "</option>";
 	}
 	return optionString;
@@ -1459,7 +1459,7 @@ function classSelected(selecttag) {
 	}
 }
 
-/* Called only from "room" page after selecting a Subject 
+/* Called only from "room" page after selecting a Subject
  * Checks two conditions for every SCT entry for this subject
  *   (a) Some entries still left for this class-subject pair
  *   (b) Class is free on all required slots
@@ -1481,7 +1481,7 @@ function getEligibleClass(i, j, k, subjectRow) {
 						["classShortName"]);
 				continue;
 		}
-	
+
 		if(classBusyInThisSlot(i, j, sct[l], sct[l]["classId"], 0)) {
 			disabledClasses.push([search(classTable, "classId", sct[l]["classId"])
 				["classShortName"], "Busy"]);
@@ -1501,21 +1501,21 @@ function getEligibleClass(i, j, k, subjectRow) {
 					classlist[r]["classShortName"] + "</option>";
 	}
 	for(z in disabledClasses) {
-		 optionString += "<option disabled=true class=\"disabledEntries1\"" + 
+		 optionString += "<option disabled=true class=\"disabledEntries1\"" +
 					"\">" + disabledClasses[z][0] + "</option>";
-		 optionString += "<option disabled=true class=\"disabledEntries2\"" + 
+		 optionString += "<option disabled=true class=\"disabledEntries2\"" +
 					"\">&nbsp;&nbsp" + disabledClasses[z][1] + "</option>";
 	}
 	return optionString;
 }
 
-/* On class page: 
+/* On class page:
  *    show teacher Info + roomselect
- * On teacher page: 
- *    show class info + roomselect 
- * On batch page: 
+ * On teacher page:
+ *    show class info + roomselect
+ * On batch page:
  *     ERORR
- * On room page: 
+ * On room page:
  * 	   Make TT entry. showTable();
  */
 function batchSelected(selecttag) {
@@ -1569,7 +1569,7 @@ function batchSelected(selecttag) {
 						"batchId", batchRow["batchId"])["teacherId"];
 			var classId = search(batchClass, "batchId", batchRow["batchId"])["classId"];
 			makeTimeTableEntry(iid, jid, supportObject["roomId"], classId, subjectRow["subjectId"],
-								teacherId, batchRow["batchId"], currentSnapshotId, 
+								teacherId, batchRow["batchId"], currentSnapshotId,
 								0, parseInt(subjectRow["eachSlot"]));
 			fillTable2(false);
 			return;
@@ -1592,10 +1592,10 @@ function fixedEntryObject(ttId, fixedText) {
 }
 
 /* Get Text for fixedEntry
- * Make TT Entry 
+ * Make TT Entry
  * Make fixedEntry
- * Show Fixed Entry 
- * Make helperTable entry 
+ * Show Fixed Entry
+ * Make helperTable entry
  */
 function fixedSlotEntry(i, j, k) {
 	var label = prompt("Enter Label for Fixed Slot:", "LUNCH");
@@ -1635,13 +1635,13 @@ function fixedSlotEntry(i, j, k) {
 	}
 }
 
-/* After selecting a subject 
+/* After selecting a subject
  * On class page:
  *    show teacherInfo + batchList/RoomList
  * On batch page:
  *    show  class+teacher Info + RoomList
- * On room page: 
- *    show  class+batch List 
+ * On room page:
+ *    show  class+batch List
  * On teacher page:
  *    show classInfo + batchList/RoomList
  */
@@ -1674,7 +1674,7 @@ function subjectSelected(selecttag) {
 								"subjectId", subjectRow["subjectId"],
 								"classId", supportObject["classId"]);
 				var teacherRow = search(teacher, "teacherId", sctEntry["teacherId"]);
-				extraInfo += "<div id=\"teacher"+ Id + 
+				extraInfo += "<div id=\"teacher"+ Id +
 								"\" class=\"box\">" +
 								teacherRow["teacherShortName"] +
 					"</div>";
@@ -1761,7 +1761,7 @@ function subjectSelected(selecttag) {
 			alert("ERROR: subjectSelected: should not have come here.");
 			break;
 		}
-		/* TODO: should we do fillTable2(false) here, or it can be done  
+		/* TODO: should we do fillTable2(false) here, or it can be done
 		 * with lesser work?
 		 */
 		selecttag.parentElement.innerHTML = "" +
@@ -1774,7 +1774,7 @@ function subjectSelected(selecttag) {
 }
 
 /* TODO: Abhijit: A subject may be rejected due to multiple reasons.
- * Which reason to display ? 
+ * Which reason to display ?
  */
 function disabledSubjectAdd(disabledArray, subject, searchId, string) {
 	for(i = 0; i < disabledArray.length; i++) {
@@ -1791,9 +1791,9 @@ function allEntriesAlreadyDoneForSubject(sctOrSbtEntry, searchOn, searchId,
 		searchIdName, logOrNot) {
 	var currSubject= search(subject, "subjectId", sctOrSbtEntry["subjectId"]);
 	var maxEntriesForSubject = currSubject["nSlots"];
-	
+
 	/* # entries in tt for this batch-subject or class-subject */
-	var existingEntries = searchMultipleRows(timeTable, "subjectId", 
+	var existingEntries = searchMultipleRows(timeTable, "subjectId",
 			currSubject["subjectId"], searchOn, searchId);
 
 	/* For a subject with eachSlot=2, we enter two entries in timetable */
@@ -1802,7 +1802,7 @@ function allEntriesAlreadyDoneForSubject(sctOrSbtEntry, searchOn, searchId,
 	else
 		lenExistingEntries = 0;
 
-	/* Checking whether we have done nSlots entries for the subject */ 
+	/* Checking whether we have done nSlots entries for the subject */
 	if(lenExistingEntries == maxEntriesForSubject) {
 		if(logOrNot == 1)
 			disabledSubjectAdd(disabledSubjects, currSubject["subjectShortName"], searchIdName, "Done");
@@ -1818,7 +1818,7 @@ function allEntriesAlreadyDoneForSubject(sctOrSbtEntry, searchOn, searchId,
 /* TODO: Abhijit thinks this function is meaningles */
 function roomBusyOnRoomPageInThisSlot(i, j, sctOrSbtEntry) {
 	var currSubject= search(subject, "subjectId", sctOrSbtEntry["subjectId"]);
-	if(type != "room") 
+	if(type != "room")
 		return false;
 	for(var n = 0; n < currSubject["eachSlot"]; n++) {
 		/* If we are on room timeTable page, and room is busy in any of j+eachSlot
@@ -1854,7 +1854,7 @@ function teacherBusyInThisSlot(i, j, sctOrSbtEntry, teacherId, logOrNot) {
 function classBusyInThisSlot(i, j, sctOrSbtEntry, classId, logOrNot) {
 	var currSubject= search(subject, "subjectId", sctOrSbtEntry["subjectId"]);
 	if(currSubject["batches"] == "0") {
-		/* Skip subject because already a theory lecture in that slot 
+		/* Skip subject because already a theory lecture in that slot
 		 * TODO: Abhijit: should we check this. Don't we call getEligibleSubjects()
  		 * only if the slot had no entry?
 		 */
@@ -1875,18 +1875,18 @@ function classBusyInThisSlot(i, j, sctOrSbtEntry, classId, logOrNot) {
 		}
 		return false;
 	}
-	return false; 
+	return false;
 }
 
 
-/* Skip this subject if there is already conflicting entry in this slot 
- * Remember: we are inside: for each SCT entry, for eachSlot of subject 
+/* Skip this subject if there is already conflicting entry in this slot
+ * Remember: we are inside: for each SCT entry, for eachSlot of subject
  */
 function BatchBusyInThisSlot(i, j, sctOrSbtEntry, classId, batchId, logOrNot) {
 	var currSubject= search(subject, "subjectId", sctOrSbtEntry["subjectId"]);
-	/* We are going to look at Batchable subjects now 
-	 * For batchable subjects: 
-	 * (a) there should be no theory class in this slot 
+	/* We are going to look at Batchable subjects now
+	 * For batchable subjects:
+	 * (a) there should be no theory class in this slot
 	 * (b) the batch should be free in this slot
 	 * (c) there should be at least one overlapping batch with this batch
 	 */
@@ -1896,7 +1896,7 @@ function BatchBusyInThisSlot(i, j, sctOrSbtEntry, classId, batchId, logOrNot) {
 		alert("BatchBusyInThisSlot ERROR: batchId undefined subject: " +
 				currSubject["subjectShortName"]);
 	}
-	/* We check three conditions for each of the j + n slots. 
+	/* We check three conditions for each of the j + n slots.
 	 * Note: we are only checking the entry here for a subject-batch pair, not for a subject
 	 */
 	var bco = searchMultipleRows(batchCanOverlap, "batchId", batchId);
@@ -1907,7 +1907,7 @@ function BatchBusyInThisSlot(i, j, sctOrSbtEntry, classId, batchId, logOrNot) {
 			continue;
 		for(var q in thisSlotEntries) {
 			if("" + thisSlotEntries[q]["batchId"] == "null") {
-				/* There is a non-batchable entry , so skip */ 
+				/* There is a non-batchable entry , so skip */
 				if(logOrNot == 1)
 					disabledSubjectAdd(disabledSubjects, currSubject["subjectShortName"],
 						search(batch, "batchId", batchId)["batchName"], "Overlap");
@@ -1956,7 +1956,7 @@ function BatchBusyInThisSlot(i, j, sctOrSbtEntry, classId, batchId, logOrNot) {
 			return true;
 		}
 	}
-	return false; 
+	return false;
 }
 
 function subjectCantFitInRemainingSlots(sctOrSbtEntry, j, nSlotsPerDay, idText) {
@@ -2038,10 +2038,10 @@ function roomSmallOnRoomPageForThisClassOrBatch(sctOrSbtEntry, searchId, capacit
 	if(parseInt(search(room, "roomShortName", currTableId)["roomCount"]) +
 			roomSizeDelta < capacity) {
 		disabledSubjectAdd(disabledSubjects, currSubject["subjectShortName"],
-				searchText, "TooBig");	
+				searchText, "TooBig");
 		return true;
 	}
-	return false; 	
+	return false;
 }
 function enableSelect(disabledSelect) {
 	disabledSelect.disabled = false;
@@ -2049,14 +2049,14 @@ function enableSelect(disabledSelect) {
 function disableSelect(enabledSelect) {
 	enabledSelect.disabled = true;
 }
-/* getEligibleSubjects: 
+/* getEligibleSubjects:
  * Returns list of eligible subjects as select-options for a given slot.
  * Correctness of this function is crucial to working of the software.
- * 
+ *
  * Algo:
  * Make SBT+SCT List as subsets of subjectCT and subjectBT lists.
- *  
- * 
+ *
+ *
  */
 function getEligibleSubjects(i, j, k) {
 	console.log("getEligibleSubjects: i = " + i + " j = " + j + " k = " + k);
@@ -2120,13 +2120,13 @@ function getEligibleSubjects(i, j, k) {
 				search(classTable, "classId", sctlist[m]["classId"])["classShortName"], 1)) {
 			continue;
 		}
-		
+
 		/* Skip the subject if it can't fit remaining slots of day */
 		if(subjectCantFitInRemainingSlots(sctlist[m], j, nSlotsPerDay,
 				search(classTable, "classId", sctlist[m]["classId"])["classShortName"])) {
 			continue;
 		}
-		
+
 		if(teacherBusyInThisSlot(i, j, sctlist[m], sctlist[m]["teacherId"], 1)) {
 			continue;
 		}
@@ -2140,12 +2140,12 @@ function getEligibleSubjects(i, j, k) {
 				search(classTable, "classId", sctlist[m]["classId"])["classCount"])) {
 			continue;
 		}
-		
+
 		subjectsList.push([currSubject["subjectShortName"],
 						search(classTable, "classId", sctlist[m]["classId"])["classShortName"],
 						search(teacher, "teacherId", sctlist[m]["teacherId"])["teacherShortName"]
 						]);
-	} 
+	}
 
 	/* Handle all SBT Entries */
 	for(var m = 0; m < sbtlist.length; m++) {
@@ -2162,7 +2162,7 @@ function getEligibleSubjects(i, j, k) {
 		}
 		/* Skip if all required entries are already done */
 		if(allEntriesAlreadyDoneForSubject(sbtlist[m], "batchId" ,
-				sbtlist[m]["batchId"], 
+				sbtlist[m]["batchId"],
 				search(batch, "batchId", sbtlist[m]["batchId"])["batchName"], 1)) {
 			continue;
 		}
@@ -2172,7 +2172,7 @@ function getEligibleSubjects(i, j, k) {
 				search(batch, "batchId", sbtlist[m]["batchId"])["batchName"])) {
 			continue;
 		}
-		
+
 		if(teacherBusyInThisSlot(i, j, sbtlist[m], sbtlist[m]["teacherId"], 1)) {
 			continue;
 		}
@@ -2222,7 +2222,7 @@ function getEligibleSubjects(i, j, k) {
 					">" + subj + "</option>";
 	}
 	if((type == "batch" || type == "class") &&  cellEmpty(i, j)) {
-		select += "<option title=\"Insert a fixed slot/ LUNCH slot\" " + 
+		select += "<option title=\"Insert a fixed slot/ LUNCH slot\" " +
 				  "value = \"FixedEntry\">Fixed Slot</option>";
 	}
 	for(x = 0; x < disabledSubjects.length; x++) {
@@ -2239,8 +2239,8 @@ function getEligibleSubjects(i, j, k) {
 	return select;
 }
 
-/* cell is empty if all helperTable entries for i.j are 0 or null 
- */ 
+/* cell is empty if all helperTable entries for i.j are 0 or null
+ */
 function cellEmpty(i, j) {
 	console.log("cellEmpty: i = " + i + " j = " + j);
 	for(var k = 0 ; k < helperTable[i - 1][j].length; k++) {
@@ -2303,7 +2303,7 @@ function deleteEntry(Span) {
 	}
 	/*For overlapping sbt, delete OSBT entries*/
 	if(batchId != "" + null) {
-		var sbt = search(subjectBatchTeacher, "subjectId", subjectId, 
+		var sbt = search(subjectBatchTeacher, "subjectId", subjectId,
 							 "batchId", batchId, "teacherId", teacherId);
 		var osbt;
 		if(sbt !== -1) {
@@ -2335,18 +2335,18 @@ function deleteEntry(Span) {
 }
 
 /* getPosition():
- * is called with day starting at 1, not 0  so we do, day = day1 - 1. 
+ * is called with day starting at 1, not 0  so we do, day = day1 - 1.
  *
  * Returns the next k'th row available for entering a new entry
- * Returns null if (a) we don't have sufficient columns ahead 
+ * Returns null if (a) we don't have sufficient columns ahead
  *   (b) The current entry already exists (for multi-column entries)
- *   (c) We can't find any k in current cell  
+ *   (c) We can't find any k in current cell
  *   TODO: Check c is possible
  *
  * rowEntry is null when we are looking for entering 'select-box'
  * else it is some entry we have found in timeTable at day1-slotNo
  *
- * Function also sets the k'th+eachSlot positions in helperTable for the rowEntry 
+ * Function also sets the k'th+eachSlot positions in helperTable for the rowEntry
  */
 function getPosition(day1, slotNo, rowEntry, eachSlot) {
 	var subjectId = -1, classId= -1, batchId = -1, pos = -1;
@@ -2388,7 +2388,7 @@ function getPosition(day1, slotNo, rowEntry, eachSlot) {
 		return null;
 	}
 	for(var n = 0; n < eachSlot; n++) {
-		/* This is the only place where we make entries in helperTable. 
+		/* This is the only place where we make entries in helperTable.
 		 * For a 3rd entry of 3 slots, on Monday starting at slot-3, we make
 		 * 3 entries in [0, 3, 3], [0, 4, 3], [0, 5, 3]
 		 * Note: rowEntry is null when we are trying to insert a subject-select
@@ -2413,27 +2413,27 @@ function getPosition(day1, slotNo, rowEntry, eachSlot) {
 				}
 			}
 			enabledRows[day] = pos;
-		} 
+		}
 		document.getElementById("cell"+ makeIdFromIJK(day1, slotNo, pos)).style.borderTop = "0px solid black";
 	}
 	return pos;
 }
 
-/* fillTable2() 
+/* fillTable2()
  * Should be called whenever the timeTable() changes.
- * Pseudo Code. 
- * If(createNewTable) 
+ * Pseudo Code.
+ * If(createNewTable)
  *    createNewTable
  * initializeEnableRowArray();
  * for 6 days : i
  *   for each of the nSlots : j
  *     slotRows = getAllTTRowsOn-day-i-slot-j
- *     if slotRows, 
- *      for each of the slotRows: k 
+ *     if slotRows,
+ *      for each of the slotRows: k
  *        call getPosition()/enter in helperTable();
  *        display that entry
  *		  for class-page, show select box
- *     else 
+ *     else
  *		  display "Select" box
  */
 function fillTable2(createNewTable) {
@@ -2443,7 +2443,7 @@ function fillTable2(createNewTable) {
 	var days = 6;
 	var slottablePerDay = 1;
 	if(type == undefined || currTableId == undefined)
-		return;	
+		return;
 	if(type == "class") {
 		var row = searchMultipleRows(batchClass, "classId", supportObject["classId"]);
 		/*Depending on the no of batches in a class. TODO: check + 1*/
@@ -2498,11 +2498,11 @@ function fillTable2(createNewTable) {
 			var slotRows;
 			if(type == "batch") {
 				xbatchId = search(batch, "batchName", currTableId)["batchId"];
-				slotRows = searchMultipleRows(timeTable, "day", i, "slotNo", j, 
-					"classId", classId, "batchId", xbatchId, 
+				slotRows = searchMultipleRows(timeTable, "day", i, "slotNo", j,
+					"classId", classId, "batchId", xbatchId,
 					"snapshotId", currentSnapshotId);
-				slotRows2 = searchMultipleRows(timeTable, "day", i, "slotNo", j, 
-					"classId", classId, "batchId", null, 
+				slotRows2 = searchMultipleRows(timeTable, "day", i, "slotNo", j,
+					"classId", classId, "batchId", null,
 					"snapshotId", currentSnapshotId);
 				if(slotRows != -1)
 					for(k in slotRows2)
@@ -2512,7 +2512,7 @@ function fillTable2(createNewTable) {
 			}
 			else {
 				slotRows = searchMultipleRows(timeTable, "day", i, "slotNo", j,
-					type + "Id", supportObject[type + "Id"], 
+					type + "Id", supportObject[type + "Id"],
 					"snapshotId", currentSnapshotId);
 			}
 			if(slotRows != -1) {
@@ -2587,7 +2587,7 @@ function fillTable2(createNewTable) {
 					subjectHasBatches = subjectRow["batches"];
 					batchName = "";
 					batchIdNull = ("" + slotRows[k]["batchId"] == "null");
-					if(!batchIdNull) { // && (type != "batch")) 
+					if(!batchIdNull) { // && (type != "batch"))
 						var batchRow = search(batch, "batchId", slotRows[k]["batchId"]);
 						batchName = "" + batchRow["batchName"];
 					}
@@ -2652,9 +2652,9 @@ function fillTable2(createNewTable) {
 						document.getElementById("cell" + makeIdFromIJK(i, j, position)).setAttribute("colspan", eachSlot);
 					}
 				}
-				/* For each Cell, having some existing entries 
-				 * Display subject select box on class page, 
-				 * only if subject has batches 
+				/* For each Cell, having some existing entries
+				 * Display subject select box on class page,
+				 * only if subject has batches
 				 */
 				if(subjectHasBatches !== "0" && type == "class") {
 					var position = getPosition(i, j, null, 1);
@@ -2696,12 +2696,12 @@ function fillTable2(createNewTable) {
 					"</tr>";
 				}
 				/* Cells with existing Entries. Set Rowspan. refers to dayname td*/
-				var rowspan = document.getElementById("" + i).getAttribute("rowspan"); 
+				var rowspan = document.getElementById("" + i).getAttribute("rowspan");
 				if(rowspan == null) {
 					rowspan = "" + 1;
 				}
 				if(parseInt(rowspan) <= slotRows.length && type == "class") {
-					document.getElementById("" + i).setAttribute("rowspan", 
+					document.getElementById("" + i).setAttribute("rowspan",
 						(slotRows.length + parseInt(subjectHasBatches)));
 				}
 			} /* End - if cell has an existing entry */
@@ -2747,7 +2747,7 @@ function fillTable2(createNewTable) {
 							"Done<input id= \"checkbox" + makeIdFromIJK(i, j, k) +
 								"\" class= \"toggle\"" +
 							"type=checkbox" +
-							" value = \"" + makeIdFromIJK(i, j, k) + 
+							" value = \"" + makeIdFromIJK(i, j, k) +
 								"\" style=\"display:none;\" onchange=roomSelected(this) >" +
 						"</td>" +
 					"</tr>";
@@ -2761,7 +2761,7 @@ function fillTable2(createNewTable) {
 	showTrackerList();
 	width1 = 0.7 * window.width / NoOfSlots;
 	width2 = window.width = width1;
-	$(".cell").width(width1); 
+	$(".cell").width(width1);
 	$(".outercol2").width(width2);
 }
 
@@ -2776,8 +2776,8 @@ function classChange(createNewTable){
 	document.getElementById("batch-menu").selectedIndex = "-1";
 	getSupportObject();//fills supportObject correctly depending on type and id;
 	/*Filling the table*/
-	document.getElementById("title").innerHTML =  
-				"<h2> " + search(dept, "deptId", currentDeptId)["deptName"] + 
+	document.getElementById("title").innerHTML =
+				"<h2> " + search(dept, "deptId", currentDeptId)["deptName"] +
 				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
 				"Timetable for " +
 				"<span class=\"currTitle\"> Class: " + classShortName + " </span> </h2>";
@@ -2811,8 +2811,8 @@ function roomChange(createNewTable){
 	document.getElementById("batch-menu").selectedIndex = "-1";
 	var index = document.getElementById("room-menu").selectedIndex; /*Setting the select tag*/
 	var roomShortName = document.getElementById("room-menu").options[index].text;
-	document.getElementById("title").innerHTML =  
-				"<h2> " + search(dept, "deptId", currentDeptId)["deptName"] + 
+	document.getElementById("title").innerHTML =
+				"<h2> " + search(dept, "deptId", currentDeptId)["deptName"] +
 				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
 				"Timetable for " +
 				"<span class=\"currTitle\"> Room: " + roomShortName + " </span> </h2>";
@@ -2830,8 +2830,8 @@ function batchChange(createNewTable){
 	//document.getElementById("subject-menu").selectedIndex = "-1";
 	var index = document.getElementById("batch-menu").selectedIndex; /*Setting the select tag*/
 	var batchName = document.getElementById("batch-menu").options[index].text;
-	document.getElementById("title").innerHTML =  
-				"<h2> " + search(dept, "deptId", currentDeptId)["deptName"] + 
+	document.getElementById("title").innerHTML =
+				"<h2> " + search(dept, "deptId", currentDeptId)["deptName"] +
 				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
 				"Timetable for " +
 				"<span class=\"currTitle\"> Batch: " + batchName + " </span> </h2>";
@@ -2845,8 +2845,8 @@ function batchChange(createNewTable){
 function teacherChange(createNewTable){
 	var index = document.getElementById("teacher-menu").selectedIndex; /*Setting the select tag*/
 	var teacherShortName = document.getElementById("teacher-menu").options[index].text;
-	document.getElementById("title").innerHTML =  
-				"<h2> " + search(dept, "deptId", currentDeptId)["deptName"] + 
+	document.getElementById("title").innerHTML =
+				"<h2> " + search(dept, "deptId", currentDeptId)["deptName"] +
 				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
 				"Timetable for " +
 				"<span class=\"currTitle\"> Teacher: " + teacherShortName + " </span> </h2>";
@@ -2941,13 +2941,13 @@ function loadSelectMenus() {
 		loadRoomMenu();
 	}
 	else {
-		$("#mainTimeTable").html("<div align=center> Please select the Configuration Menu and " + 
+		$("#mainTimeTable").html("<div align=center> Please select the Configuration Menu and " +
 					"enter at least one room, teacher, class, batch, " +
 					"entry to see the select menus</div>");
 		$("#teacher-menu").css("display", "none");
 		$("#class-menu").css("display", "none");
 		$("#batch-menu").css("display", "none");
-		$("#room-menu").css("display", "none"); 
+		$("#room-menu").css("display", "none");
 		return;
 	}
 	if(teacher.length > 0) {
@@ -2982,7 +2982,7 @@ function loadNewSnapshot() {
 	getSupportObject();
 	console.log("loadNewSnapshot: loaded snapshot " + currentSnapshotId);
 	//alert(JSON.stringify(timeTable));
-	/* If some table was already displayed, then type and id globals will be set 
+	/* If some table was already displayed, then type and id globals will be set
 	 * and this call will redisplay that table. Else, it will just return
 	 */
 	fillTable2(true);
@@ -3060,7 +3060,8 @@ function jsSaveNewSnapshot() {
 		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		xhttp.send("reqType=saveNewSnapshot&newSnapshotName=" + newSnapshotName + "&currentSnapshotName=" + currentSnapshotName +
 					"&configId=" + currentConfigId + "&ttData=" + JSON.stringify(timeTable) +
-					"&feData=" + JSON.stringify(fixedEntry));
+					"&feData=" + JSON.stringify(fixedEntry) + "&brData="+ JSON.stringify(batchRoom)
+					 + "&crData=" + JSON.stringify(classRoom) + "&srData=" + JSON.stringify(subjectRoom));
 	}
 }
 function jsSaveSnapshot(asynchronousOrNot) {
@@ -3093,8 +3094,10 @@ function jsSaveSnapshot(asynchronousOrNot) {
 		document.getElementById("saveSnapshot").value = "Saving snapshot ...wait";
 		document.getElementById("saveSnapshot").disabled = true;
 		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		xhttp.send("reqType=saveSnapshot&snapshotName=" + currentSnapshotName + "&ttData=" + 
-				JSON.stringify(timeTable) + "&feData=" + JSON.stringify(fixedEntry));
+		xhttp.send("reqType=saveSnapshot&snapshotName=" + currentSnapshotName + "&ttData=" +
+				JSON.stringify(timeTable) + "&feData=" + JSON.stringify(fixedEntry) + "&brData="
+				+ JSON.stringify(batchRoom) + "&crData=" + JSON.stringify(classRoom) +
+				"&srData=" + JSON.stringify(subjectRoom));
 		$("#mainTimeTable").hide();
 		$("#selection-menu-column").hide();
 		$("#configuration-menu-column").hide();
@@ -3195,12 +3198,12 @@ function jsExport(type) {
 	xhttp.responseType = "blob";
 	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	//xhttp.setRequestHeader("Content-Type", "application/json");
-	xhttp.send("reqType=" + type + "&snapshotName=" + currentSnapshotName + 
+	xhttp.send("reqType=" + type + "&snapshotName=" + currentSnapshotName +
 			"&snapshotId=" + currentConfigId);
 	//window.location='timetable.php';
 
 }
-/** 
+/**
  * function wait():
  * Attribution: http://stackoverflow.com/questions/14226803/javascript-wait-5-seconds-before-executing-next-line
  */
@@ -3294,8 +3297,8 @@ function load() {
 				search(dept, "deptId", currentDeptId)["deptName"] + "</h2>";
 	$("#waitMessage").hide();
 
-	$(window).resize(function () { 
-		/* do something */ 
+	$(window).resize(function () {
+		/* do something */
 		fillTable2(true);
 	});
 

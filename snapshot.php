@@ -1,6 +1,6 @@
 <?php
 
-// This file is part of Samay - a timetabling software for 
+// This file is part of Samay - a timetabling software for
 // schools, colleges/universities.
 //
 // Samay is free software: you can redistribute it and/or modify
@@ -22,9 +22,9 @@
  */
 
 
-/* When we get data here, the ttId in timeTable and ttId in fixedEntry 
+/* When we get data here, the ttId in timeTable and ttId in fixedEntry
  * are likely to be wrong, as they were just computed at user end. Take care
- * of that. 
+ * of that.
  */
 
 function rollback() {
@@ -55,7 +55,7 @@ function findNewTTId($ttId, $ttData, $currentSnapshotId, $newSnapshotId) {
 	$newClassId = $result[0]["classId"];
 	$selectQuery = "SELECT ttId FROM timeTable WHERE".
 					" day = ". $row["day"] . " AND slotNo = ". $row["slotNo"].
-					" AND classId = ". $newClassId. 
+					" AND classId = ". $newClassId.
 					/*" AND roomId = ".$row["roomId"]. " AND teacherId = ".$row["teacherId"].
 					" AND batchId = ". $row["batchId"].
 					" AND subjectId = ".$row["subjectId"]. */
@@ -73,7 +73,7 @@ function findTTId($ttId, $ttData, $snapshotId) {
 	$row = $ttData[$index];
 	$selectQuery = "SELECT ttId FROM timeTable WHERE".
 					" day = ". $row["day"] . " AND slotNo = ". $row["slotNo"].
-					" AND classId = ". $row["classId"]. 
+					" AND classId = ". $row["classId"].
 					/*" AND roomId = ".$row["roomId"]. " AND teacherId = ".$row["teacherId"].
 					" AND batchId = ". $row["batchId"].
 					" AND subjectId = ".$row["subjectId"]. */
@@ -96,7 +96,7 @@ function insertSnapshotEntry() {
 		ttlog("insertSnapshotEntry: $query Failed");
 		$resString = "{\"Success\": \"False\"}";
 		return $resString;
-	}	
+	}
 	ttlog("insertSnapshotEntry: $query Success");
 	$resString = "{\"Success\": \"True\"}";
 	return $resString;
@@ -110,18 +110,24 @@ function saveSnapshot() {
 	$user = getArgument("userId");
 	$ttd = getArgument("ttData");
 	$fed = getArgument("feData");
-	$ttData = json_decode($ttd, true);	
-	$feData = json_decode($fed, true);	
+	$crd = getArgument("crData");
+	$brd = getArgument("brData");
+	$srd = getArgument("srData");
+	$ttData = json_decode($ttd, true);
+	$feData = json_decode($fed, true);
+	$crData = json_decode($crd, true);
+	$brData = json_decode($brd, true);
+	$srData = json_decode($srd, true);
 
 	$startTransactionQuery = "START TRANSACTION;";
 	$result = sqlUpdate($startTransactionQuery);
 	if($result != true)
 		return rollback();
-	
+
 	$snapshotFindQuery = "SELECT snapshotId FROM snapshot WHERE snapshotName = \"$snapshotName\"";
 	ttlog("saveSnapShot: query: $snapshotFindQuery");
 
-	$result = sqlGetOneRow($snapshotFindQuery);	
+	$result = sqlGetOneRow($snapshotFindQuery);
 	$snapshotId = $result[0]["snapshotId"];
 	if($result != true)
 		return rollback();
@@ -129,13 +135,13 @@ function saveSnapshot() {
 	ttlog("saveSnapShot: ttData: ".json_encode($ttData));
 	ttlog("saveSnapShot: fixedEntries: ".json_encode($feData));
 
-	$snapshotDeleteQuery = "DELETE FROM timeTable where snapshotId = $snapshotId;";	
+	$snapshotDeleteQuery = "DELETE FROM timeTable where snapshotId = $snapshotId;";
 	ttlog("saveSnapShot: query: $snapshotDeleteQuery");
 	$result = sqlUpdate($snapshotDeleteQuery);
 	if($result != true)
 		return rollback();
 
-	$snapshotDeleteQuery = "DELETE FROM fixedEntry where snapshotId = $snapshotId;";	
+	$snapshotDeleteQuery = "DELETE FROM fixedEntry where snapshotId = $snapshotId;";
 	ttlog("saveSnapShot: query: $snapshotDeleteQuery");
 	$result = sqlUpdate($snapshotDeleteQuery);
 	if($result != true)
@@ -179,6 +185,53 @@ function saveSnapshot() {
 		if($result != true)
 			return rollback();
 	}
+	$snapshotDeleteQuery = "DELETE FROM classRoom where snapshotId = $snapshotId;";
+	ttlog("saveSnapshot: query: $snapshotDeleteQuery");
+	$result = sqlUpdate($snapshotDeleteQuery);
+	if($result != true)
+		return rollback();
+
+	for($k = 0; $k < count($crData); $k++) {
+		$currRow = $crData[$k];
+		$query = "INSERT INTO classRoom (classId, roomId, snapshotId) ".
+			 "VALUES (". $currRow['classId'] .",". $currRow['roomId'] .", $snapshotId);";
+		$result = sqlUpdate($query);
+		ttlog("saveSnapshot: query: $query");
+		if($result != true)
+			return rollback();
+	}
+
+	$snapshotDeleteQuery = "DELETE FROM batchRoom where snapshotId = $snapshotId;";
+	ttlog("saveSnapshot: query: $snapshotDeleteQuery");
+	$result = sqlUpdate($snapshotDeleteQuery);
+	if($result != true)
+		return rollback();
+
+	for($k = 0; $k < count($brData); $k++) {
+		$currRow = $brData[$k];
+		$query = "INSERT INTO batchRoom (batchId, roomId, snapshotId) ".
+			 "VALUES (". $currRow['batchId'] .",". $currRow['roomId'] .", $snapshotId);";
+		$result = sqlUpdate($query);
+		ttlog("saveSnapshot: query: $query");
+		if($result != true)
+			return rollback();
+	}
+
+	$snapshotDeleteQuery = "DELETE FROM subjectRoom where snapshotId = $snapshotId;";
+	ttlog("saveSnapshot: query: $snapshotDeleteQuery");
+	$result = sqlUpdate($snapshotDeleteQuery);
+	if($result != true)
+		return rollback();
+
+	for($k = 0; $k < count($srData); $k++) {
+		$currRow = $srData[$k];
+		$query = "INSERT INTO subjectRoom (subjectId, roomId, snapshotId) ".
+			 "VALUES (". $currRow['subjectId'] .",". $currRow['roomId'] .", $snapshotId);";
+		$result = sqlUpdate($query);
+		ttlog("saveSnapshot: query: $query");
+		if($result != true)
+			return rollback();
+	}
 	sqlUpdate("COMMIT;");
 	$resString = "{\"Success\": \"True\"}";
 	ttlog("saveSnapShot: Success True".  $resString);
@@ -187,11 +240,11 @@ function saveSnapshot() {
 global $newIDs;
 function cloneAllTables($currentSnapshotId, $newSnapshotId) {
 	/* Stage 1: Tables without any foreign key except snapshotId */
-	$tableNames = array(//"dept", "config", "snapshot", 
-					"teacher", 
-					"class", 
-					"room", 
-					"subject", 
+	$tableNames = array(//"dept", "config", "snapshot",
+					"teacher",
+					"class",
+					"room",
+					"subject",
 					"batch");
 	for($k  = 0; $k < count($tableNames); $k++) {
 		/* change snapshotId in each row of the table */
@@ -227,7 +280,7 @@ function cloneAllTables($currentSnapshotId, $newSnapshotId) {
 
 			/* The selection query will get us new Id. to be used as foreign key for other tables*/
 			$selQueryStr = "";
-			for($j = 1; $j < $nColumns - 1; $j++) { 
+			for($j = 1; $j < $nColumns - 1; $j++) {
 				$columnName = $allColumnNames[$j]["COLUMN_NAME"];
 				$selQueryStr .= $columnName." = '".$allRows[$i][$columnName]."' AND ";
 			}
@@ -250,10 +303,9 @@ function cloneAllTables($currentSnapshotId, $newSnapshotId) {
 
 	/* ----------------------------------------------------------*/
 	/* Stage 2: Tables with foreign keys from stage-1 tables*/
-	$tableNames = array("batchCanOverlap", "batchClass", 
-					"classRoom", "batchRoom", "subjectRoom", 
-					"subjectBatchTeacher", "subjectClassTeacher", "overlappingSBT", 
-					"fixedEntry");
+	$tableNames = array("batchCanOverlap", "batchClass",
+					"subjectBatchTeacher", "subjectClassTeacher", "overlappingSBT",
+					"fixedEntry", "classRoom", "batchRoom", "subjectRoom");
 	/* ----------------------------------------------------------*/
 	/* batchClass Table */
 	$getAllQuery = "SELECT * FROM batchClass WHERE snapshotId = $currentSnapshotId";
@@ -264,75 +316,14 @@ function cloneAllTables($currentSnapshotId, $newSnapshotId) {
 				"(".
 				"(SELECT batchId FROM batch WHERE batchName=".
 					"(SELECT batchName from batch WHERE batchId=".$allRows[$i]["batchId"]." AND snapshotId = $currentSnapshotId)".
-				" AND snapshotId = $newSnapshotId), ". 
+				" AND snapshotId = $newSnapshotId), ".
 				"(SELECT classId FROM class WHERE classShortName=".
 					"(SELECT classShortName from class WHERE classId=".$allRows[$i]["classId"]." AND snapshotId = $currentSnapshotId)".
-				" AND snapshotId = $newSnapshotId), $newSnapshotId) "; 
+				" AND snapshotId = $newSnapshotId), $newSnapshotId) ";
 		//ttlog($insertQuery);
 		$result = sqlUpdate($insertQuery);
 		if($result === false)
-			return false; 
-	}
-
-	/* ----------------------------------------------------------*/
-	/* classRoom Table */
-	$getAllQuery = "SELECT * FROM classRoom WHERE snapshotId = $currentSnapshotId";
-	$allRows = sqlGetAllRows($getAllQuery);
-	ttlog($getAllQuery);
-	for($i = 0; $i < count($allRows); $i++) {
-		$insertQuery = "INSERT INTO classRoom(classId, roomId, snapshotId) VALUES ".
-				"(".
-				"(SELECT classId FROM class WHERE classShortName=".
-					"(SELECT classShortName from class WHERE classId=".$allRows[$i]["classId"]." AND snapshotId = $currentSnapshotId)".
-				" AND snapshotId = $newSnapshotId), ".
-				"(SELECT roomId FROM room WHERE roomShortName =".
-					"(SELECT roomShortName from room WHERE roomId=".$allRows[$i]["roomId"]." AND snapshotId = $currentSnapshotId)".
-				" AND snapshotId = $newSnapshotId), ". 
-				"$newSnapshotId) "; 
-		//ttlog($insertQuery);
-		$result = sqlUpdate($insertQuery);
-		if($result === false)
-			return false; 
-	}
-	/* ----------------------------------------------------------*/
-	/* batchRoom Table */
-	$getAllQuery = "SELECT * FROM batchRoom WHERE snapshotId = $currentSnapshotId";
-	$allRows = sqlGetAllRows($getAllQuery);
-	ttlog($getAllQuery);
-	for($i = 0; $i < count($allRows); $i++) {
-		$insertQuery = "INSERT INTO batchRoom(batchId, roomId, snapshotId) VALUES ".
-				"(".
-				"(SELECT batchId FROM batch WHERE batchName=".
-					"(SELECT batchName from batch WHERE batchId=".$allRows[$i]["batchId"]." AND snapshotId = $currentSnapshotId)".
-				" AND snapshotId = $newSnapshotId), ".
-				"(SELECT roomId FROM room WHERE roomShortName =".
-					"(SELECT roomShortName from room WHERE roomId=".$allRows[$i]["roomId"]." AND snapshotId = $currentSnapshotId)".
-				" AND snapshotId = $newSnapshotId), ". 
-				"$newSnapshotId) "; 
-		//ttlog($insertQuery);
-		$result = sqlUpdate($insertQuery);
-		if($result === false)
-			return false; 
-	}
-	/* ----------------------------------------------------------*/
-	/* subjectRoom Table */
-	$getAllQuery = "SELECT * FROM subjectRoom WHERE snapshotId = $currentSnapshotId";
-	$allRows = sqlGetAllRows($getAllQuery);
-	ttlog($getAllQuery);
-	for($i = 0; $i < count($allRows); $i++) {
-		$insertQuery = "INSERT INTO subjectRoom(subjectId, roomId, snapshotId) VALUES ".
-				"(".
-				"(SELECT subjectId FROM subject WHERE subjectShortName=".
-					"(SELECT subjectShortName from subject WHERE subjectId=".$allRows[$i]["subjectId"]." AND snapshotId = $currentSnapshotId)".
-				" AND snapshotId = $newSnapshotId), ".
-				"(SELECT roomId FROM room WHERE roomShortName =".
-					"(SELECT roomShortName from room WHERE roomId=".$allRows[$i]["roomId"]." AND snapshotId = $currentSnapshotId)".
-				" AND snapshotId = $newSnapshotId), ". 
-				"$newSnapshotId) "; 
-		//ttlog($insertQuery);
-		$result = sqlUpdate($insertQuery);
-		if($result === false)
-			return false; 
+			return false;
 	}
 
 	/* ----------------------------------------------------------*/
@@ -346,14 +337,14 @@ function cloneAllTables($currentSnapshotId, $newSnapshotId) {
 				"(".
 				"(SELECT batchId FROM batch WHERE batchName=".
 					"(SELECT batchName from batch WHERE batchId=".$allRows[$i]["batchId"]." AND snapshotId = $currentSnapshotId)".
-				" AND snapshotId = $newSnapshotId), ". 
+				" AND snapshotId = $newSnapshotId), ".
 				"(SELECT batchId FROM batch WHERE batchName=".
 					"(SELECT batchName from batch WHERE batchId=".$allRows[$i]["batchOverlapId"]." AND snapshotId = $currentSnapshotId)".
-				" AND snapshotId = $newSnapshotId), $newSnapshotId) "; 
+				" AND snapshotId = $newSnapshotId), $newSnapshotId) ";
 		//ttlog($insertQuery));
 		$result = sqlUpdate($insertQuery);
 		if($result === false)
-			return false; 
+			return false;
 	}
 
 	/* ----------------------------------------------------------*/
@@ -375,16 +366,16 @@ function cloneAllTables($currentSnapshotId, $newSnapshotId) {
 				"(".
 				"(SELECT subjectId FROM subject WHERE subjectShortName =".
 					"(SELECT subjectShortName from subject WHERE subjectId=".$allRows[$i]["subjectId"]." AND snapshotId = $currentSnapshotId)".
-				" AND snapshotId = $newSnapshotId), ". 
+				" AND snapshotId = $newSnapshotId), ".
 				"(SELECT batchId FROM batch WHERE batchName=".
 					"(SELECT batchName from batch WHERE batchId=".$allRows[$i]["batchId"]." AND snapshotId = $currentSnapshotId)".
 				" AND snapshotId = $newSnapshotId), ".
 				$teacherStr.
-				"$newSnapshotId) "; 
+				"$newSnapshotId) ";
 		ttlog($insertQuery);
 		$result = sqlUpdate($insertQuery);
 		if($result === false)
-			return false; 
+			return false;
 	}
 
 	/* ----------------------------------------------------------*/
@@ -406,22 +397,22 @@ function cloneAllTables($currentSnapshotId, $newSnapshotId) {
 				"(".
 				"(SELECT subjectId FROM subject WHERE subjectShortName =".
 					"(SELECT subjectShortName from subject WHERE subjectId=".$allRows[$i]["subjectId"]." AND snapshotId = $currentSnapshotId)".
-				" AND snapshotId = $newSnapshotId), ". 
+				" AND snapshotId = $newSnapshotId), ".
 				"(SELECT classId FROM class WHERE classShortName=".
 					"(SELECT classShortName from class WHERE classId=".$allRows[$i]["classId"]." AND snapshotId = $currentSnapshotId)".
 				" AND snapshotId = $newSnapshotId), ".
 				$teacherStr.
-				"$newSnapshotId) "; 
+				"$newSnapshotId) ";
 		ttlog($insertQuery);
 		$result = sqlUpdate($insertQuery);
 		if($result === false)
-			return false; 
+			return false;
 	}
 
 	/* ----------------------------------------------------------*/
 	/* overlappingSBT Table */
 	/* This is quite complicated as overlappingSBT Table has foreign keys, which
-	 * are recursively foreign-foreign-foreign keys 
+	 * are recursively foreign-foreign-foreign keys
 	 */
 	$getAllQuery = "SELECT * FROM overlappingSBT WHERE snapshotId = $currentSnapshotId";
 	$allRows = sqlGetAllRows($getAllQuery);
@@ -431,14 +422,14 @@ function cloneAllTables($currentSnapshotId, $newSnapshotId) {
 		$sbtId2 = $allRows[$i]["sbtId2"];
 
 		$tempQuery = "SELECT subjectId, batchId, teacherId from subjectBatchTeacher ".
-						  " where sbtId = $sbtId1 and snapshotId = $currentSnapshotId";  
+						  " where sbtId = $sbtId1 and snapshotId = $currentSnapshotId";
 		$row = sqlGetOneRow($tempQuery);
 		if($row === false)
 			return false;
 		$s1 = $row[0]["subjectId"]; $b1 = $row[0]["batchId"]; $t1 = $row[0]["teacherId"];
 
 		$tempQuery = "SELECT subjectId, batchId, teacherId from subjectBatchTeacher ".
-						  " where sbtId = $sbtId2 and snapshotId = $currentSnapshotId";  
+						  " where sbtId = $sbtId2 and snapshotId = $currentSnapshotId";
 		$row = sqlGetOneRow($tempQuery);
 		if($row === false)
 			return false;
@@ -493,14 +484,14 @@ function cloneAllTables($currentSnapshotId, $newSnapshotId) {
 		$newt2 = $row[0]["teacherId"];
 
 		$tempQuery = "SELECT sbtId from subjectBatchTeacher where subjectId = $news1 ".
-					 " AND batchId = $newb1 and teacherId = $newt1 and snapshotId = $newSnapshotId";	
+					 " AND batchId = $newb1 and teacherId = $newt1 and snapshotId = $newSnapshotId";
 		$row = sqlGetOneRow($tempQuery);
 		if($row === false)
 			return false;
 		$newsbtId1 = $row[0]["sbtId"];
 
 		$tempQuery = "SELECT sbtId from subjectBatchTeacher where subjectId = $news2 ".
-					 " AND batchId = $newb2 and teacherId = $newt2 and snapshotId = $newSnapshotId";	
+					 " AND batchId = $newb2 and teacherId = $newt2 and snapshotId = $newSnapshotId";
 		$row = sqlGetOneRow($tempQuery);
 		if($row === false)
 			return false;
@@ -511,7 +502,7 @@ function cloneAllTables($currentSnapshotId, $newSnapshotId) {
 		ttlog($insertQuery);
 		$result = sqlUpdate($insertQuery);
 		if($result === false)
-			return false; 
+			return false;
 	}
 
 	return true;
@@ -525,28 +516,34 @@ function saveNewSnapshot() {
 	$user = getArgument("userId");
 	$ttd = getArgument("ttData");
 	$configId = getArgument("configId");
-	$ttData = json_decode($ttd, true);	
+	$ttData = json_decode($ttd, true);
 	$fed = getArgument("feData");
-	$feData = json_decode($fed, true);	
+	$feData = json_decode($fed, true);
+	$crd = getArgument("crData");
+	$crData = json_decode($crd, true);
+	$brd = getArgument("brData");
+	$brData = json_decode($brd, true);
+	$srd = getArgument("srData");
+	$srData = json_decode($srd, true);
 
 	$startTransactionQuery = "START TRANSACTION;";
-	$result = sqlUpdate($startTransactionQuery); 
+	$result = sqlUpdate($startTransactionQuery);
 	if($result != true)
 		return rollback();
 
 	$snapshotCreateQuery = "INSERT INTO snapshot (snapshotName, snapshotCreator, createTime, modifyTime, configId) ".
 							"VALUES (\"".
 							$newSnapshotName."\",1,1000,2000, $configId);";
-	$result = sqlUpdate($snapshotCreateQuery);	
+	$result = sqlUpdate($snapshotCreateQuery);
 	ttlog("saveNewSnapshot: query: ". $result);
 	if($result === false)
 		return rollback();
 
 	$query1 = "SELECT snapshotId FROM snapshot WHERE snapshotName = \"$currentSnapshotName\"";
 	$query2 = "SELECT snapshotId FROM snapshot WHERE snapshotName = \"$newSnapshotName\"";
-	$result = sqlGetOneRow($query1);	
+	$result = sqlGetOneRow($query1);
 	$currentSnapshotId = $result[0]["snapshotId"];
-	$result = sqlGetOneRow($query2);	
+	$result = sqlGetOneRow($query2);
 	$newSnapshotId = $result[0]["snapshotId"];
 
 	$cloneResult = cloneAllTables($currentSnapshotId, $newSnapshotId);
@@ -572,7 +569,7 @@ function saveNewSnapshot() {
 				if($row === false)
 					return false;
 				$newClassId = $row[0]["classId"];
-			} else 
+			} else
 				$newClassId = "null";
 
 			if($roomId != "null" && $roomId !="") {
@@ -583,7 +580,7 @@ function saveNewSnapshot() {
 				if($row === false)
 					return false;
 				$newRoomId = $row[0]["roomId"];
-			} else 
+			} else
 				$newRoomId = "null";
 
 			if($subjectId != "null" && $subjectId != "") {
@@ -594,7 +591,7 @@ function saveNewSnapshot() {
 				if($row === false)
 					return false;
 				$newSubjectId = $row[0]["subjectId"];
-			} else 
+			} else
 				$newSubjectId = "null";
 
 			if($teacherId != "null" && $teacherId != "") {
@@ -605,9 +602,9 @@ function saveNewSnapshot() {
 				if($row === false)
 					return false;
 				$newTeacherId = $row[0]["teacherId"];
-			} else 
+			} else
 				$newTeacherId = "null";
-			
+
 			if($batchId != "null" && $batchId != "") {
 				$tempQuery = "SELECT batchId from batch where batchName = ".
 								" (SELECT batchName from batch where batchId = $batchId AND snapshotId = $currentSnapshotId) ".
@@ -616,7 +613,7 @@ function saveNewSnapshot() {
 				if($row === false)
 					return false;
 				$newBatchId = $row[0]["batchId"];
-			} else 
+			} else
 				$newBatchId = "null";
 
 			if($currRow["isFixed"] == 1) {
@@ -649,11 +646,55 @@ function saveNewSnapshot() {
 		$feInsertQuery = "INSERT INTO fixedEntry(ttId, fixedText, snapshotId) VALUES (".
 						$ttId.",\"".$currRow["fixedText"]."\",".$newSnapshotId.");";
 		$result = sqlUpdate($feInsertQuery);
-		ttlog("saveSnapShot: query: $feInsertQuery");
+		ttlog("saveNewSnapShot: query: $feInsertQuery");
 		if($result != true)
 			return rollback();
 	}
-	
+	for($k = 0; $k < count($crData); $k++) {
+		$crInsertQuery = "INSERT INTO classRoom(classId, roomId, snapshotId) VALUES ".
+				"(".
+				"(SELECT classId FROM class WHERE classShortName=".
+					"(SELECT classShortName from class WHERE classId=".$crData[$k]["classId"]." AND snapshotId = $currentSnapshotId)".
+				" AND snapshotId = $newSnapshotId), ".
+				"(SELECT roomId FROM room WHERE roomShortName =".
+					"(SELECT roomShortName from room WHERE roomId=".$crData[$k]["roomId"]." AND snapshotId = $currentSnapshotId)".
+				" AND snapshotId = $newSnapshotId), ".
+				"$newSnapshotId) ";
+		ttlog("saveNewSnapShot: query: $crInsertQuery");
+		$result = sqlUpdate($crInsertQuery);
+		if($result != true)
+			return rollback();
+	}
+	for($k = 0; $k < count($brData); $k++) {
+		$brInsertQuery = "INSERT INTO batchRoom(batchId, roomId, snapshotId) VALUES ".
+				"(".
+				"(SELECT batchId FROM batch WHERE batchName=".
+					"(SELECT batchName from batch WHERE batchId=".$brData[$k]["batchId"]." AND snapshotId = $currentSnapshotId)".
+				" AND snapshotId = $newSnapshotId), ".
+				"(SELECT roomId FROM room WHERE roomShortName =".
+					"(SELECT roomShortName from room WHERE roomId=".$brData[$k]["roomId"]." AND snapshotId = $currentSnapshotId)".
+				" AND snapshotId = $newSnapshotId), ".
+				"$newSnapshotId) ";
+		ttlog("saveNewSnapShot: query: $brInsertQuery");
+		$result = sqlUpdate($brInsertQuery);
+		if($result != true)
+			return rollback();
+	}
+	for($k = 0; $k < count($srData); $k++) {
+		$srInsertQuery = "INSERT INTO subjectRoom(subjectId, roomId, snapshotId) VALUES ".
+				"(".
+				"(SELECT subjectId FROM subject WHERE subjectShortName=".
+					"(SELECT subjectShortName from subject WHERE subjectId=".$srData[$k]["subjectId"]." AND snapshotId = $currentSnapshotId)".
+				" AND snapshotId = $newSnapshotId), ".
+				"(SELECT roomId FROM room WHERE roomShortName =".
+					"(SELECT roomShortName from room WHERE roomId=".$srData[$k]["roomId"]." AND snapshotId = $currentSnapshotId)".
+				" AND snapshotId = $newSnapshotId), ".
+				"$newSnapshotId) ";
+		ttlog("saveNewSnapShot: query: $srInsertQuery");
+		$result = sqlUpdate($srInsertQuery);
+		if($result != true)
+			return rollback();
+	}
 	sqlUpdate("COMMIT;");
 	$resString = "{\"Success\": \"True\",";
 	$resString .= "\"snapshotId\": \"$newSnapshotId\"}";
