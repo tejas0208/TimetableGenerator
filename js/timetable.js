@@ -1699,7 +1699,7 @@ function subjectSelected(selecttag) {
 								"subjectId", subjectRow["subjectId"],
 								"teacherId", supportObject["teacherId"]);
 				if(sctEntry.length == 1) {
-					var classRow = search(classTable, "classId", sctEntry["classId"]);
+					var classRow = search(classTable, "classId", sctEntry[0]["classId"]);
 					extraInfo += "<div id=\"class"+ Id +
 								"\" class=\"box\">" +
 								classRow["classShortName"] +
