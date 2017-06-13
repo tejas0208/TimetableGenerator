@@ -1928,15 +1928,22 @@ function BatchBusyInThisSlot(i, j, sctOrSbtEntry, classId, batchId, logOrNot) {
 		var thisSlotEntries = searchMultipleRows(timeTable, "day", i, "slotNo", (j + n),
 			"classId", classId, "snapshotId", currentSnapshotId);
 		var overlappingPossible;
+		/*If there are time table entries in that slot.*/
 		if(thisSlotEntries != -1) {
-			overlappingPossible = true;
-			for(var q in thisSlotEntries) {
-				/* TODO: Abhijit: Check. This may be impossible condition */
-				if(search(bco, "batchOverlapId", thisSlotEntries[q]["batchId"]) === -1) {
-						overlappingPossible = false;
-						break;
+			/*If batchCanOverlap table contains rows.*/
+			if(bco !== -1) {
+				overlappingPossible = true;
+				for(var q in thisSlotEntries) {
+					/* TODO: Abhijit: Check. This may be impossible condition */
+					/*If there are no entries of the overlapping batches in the batchoverlaptable*/
+					if(search(bco, "batchOverlapId", thisSlotEntries[q]["batchId"]) === -1) {
+							overlappingPossible = false;
+							break;
+					}
 				}
 			}
+			else
+				overlappingPossible = false;
 		}
 		/* No entries in this slot, so overlapping is obviously possible */
 		else
