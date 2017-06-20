@@ -573,8 +573,8 @@ function dropHandler(e) {
 				temp2[r]["day"] = "-1";
 				temp2[r]["slotNo"] = "-1";
 			}
-			valid2 = checkValidity(parseInt(srcSlotEntry["day"]), slotNo,
-						 destSlotEntry);
+			valid2 = checkValidity(srcI, slotNo, destSlotEntry); 
+
 		}
 		if(!valid2 || !valid1) {
 			if(temp2.length !== 0) {/*If operation fails*/
