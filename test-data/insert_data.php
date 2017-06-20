@@ -28,9 +28,13 @@
  *				 Drop and Create database. 
  *				 Read CSV files and insert into database. 
  *				 Can be used on any platform.
+ *  The script expects 'datasetPath' to be received as POST/GET argument.
+ *  If it does not receive 'datasetPath', 
+ *  it assumes datasetPath to be csv/full/
 */
 	
 require_once('../config.php');
+require_once('../common.php');
 
 $conn = new mysqli($CFG->server, $CFG->db_user, $CFG->db_pass, $CFG->db_database);
 if($conn->error) {
@@ -39,8 +43,15 @@ if($conn->error) {
 
 function insertCSV($conn, $filename) {
 
-	$PATH = "csv/full/"; // specify the path to csv files
+    // specify the path to csv files
 
+    $PATH = getArgument("datasetPath");
+
+    if(empty($PATH)) {  			// if datasetPath is not passed
+		$PATH = "csv/full/"; 		// consider csv/full/ as default datasetPath
+		echo "<br/>datasetPath argument not received. Considering $PATH<br/>";
+	}
+	
 	$filepath = $PATH . $filename;
 
 	$file = fopen($filepath, "r");

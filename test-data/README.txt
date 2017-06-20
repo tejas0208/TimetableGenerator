@@ -1,7 +1,7 @@
 This folder contains some test-data to help developers create a database.
 
 The entry of data from the graphical interface takes lot of time. The
-developers can save this time by running the 'insert_data.sh' in the browser on
+developers can save this time by running the 'insert_data.php' in the browser on
 any platform OR 'runall.sh' script if you want to run a shell script on linux
 platform, with a CSV data directory as an argument.
 
@@ -11,10 +11,6 @@ http:\\localhost\taasika\test-data\insert_data.php
 You can use either insert_data.php or runall.sh
 
 Multiple CSV data directories are already given in the 'csv' folder.
-
-If you want to skip the trouble of running the programs, you can just import
-timetable.sql in root directory of Taasika (which has data loaded from
-csv\full)
 
 Note: If using runall.sh, you need to change the username/password for mysql in
 the runall.sh. By default it uses 'root' as login-id and 'root' as password.
