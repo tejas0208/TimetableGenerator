@@ -2357,7 +2357,7 @@ function getPosition(day1, slotNo, rowEntry, eachSlot) {
 		batchId = rowEntry["batchId"];
 	}
 	var $nSlots = search(config, "configId", currentConfigId)["nSlots"];
-
+	$nSlots = parseInt($nSlots) - 1;//Array starts from 0
 	/* helperTable[][].length = no. of batches for a class, or 1 */
 	for(var k = 0; k < helperTable[day][slotNo].length; k++) {
 		var valid = true;
@@ -2710,7 +2710,7 @@ function fillTable2(createNewTable) {
 				var k = getPosition(i, j, null, 1);
 				slottable = document.getElementById("slottable" + makeIdFromIJK(i, j, k));
 				if(slottable == null) {
-					alert("ERROR: slottable null, i = " + i + " j = " + j + " k = " + k);
+					//alert("ERROR: slottable null, i = " + i + " j = " + j + " k = " + k);
 					continue;
 				}
 				// Note: inside i=days * j=NoOfSlots loop, subjectHasBatches !=0
