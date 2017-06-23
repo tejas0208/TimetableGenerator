@@ -11,16 +11,21 @@ Lines begining with '>' indicate GNU/Linux commands.
 * On Ubuntu based systems, first install the LAMP stack. Refer to: http://howtoubuntu.org/how-to-
   install-lamp-on-ubuntu
 
-* Install the needed php packages > sudo apt-get install php5-mysqlnd
+* Install the needed php packages 
+  > sudo apt-get install php5-mysqlnd
 
-* Copy the code of 'taasika' into any folder > cd > mkdir ~/src/ > cd src > git clone
-  git@gitlab.com:abhijit13/taasika.git
+* Copy the code of 'taasika' into any folder 
+  > cd 
+  > mkdir ~/src/ 
+  > cd src 
+  > git clone git@gitlab.com:abhijit13/taasika.git
 
 * Give write permissions to 'taasika' code folder. Note: This is a security risk. This requirement
-  will be changed later. > chmod 777 ~/src/taasika
+  will be changed later. 
+  > chmod 777 ~/src/taasika
 
-* Create a link from your DocumentRoot (typically /var/www/html) to the taasika code > sudo ln -s
-  ~/src/taasika /var/www/html/
+* Create a link from your DocumentRoot (typically /var/www/html) to the taasika code 
+  > sudo ln -s ~/src/taasika /var/www/html/
 
 * Access the 'taasika' code.  Type in your browser http://127.0.0.1/taasika/
 
