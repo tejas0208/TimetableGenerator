@@ -1948,7 +1948,7 @@ function BatchBusyInThisSlot(i, j, sctOrSbtEntry, classId, batchId, logOrNot) {
 		/* No entries in this slot, so overlapping is obviously possible */
 		else
 			overlappingPossible = true;
-		
+
 		if(overlappingPossible == false) {
 			if(logOrNot == 1)
 				disabledSubjectAdd(disabledSubjects, currSubject["subjectShortName"],
