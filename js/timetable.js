@@ -2710,7 +2710,7 @@ function fillTable2(createNewTable) {
 				var k = getPosition(i, j, null, 1);
 				slottable = document.getElementById("slottable" + makeIdFromIJK(i, j, k));
 				if(slottable == null) {
-					//alert("ERROR: slottable null, i = " + i + " j = " + j + " k = " + k);
+					alert("ERROR: slottable null, i = " + i + " j = " + j + " k = " + k);
 					continue;
 				}
 				// Note: inside i=days * j=NoOfSlots loop, subjectHasBatches !=0
