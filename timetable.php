@@ -32,6 +32,7 @@ require_once('snapshot.php');
 require_once('forms.php');
 require_once('export.php');
 require_once('exportsql.php');
+require_once('exportpdf.php');
 
 function getTimetable() {
 	header("Content-Type: application/JSON; charset=UTF-8");
@@ -114,6 +115,16 @@ switch($reqType) {
 		break;
 	case "exportCSV":
 		$filename = exportCSV();
+		header("Cache-Control: public");
+		header("Content-Description: File Transfer");
+		header("Content-disposition: attachment");
+		header("filename:". $filename);	
+		header('Content-type: application/zip');
+		header("Content-Transfer-Encoding: binary");
+		readfile($filename);
+		break;
+	case "exportPDF":
+		$filename = exportPDF();
 		header("Cache-Control: public");
 		header("Content-Description: File Transfer");
 		header("Content-disposition: attachment");

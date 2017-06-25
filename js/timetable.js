@@ -3200,7 +3200,7 @@ function jsSQLExport(type) {
 	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	//xhttp.setRequestHeader("Content-Type", "application/json");
 	xhttp.send("reqType=exportSQL&snapshotName=" + currentSnapshotName+ "&type=" +
-				type + "&snapshotId=" + currentConfigId);
+				type + "&snapshotId=" + currentSnapshotId);
 	//window.location='timetable.php';
 
 }

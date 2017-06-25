@@ -1,0 +1,419 @@
+<?php
+// This file is part of Samay - a timetabling software for
+// schools, colleges/universities.
+//
+// Samay is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Samay is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Samay.  If not, see <http://www.gnu.org/licenses/>.
+
+require_once('./fpdf-easytable/exfpdf.php');
+require_once('./fpdf-easytable/easyTable.php');
+function printRow($rowData, $table, $rowspan, $searchParam) { #$rowspan is rowspan for visible cell
+	$filledRows = array_fill(0, count($rowData), 0); #each element is count of virtual rows filled
+	$count = array_fill(0, count($rowData), 0); #each element is data from $rowData used 
+	for($i = 0;$i < $rowspan;$i++) { #for each virtual cell in a day slot
+		for($j = 0;$j < count($rowData);$j++) { #for each cell in a row
+			if($filledRows[$j] == $i) {
+				$blankRows = $rowspan - count($rowData[$j]);
+				if($i == 0 && count($rowData[$j]) == 1) {
+					$virtualRowspan = $rowspan;
+					$style = "valign:M; border:TBLR;";
+				}
+				else if($i == 0) {
+					$virtualRowspan = floor($blankRows / 2) + 1;
+					$style = "valign:B; border:TLR;";
+				}
+				else if($count[$j] == count($rowData[$j]) - 1) {
+					$virtualRowspan = ceil($blankRows / 2) + 1;
+					$style = "valign:T; border:BLR;";
+				}
+				else {
+					$virtualRowspan = 1;
+					$style = "border:LR;";
+				}
+				$filledRows[$j] += $virtualRowspan;
+				$style .= "font-size:8; paddingY:0.4";
+				for($k = 0;$k < count($rowData[$j][$count[$j]]);$k++) {
+					$table->easyCell($rowData[$j][$count[$j]][$k]['str'],$rowData[$j][$count[$j]][$k]['style']."rowspan:".$virtualRowspan.";".$style);
+				}
+				$count[$j] += 1;
+			}
+		}
+		$table->printRow();
+	}
+}
+function generate_timetable_pdf($currTableName, $searchParam, $allrows2, $nSlots, $dayBegin, $slotDuration) {
+	$pdf = new exFPDF('L', 'mm', 'A4');
+	$pdf->setTitle("Timetable for COEP");
+	$pdf->setSubject("Subject for Timetable");
+	$pdf->setKeywords("timetable generated");
+
+	$snapshotId = getArgument("snapshotId");
+	$pdf->AddPage(); //page for timetable
+	$pdf->setMargins(5, 5, 5);
+	$pdf->SetAutoPageBreak(false, 5);
+	$pdf->SetFont('helvetica','B',14);
+	$pdf->setTextColor(34, 139, 34);
+	$pdf->setY(5);
+
+	$pdf->Cell(0, 6, "College of Engineering Pune", 0, 1, 'C');
+	$pdf->SetFont('helvetica','',14);
+	$pdf->Cell(0, 6, "Dept of Comp Engg and IT", 0, 1, 'C');
+	$pdf->SetFont('helvetica','BU',14);
+	$pdf->Cell(0, 6, "Timetable For $currTableName: $searchParam", 0, 1, 'C');
+
+	$width = '{7, ';
+	$w = $pdf->GetPageWidth() / $nSlots;
+	for($i = 0;$i <= 2 * ($nSlots - 1);$i++)
+		$width .= ($w.', ');
+	$width .= ($w.'}');
+	/* Main timeTable */
+	$table = new easyTable($pdf, $width, 'align:L; font-style:B; font-size:10;
+		font-family:helvetica; border:1; border-color:#000000; border-width:0.4; width:'.$pdf->GetPageWidth().';');
+
+	$table->easyCell('');
+	$currSlotTime = strtotime($dayBegin);
+	$currSlotTimeFormatted = date("H:i", $currSlotTime);
+	// Generate the Slots-Labels
+	for($i = 0; $i < $nSlots; $i++) {
+		$table->easyCell($currSlotTimeFormatted, 'align:C; valign:M; font-color:#000000; colspan:2;');
+		$currSlotTime += $slotDuration;
+		$currSlotTimeFormatted = date("H:i", $currSlotTime);
+	}
+	$table->printRow();
+
+	$days = array("Mon", "Tue", "Wed", "Thu", "Fri");
+	$batchColor = '#0000cd'; //medium blue
+	$roomColor = '#228b22'; //forest green
+	$classColor = '#ff00ff';//magenta
+	$subjectColor = '#ff0000';//red
+	for($day = 1; $day <= 5; $day++) {
+		$rowData = array();
+		$rowspan = 1;
+		array_push($rowData, array(array(array('str' => $days[$day - 1],
+										 'style' => "align:C; valign:M; font-color:#000000; colspan:1;")
+								  )));
+		for($slotNo = 0; $slotNo < $nSlots; $slotNo += $colspan) {
+			$thisSlotEntries = find($allrows2, $day, $slotNo);
+			$nEntries = count($thisSlotEntries);
+			$cellData = array();
+			$colspan = 1;
+			for($i = 0;$i < $nEntries;$i++) {
+				if($thisSlotEntries[$i]['isFixed'] != 1) {
+					$query = "SELECT eachSlot FROM subject WHERE subjectShortName = \"".
+						$thisSlotEntries[$i]['subjectShortName']."\"and snapshotId = $snapshotId;";
+					$subjectRow = sqlGetOneRow($query);
+					if($subjectRow[0]['eachSlot'] > $colspan)
+						$colspan = $subjectRow[0]['eachSlot'];
+				}
+			}
+			for($i = 1;$i < $colspan;$i++) {
+				$nextSlotEntries = find($allrows2, $day, $slotNo + $i);
+				for($j = 0;$j < count($thisSlotEntries);$j++) {
+					for($k = 0;$k < count($nextSlotEntries);$k++) {
+						if($nextSlotEntries[$k]['subjectShortName'] === $thisSlotEntries[$j]['subjectShortName'] ||
+							$nextSlotEntries[$k]['batchName'] === $thisSlotEntries[$j]['batchName'] ||
+							$nextSlotEntries[$k]['roomShortName'] === $thisSlotEntries[$j]['roomShortName'])
+							array_splice($nextSlotEntries, $k, 1);
+					}
+				}
+				$thisSlotEntries = array_merge($thisSlotEntries, $nextSlotEntries);
+			}
+			$nEntries = count($thisSlotEntries);
+			if($currTableName != "class" || $nEntries <= 1) {
+				for($d = 0; $d < $nEntries; $d++) {
+					$currEntry = $thisSlotEntries[$d];
+					if($currEntry["batchName"] != "NULL" && $currTableName != "batch") {
+						array_push($cellData, array(array('str' => $currEntry["batchName"],
+														  'style' => "colspan:".(2 * $colspan).
+																	";font-color:$batchColor; align:C;")
+													));
+					}
+
+					if($currTableName != "class" && $currTableName != "batch" && $currEntry["batchName"] != "NULL") {
+						array_push($cellData, array(array('str' => $currEntry["classShortName"],
+														  'style' => "colspan:".(2 * $colspan).
+																	";font-color:$classColor; align:C;")
+													));
+					}
+
+					if($currTableName != "subject" && $currTableName != "room" && $currTableName != "teacher") {
+						array_push($cellData, array(array('str' => $currEntry["subjectShortName"],
+														  'style' => "colspan:".(2 * $colspan).
+																	";font-color:$subjectColor; align:C;")
+													));
+					}
+
+					if($currTableName != "room" && $currTableName != "teacher") {
+						array_push($cellData, array(array('str' => $currEntry["roomShortName"],
+														  'style' => "colspan:".(2 * $colspan).
+																	";font-color:$roomColor; align:C;")
+													));
+					}
+
+					if($currEntry['isFixed'] == 1) {
+						$query = "SELECT fixedText FROM fixedEntry WHERE ttId = ".$currEntry['ttId']
+							." AND snapshotId = $snapshotId;";
+						$fixedText = sqlGetOneRow($query);
+						array_push($cellData, array(array('str' => $fixedText[0]['fixedText'],
+														  'style' => "colspan:".(2 * $colspan).
+																	";font-color:#000000; align:C;")
+													));
+					}
+				}
+				if($currTableName === "teacher" && $nEntries > 0) {//for teacher show roomName and subject name once
+					array_push($cellData, array(array('str' => $thisSlotEntries[0]["roomShortName"],
+													  'style' => "colspan:$colspan;font-color:$roomColor; align:R;"),
+												array('str' => $thisSlotEntries[0]["subjectShortName"],
+													  'style' => "colspan:$colspan;font-color:$subjectColor; align:L;")
+												));
+				}
+				if($currTableName === "room" && $nEntries > 0) {//for room show subjectName once
+					array_push($cellData, array(array('str' => $thisSlotEntries[0]["subjectShortName"],
+													  'style' => "colspan:".(2 * $colspan).
+																";font-color:$subjectColor; align:C;")
+												));
+				}
+				if($nEntries === 0)
+					array_push($cellData, array(array('str' => '', 'style' => "colspan:".(2 * $colspan).";")));
+			}
+			else { /* nEntries > 1 for table = "class" */
+				for($d = 0; $d < $nEntries; $d++) {
+					$currEntry = $thisSlotEntries[$d];
+					array_push($cellData, array(array('str' => $currEntry["batchName"],
+													  'style' => "colspan:".(2 * $colspan).
+																";font-color:$batchColor; align:C;")
+												));
+					array_push($cellData, array(array('str' => $currEntry["roomShortName"],
+													  'style' => "colspan:$colspan;font-color:$roomColor; align:R;"),
+												array('str' => $currEntry["subjectShortName"],
+													  'style' => "colspan:$colspan;font-color:$subjectColor; align:L;")
+												));
+				}
+			}
+			array_push($rowData, $cellData);
+			if(count($cellData) > $rowspan)
+				$rowspan = count($cellData);
+		}
+		printRow($rowData, $table, $rowspan, $searchParam);
+	}
+	$table->endTable(0);
+
+	/*Add color legend*/
+	$pdf->ln();
+	$table = new easyTable($pdf, 5, 'align:C; font-size:10; font-family:helvetica; border:1; border-width:0.4;');
+	$table->easyCell("Color Legend ->", "border:0; align:C;");
+	$table->easyCell("Batch Name", "font-color:$batchColor; align:C;");
+	$table->easyCell("Room Name", "font-color:$roomColor; align:C;");
+	$table->easyCell("Class Name", "font-color:$classColor; align:C;");
+	$table->easyCell("Subject Name", "font-color:$subjectColor; align:C;");
+	$table->printRow();
+	$table->endTable(0);
+	
+	/*on teacher paga add hrs/week */
+	if($currTableName == "teacher") {
+		$pdf->ln();
+		$table = new easyTable($pdf, '{25, 15}', 'align:C; font-size:10; font-family:helvetica;
+										border:1; border-width:0.4; width:40; font-color:#000000;  align:L:');
+		$table->easyCell("Total Load", "font-style:B; align:C;");
+		$table->easyCell(count($allrows2)." Hrs", "font-style:B; align:C;");
+		$table->printRow();
+		$table->endTable(0);
+	}
+	/* see next page message*/
+	$pdf->SetFont('helvetica','',10);
+	$pdf->SetY(-15);
+	$pdf->setTextColor(0, 0, 0);
+	$pdf->Cell(0, 5, 'Please see the legend on the next page for details of acronyms', 0, 0, 'C');
+	
+	/*Add Page No*/
+	$pdf->ln();
+	$pdf->SetY(-10);
+	$pdf->SetFont('helvetica','',10);
+	$pdf->Cell(0,5,'Page '.$pdf->PageNo(),0,0,'C');
+	
+	$align = array('align:L{LC}; ', '', 'align:R; ');
+	$i = 0;
+	$styleCell = 'font-size:8;';
+	switch($currTableName) {
+		case "teacher":
+			$data = ShortNameMappings($allrows2, "roomShortName", "roomName", "room", array("Room Short Name", "Room Name"));
+			if($data != 0)
+				$y = createTable($pdf, $data, '{25, 60}', 2, $align[$i++], $styleCell);
+			break;
+		case "class": case "batch"://show room-short name and subject-teacher mappings
+			$data = ShortNameMappings($allrows2, "roomShortName", "roomName", "room", array("Room Short Name", "Room Name"));
+			if($data != 0)
+				$y = createTable($pdf, $data, '{35, 60}', 2, $align[$i++], $styleCell);
+			$data = SubjectTeacherMappings($allrows2, $currTableName, array("Subject Short Name", "Teacher Name"));
+			if($data != 0)
+				$y = createTable($pdf, $data, '{50, 35}', 2, $align[$i++], $styleCell, $y);
+			break;
+		case "room"://show subject-teacher mapping
+			$data = SubjectTeacherMappings($allrows2, $currTableName, array("Subject Short Name", "Teacher Name"));
+			if($data != 0)
+				$y = createTable($pdf, $data, '{50, 35}', 2, $align[$i++], $styleCell);
+			break;
+	}
+	//show subject-short name mapping
+	$data = ShortNameMappings($allrows2, "subjectShortName", "subjectName", "subject",
+				array("Subject Short Name", "Subject Name"));
+	if($data != 0)
+		$y = createTable($pdf, $data, '{30, 60}', 2, $align[$i++], $styleCell, $y);
+	if($pdf->PageNo() == 2) {//if lenged page exists
+		$pdf->SetY(-30);
+		$pdf->SetFont('helvetica','B',10);
+		$pdf->setTextColor(0, 0, 0);
+		$pdf->Cell($pdf->GetPageWidth() / 2, 10, "Timetable Incharge", 0, 0, 'C');
+		$pdf->Cell($pdf->GetPageWidth() / 2, 10, "Head of Department", 0, 0, 'C');
+		
+		$pdf->SetFont('helvetica','',10);
+		$pdf->SetY(-10);
+		$pdf->Cell(0,6,'Page '.$pdf->PageNo(),0,0,'C');
+	}
+	$pdf->output('F', dirname(__FILE__).'/tmp/timetable_pdf/'.$currTableName."_".$searchParam.".pdf");
+}
+function createTable($pdf, $data, $width, $pageNo, $styleTable = '', $styleCell = '', $y = 0) {
+	if($pdf->PageNo() != $pageNo) {
+		$pdf->AddPage(); #legend page
+		$pdf->setMargins(5, 10, 5);
+		$pdf->SetFont('helvetica','B',14);
+		$pdf->SetX(15);
+		$pdf->Cell(0, 8, "Legend Page", 0, 1, 'C');
+		$pdf->SetFont('helvetica','B',10);
+		$y=$pdf->GetY();
+	}
+	else
+		$pdf->SetY($y);
+
+	$table = new easyTable($pdf, $width, $styleTable.'width:90; font-style:B; font-size:10;
+				font-family:helvetica; border:1; border-color:#000000; border-width:0.4');
+	for($i = 0;$i < count($data[0]);$i++)
+		$table->easyCell($data[0][$i], 'align:C; valign:M; font-color:#006400 font-size:12');
+	$table->printRow();
+	for($i = 1;$i < count($data);$i++) {
+		for($j = 0;$j < 2;$j++) {
+			$table->easyCell($data[$i][$j], $styleCell.'align:C; valign:M; font-color:#000000');
+		}
+		$table->printRow();
+	}
+	$table->endTable();
+	return $y;
+}
+function ShortNameMappings($allrows2, $currParam, $searchParam, $tableName, $headerRow) {
+	$currentSnapshotId = getArgument("snapshotId");
+	$tableData = array();
+	foreach ( $allrows2 as $currEntry ) {
+		if($currEntry['isFixed'] != 1) {
+			$arr = array($currEntry[$currParam]);
+			if(array_search($arr, $tableData) === false)
+				array_push($tableData, $arr);
+		}
+	}
+	for($k = 0; $k < count($tableData); $k++) {
+		$query = "SELECT $searchParam FROM $tableName WHERE $currParam=\"".$tableData[$k][0]. "\" and
+					snapshotId = $currentSnapshotId";
+		$row = sqlGetOneRow($query);
+		array_push($tableData[$k], $row[0][$searchParam]);
+	}
+	if(count($tableData) != 0) {
+		array_unshift($tableData, $headerRow);
+		return $tableData;
+	}
+	return 0;
+}
+function SubjectTeacherMappings($allrows2, $currTableName, $headerRow) {
+	$currentSnapshotId = getArgument("snapshotId");
+	$subjectTeacher = array();
+	$batchNames = array();
+	foreach ( $allrows2 as $currEntry ) {
+		if($currEntry['isFixed'] != 1) {
+			$key = $currEntry['subjectShortName'].$currEntry['teacherShortName'];
+			$arr = array($currEntry['subjectShortName'], $currEntry['teacherShortName']);
+			if(array_search($arr, $subjectTeacher) === false)
+				array_push($subjectTeacher, $arr);
+			if($currTableName != "batch" && $currEntry['batchName'] != NULL) {
+				if(!array_key_exists($key, $batchNames))
+					$batchNames[$key] = array();
+				if(array_search($currEntry['batchName'], $batchNames[$key]) === false)
+					array_push($batchNames[$key], $currEntry['batchName']);
+			}
+		}
+	}
+	for($k = 0; $k < count($subjectTeacher); $k++) {
+		$key = $subjectTeacher[$k][0].$subjectTeacher[$k][1];
+		if($currTableName != "batch" && array_key_exists($key, $batchNames))
+			$subjectTeacher[$k][0] .= (": " .implode(", ", $batchNames[$key]));
+		$query = "SELECT teacherName FROM teacher WHERE teacherShortName=\"".$subjectTeacher[$k][1]. "\" and
+					snapshotId = $currentSnapshotId";
+		$teacherName = sqlGetOneRow($query);
+		$subjectTeacher[$k][1] = $teacherName[0]['teacherName'];
+	}
+	if(count($subjectTeacher) != 0) {
+		array_unshift($subjectTeacher, $headerRow);
+		return $subjectTeacher;
+	}
+	return 0;
+}
+function exportPDF() {
+	$filename = "timetable_pdf.zip";
+	if(!file_exists("tmp"))
+		mkdir("tmp");
+	if(!file_exists("tmp/timetable_pdf"))
+		mkdir("tmp/timetable_pdf");
+	$tableNames = array("teacher", "teacherShortName", "class", "classShortName",
+				"batch", "batchName", "room", "roomShortName");
+	$query = "SELECT * from config WHERE configId = 1";
+	$allrows = sqlGetAllRows($query);
+	$currentSnapshotName = getArgument("snapshotName");
+	$currentSnapshotId = getArgument("snapshotId");
+	# consider having a timetable class with derived classes
+	# on teacherTT, classTT, batchTT, etc. and have a specific code in each.
+
+	/* TODO: Change this to use currentConfigId */
+	$nSlots = $allrows[0]["nSlots"];
+	$dayBegin = $allrows[0]["dayBegin"];
+	$slotDuration = $allrows[0]["slotDuration"];
+	for($i = 0; $i < count($tableNames); $i += 2) {
+		# Generate a pdf for each table: teachers, classes, batches, rooms
+		$currTableName = $tableNames[$i];
+		$currParam = $tableNames[$i + 1];
+		$query = "SELECT * FROM $currTableName WHERE snapshotId = $currentSnapshotId";
+		$allrows = sqlGetAllRows($query);
+		for($j = 0; $j < count($allrows); $j++) {
+			# Generate pdf for each room/class/teacher/batch in each table
+			$searchParam = $allrows[$j][$currParam];
+			$query = "SELECT * FROM timeTableReadable WHERE  $currParam = \"$searchParam\" ".
+					 "AND snapshotName = \"$currentSnapshotName\"";
+			$allrows2 = sqlGetAllRows($query);
+			if($currTableName == "batch") {
+				if(count($allrows2) == 0) {
+					$query = "SELECT classShortName FROM batchClassReadable WHERE batchName = \"".
+						"$searchParam\" AND snapshotName = \"$currentSnapshotName\"";
+					$classRow = sqlGetOneRow($query);
+					$classShortName = $classRow[0]['classShortName'];
+				}
+				else {
+					$classShortName = $allrows2[0]['classShortName'];
+				}
+				$query = "SELECT * FROM timeTableReadable WHERE classShortName = \"$classShortName".
+					"\" AND batchName IS NULL AND snapshotName = \"$currentSnapshotName\"";
+				$classRows = sqlGetAllRows($query);
+				$allrows2 = array_merge($allrows2, $classRows);
+			}
+			generate_timetable_pdf($currTableName, $searchParam, $allrows2, $nSlots, $dayBegin, $slotDuration);
+		}
+	}
+	HZip::zipDir('tmp/timetable_pdf', $filename);
+	return $filename;
+}
+?>

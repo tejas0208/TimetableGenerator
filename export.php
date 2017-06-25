@@ -1,5 +1,5 @@
 <?php
-// This file is part of Samay - a timetabling software for 
+// This file is part of Samay - a timetabling software for
 // schools, colleges/universities.
 //
 // Samay is free software: you can redistribute it and/or modify
@@ -29,8 +29,7 @@ ini_set('display_startup_errors', TRUE);
 #require_once('../PHPExcel/Build/PHPExcel.phar');
 require_once('./PHPExcel/Classes/PHPExcel.php');
 require_once('./db.php');
-
-global $objPHPExcel; 
+global $objPHPExcel;
 function count_new_lines($text) {
 	return 1;
 }
@@ -38,7 +37,7 @@ function find($allrows, $day, $slotNo) {
 	$result = array();
 	$i = 0;
 	for($k = 0; $k < count($allrows); $k++) {
-			if($allrows[$k]["day"] == $day && 
+			if($allrows[$k]["day"] == $day &&
 						$allrows[$k]["slotNo"] == $slotNo)
 					$result[$i++] = $allrows[$k];
 	}
@@ -47,7 +46,7 @@ function find($allrows, $day, $slotNo) {
 /* Generates one worksheet for teacher=teacherShortName, class=classShortName, etc. */
 function generate_timetable_worksheet($currTableName, $searchParam, $sheetCount,
 		$allrows2, $nSlots, $dayBegin, $slotDuration) {
-	global $objPHPExcel; 
+	global $objPHPExcel;
 	#ttlog("generate_timetable_worksheet: $currTableName $searchParam $sheetCount $nSlots");
 	global $objPHPExcel;
 	$myWorkSheet = new PHPExcel_Worksheet($objPHPExcel, $currTableName."_".$searchParam);
@@ -61,7 +60,7 @@ function generate_timetable_worksheet($currTableName, $searchParam, $sheetCount,
 	$objPHPExcel->getActiveSheet()->getPageMargins()->setBottom(0.5);
 	# Generate the Header for the worksheet
 	$text = array("College of Engineering Pune", "Dept of Comp Engg and IT", "Timetable For $currTableName: $searchParam");
-	for($x = 0; $x < count($text); $x++) { # The header in the worksheet  
+	for($x = 0; $x < count($text); $x++) { # The header in the worksheet
 			$xx = $x + 1;
 			$objRichText = new PHPExcel_RichText();
 			$currText = $objRichText->createTextRun($text[$x]);
@@ -98,7 +97,7 @@ function generate_timetable_worksheet($currTableName, $searchParam, $sheetCount,
 
 	# Generate the Slots-Labels and Day-Wise Labels
 	$cols = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O','P','Q','R','S');
-	for($k = 0; $k < $nSlots; $k++) { 	# Column Labels  Slot -1, etc. 
+	for($k = 0; $k < $nSlots; $k++) { 	# Column Labels  Slot -1, etc.
 		$objRichText = new PHPExcel_RichText();
 		//$currText = $objRichText->createTextRun("Slot ".$k);
 		$currText = $objRichText->createTextRun($currSlotTimeFormatted);
@@ -131,11 +130,11 @@ function generate_timetable_worksheet($currTableName, $searchParam, $sheetCount,
 										setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
 		$objPHPExcel->getActiveSheet()->getStyle('A'.$z)->applyFromArray($styleArray);
 	}
-	# Generate the Actual Timetable Cells 
+	# Generate the Actual Timetable Cells
 	# This is an inefficient way of doing it. Running one loop on all rows of $allrows2 will be more efficient, but
 	# this will require creating each cell content as it appears inn $allrows2, and if you encounter again the same
-	# cell, then appending to it. There is no way to append to a cell while preserving the formatting using PHPExcel, 
-	# so taking this long route of finding all $allrows for each possible cell(days*nSlots) 
+	# cell, then appending to it. There is no way to append to a cell while preserving the formatting using PHPExcel,
+	# so taking this long route of finding all $allrows for each possible cell(days*nSlots)
 	for($col = 0; $col <= $nSlots - 1; $col++)
 		$widths[$col] = 6.5;
 	for($day = 1; $day <= 6; $day++) {
@@ -145,8 +144,8 @@ function generate_timetable_worksheet($currTableName, $searchParam, $sheetCount,
 
 			$thisSlotEntries = find($allrows2, $day, $slotNo);
 			$objRichText = new PHPExcel_RichText();
-		
-			$nEntries = count($thisSlotEntries); 
+
+			$nEntries = count($thisSlotEntries);
 
 			if($currTableName != "class" || $nEntries <= 1) {
 				for($d = 0; $d < $nEntries; $d++) {
@@ -200,7 +199,7 @@ function generate_timetable_worksheet($currTableName, $searchParam, $sheetCount,
 					$width = 6.5;
 					$widths[$slotNo] = 6.5;
 				}
-				if($widths[$slotNo] < 16.70) { 
+				if($widths[$slotNo] < 16.70) {
 					$width = 8.35;
 					$widths[$slotNo] = 8.35;
 				} else {
@@ -210,7 +209,7 @@ function generate_timetable_worksheet($currTableName, $searchParam, $sheetCount,
 			}
 			else { /* nEntries > 1 for table = "class" */
 				for($d = 0; $d < $nEntries; $d++) {
-					$currEntry = $thisSlotEntries[$d];	
+					$currEntry = $thisSlotEntries[$d];
 					$currText = $objRichText->createTextRun($currEntry["batchName"]."/");
 					$currText->getFont()->setBold(true);
 					$currText->getFont()->setSize(10);
@@ -264,21 +263,21 @@ function generate_timetable_spreadsheet() {
 	$allrows = sqlGetAllRows($query);
 	$currentSnapshotName = getArgument("snapshotName");
 	$currentSnapshotId = getArgument("snapshotId");
-	# consider having a timetable class with derived classes 
+	# consider having a timetable class with derived classes
 	# on teacherTT, classTT, batchTT, etc. and have a specific code in each.
-	
+
 	/* TODO: Change this to use currentConfigId */
 	$nSlots = $allrows[0]["nSlots"];
 	$dayBegin = $allrows[0]["dayBegin"];
 	$slotDuration = $allrows[0]["slotDuration"];
 	$sheetCount = 0;
-	for($i = 0; $i < count($tableNames); $i += 2) { 
+	for($i = 0; $i < count($tableNames); $i += 2) {
 		# Generate worksheets for each table: teachers, classes, batches, rooms
 		$currTableName = $tableNames[$i];
 		$currParam = $tableNames[$i + 1];
 		$query = "SELECT * FROM $currTableName WHERE snapshotId = $currentSnapshotId";
 		$allrows = sqlGetAllRows($query);
-		for($j = 0; $j < count($allrows); $j++) { 
+		for($j = 0; $j < count($allrows); $j++) {
 			# Generate worksheets for each room/class/teacher/batch in each table
 			$searchParam = $allrows[$j][$currParam];
 			$query = "SELECT * FROM timeTableReadable WHERE  $currParam = \"$searchParam\" ".
@@ -288,12 +287,12 @@ function generate_timetable_spreadsheet() {
 			generate_timetable_worksheet($currTableName, $searchParam, $sheetCount,
 				$allrows2, $nSlots, $dayBegin, $slotDuration);
 
-			# print information about subject shortcut names, subject-teacher mapping	
+			# print information about subject shortcut names, subject-teacher mapping
 
-			$sheetCount++;	
+			$sheetCount++;
 		}
 	}
-}	
+}
 function generate_data_worksheet($currTableName, $sheetCount, $nameOrId) {
 	global $objPHPExcel;
 
@@ -327,8 +326,8 @@ function generate_data_worksheet($currTableName, $sheetCount, $nameOrId) {
 	$objPHPExcel->getActiveSheet()->getPageMargins()->setRight(0.3);
 	$objPHPExcel->getActiveSheet()->getPageMargins()->setLeft(0.8);
 	$objPHPExcel->getActiveSheet()->getPageMargins()->setBottom(0.5);
-	
-	$query = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS ". 
+
+	$query = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS ".
 			" WHERE TABLE_SCHEMA='timeTable' AND TABLE_NAME='".$currTableName."';";
 	$colNames = sqlGetAllRows($query);
 
@@ -339,7 +338,7 @@ function generate_data_worksheet($currTableName, $sheetCount, $nameOrId) {
 	else
 		$query = "SELECT * FROM $currTableName WHERE snapshotId = $currentSnapshotId;";
 	$allrows = sqlGetAllRows($query);
-	$colLabels = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 
+	$colLabels = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
 						'K', 'L', 'M', 'N', 'O','P','Q','R','S');
 	/* print header row */
 	for($j = 0; $j < count($colNames); $j++) {
@@ -390,47 +389,47 @@ function generate_data_worksheet($currTableName, $sheetCount, $nameOrId) {
 	}
 }
 function generate_data_spreadsheet() {
-	$tableNames = array("teacherReadable", "name", "class", "id", "batch","id", 
-						"batchClassReadable", "name", "batchCanOverlapReadable", 
+	$tableNames = array("teacherReadable", "name", "class", "id", "batch","id",
+						"batchClassReadable", "name", "batchCanOverlapReadable",
 						"name", "subjectClassTeacherReadable", "name",
-						"subjectBatchTeacherReadable", "name", "config", "none"); 
+						"subjectBatchTeacherReadable", "name", "config", "none");
 
 	$sheetCount = 0;
-	for($i = 0; $i < count($tableNames); $i += 2) { 
+	for($i = 0; $i < count($tableNames); $i += 2) {
 		# Generate worksheets for each table: teachers, classes, batches, rooms
 		$currTable = $tableNames[$i];
 		$nameOrId = $tableNames[$i + 1];
 		generate_data_worksheet($currTable, $sheetCount, $nameOrId);
 
-		# print information about subject shortcut names, subject-teacher mapping	
-		$sheetCount++;	
+		# print information about subject shortcut names, subject-teacher mapping
+		$sheetCount++;
 	}
 
 }
 function saveFile($savefilename) {
-	global $_POST, $objPHPExcel; 
+	global $_POST, $objPHPExcel;
 	$extension = getArgument("extension");
 	if($extension == "")
-			$extension = 'xlsx';	
+			$extension = 'xlsx';
 
 	if($extension == "ODS") {
 		$format = 'OpenDocument';
 		$extension = 'ods';
 	} else if ($extension == "Excel") {
 		$format = 'Excel5';
-		$extension = 'xls'; 
+		$extension = 'xls';
 	} else {
 		$format = 'Excel2007';
 		$extension = 'xlsx';
 	}
 	$objPHPWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $format);
-	$filename = str_replace('EXT', $extension, $savefilename); 
+	$filename = str_replace('EXT', $extension, $savefilename);
 	$objPHPWriter->save($filename); #str_extension('php',$extension, basename(__FILE__)));
 	#ttlog("export: Saving file $filename");
-	return $filename; 
+	return $filename;
 }
 function exportConfigXLSX() {
-	global $objPHPExcel; 
+	global $objPHPExcel;
 	$objPHPExcel = new PHPExcel();
 	$objPHPExcel->getProperties()->setCreator("Abhijit A.M.")
 						->setLastModifiedBy("Abhijit A. M.")
@@ -445,7 +444,7 @@ function exportConfigXLSX() {
 	return $filename;
 }
 function exportXLSX() {
-	global $objPHPExcel; 
+	global $objPHPExcel;
 	$objPHPExcel = new PHPExcel();
 	$objPHPExcel->getProperties()->setCreator("Abhijit A.M.")
 						->setLastModifiedBy("Abhijit A. M.")
@@ -463,7 +462,7 @@ function exportCSV() {
 	$filename = "timetable.zip";
 	$tempDir =	sys_get_temp_dir();
 	/* TODO: check why files not getting created in tmp folder */
-	/*$res = mkdir("$tempDir/timetable/");	
+	/*$res = mkdir("$tempDir/timetable/");
 	if($res === false) {
 		ttlog("mkdir Failed");
 	} */
@@ -481,7 +480,7 @@ function exportCSV() {
 		"room", "id", ["roomShortName", "roomName", "roomCount"], 
 		"subject", "id", ["subjectShortName", "subjectName", "eachSlot", "nSlots", "batches"],
 		"class", "id", ["classShortName", "className", "classCount"],
-		"batch","id", ["batchName", "batchCount"], 
+		"batch","id", ["batchName", "batchCount"],
 		"batchClassReadable", "name", ["batchName", "classShortName"],
 		"batchCanOverlapReadable", "name",
 			["b1Name", "b2Name"],
@@ -491,8 +490,8 @@ function exportCSV() {
 		"subjectBatchTeacherReadable", "name",
 			["batchName", "subjectShortName", "teacherShortName"],
 		"config", "none",["configName", "dayBegin", "slotDuration", "nSlots", "incharge"]
-	); 
-	for($i = 0; $i < count($tableNames); $i += 3) { 
+	);
+	for($i = 0; $i < count($tableNames); $i += 3) {
 
 		$currTableName = $tableNames[$i];
 		if($tableNames[$i + 1] == "name")
@@ -515,9 +514,9 @@ function exportCSV() {
 			fwrite($file, "\n");
 		}
 		HZip::zipDir('tmp/timetable', 'timetable.zip');
-		# print information about subject shortcut names, subject-teacher mapping	
+		# print information about subject shortcut names, subject-teacher mapping
 	}
-	
+
 	return $filename;
 }
 /* Credit: http://php.net/manual/en/class.ziparchive.php */
