@@ -101,6 +101,7 @@ function insertTextColumn(row, id, text) {
 	var centerTag = document.createElement("center");
 	centerTag.setAttribute("id", id);
 	centerTag.setAttribute("class", "formText");
+	centerTag.setAttribute("value", text);
 	var centerText = document.createTextNode(text);
 	centerTag.appendChild(centerText);
 	cell.appendChild(centerTag);
@@ -120,14 +121,20 @@ function insertSelectTag(row, id, table, valueId, displayId) {
 	cell.appendChild(selectTag);
 	return selectTag;
 }
-function insertInputBox(row, type, id, size, placeholder, value) {
+function insertInputBox(row, type, id, size, placeholder, value, title, minValue) {
 	var cell = insertCell(row);
 	inputTag = document.createElement("input");
 	inputTag.setAttribute("type", type);	
 	inputTag.setAttribute("id", id);	
 	inputTag.setAttribute("size", size);	
 	inputTag.setAttribute("placeholder", placeholder);
-	inputTag.setAttribute("value", value);	
+	inputTag.setAttribute("value", value);
+	inputTag.setAttribute("required", "required");	
+	if(title !== undefined)
+		inputTag.setAttribute("title", title);
+	if(minValue !== undefined) {
+		inputTag.setAttribute("min", minValue);	
+	}
 	cell.appendChild(inputTag);
 }
 function insertRow(table, count) {
@@ -148,8 +155,8 @@ function batchForm() {
 	/* ---- Adding "Add Batch Row" -----------------------*/
 	row = insertRow(table, 1);
 	insertTextColumn(row, "", "New");//currBatchRoom["brId"]);
-	insertInputBox(row, "text", "batchNameAdd", "32", "Enter Batch Name", "");
-	insertInputBox(row, "number", "batchCountAdd", "3", "Strength", "");
+	insertInputBox(row, "text", "batchNameAdd", "32", "Enter Batch Name", "", "Batch Name (Short)");
+	insertInputBox(row, "number", "batchCountAdd", "3", "Strength", "", "Batch Strength", "1");
 	insertSelectTag(row, "batchClassAdd", classTable, "classId", "classShortName");
 
 	cell = insertAddButton(row, "batchInsert()", 1);
@@ -165,9 +172,9 @@ function batchForm() {
 		insertTextColumn(row, "center_" + count, currBatch["batchId"]);
 
 		insertInputBox(row, "text", "batchName_" + count, "32",
-					"Batch Name", currBatch["batchName"]);
+					"Batch Name", currBatch["batchName"], "Batch Name (Short)");
 		insertInputBox(row, "number", "batchCount_" + count, "3",
-					"Strength", currBatch["batchCount"]);
+					"Strength", currBatch["batchCount"],  "Batch Strength", "1");
 
 		var cell = insertCell(row);
 		cell.setAttribute("align","center");
@@ -196,10 +203,24 @@ function batchForm() {
 }
 function batchInsert() {
 	var batchName, batchCount;
-	batchName = document.getElementById("batchNameAdd").value;
-	batchCount = document.getElementById("batchCountAdd").value;
-	classId = document.getElementById("batchClassAdd").value;
-
+	batchName = document.getElementById("batchNameAdd");
+	batchCount = document.getElementById("batchCountAdd");
+	classId = document.getElementById("batchClassAdd");
+	//Checking parameters
+	if(checkParameterValidity(batchName, batchCount, classId) == false ) {
+		return;	
+	}
+	if(alreadyValueNotPresentInDB(batch,  "batchName", 
+				batchName.value) == false) {
+		return;	
+	}
+	if(classId.value == -1) {
+		alert("Please select a class for the batch");
+		return;
+	}
+	batchName = batchName.value;
+	batchCount = batchCount.value;
+	classId = classId.value;
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function () {
 		if(this.readyState == 4 && this.status == 200) {
@@ -623,7 +644,10 @@ function batchRoomInsert() {
 	var batchId, roomId,  brId;
 	batchId = document.getElementById("brBatchAdd").value;
 	roomId = document.getElementById("brRoomAdd").value;
-	/* debug */
+	/* parameter checking */
+	if(selectTagsValueEmpty(batchId, roomId) == true) {
+		return;
+	}
 	roomShortName = search(room, "roomId", roomId)["roomShortName"];
 	batchName = search(batch, "batchId", batchId)["batchName"];
 
@@ -658,6 +682,10 @@ function batchRoomUpdate(i) {
 	var batchId, roomId,  brId;
 	batchId = document.getElementById("batch_" + row).value;
 	roomId = document.getElementById("room_" + row).value;
+	/* parameter checking */
+	if(selectTagsValueEmpty(batchId, roomId) == true) {
+		return;
+	}
 	brId = document.getElementById("center_" + row).childNodes[0].nodeValue;
 	document.getElementById("batchRoomUpdateButton_" + row).childNodes[0].nodeValue = "Updating";
 	document.getElementById("batchRoomDeleteButton_" + row).disabled = true;
@@ -741,10 +769,10 @@ function classForm() {
 	/* ---- Adding "Add Class Row" -----------------------*/
 	row = insertRow(table, 1);
 	insertTextColumn(row, "", "New");//currBatchRoom["brId"]);
-	insertInputBox(row, "text", "classNameAdd", "32", "Enter Class Name", "");
-	insertInputBox(row, "text", "classShortNameAdd", "8", "Enter Short Name", "");
-	insertInputBox(row, "number", "semesterAdd", "3", "Semester", "");
-	insertInputBox(row, "number", "classCountAdd", "3", "Strength", "");
+	insertInputBox(row, "text", "classNameAdd", "32", "Enter Class Name", "","Class Name");
+	insertInputBox(row, "text", "classShortNameAdd", "8", "Enter Short Name", "", "Class ShortName");
+	insertInputBox(row, "number", "semesterAdd", "3", "Semester", "", "Semester", "1");
+	insertInputBox(row, "number", "classCountAdd", "3", "Strength", "", "Strength: No. of Students", "1");
 	cell = insertAddButton(row, "classInsert()", 2);
 
 	/* Add the existing class entries */
@@ -759,13 +787,13 @@ function classForm() {
 		insertTextColumn(row, "center_" + count, currClass["classId"]);
 
 		insertInputBox(row, "text", "className_" + count, "32",
-					"Class Name", currClass["className"]);
+					"Class Name", currClass["className"], "Class Name");
 		insertInputBox(row, "text", "classShortName_" + count, "8",
-					"Class Short Name", currClass["classShortName"]);
+					"Class Short Name", currClass["classShortName"],  "Class ShortName");
 		insertInputBox(row, "number", "semester_" + count, "3",
-					"Semester", currClass["semester"]);
+					"Semester", currClass["semester"], "Semester", "1" );
 		insertInputBox(row, "number", "classCount_" + count, "3",
-					"Strength", currClass["classCount"]);
+					"Strength", currClass["classCount"], "Strength: No. of Students", "1" );
 
 		insertUpdateButton(row, "cUpdateButton_" + count,
 							"classUpdate(" + count + ")");
@@ -778,10 +806,25 @@ function classForm() {
 function classInsert() {
 	var row = i;
 	var className, classShortName, semester, classCount;
-	className = document.getElementById("classNameAdd").value;
-	classShortName = document.getElementById("classShortNameAdd").value;
-	semester = document.getElementById("semesterAdd").value;
-	classCount = document.getElementById("classCountAdd").value;
+	className = document.getElementById("classNameAdd");
+	classShortName = document.getElementById("classShortNameAdd");
+	semester = document.getElementById("semesterAdd");
+	classCount = document.getElementById("classCountAdd");
+	
+	//Checking Parameter
+	if(checkParameterValidity(className, classShortName, 
+		semester, classCount) == false ) {
+		return;	
+	}
+	if(alreadyValueNotPresentInDB(classTable,  "classShortName", 
+				classShortName.value) == false) {
+		return;	
+	}
+	
+	className = className.value;
+	classShortName = classShortName.value;
+	semester = semester.value;
+	classCount = classCount.value;
 
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function () {
@@ -817,11 +860,26 @@ function classUpdate(i) {
 	var row = i;
 	var className, classShortName, semester, classCount;
 	classId = document.getElementById("center_" + row).childNodes[0].nodeValue;
-	alert(classId);
-	className = document.getElementById("className_" + row).value;
-	classShortName = document.getElementById("classShortName_" + row).value;
-	semester = document.getElementById("semester_" + row).value;
-	classCount = document.getElementById("classCount_" + row).value;
+	
+	className = document.getElementById("className_" + row);
+	classShortName = document.getElementById("classShortName_" + row);
+	semester = document.getElementById("semester_" + row);
+	classCount = document.getElementById("classCount_" + row);
+	
+	//Checking Parameter
+	if(checkParameterValidity(className, classShortName, 
+		semester, classCount) == false ) {
+		return;	
+	}
+	if(alreadyValueNotPresentInDB(classTable,  "classShortName", 
+				classShortName.value, "classId", classId) == false) {
+		return;	
+	}
+	
+	className = className.value;
+	classShortName = classShort.value;
+	semester = semester.value;
+	classCount = classCount.value;
 	document.getElementById("cUpdateButton_" + row).childNodes[0].nodeValue = "Updating";
 	document.getElementById("cDeleteButton_" + row).disabled = true;
 	document.getElementById("cUpdateButton_" + row).disabled = true;
@@ -967,11 +1025,15 @@ function classRoomForm() {
 		count++;
 	}
 }
+
 function classRoomInsert() {
 	var classId, roomId,  crId;
 	classId = document.getElementById("crClassAdd").value;
 	roomId = document.getElementById("crRoomAdd").value;
-	/* debug */
+	/* parameter checking */
+	if(selectTagsValueEmpty(classId, roomId) == true) {
+		return;
+	}
 	roomShortName = search(room, "roomId", roomId)["roomShortName"];
 	classShortName= search(classTable, "classId", classId)["classShortName"];
 
@@ -1002,11 +1064,24 @@ function classRoomInsert() {
 
 }
 
+function selectTagsValueEmpty() {
+	for(i = 0 ; i < arguments.length; i++) {
+		if(arguments[i] == -1) {
+			alert("Please fill all fields");
+			return true;
+		}
+	}
+	return false;
+}
 function classRoomUpdate(i) {
 	var row = i;
 	var classId, roomId,  crId;
 	classId = document.getElementById("class_" + row).value;
 	roomId = document.getElementById("room_" + row).value;
+	/* parameter checking */
+	if(selectTagsValueEmpty(classId, roomId) == true) {
+		return;
+	}
 	crId = document.getElementById("center_" + row).childNodes[0].nodeValue;
 	document.getElementById("classRoomUpdateButton_" + row).childNodes[0].nodeValue = "Updating";
 	document.getElementById("classRoomDeleteButton_" + row).disabled = true;
@@ -1100,10 +1175,12 @@ function configForm() {
 	/* ---- Adding "Add Config Row" -----------------------*/
 	var row = insertRow(table, count);
 	insertTextColumn(row, "", "New");//currBatchRoom["brId"]);
-	insertInputBox(row, "text", "configNameAdd", "32", "Enter Config Name", "");
-	insertInputBox(row, "time", "dayBeginAdd", "8", "Day Begins At", "");
-	insertInputBox(row, "number", "slotDurationAdd", "3", "Each Slot Minutes", "");
-	insertInputBox(row, "number", "nSlotsAdd", "3", "No of Slots Per Day", "");
+	insertInputBox(row, "text", "configNameAdd", "32", "Enter Config Name", "", "Configuration Name");
+	insertInputBox(row, "time", "dayBeginAdd", "8", "Day Begins At", "", "Day Begin Time");
+	document.getElementById("dayBeginAdd").setAttribute("pattern", 
+							"^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$");
+	insertInputBox(row, "number", "slotDurationAdd", "3", "Each Slot Minutes", "", "Slot Duration (in Secs)", "1");
+	insertInputBox(row, "number", "nSlotsAdd", "3", "No of Slots Per Day", "", "No of Slots Per Day", "1");
 	insertSelectTag(row, "deptIdAdd", dept, "deptId", "deptName");
 	/* TODO: This will be replaced by the current user Id when we implement users */
 	insertSelectTag(row, "inchargeAdd", [[1]], "0", "0");
@@ -1147,12 +1224,30 @@ function checkParameters(configName, dayBegin, slotDuration, nSlots, deptId, inc
 }
 function configInsert() {
 	var configName, dayBegin, slotDuration, nSlots, deptId, incharge;
-	configName = document.getElementById("configNameAdd").value;
-	dayBegin = document.getElementById("dayBeginAdd").value;
-	slotDuration = document.getElementById("slotDurationAdd").value;
-	nSlots = document.getElementById("nSlotsAdd").value;
+	configName = document.getElementById("configNameAdd");
+	dayBegin = document.getElementById("dayBeginAdd");
+	slotDuration = document.getElementById("slotDurationAdd");
+	nSlots = document.getElementById("nSlotsAdd");
 	deptId = document.getElementById("deptIdAdd").value;
 	incharge = document.getElementById("inchargeAdd").value;
+	
+	//Checking Parameter
+	if(checkParameterValidity(configName, dayBegin, 
+		slotDuration, nSlots) == false ) {
+		return;	
+	}
+	if(selectTagsValueEmpty(deptId, incharge) == true) {
+		return;
+	}
+	if(alreadyValueNotPresentInDB(config,  "configName", 
+					configName.value) == false) {
+		return;	
+	}
+	
+	configName = configName.value;
+	dayBegin = dayBeginAdd.value;
+	slotDuration = slotDuration.value;
+	nSlots = nSlots.value;
 	if(checkParameters(configName, dayBegin, slotDuration, nSlots, deptId, incharge) === false)
 		return;
 	var xhttp = new XMLHttpRequest();
@@ -1247,14 +1342,15 @@ function configDelete(i) {
 	var configId = document.getElementById("center_" + row).childNodes[0].nodeValue;
 	document.getElementById("configDeleteButton_" + row).childNodes[0].nodeValue = "Deleting";
 	document.getElementById("configDeleteButton_" + row).disabled = true;
-	document.getElementById("configUpdateButton_" + row).disabled = true;
+	//document.getElementById("configUpdateButton_" + row).disabled = true;
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function () {
 		if(this.readyState == 4 && this.status == 200) {
 			response = JSON.parse(this.responseText);
 			if(response["Success"] == "True") {
-				document.getElementById("configDeleteButton_" + row).value = "Delete"
-				config.splice(i - 2, 1);
+				document.getElementById("configDeleteButton_" + row).value = "Delete";
+				//We have displayed new entry row at last(i - 1)
+				config.splice(i - 1, 1);
 				fillTable2(true);
 				configForm();
 			} else {
@@ -1405,6 +1501,9 @@ function overlappingSBTInsert() {
 	var sbtId2, teacherId, osbtId;
 	sbtId1 = document.getElementById("sbtAdd1").value;
 	sbtId2 = document.getElementById("sbtAdd2").value;
+	if(selectTagsValueEmpty(sbtId1, sbtId2) == true) {
+		return;
+	}
 	/* debug */
 	currSBT = search(subjectBatchTeacher, "sbtId", sbtId1);
 	var subjectShortName = search(subject, "subjectId", currSBT["subjectId"])["subjectShortName"];
@@ -1509,9 +1608,9 @@ function roomForm() {
 	/* ---- Adding "Add Room Row" -----------------------*/
 	row = insertRow(table, 1);
 	insertTextColumn(row, "", "New");//currBatchRoom["brId"]);
-	insertInputBox(row, "text", "roomNameAdd", "32", "Enter Room Name", "");
-	insertInputBox(row, "text", "roomShortNameAdd", "8", "Enter Short Name", "");
-	insertInputBox(row, "number", "roomCountAdd", "3", "Room Size", "");
+	insertInputBox(row, "text", "roomNameAdd", "32", "Enter Room Name", "", "Room Name");
+	insertInputBox(row, "text", "roomShortNameAdd", "8", "Enter Short Name", "", "Room ShortName");
+	insertInputBox(row, "number", "roomCountAdd", "3", "Room Size", "", "Room Size", "1");
 	cell = insertAddButton(row, "roomInsert()", 2);
 
 	/* Add the existing room entries */
@@ -1526,11 +1625,11 @@ function roomForm() {
 		insertTextColumn(row, "center_" + count, currRoom["roomId"]);
 
 		insertInputBox(row, "text", "roomName_" + count, "32",
-					"Room Name", currRoom["roomName"]);
+					"Room Name", currRoom["roomName"], "Room Name");
 		insertInputBox(row, "text", "roomShortName_" + count, "8",
-					"Short Name", currRoom["roomShortName"]);
+					"Short Name", currRoom["roomShortName"], "Room ShortName");
 		insertInputBox(row, "number", "roomCount_" + count, "3",
-					"Capacity", currRoom["roomCount"]);
+					"Capacity", currRoom["roomCount"], "Room Size", "1");
 
 		insertUpdateButton(row, "rUpdateButton_" + count,
 							"roomUpdate(" + count + ")");
@@ -1542,10 +1641,23 @@ function roomForm() {
 function roomInsert() {
 	var row = i;
 	var roomName, roomShortName, roomCount;
-	roomName = document.getElementById("roomNameAdd").value;
-	roomShortName = document.getElementById("roomShortNameAdd").value;
-	roomCount = document.getElementById("roomCountAdd").value;
+	roomName = document.getElementById("roomNameAdd");
+	roomShortName = document.getElementById("roomShortNameAdd");
+	roomCount = document.getElementById("roomCountAdd");
 
+	//Checking Parameter
+	if(checkParameterValidity(roomName, roomShortName, 
+			roomCount) == false ) {
+		return;	
+	}
+	if(alreadyValueNotPresentInDB(room,  "roomShortName", 
+				roomShortName.value) == false) {
+		return;	
+	}
+
+	roomName = roomName.value;
+	roomShortName = roomShortName.value;
+	roomCount = roomCount.value;
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function () {
 		if(this.readyState == 4 && this.status == 200) {
@@ -1576,10 +1688,26 @@ function roomInsert() {
 function roomUpdate(i) {
 	var row = i;
 	var roomName, roomShortName, roomCount;
-	roomName = document.getElementById("roomName_" + row).value;
-	roomShortName = document.getElementById("roomShortName_" + row).value;
-	roomCount = document.getElementById("roomCount_" + row).value;
+	roomName = document.getElementById("roomName_" + row);
+	roomShortName = document.getElementById("roomShortName_" + row);
+	roomCount = document.getElementById("roomCount_" + row);
 	roomId = document.getElementById("center_" + row).childNodes[0].nodeValue;
+	
+	//Checking Parameter
+	if(checkParameterValidity(roomName, roomShortName, 
+			roomCount) == false ) {
+		return;	
+	}
+	if(alreadyValueNotPresentInDB(room,  "roomShortName", 
+				roomShortName.value, "roomId", roomId) == false) {
+		return;	
+	}
+
+	
+	roomName = roomName.value;
+	roomShortName = roomShortName.value;
+	roomCount = roomCount.value;
+	
 	document.getElementById("rUpdateButton_" + row).childNodes[0].nodeValue = "Updating";
 	document.getElementById("rDeleteButton_" + row).disabled = true;
 	document.getElementById("rUpdateButton_" + row).disabled = true;
@@ -1749,8 +1877,7 @@ function sbtInsert() {
 	batchId = document.getElementById("batchAdd").value;
 	subjectId = document.getElementById("subjectAdd").value;
 	teacherId = document.getElementById("teacherAdd").value;
-	if(batchId == -1 || subjectId == -1 || teacherId == -1) {
-		alert("Enter all values " + batchId + " " + subjectId + " " + teacherId);
+	if(selectTagsValueEmpty(batchId, subjectId, teacherId) == true) {
 		return;
 	}
 	/* debug */
@@ -1964,8 +2091,7 @@ function sctInsert() {
 	classId = document.getElementById("classAdd").value;
 	subjectId = document.getElementById("subjectAdd").value;
 	teacherId = document.getElementById("teacherAdd").value;
-	if(classId == -1 || subjectId == -1 || teacherId == -1) {
-		alert("Enter All Values");
+	if(selectTagsValueEmpty(classId, subjectId, teacherId) == true) {
 		return;
 	}
 	/* debug */
@@ -2094,12 +2220,12 @@ function subjectForm() {
 	/* ---- Adding "Add Subject Row" -----------------------*/
 	row = insertRow(table, 1);
 	insertTextColumn(row, "", "New");//currBatchRoom["brId"]);
-	insertInputBox(row, "text", "subjectNameAdd", "32", "Enter Subject Name", "");
-	insertInputBox(row, "text", "subjectShortNameAdd", "8", "Enter Short Name", "");
-	insertInputBox(row, "number", "eachSlotAdd", "3", "Each Entry #Slots", "");
-	insertInputBox(row, "number", "nSlotsAdd", "3", "#Entries", "");
+	insertInputBox(row, "text", "subjectNameAdd", "32", "Enter Subject Name", "", "Subject Name");
+	insertInputBox(row, "text", "subjectShortNameAdd", "8", "Enter Short Name", "", "Subject ShortName");
+	insertInputBox(row, "number", "eachSlotAdd", "3", "Each Entry #Slots", "", "Hours for Each Slot", "1");
+	insertInputBox(row, "number", "nSlotsAdd", "3", "#Entries", "", "No. of Slots", "1");
 
-	insertSelectTag(row, "batchesAdd", [[0], [1]], "0", "0");
+	insertSelectTag(row, "batchesAdd", [["Yes"], ["No"]], "0", "0");
 
 	cell = insertAddButton(row, "subjectInsert()", 2);
 
@@ -2115,14 +2241,14 @@ function subjectForm() {
 		insertTextColumn(row, "center_" + count, currSubject["subjectId"]);
 
 		insertInputBox(row, "text", "subjectName_" + count, "32",
-					"Subject Name", currSubject["subjectName"]);
+					"Subject Name", currSubject["subjectName"], "Subject Name");
 		insertInputBox(row, "text", "subjectShortName_" + count, "8",
-					"Short Name", currSubject["subjectShortName"]);
-		insertTextColumn(row, "eachSlot_" + count, currSubject["eachSlot"]);
+					"Short Name", currSubject["subjectShortName"], "Subject ShortName");
+		insertTextColumn(row, "eachSlot_" + count, currSubject["eachSlot"], "Hours for Each Slot", "1" );
 		/*insertInputBox(row, "number", "eachSlot_" + count, "3",
 					"Each Entry #Slots", currSubject["eachSlot"]); */
 		insertInputBox(row, "number", "nSlots_" + count, "3",
-					"#Entries", currSubject["nSlots"]);
+					"#Entries", currSubject["nSlots"], "No. of Slots", "1");
 
 		insertTextColumn(row, "batches_" + count, currSubject["batches"] == "1"? "Yes": "No");
 		/*var cell = insertCell(row);
@@ -2148,12 +2274,31 @@ function subjectForm() {
 }
 function subjectInsert() {
 	var subjectName, subjectShortName, eachSlot, nSlots, batches;
-	subjectName = document.getElementById("subjectNameAdd").value;
-	subjectShortName = document.getElementById("subjectShortNameAdd").value;
-	eachSlot = document.getElementById("eachSlotAdd").value;
-	nSlots = document.getElementById("nSlotsAdd").value;
-	batches = document.getElementById("batchesAdd").value;
-
+	subjectName = document.getElementById("subjectNameAdd");
+	subjectShortName = document.getElementById("subjectShortNameAdd");
+	eachSlot = document.getElementById("eachSlotAdd");
+	nSlots = document.getElementById("nSlotsAdd");
+	batches = document.getElementById("batchesAdd");
+	
+	//Checking Parameter
+	if(checkParameterValidity(subjectName, subjectShortName, 
+		eachSlot, nSlots, batches) == false ) {
+		return;	
+	}
+	if(alreadyValueNotPresentInDB(subject,  "subjectShortName", 
+				subjectShortName.value) == false) {
+		return;	
+	}
+	subjectName = subjectName.value;
+	subjectShortName = subjectShortName.value;
+	eachSlot = eachSlot.value;
+	nSlots = nSlots.value;
+	batches = batches.value;
+	if(batches == -1 || batches == "No") {
+		batches = 0;
+	}
+	else
+		batches = 1;
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function () {
 		if(this.readyState == 4 && this.status == 200) {
@@ -2188,11 +2333,30 @@ function subjectUpdate(i) {
 	var row = i;
 	var subjectName, subjectShortName, eachSlot, nSlots, batches;
 	subjectId = document.getElementById("center_" + row).childNodes[0].nodeValue;
-	subjectName = document.getElementById("subjectName_" + row).value;
-	subjectShortName = document.getElementById("subjectShortName_" + row).value;
-	eachSlot = document.getElementById("eachSlot_" + row).value;
-	nSlots = document.getElementById("nSlots_" + row).value;
-	batches = document.getElementById("batches_" + row).value;
+	subjectName = document.getElementById("subjectName_" + row);
+	subjectShortName = document.getElementById("subjectShortName_" + row);
+	eachSlot = document.getElementById("eachSlot_" + row).innerHTML;
+	nSlots = document.getElementById("nSlots_" + row);
+	batches = document.getElementById("batches_" + row).innerHTML;
+	if(batches == "Yes")
+		batches = 1;
+	else 
+		batches = 0;
+	//Checking Parameter
+	if(checkParameterValidity(subjectName, subjectShortName, 
+			nSlots) == false ) {
+		return;	
+	}
+	if(alreadyValueNotPresentInDB(subject,  "subjectShortName", 
+				subjectShortName.value, "subjectId", subjectId) == false) {
+		return;	
+	}
+	
+	subjectName = subjectName.value;
+	subjectShortName = subjectShortName.value;
+	nSlots = nSlots.value;
+	
+	
 	document.getElementById("sUpdateButton_" + row).childNodes[0].nodeValue = "Updating";
 	document.getElementById("sDeleteButton_" + row).disabled = true;
 	document.getElementById("sUpdateButton_" + row).disabled = true;
@@ -2341,7 +2505,10 @@ function subjectRoomInsert() {
 	var subjectId, roomId,  srId;
 	subjectId = document.getElementById("srSubjectAdd").value;
 	roomId = document.getElementById("srRoomAdd").value;
-	/* debug */
+	/* parameter checking */
+	if(selectTagsValueEmpty(subjectId, roomId) == true) {
+		return;
+	}
 	roomShortName = search(room, "roomId", roomId)["roomShortName"];
 	subjectName= search(subject, "subjectId", subjectId)["subjectName"];
 
@@ -2376,6 +2543,10 @@ function subjectRoomUpdate(i) {
 	var subjectId, roomId,  srId;
 	subjectId = document.getElementById("subject_" + row).value;
 	roomId = document.getElementById("room_" + row).value;
+	/* parameter checking */
+	if(selectTagsValueEmpty(subjectId, roomId) == true) {
+		return;
+	}
 	srId = document.getElementById("center_" + row).childNodes[0].nodeValue;
 	document.getElementById("subjectRoomUpdateButton_" + row).childNodes[0].nodeValue = "Updating";
 	document.getElementById("subjectRoomDeleteButton_" + row).disabled = true;
@@ -2383,7 +2554,6 @@ function subjectRoomUpdate(i) {
 	/* debug */
 	roomShortName = search(room, "roomId", roomId)["roomShortName"];
 	subjectName= search(subject, "subjectId", subjectId)["subjectName"];
-
 	row = i - 2;
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function () {
@@ -2456,10 +2626,10 @@ function teacherForm() {
 	/* ---- Adding "Add Teacher Row" -----------------------*/
 	row = insertRow(table, 1);
 	insertTextColumn(row, "", "New");//currBatchRoom["brId"]);
-	insertInputBox(row, "text", "teacherNameAdd", "32", "Enter Teacher Name", "");
-	insertInputBox(row, "text", "teacherShortNameAdd", "8", "Enter Short Name", "");
-	insertInputBox(row, "number", "minHrsAdd", "3", "Min Hrs of Work", "");
-	insertInputBox(row, "number", "maxHrsAdd", "3", "Max Hrs of Work", "");
+	insertInputBox(row, "text", "teacherNameAdd", "32", "Enter Teacher Name", "", "Teacher's Name");
+	insertInputBox(row, "text", "teacherShortNameAdd", "8", "Enter Short Name", "", "Teacher's Short Name");
+	insertInputBox(row, "number", "minHrsAdd", "3", "Min Hrs of Work", "", "Minimum Working Hours", "0");
+	insertInputBox(row, "number", "maxHrsAdd", "3", "Max Hrs of Work", "", "Maximum Working Hours", "0");
 
 	var cell = insertCell(row);
 	cell.setAttribute("align","center");
@@ -2489,13 +2659,13 @@ function teacherForm() {
 		insertTextColumn(row, "center_" + count, currTeacher["teacherId"]);
 
 		insertInputBox(row, "text", "teacherName_" + count, "32",
-					"Teacher Name", currTeacher["teacherName"]);
+					"Teacher Name", currTeacher["teacherName"], "Teacher's Name");
 		insertInputBox(row, "text", "teacherShortName_" + count, "8",
-					"Short Name", currTeacher["teacherShortName"]);
+					"Short Name", currTeacher["teacherShortName"], "Teacher's Short Name");
 		insertInputBox(row, "number", "minHrs_" + count, "32",
-					"Min Hrs of Work", currTeacher["minHrs"]);
+					"Min Hrs of Work", currTeacher["minHrs"],"Minimum Working Hours", "0");
 		insertInputBox(row, "number", "maxHrs_" + count, "32",
-					"Max Hrs of Work", currTeacher["maxHrs"]);
+					"Max Hrs of Work", currTeacher["maxHrs"],"Maximum Working Hours", "0");
 
 		var cell = insertCell(row);
 		cell.setAttribute("align","center");
@@ -2527,14 +2697,73 @@ function getDeptId(deptShortName) {
 	}
 	return -1;
 }
+/*This function checks DOM validity for input n select
+* Like require, pattern, number, time attributes
+*require attribute is added in insertInputBox()
+*/
+function checkParameterValidity() {
+	for(var i = 0; i < arguments.length; i++) {
+		if(arguments[i].checkValidity() == false) {
+        		alert(arguments[i].validationMessage + " "+ arguments[i].title);
+        		return false;
+    		}
+	}
+	return true;
+}
+
+function checkMinMaxHrs(minhrs, maxhrs){
+	if(parseInt(minhrs.value) > parseInt(maxhrs.value)) {
+		alert("Min Work hours must be less than Max Work Hour");
+		return false;
+	}
+	return true;
+}
+
+/*If same field value alreay available in DB
+*	return false
+* tableIdCol n idValue is used while Updating
+*
+*/
+function alreadyValueNotPresentInDB(table, tableColName, colValue, tableIdCol, idValue) {
+	var row = search(table, tableColName, colValue);
+	if(row !== -1) {/*Some row found with same value*/
+		if(tableIdCol === undefined) {
+			alert("The "+tableColName+" : "+colValue+" is Already Used.\nChoose another value");
+			return false;
+		}
+		else if(row[tableIdCol] != idValue) {/*tableIdCol defined, while updating*/
+			alert("The "+tableColName+" : "+colValue+" is Already Used.\nChoose another value");
+			return false;
+		}
+	}
+	return true;
+}
+
 function teacherInsert() {
 	var teacherName, teacherShortName, minHrs, maxHrs, dept;
-	teacherName = document.getElementById("teacherNameAdd").value;
-	teacherShortName = document.getElementById("teacherShortNameAdd").value;
-	minHrs = document.getElementById("minHrsAdd").value;
-	maxHrs = document.getElementById("maxHrsAdd").value;
-	dept = document.getElementById("deptAdd").value;
-
+	teacherName = document.getElementById("teacherNameAdd");
+	teacherShortName = document.getElementById("teacherShortNameAdd");
+	minHrs = document.getElementById("minHrsAdd");
+	maxHrs = document.getElementById("maxHrsAdd");
+	dept = document.getElementById("deptAdd");
+	//Checking Parameter
+	if(checkParameterValidity(teacherName, teacherShortName, 
+		minHrs, maxHrs, dept) == false ) {
+		return;	
+	}
+	if(checkMinMaxHrs(minHrs, maxHrs) == false) {
+		return;
+	}
+	if(alreadyValueNotPresentInDB(teacher,  "teacherShortName", 
+				teacherShortName.value) == false) {
+		return;	
+	}
+	teacherName = teacherName.value;
+	teacherShortName = teacherShortName.value;
+	minHrs = minHrs.value;
+	maxHrs = maxHrs.value;
+	dept = dept.value;
+	
 	var deptId = getDeptId(dept);
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function () {
@@ -2570,11 +2799,29 @@ function teacherUpdate(i) {
 	var row = i;
 	var teacherName, teacherShortName, minHrs, maxHrs, dept, teacherId;
 	teacherId = document.getElementById("center_" + row).childNodes[0].nodeValue;
-	teacherName = document.getElementById("teacherName_" + row).value;
-	teacherShortName = document.getElementById("teacherShortName_" + row).value;
-	minHrs = document.getElementById("minHrs_" + row).value;
-	maxHrs = document.getElementById("maxHrs_" + row).value;
-	dept = document.getElementById("dept_" + row).value;
+	teacherName = document.getElementById("teacherName_" + row);
+	teacherShortName = document.getElementById("teacherShortName_" + row);
+	minHrs = document.getElementById("minHrs_" + row);
+	maxHrs = document.getElementById("maxHrs_" + row);
+	dept = document.getElementById("dept_" + row);
+	//Checking Parameter
+	if(checkParameterValidity(teacherName, teacherShortName, 
+		minHrs, maxHrs, dept) == false ) {
+		return;	
+	}
+	if(checkMinMaxHrs(minHrs, maxHrs) == false) {
+		return;
+	}
+	if(alreadyValueNotPresentInDB(teacher,  "teacherShortName", 
+				teacherShortName.value, "teacherId", teacherId) == false) {
+		return;	
+	}
+	
+	teacherName = teacherName.value;
+	teacherShortName = teacherShortName.value;
+	minHrs = minHrs.value;
+	maxHrs = maxHrs.value;
+	dept = dept.value;
 	document.getElementById("tUpdateButton_" + row).childNodes[0].nodeValue = "Updating";
 	document.getElementById("tDeleteButton_" + row).disabled = true;
 	document.getElementById("tUpdateButton_" + row).disabled = true;
