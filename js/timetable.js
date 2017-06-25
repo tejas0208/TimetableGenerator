@@ -3056,7 +3056,12 @@ function loadSnapshotMenu(selectedName) {
 	//sortSelect(selectTag);
 }
 function jsSaveNewSnapshot() {
-	var newSnapshotName = prompt("Enter snapshot Name","snapshot");
+	var newSnapshotName = prompt("Enter snapshot Name","new snapshot");
+	if(search(snapshot, "snapshotName", newSnapshotName) != -1) {
+		alert("Snapshot name: "+newSnapshotName+" already used.\nTry another name."
+				+"\n\t\tOR\nChoose the snapshot and click Save.");
+		return;
+	}
 	if(newSnapshotName != null) {
 		var xhttp;
 		xhttp = new XMLHttpRequest();
