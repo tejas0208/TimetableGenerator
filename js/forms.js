@@ -877,7 +877,7 @@ function classUpdate(i) {
 	}
 	
 	className = className.value;
-	classShortName = classShort.value;
+	classShortName = classShortName.value;
 	semester = semester.value;
 	classCount = classCount.value;
 	document.getElementById("cUpdateButton_" + row).childNodes[0].nodeValue = "Updating";
@@ -917,7 +917,6 @@ function classUpdate(i) {
 	xhttp.send("reqType=classUpdate&className=" + className + "&classShortName=" +
 			classShortName + "&semester=" + semester + "&classCount=" + classCount +
 			"&classId=" + classId + "&snapshotId=" + currentSnapshotId);
-
 }
 function classDelete(i) {
 	var row = i;
