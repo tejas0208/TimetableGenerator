@@ -1,5 +1,5 @@
 <?php
-// This file is part of Samay - a timetabling software for 
+// This file is part of Samay - a timetabling software for
 // schools, colleges/universities.
 //
 // Samay is free software: you can redistribute it and/or modify
@@ -45,32 +45,32 @@ function generateInputForms() {
 	global $formsList;
 	global $formsHTML;
 	for($i = 0; $i < count($formsList); $i++) {
-		$formsHTML .=  
+		$formsHTML .=
 			"<div class=\"inputForm\" id=\"".$formsList[$i][0]."\">".
-			"<table class=\"inputFormTitleTable\"> <tr> 
+			"<table class=\"inputFormTitleTable\"> <tr>
 					<td class=\"inputFormTitle\"> ".$formsList[$i][1].
-					"</td> 
-					<td class=\"closebtn\">  <a href=\"javascript:void(0)\" 
-							onclick='formClose(\"".$formsList[$i][0]."\")'> 
-							Close &times; </a> 
-					</td> 
+					"</td>
+					<td class=\"closebtn\">  <a href=\"javascript:void(0)\"
+							onclick='formClose(\"".$formsList[$i][0]."\")'>
+							Close &times; </a>
+					</td>
 			</table>
-			<table id=\"".$formsList[$i][2]."\" class=\"inputFormTable\">	
+			<table id=\"".$formsList[$i][2]."\" class=\"inputFormTable\">
 			</table>
 			</div>";
 	}
 }
 $checkMessage = "
 	<div id=\"checkMessage\" class=\"waitMessage\">
-	<h1> Checking Setup... </h1> 
+	<h1> Checking Setup... </h1>
 	</div>
 ";
 
 $waitMessage = "
 	<div id=\"waitMessage\" class=\"waitMessage\" display=\"\">
-	<table width=\"60%\"> 
-	<tr> 
-		<td> <h1> Wait till the operation completes ... </h1> </td> 
+	<table width=\"60%\">
+	<tr>
+		<td> <h1> Wait till the operation completes ... </h1> </td>
 	</tr>
 	</table>
 	</div>
@@ -166,7 +166,7 @@ function teacherUpdate() {
 		return failMessage();
 	}
 	ttlog("teacherUpdate(): resString: ".successMessage());
-	return successMessage(); 
+	return successMessage();
 }
 
 function subjectInsert() {
@@ -185,7 +185,7 @@ function subjectInsert() {
 		 "VALUES (\"$subjectName\", \"$subjectShortName\", $eachSlot, $nSlots, $batches, $snapshotId)";
 	$selectQuery = "SELECT * from subject where subjectShortName = \"$subjectShortName\" AND snapshotId = $snapshotId";
 
-	$result = sqlUpdate($query);	
+	$result = sqlUpdate($query);
 	ttlog("insertSubject(): $query Result: ".json_encode($result));
 	if($result === false) {
 		ttlog("insertSubject(): resString: ".failMessage());
@@ -211,7 +211,7 @@ function subjectDelete() {
 
 	$query = "DELETE FROM subject WHERE subjectId = \"$subjectId\" AND snapshotId = $snapshotId;";
 
-	$result = sqlUpdate($query);	
+	$result = sqlUpdate($query);
 	ttlog("subjectDelete(): $query Result: ".json_encode($result));
 
 	if($result === false) {
@@ -236,7 +236,7 @@ function subjectUpdate() {
 			 "\"$subjectShortName\", eachSlot = \"$eachSlot\", nSlots= \"$nSlots\", ".
 			 "batches= \"$batches\" WHERE subjectId = \"$subjectId\" AND snapshotId = $snapshotId";
 
-	$result = sqlUpdate($query);	
+	$result = sqlUpdate($query);
 	ttlog("subjectUpdate(): $query Result: ".json_encode($result));
 
 	if($result === false) {
@@ -257,12 +257,12 @@ function classInsert() {
 	$semester = getArgument("semester");
 	$classCount = getArgument("classCount");
 	$snapshotId = getArgument("snapshotId");
-	
+
 	$query = "INSERT INTO class (className, classShortName, semester, classCount, snapshotId) ".
 			 "VALUES (\"$className\", \"$classShortName\", $semester, $classCount, $snapshotId)";
 	$selectQuery = "SELECT * from class where classShortName = \"$classShortName\" AND snapshotId = $snapshotId";
 
-	$result = sqlUpdate($query);	
+	$result = sqlUpdate($query);
 	ttlog("classInsert(): $query Result :".json_encode($result));
 
 	if($result === false) {
@@ -288,10 +288,10 @@ function classDelete() {
 
 	$classId = getArgument("classId");
 	$snapshotId = getArgument("snapshotId");
-	
+
 	$query = "DELETE FROM class WHERE classId = \"$classId\" AND snapshotId = $snapshotId;";
 
-	$result = sqlUpdate($query);	
+	$result = sqlUpdate($query);
 	ttlog("classDelete(): $query Result :".json_encode($result));
 
 	if($result === false) {
@@ -312,12 +312,12 @@ function classUpdate() {
 	$semester = getArgument("semester");
 	$classCount = getArgument("classCount");
 	$snapshotId = getArgument("snapshotId");
-	
+
 	$query = "UPDATE class SET className = \"$className\", classShortName = ".
 			 "\"$classShortName\", semester = \"$semester\", classCount= \"$classCount\" ".
 			 "WHERE classId = \"$classId\" and snapshotId = $snapshotId";
 
-	$result = sqlUpdate($query);	
+	$result = sqlUpdate($query);
 	ttlog("classUpdate(): $query Result :".json_encode($result));
 
 	if($result === false) {
@@ -327,7 +327,7 @@ function classUpdate() {
 	ttlog("classUpdate(): resString: ".successMessage());
 	return successMessage();
 }
-/* TODO: We have made compulsory to enter a batch with class. 
+/* TODO: We have made compulsory to enter a batch with class.
  * So this function needs an update
  */
 function batchClassUpdate() {
@@ -342,17 +342,17 @@ function batchClassUpdate() {
 	$result = sqlGetAllRows($query);
 
 	$selectQuery = "";
-	if(count($result) == 1) 
+	if(count($result) == 1)
 		$query = "UPDATE batchClass SET classId = $classId WHERE batchId = $batchId  AND snapshotId = $snapshotId;";
 	else if(count($result == 0)) {
 		$query = "INSERT INTO batchClass (batchId, classId, snapshotId) VALUES ($batchId, $classId, $snapshotId)";
 		$selectQuery = "SELECT * from batchClass WHERE batchId =$batchId AND snapshotId = $snapshotId";
 	}
 	else
-		$query = "ERORR-Query: Not found $batchId"; 
+		$query = "ERORR-Query: Not found $batchId";
 	ttlog("batchClassUpdate: Query: ".$query);
 
-	$result = sqlUpdate($query);	
+	$result = sqlUpdate($query);
 	ttlog("batchClassUpdate: $query Result: ".json_encode($result));
 
 	if($result === false) {
@@ -391,7 +391,7 @@ function batchInsert() {
 	$query = "INSERT INTO batch (batchName, batchCount, snapshotId) VALUES (\"$batchName\", $batchCount, $snapshotId)";
 	$selectQuery = "SELECT * FROM batch where batchName = \"$batchName\" AND snapshotId = $snapshotId";
 
-	$result = sqlUpdate($query);	
+	$result = sqlUpdate($query);
 	ttlog("batchInsert(): $query Result: ".json_encode($result));
 
 	if($result === false) {
@@ -404,11 +404,11 @@ function batchInsert() {
 		ttlog("batchInsert(): resString: ".failMessage());
 		return failMessage();
 	} else {
-		$insertBatchClassQuery = 
+		$insertBatchClassQuery =
 			"INSERT INTO batchClass (batchId, classId, snapshotId) VALUES ( ".
 				$result[0]["batchId"].  ", $classId, $snapshotId)";
-		$result = sqlUpdate($insertBatchClassQuery);
-		if($result === false) {
+		$res = sqlUpdate($insertBatchClassQuery);
+		if($res === false) {
 			ttlog("batchInsert(): resString: ".failMessage());
 			return failMessage();
 		} else {
@@ -427,7 +427,7 @@ function batchDelete() {
 
 	$query = "DELETE FROM batch WHERE batchId = \"$batchId\" AND snapshotId = $snapshotId;";
 
-	$result = sqlUpdate($query);	
+	$result = sqlUpdate($query);
 	ttlog("batchDelete(): $query Result: ".json_encode($result));
 
 	if($result === false) {
@@ -452,7 +452,7 @@ function batchUpdate() {
 	$query = "UPDATE batch SET batchName = \"$batchName\", batchCount= \"$batchCount\" ".
 			 "WHERE batchId = \"$batchId\" AND snapshotId = $snapshotId";
 
-	$result = sqlUpdate($query);	
+	$result = sqlUpdate($query);
 	ttlog("batchUpdate(): Result: ".json_encode($result));
 
 	if($result === false) {
@@ -480,7 +480,7 @@ function batchCanOverlapDelete() {
 	$query .= ";";
 	ttlog("batchCanOverlapDelete: Created Query: ".$query);
 
-	$result = sqlUpdate($query);	
+	$result = sqlUpdate($query);
 	ttlog("batchCanOverlapDelete: $query Result: ".json_encode($result));
 
 	if($result === false) {
@@ -503,7 +503,7 @@ function batchCanOverlapInsert() {
 		$tok = strtok(",");
 		if($tok !== false)
 			$batches[count($batches)] = $tok;
-	} 
+	}
 	ttlog("batchCanOverlapInsert: received batches for deletion: ".json_encode($batches));
 	$query = "INSERT INTO batchCanOverlap (batchId, batchOverlapId, snapshotId) VALUES ";
 	for($i = 0; $i < count($batches); $i++) { // 0 special case, to match the "OR" in query
@@ -517,10 +517,10 @@ function batchCanOverlapInsert() {
 					$query .= "(".$batches[$i].", ".$batches[$j].", $snapshotId), ";
 			}
 	}
-	$query .= ";"; // remove the last comma  
+	$query .= ";"; // remove the last comma
 	ttlog("batchCanOverlapInsert: Query Created: ".$query);
 
-	$result = sqlUpdate($query);	
+	$result = sqlUpdate($query);
 	ttlog("batchCanOverlapInsert: Result: ".json_encode($result));
 
 	if($result === false) {
@@ -544,7 +544,7 @@ function roomInsert() {
 			 "VALUES (\"$roomName\", \"$roomShortName\", $roomCount, $snapshotId)";
 	$selectQuery = "SELECT * from room where roomShortName = \"$roomShortName\" AND snapshotId = $snapshotId";
 
-	$result = sqlUpdate($query);	
+	$result = sqlUpdate($query);
 	ttlog("roomInsert(): $query Result :".json_encode($result));
 
 	if($result === false) {
@@ -570,10 +570,10 @@ function roomDelete() {
 
 	$roomId = getArgument("roomId");
 	$snapshotId = getArgument("snapshotId");
-	
+
 	$query = "DELETE FROM room WHERE roomId = \"$roomId\" AND snapshotId = $snapshotId;";
 
-	$result = sqlUpdate($query);	
+	$result = sqlUpdate($query);
 	ttlog("roomDelete(): $query Result :".json_encode($result));
 
 	if($result === false) {
@@ -593,12 +593,12 @@ function roomUpdate() {
 	$roomShortName = getArgument("roomShortName");
 	$roomCount = getArgument("roomCount");
 	$snapshotId = getArgument("snapshotId");
-	
+
 	$query = "UPDATE room SET roomName = \"$roomName\", roomShortName = ".
 			 "\"$roomShortName\", roomCount= \"$roomCount\" ".
 			 "WHERE roomId = \"$roomId\" AND snapshotId = $snapshotId";
 
-	$result = sqlUpdate($query);	
+	$result = sqlUpdate($query);
 	ttlog("roomUpdate(): $query Result :".json_encode($result));
 
 	if($result === false) {
@@ -794,16 +794,16 @@ function subjectRoomInsert() {
 	header("Content-Type: application/JSON: charset=UTF-8");
 
 	$subjectId = getArgument("subjectId");
-	$roomId = getArgument("roomId"); 
+	$roomId = getArgument("roomId");
 	$srId = getArgument("srId");
 	$snapshotId = getArgument("snapshotId");
-	
+
 	$query = "INSERT INTO subjectRoom (subjectId, roomId, snapshotId) ".
 			 "VALUES ($subjectId, $roomId, $snapshotId) ";
 	$selectQuery = "SELECT * from subjectRoom where subjectId = $subjectId AND ".
 			  " roomId = $roomId AND snapshotId = $snapshotId";
 
-	$result = sqlUpdate($query);	
+	$result = sqlUpdate($query);
 	ttlog("subjectRoomInsert(): $query Result :".json_encode($result));
 
 	if($result === false) {
@@ -829,10 +829,10 @@ function subjectRoomDelete() {
 
 	$srId = getArgument("srId");
 	$snapshotId = getArgument("snapshotId");
-	
+
 	$query = "DELETE FROM subjectRoom WHERE srId = $srId AND snapshotId = $snapshotId;";
 
-	$result = sqlUpdate($query);	
+	$result = sqlUpdate($query);
 	ttlog("subjectRoomDelete(): $query Result :".json_encode($result));
 
 	if($result === false) {
@@ -848,15 +848,15 @@ function subjectRoomUpdate() {
 	header("Content-Type: application/JSON: charset=UTF-8");
 
 	$subjectId = getArgument("subjectId");
-	$roomId = getArgument("roomId"); 
+	$roomId = getArgument("roomId");
 	$srId = getArgument("srId");
 	$snapshotId = getArgument("snapshotId");
-	
+
 	$query = "UPDATE subjectRoom SET subjectId = $subjectId, ".
 			 "roomId = $roomId ".
 			 "WHERE srId = $srId AND snapshotId = $snapshotId";
 
-	$result = sqlUpdate($query);	
+	$result = sqlUpdate($query);
 	ttlog("subjectRoomUpdate(): $query Result :".json_encode($result));
 
 	if($result === false) {
@@ -871,15 +871,15 @@ function classRoomInsert() {
 	header("Content-Type: application/JSON: charset=UTF-8");
 
 	$classId = getArgument("classId");
-	$roomId = getArgument("roomId"); 
+	$roomId = getArgument("roomId");
 	$crId = getArgument("crId");
 	$snapshotId = getArgument("snapshotId");
-	
+
 	$query = "INSERT INTO classRoom (classId, roomId, snapshotId) ".
 			 "VALUES ($classId, $roomId, $snapshotId) ";
 	$selectQuery = "SELECT * from classRoom where classId = $classId AND roomId = $roomId AND snapshotId = $snapshotId";
 
-	$result = sqlUpdate($query);	
+	$result = sqlUpdate($query);
 	ttlog("classRoomInsert(): $query Result :".json_encode($result));
 
 	if($result === false) {
@@ -906,10 +906,10 @@ function classRoomDelete() {
 
 	$crId = getArgument("crId");
 	$snapshotId = getArgument("snapshotId");
-	
+
 	$query = "DELETE FROM classRoom WHERE crId = $crId AND snapshotId = $snapshotId;";
 
-	$result = sqlUpdate($query);	
+	$result = sqlUpdate($query);
 	ttlog("classRoomDelete(): $query Result :".json_encode($result));
 
 	if($result === false) {
@@ -925,15 +925,15 @@ function classRoomUpdate() {
 	header("Content-Type: application/JSON: charset=UTF-8");
 
 	$classId = getArgument("classId");
-	$roomId = getArgument("roomId"); 
+	$roomId = getArgument("roomId");
 	$crId = getArgument("crId");
 	$snapshotId = getArgument("snapshotId");
-	
+
 	$query = "UPDATE classRoom SET classId = $classId, ".
 			 "roomId = $roomId ".
 			 "WHERE crId = $crId AND snapshotId = $snapshotId";
 
-	$result = sqlUpdate($query);	
+	$result = sqlUpdate($query);
 	ttlog("classRoomUpdate(): $query Result :".json_encode($result));
 
 	if($result === false) {
@@ -948,15 +948,15 @@ function batchRoomInsert() {
 	header("Content-Type: application/JSON: charset=UTF-8");
 
 	$batchId = getArgument("batchId");
-	$roomId = getArgument("roomId"); 
+	$roomId = getArgument("roomId");
 	$brId = getArgument("brId");
 	$snapshotId = getArgument("snapshotId");
-	
+
 	$query = "INSERT INTO batchRoom (batchId, roomId, snapshotId) ".
 			 "VALUES ($batchId, $roomId, $snapshotId) ";
 	$selectQuery = "SELECT * from batchRoom where batchId = $batchId AND roomId = $roomId AND snapshotId = $snapshotId";
 
-	$result = sqlUpdate($query);	
+	$result = sqlUpdate($query);
 	ttlog("batchRoomInsert(): $query Result :".json_encode($result));
 
 	if($result === false) {
@@ -984,10 +984,10 @@ function batchRoomDelete() {
 
 	$brId = getArgument("brId");
 	$snapshotId = getArgument("snapshotId");
-	
+
 	$query = "DELETE FROM batchRoom WHERE brId = $brId AND snapshotId = $snapshotId;";
 
-	$result = sqlUpdate($query);	
+	$result = sqlUpdate($query);
 	ttlog("batchRoomDelete(): $query : Result :".json_encode($result));
 
 	if($result === false) {
@@ -1003,15 +1003,15 @@ function batchRoomUpdate() {
 	header("Content-Type: application/JSON: charset=UTF-8");
 
 	$batchId = getArgument("batchId");
-	$roomId = getArgument("roomId"); 
+	$roomId = getArgument("roomId");
 	$brId = getArgument("brId");
 	$snapshotId = getArgument("snapshotId");
-	
+
 	$query = "UPDATE batchRoom SET batchId = $batchId, ".
 			 "roomId = $roomId ".
 			 "WHERE brId = $brId AND snapshotId = $snapshotId";
 
-	$result = sqlUpdate($query);	
+	$result = sqlUpdate($query);
 	ttlog("batchRoomUpdate(): $query : Result :".json_encode($result));
 
 	if($result === false) {
@@ -1038,7 +1038,7 @@ function configInsert() {
 			 "VALUES (\"$configName\", \"$dayBegin\", $slotDuration, $nSlots, $deptId, $incharge)";
 	$selectQuery = "SELECT * from config where configName = \"$configName\"";
 
-	$result = sqlUpdate($query);	
+	$result = sqlUpdate($query);
 	ttlog("configInsert(): $query Result: ".json_encode($result));
 
 	if($result === false) {
@@ -1066,7 +1066,7 @@ function configDelete() {
 
 	$query = "DELETE FROM config WHERE configId = $configId;";
 
-	$result = sqlUpdate($query);	
+	$result = sqlUpdate($query);
 	ttlog("configDelete(): $query Result: ".json_encode($result));
 
 	if($result === false) {
@@ -1093,8 +1093,8 @@ function configUpdate() {
 	$query = "UPDATE config SET configName = \"$configName\", dayBegin = ".
 			 "\"$dayBegin\", slotDuration = $slotDuration, nSlots= $nSlots, ".
 			 "deptId= $deptId, incharge=$incharge WHERE configId = \"$configId\"";
-	
-	$result = sqlUpdate($query);	
+
+	$result = sqlUpdate($query);
 	ttlog("configUpdate(): $query Result: ".json_encode($result));
 
 	if($result === false) {
@@ -1124,7 +1124,7 @@ function overlappingSBTInsert() {
 
 	$result = sqlUpdate($queryInsert1);
 	ttlog("overlappingSBTInsert(): $queryInsert1 Result: $result");
-	if($result === false) { 
+	if($result === false) {
 		ttlog("overlappingSBTInsert(): resString: ".failMessage());
 		return failMessage();
 	}
