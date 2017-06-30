@@ -1960,8 +1960,8 @@ function BatchBusyInThisSlot(i, j, sctOrSbtEntry, classId, batchId, logOrNot) {
 	return false; 
 }
 
-function subjectCantFitInRemainingSlots(sctOrSbtEntry, j, nSlotsPerDay, idText) {
-	var currSubject= search(subject, "subjectId", sctOrSbtEntry["subjectId"]);
+function subjectCantFitInRemainingSlots(currSubject, j, nSlotsPerDay, idText) {
+	//var currSubject= search(subject, "subjectId", sctOrSbtEntry["subjectId"]);
 	if(j + parseInt(currSubject["eachSlot"]) - 1  >= nSlotsPerDay) {
 		disabledSubjectAdd(disabledSubjects, currSubject["subjectShortName"],
 				idText, "Len=" + currSubject["eachSlot"]);
@@ -2125,7 +2125,7 @@ function getEligibleSubjects(i, j, k) {
 		}
 		
 		/* Skip the subject if it can't fit remaining slots of day */
-		if(subjectCantFitInRemainingSlots(sctlist[m], j, nSlotsPerDay,
+		if(subjectCantFitInRemainingSlots(currSubject, j, nSlotsPerDay,
 				search(classTable, "classId", sctlist[m]["classId"])["classShortName"])) {
 			continue;
 		}
@@ -2171,7 +2171,7 @@ function getEligibleSubjects(i, j, k) {
 		}
 
 		/* Skip the subject if it can't fit remaining slots of day */
-		if(subjectCantFitInRemainingSlots(sbtlist[m], j, nSlotsPerDay,
+		if(subjectCantFitInRemainingSlots(currSubject, j, nSlotsPerDay,
 				search(batch, "batchId", sbtlist[m]["batchId"])["batchName"])) {
 			continue;
 		}
