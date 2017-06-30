@@ -2109,7 +2109,7 @@ function getEligibleSubjects(i, j, k) {
 	for(var m = 0; m < sctlist.length; m++) {
 		var currSubject= search(subject, "subjectId", sctlist[m]["subjectId"]);
 		/* Skip if already included in the list */
-		for(x = 0; x < subjectsList.length; x++) {
+		/*for(x = 0; x < subjectsList.length; x++) {
 			if(subjectsList[x][0] == currSubject &&
 					subjectsList[x][1] == search(classTable, "classId", sctlist[m]["classId"])
 									["classShortName"] &&
@@ -2117,7 +2117,7 @@ function getEligibleSubjects(i, j, k) {
 									["teacherShortName"]
 			)
 				continue;
-		}
+		}*/
 		/* Skip if all required entries are already done */
 		if(allEntriesAlreadyDoneForSubject(sctlist[m], "classId", sctlist[m]["classId"],
 				search(classTable, "classId", sctlist[m]["classId"])["classShortName"], 1)) {
@@ -2154,7 +2154,7 @@ function getEligibleSubjects(i, j, k) {
 	for(var m = 0; m < sbtlist.length; m++) {
 		var currSubject= search(subject, "subjectId", sbtlist[m]["subjectId"]);
 		/* Skip if already included in the list */
-		for(x = 0; x < subjectsList.length; x++) {
+		/*for(x = 0; x < subjectsList.length; x++) {
 			if(subjectsList[x][0] == currSubject &&
 					subjectsList[x][1] == search(batch, "batchId", sctlist[m]["batchId"])
 									["batchName"] &&
@@ -2162,7 +2162,7 @@ function getEligibleSubjects(i, j, k) {
 									["teacherShortName"]
 			)
 				continue;
-		}
+		}*/
 		/* Skip if all required entries are already done */
 		if(allEntriesAlreadyDoneForSubject(sbtlist[m], "batchId" ,
 				sbtlist[m]["batchId"], 
