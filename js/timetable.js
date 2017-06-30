@@ -1321,7 +1321,7 @@ function getEligibleBatches(i, j, k, subjectRow) {
 				"Done"]);
 			continue;
 		}
-		if(teacherBusyInThisSlot(i, j, sbtlist[m], sbtlist[m]["teacherId"], 0)) {
+		if(teacherBusyInThisSlot(i, j, subjectRow, sbtlist[m]["teacherId"], 0)) {
 			disabledBatches.push([search(batch, "batchId", sbtlist[m]["batchId"])["batchName"],
 				"TchrBusy"]);
 			continue;
@@ -1835,8 +1835,8 @@ function roomBusyOnRoomPageInThisSlot(i, j, sctOrSbtEntry) {
 	return false;
 }
 
-function teacherBusyInThisSlot(i, j, sctOrSbtEntry, teacherId, logOrNot) {
-	var currSubject= search(subject, "subjectId", sctOrSbtEntry["subjectId"]);
+function teacherBusyInThisSlot(i, j, currSubject, teacherId, logOrNot) {
+	//var currSubject= search(subject, "subjectId", sctOrSbtEntry["subjectId"]);
 	currTeacher = search(teacher, "teacherId", teacherId);
 
 	for(var n = 0; n < currSubject["eachSlot"]; n++) {
@@ -2130,7 +2130,7 @@ function getEligibleSubjects(i, j, k) {
 			continue;
 		}
 		
-		if(teacherBusyInThisSlot(i, j, sctlist[m], sctlist[m]["teacherId"], 1)) {
+		if(teacherBusyInThisSlot(i, j, currSubject, sctlist[m]["teacherId"], 1)) {
 			continue;
 		}
 		if(roomBusyOnRoomPageInThisSlot(i, j, sctlist[m])) {
@@ -2176,7 +2176,7 @@ function getEligibleSubjects(i, j, k) {
 			continue;
 		}
 		
-		if(teacherBusyInThisSlot(i, j, sbtlist[m], sbtlist[m]["teacherId"], 1)) {
+		if(teacherBusyInThisSlot(i, j, currSubject, sbtlist[m]["teacherId"], 1)) {
 			continue;
 		}
 		if(roomBusyOnRoomPageInThisSlot(i, j, sbtlist[m])) {
