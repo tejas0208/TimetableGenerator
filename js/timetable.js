@@ -1309,13 +1309,13 @@ function getEligibleBatches(i, j, k, subjectRow) {
 
 	for(var m = 0; m < sbtlist.length; m++) {
 		var currBatch = search(batch, "batchId", sbtlist[m]["batchId"]);
-		var currSubject = search(subject, "subjectId", sbtlist[m]["subjectId"]);
+		//var currSubject = search(subject, "subjectId", sbtlist[m]["subjectId"]);
 		/* Skip if already included in the list */
 		if(eligibleBatches.indexOf(currBatch) != -1) {
 			continue;
 		}
 
-		if(allEntriesAlreadyDoneForSubject(sbtlist[m], "batchId" , sbtlist[m]["batchId"],
+		if(allEntriesAlreadyDoneForSubject(subjectRow, "batchId" , sbtlist[m]["batchId"], 
 			search(batch, "batchId", sbtlist[m]["batchId"])["batchName"], 0)) {
 				disabledBatches.push([search(batch, "batchId", sbtlist[m]["batchId"])["batchName"],
 				"Done"]);
@@ -1326,8 +1326,7 @@ function getEligibleBatches(i, j, k, subjectRow) {
 				"TchrBusy"]);
 			continue;
 		}
-
-		if(BatchBusyInThisSlot(i, j, currSubject, sbtlist[m]["classId"],
+		if(BatchBusyInThisSlot(i, j, subjectRow, sbtlist[m]["classId"],
 						sbtlist[m]["batchId"], 0)) {
 			disabledBatches.push([search(batch, "batchId", sbtlist[m]["batchId"])["batchName"],
 				"BtchBusy"]);
@@ -1473,7 +1472,7 @@ function getEligibleClass(i, j, k, subjectRow) {
 	for(var l in sct) {
 		var classId = sct[l]["classId"];
 
-		if(allEntriesAlreadyDoneForSubject(sct[l], "classId", sct[l]["classId"],
+		if(allEntriesAlreadyDoneForSubject(subjectRow, "classId", sct[l]["classId"],
 				search(classTable, "classId", sct[l]["classId"])["classShortName"], 0)) {
 			disabledClasses.push([search(classTable, "classId", sct[l]["classId"])
 						["classShortName"], "Full"]);
@@ -1788,9 +1787,9 @@ function disabledSubjectAdd(disabledArray, subject, searchId, string) {
 	return 0;
 }
 
-function allEntriesAlreadyDoneForSubject(sctOrSbtEntry, searchOn, searchId,
+function allEntriesAlreadyDoneForSubject(currSubject, searchOn, searchId,
 		searchIdName, logOrNot) {
-	var currSubject= search(subject, "subjectId", sctOrSbtEntry["subjectId"]);
+	/*var currSubject= search(subject, "subjectId", sctOrSbtEntry["subjectId"]);*/
 	var maxEntriesForSubject = currSubject["nSlots"];
 
 	/* # entries in tt for this batch-subject or class-subject */
@@ -2119,7 +2118,7 @@ function getEligibleSubjects(i, j, k) {
 				continue;
 		}*/
 		/* Skip if all required entries are already done */
-		if(allEntriesAlreadyDoneForSubject(sctlist[m], "classId", sctlist[m]["classId"],
+		if(allEntriesAlreadyDoneForSubject(currSubject, "classId", sctlist[m]["classId"],
 				search(classTable, "classId", sctlist[m]["classId"])["classShortName"], 1)) {
 			continue;
 		}
@@ -2164,8 +2163,8 @@ function getEligibleSubjects(i, j, k) {
 				continue;
 		}*/
 		/* Skip if all required entries are already done */
-		if(allEntriesAlreadyDoneForSubject(sbtlist[m], "batchId" ,
-				sbtlist[m]["batchId"],
+		if(allEntriesAlreadyDoneForSubject(currSubject, "batchId" ,
+				sbtlist[m]["batchId"], 
 				search(batch, "batchId", sbtlist[m]["batchId"])["batchName"], 1)) {
 			continue;
 		}
