@@ -1610,7 +1610,7 @@ function fixedSlotEntry(i, j, k) {
 				null, supportObject["batchId"], currentSnapshotId, 1, 1);
 		}
 		fixedEntry.push(new fixedEntryObject(timeTable[timeTable.length - 1]["ttId"], label));
-		var slottable = document.getElementById("slottable" + makeIdFromIJK(i, j, k));
+		/*var slottable = document.getElementById("slottable" + makeIdFromIJK(i, j, k));
 		if(slottable == null) {
 			alert("ERROR: slottable null for fixedEntry");
 			return;
@@ -1630,8 +1630,9 @@ function fixedSlotEntry(i, j, k) {
 						"</span>" +
 					"</div>" +
 				"</td>" +
-			"</tr>";
+			"</tr>";*/
 		helperTable[i - 1][j][k] = timeTable[timeTable.length - 1];
+		fillTable2(false);
 	}
 }
 
@@ -1982,6 +1983,8 @@ function batchOverlappingPossible(i, j, osbt, subjectRow) {
 		var slotEntries = searchMultipleRows(timeTable, "day", i, "slotNo", (j + p),
 					//"classId", overlappingClassId, "batchId", overlappingBatchId,
 					"classId", overlappingClassId, "snapshotId", currentSnapshotId);
+		if(slotEntries === -1)
+			continue;
 		for(var q in slotEntries) {
 			/*console.log("batchOverlappingPossible: i = " + i + " j = " + j +
 						" slotBId = " + slotEntries[q]["batchId"]); */
