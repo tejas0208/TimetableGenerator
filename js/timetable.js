@@ -1817,8 +1817,8 @@ function allEntriesAlreadyDoneForSubject(currSubject, searchOn, searchId,
 }
 
 /* TODO: Abhijit thinks this function is meaningles */
-function roomBusyOnRoomPageInThisSlot(i, j, sctOrSbtEntry) {
-	var currSubject= search(subject, "subjectId", sctOrSbtEntry["subjectId"]);
+function roomBusyOnRoomPageInThisSlot(i, j, currSubject) {
+	//var currSubject= search(subject, "subjectId", sctOrSbtEntry["subjectId"]);
 	if(type != "room") 
 		return false;
 	for(var n = 0; n < currSubject["eachSlot"]; n++) {
@@ -2133,7 +2133,7 @@ function getEligibleSubjects(i, j, k) {
 		if(teacherBusyInThisSlot(i, j, currSubject, sctlist[m]["teacherId"], 1)) {
 			continue;
 		}
-		if(roomBusyOnRoomPageInThisSlot(i, j, sctlist[m])) {
+		if(roomBusyOnRoomPageInThisSlot(i, j, currSubject)) {
 			continue;
 		}
 		if(classBusyInThisSlot(i, j, sctlist[m], sctlist[m]["classId"], 1)) {
@@ -2179,7 +2179,7 @@ function getEligibleSubjects(i, j, k) {
 		if(teacherBusyInThisSlot(i, j, currSubject, sbtlist[m]["teacherId"], 1)) {
 			continue;
 		}
-		if(roomBusyOnRoomPageInThisSlot(i, j, sbtlist[m])) {
+		if(roomBusyOnRoomPageInThisSlot(i, j, currSubject)) {
 			continue;
 		}
 		if(BatchBusyInThisSlot(i, j, currSubject, sbtlist[m]["classId"],
