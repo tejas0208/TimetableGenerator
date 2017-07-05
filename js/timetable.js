@@ -1482,7 +1482,7 @@ function getEligibleClass(i, j, k, subjectRow) {
 				continue;
 		}
 	
-		if(classBusyInThisSlot(i, j, sct[l], sct[l]["classId"], 0)) {
+		if(classBusyInThisSlot(i, j, subjectRow, sct[l]["classId"], 0)) {
 			disabledClasses.push([search(classTable, "classId", sct[l]["classId"])
 				["classShortName"], "Busy"]);
 			console.log("getEligibleClass: Busy. skipping " + search(classTable, "classId", sct[l]["classId"])
@@ -1790,7 +1790,6 @@ function disabledSubjectAdd(disabledArray, subject, searchId, string) {
 
 function allEntriesAlreadyDoneForSubject(currSubject, searchOn, searchId,
 		searchIdName, logOrNot) {
-	/*var currSubject= search(subject, "subjectId", sctOrSbtEntry["subjectId"]);*/
 	var maxEntriesForSubject = currSubject["nSlots"];
 	
 	/* # entries in tt for this batch-subject or class-subject */
@@ -1818,7 +1817,6 @@ function allEntriesAlreadyDoneForSubject(currSubject, searchOn, searchId,
 
 /* TODO: Abhijit thinks this function is meaningles */
 function roomBusyOnRoomPageInThisSlot(i, j, currSubject) {
-	//var currSubject= search(subject, "subjectId", sctOrSbtEntry["subjectId"]);
 	if(type != "room") 
 		return false;
 	for(var n = 0; n < currSubject["eachSlot"]; n++) {
@@ -1836,7 +1834,6 @@ function roomBusyOnRoomPageInThisSlot(i, j, currSubject) {
 }
 
 function teacherBusyInThisSlot(i, j, currSubject, teacherId, logOrNot) {
-	//var currSubject= search(subject, "subjectId", sctOrSbtEntry["subjectId"]);
 	currTeacher = search(teacher, "teacherId", teacherId);
 
 	for(var n = 0; n < currSubject["eachSlot"]; n++) {
@@ -1852,8 +1849,7 @@ function teacherBusyInThisSlot(i, j, currSubject, teacherId, logOrNot) {
 	}
 	return false;
 }
-function classBusyInThisSlot(i, j, sctOrSbtEntry, classId, logOrNot) {
-	var currSubject= search(subject, "subjectId", sctOrSbtEntry["subjectId"]);
+function classBusyInThisSlot(i, j, currSubject, classId, logOrNot) {
 	if(currSubject["batches"] == "0") {
 		/* Skip subject because already a theory lecture in that slot 
 		 * TODO: Abhijit: should we check this. Don't we call getEligibleSubjects()
@@ -1961,7 +1957,6 @@ function BatchBusyInThisSlot(i, j, sctOrSbtEntry, classId, batchId, logOrNot) {
 }
 
 function subjectCantFitInRemainingSlots(currSubject, j, nSlotsPerDay, idText) {
-	//var currSubject= search(subject, "subjectId", sctOrSbtEntry["subjectId"]);
 	if(j + parseInt(currSubject["eachSlot"]) - 1  >= nSlotsPerDay) {
 		disabledSubjectAdd(disabledSubjects, currSubject["subjectShortName"],
 				idText, "Len=" + currSubject["eachSlot"]);
@@ -2108,16 +2103,6 @@ function getEligibleSubjects(i, j, k) {
 	disabledSubjects = [];
 	for(var m = 0; m < sctlist.length; m++) {
 		var currSubject= search(subject, "subjectId", sctlist[m]["subjectId"]);
-		/* Skip if already included in the list */
-		/*for(x = 0; x < subjectsList.length; x++) {
-			if(subjectsList[x][0] == currSubject &&
-					subjectsList[x][1] == search(classTable, "classId", sctlist[m]["classId"])
-									["classShortName"] &&
-					subjectsList[x][2] == search(teacher, "teacherId", sctlist[m]["teacherId"])
-									["teacherShortName"]
-			)
-				continue;
-		}*/
 		/* Skip if all required entries are already done */
 		if(allEntriesAlreadyDoneForSubject(currSubject, "classId", sctlist[m]["classId"],
 				search(classTable, "classId", sctlist[m]["classId"])["classShortName"], 1)) {
@@ -2136,7 +2121,7 @@ function getEligibleSubjects(i, j, k) {
 		if(roomBusyOnRoomPageInThisSlot(i, j, currSubject)) {
 			continue;
 		}
-		if(classBusyInThisSlot(i, j, sctlist[m], sctlist[m]["classId"], 1)) {
+		if(classBusyInThisSlot(i, j, currSubject, sctlist[m]["classId"], 1)) {
 			continue;
 		}
 		if(roomSmallOnRoomPageForThisClassOrBatch(sctlist[m], "classId",
@@ -2153,16 +2138,6 @@ function getEligibleSubjects(i, j, k) {
 	/* Handle all SBT Entries */
 	for(var m = 0; m < sbtlist.length; m++) {
 		var currSubject= search(subject, "subjectId", sbtlist[m]["subjectId"]);
-		/* Skip if already included in the list */
-		/*for(x = 0; x < subjectsList.length; x++) {
-			if(subjectsList[x][0] == currSubject &&
-					subjectsList[x][1] == search(batch, "batchId", sctlist[m]["batchId"])
-									["batchName"] &&
-					subjectsList[x][2] == search(teacher, "teacherId", sctlist[m]["teacherId"])
-									["teacherShortName"]
-			)
-				continue;
-		}*/
 		/* Skip if all required entries are already done */
 		if(allEntriesAlreadyDoneForSubject(currSubject, "batchId" ,
 				sbtlist[m]["batchId"], 
