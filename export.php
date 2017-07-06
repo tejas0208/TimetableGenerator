@@ -452,8 +452,8 @@ function exportCSV() {
 		ttlog("mkdir Failed");
 	} */
 	//$currentSnapshotName = getArgument("currentSnapshotId");
-	$currentSnapshotName = "default";
-	$currentSnapshotId = "1";
+	$currentSnapshotName = getArgument("snapshotName");
+	$currentSnapshotId = getArgument("snapshotId");
 
 	if(!file_exists("tmp"))
 		mkdir("tmp");
@@ -462,11 +462,14 @@ function exportCSV() {
 	$tableNames = array(
 		"teacherReadable", "name",
 			["teacherShortName", "teacherName", "minHrs", "maxHrs", "deptShortName"],
+		"room", "id", ["roomShortName", "roomName", "roomCount"], 
+		"subject", "id", ["subjectShortName", "subjectName", "eachSlot", "nSlots", "batches"],
 		"class", "id", ["classShortName", "className", "classCount"],
 		"batch","id", ["batchName", "batchCount"], 
 		"batchClassReadable", "name", ["batchName", "classShortName"],
 		"batchCanOverlapReadable", "name",
 			["b1Name", "b2Name"],
+		"overlappingSBTReadable", "name", ["subject1", "batch1", "teacher1", "subject2", "batch2", "teacher2"],
 		"subjectClassTeacherReadable", "name",
 			["classShortName", "subjectShortName", "teacherShortName"],
 		"subjectBatchTeacherReadable", "name",

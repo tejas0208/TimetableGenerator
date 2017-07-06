@@ -3224,7 +3224,7 @@ function jsExport(type) {
 	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	//xhttp.setRequestHeader("Content-Type", "application/json");
 	xhttp.send("reqType=" + type + "&snapshotName=" + currentSnapshotName +
-			"&snapshotId=" + currentConfigId);
+			"&snapshotId=" + currentSnapshotId);
 	//window.location='timetable.php';
 
 }
