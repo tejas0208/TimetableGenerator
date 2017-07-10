@@ -643,6 +643,27 @@ function dragStartHandler(e) {
 	srcI = i;/*Needed afterwards*/
   	e.dataTransfer.effectAllowed = 'move';
   	e.dataTransfer.setData('text/html', e.target.innerHTML);
+	var configrow = search(config, "configId", currentConfigId);
+	NoOfSlots = configrow["nSlots"];
+	var days = parseInt(configrow["daysInWeek"]);
+	var subjectRow = search(subject, "subjectId", srcSlotEntry["subjectId"]);
+	var eachSlot = subjectRow["eachSlot"];
+	var alertVar = window.alert;
+	window.alert = function () {return;};
+	for(var p = 1; p <= days; p++) {
+		for(var q = 0; q < NoOfSlots; q++) {
+			var position = getPosition(p, q, null, eachSlot);
+			if(position != null) {
+				var selectTag = document.getElementById("subject" + makeIdFromIJK(p, q, position));
+				if(selectTag != null) {
+					if(checkValidity(p, q, srcSlotEntry))
+						selectTag.disabled = false;
+				}
+			}
+		}
+	}
+	window.alert = alertVar;
+	tableFilled = false;
 }
 
 function dragEnterHandler(e) {
@@ -828,6 +849,7 @@ function dropHandler(e) {
 		}
 	}
 	srcSlotEntry = null;
+	tableFilled = true;
 	fillTable2(true);
 }
 
@@ -835,6 +857,8 @@ function dragEndHandler(e) {
 	if(cutSrcEl !== null)
 		return;
 	dragSrcEl.style.opacity = 1;
+	if(!tableFilled)
+		fillTable2(false);
 }
 
 
