@@ -1877,8 +1877,7 @@ function classBusyInThisSlot(i, j, currSubject, classId, logOrNot) {
 /* Skip this subject if there is already conflicting entry in this slot
  * Remember: we are inside: for each SCT entry, for eachSlot of subject
  */
-function BatchBusyInThisSlot(i, j, sctOrSbtEntry, classId, batchId, logOrNot) {
-	var currSubject= search(subject, "subjectId", sctOrSbtEntry["subjectId"]);
+function BatchBusyInThisSlot(i, j, currSubject, classId, batchId, logOrNot) {
 	/* We are going to look at Batchable subjects now
 	 * For batchable subjects:
 	 * (a) there should be no theory class in this slot
