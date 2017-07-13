@@ -68,6 +68,7 @@ var dirtyTimeTable = false;
 
 /* This stores information about no. of schedules done from SCT/SBT */
 var tracker = [];
+var completion;
 
 var roomSizeDelta = 10;
 
@@ -251,6 +252,8 @@ function showTrackerList() {
 					"\"class=\"closebtn\" onclick=\"sortTrackerOnDone()\">" +
 					"Done^ </a></td>";
 	trackerStr += "</tr>";
+	completionNSlots = 0;
+	completionDone = 0;
 	switch(type) {
 		case "class":
 			currClassId = search(classTable, "classShortName", currTableId)["classId"];
@@ -274,6 +277,8 @@ function showTrackerList() {
 				trackerStr += "</td>";
 				trackerStr += "<td class=\"trackercol\">";
 				trackerStr += curr["done"] + "/" + curr["nSlots"];
+				completionNSlots += Number(curr["nSlots"]);
+				completionDone += Number(curr["done"]);
 				trackerStr += "</td>";
 				trackerStr += "</tr>";
 				addOSBTRowToTrackerShow(curr);
@@ -297,6 +302,8 @@ function showTrackerList() {
 				trackerStr += "</td>";
 				trackerStr += "<td class=\"trackercol\">";
 				trackerStr += curr["done"] + "/" + curr["nSlots"];
+				completionNSlots += Number(curr["nSlots"]);
+				completionDone += Number(curr["done"]);
 				trackerStr += "</td>";
 				trackerStr += "</tr>";
 				addOSBTRowToTrackerShow(curr);
@@ -324,6 +331,8 @@ function showTrackerList() {
 				trackerStr += "</td>";
 				trackerStr += "<td class=\"trackercol\">";
 				trackerStr += curr["done"] + "/" + curr["nSlots"];
+				completionNSlots += Number(curr["nSlots"]);
+				completionDone += Number(curr["done"]);
 				trackerStr += "</td>";
 				trackerStr += "</tr>";
 				addOSBTRowToTrackerShow(curr);
@@ -349,6 +358,8 @@ function showTrackerList() {
 				trackerStr += "</td>";
 				trackerStr += "<td class=\"trackercol\">";
 				trackerStr += curr["done"] + "/" + curr["nSlots"];
+				completionNSlots += Number(curr["nSlots"]);
+				completionDone += Number(curr["done"]);
 				trackerStr += "</td>";
 				trackerStr += "</tr>";
 				addOSBTRowToTrackerShow(curr);
@@ -360,6 +371,11 @@ function showTrackerList() {
 	}
 	trackerStr += "</table>";
 	document.getElementById("tracker").innerHTML = trackerStr;
+	if(completionNSlots)
+		completion = completionDone * 100 / completionNSlots;
+	else
+		completion = 0;
+	document.getElementById("completionTag").innerHTML = "Done: " + completion.toFixed(1) + "%";
 	trackerElem = document.getElementById("tracker");
     trackerElem.style.height = (trackerElem.scrollHeight)+"px";
 }
@@ -3266,12 +3282,14 @@ hiddenTracker = 0;
 function hideTracker() {
 	if(!hiddenTracker)  {
 		$("#trackerDiv").hide();
-		$("#trackerDiv").html("Dashboard <a href=\"javascript:void(0)\" onclick='hideTracker()'> Show </a>");
+		$("#trackerDiv").html("Dashboard <span id=\"completionTag\"> </span>" +
+							"<a href=\"javascript:void(0)\" onclick='hideTracker()'> Show </a>");
 		$("#trackerDiv").show();
 		hiddenTracker = 1;
 	} else {
 		$("#trackerDiv").hide();
-		$("#trackerDiv").html("Dashboard <a href=\"javascript:void(0)\" onclick='hideTracker()'> Hide </a>" +
+		$("#trackerDiv").html("Dashboard <span id=\"completionTag\"> </span>" +
+						"<a href=\"javascript:void(0)\" onclick='hideTracker()'> Hide </a>" +
 						"<div id=\"tracker\" rows = \"3\" cols = \"20\" readonly=\"readonly\">");
 		$("#trackerDiv").show();
 		showTrackerList();
