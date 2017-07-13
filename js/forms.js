@@ -484,6 +484,7 @@ function batchCanOverlapForm() {
 
 		insertDeleteButton(row, "batchCanOverlapDeleteButton_" + count,
 							"batchCanOverlapDelete(" + count + ")");
+		count++;
 
 	}
 }

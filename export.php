@@ -240,10 +240,17 @@ function generate_timetable_worksheet($currTableName, $searchParam, $sheetCount,
 			$objPHPExcel->getActiveSheet()->getStyle($col.$row)->applyFromArray($styleArray);
 		}
 	}
+	$row = $row + 2;
+	$col = 'E';
+	$objPHPExcel->getActiveSheet()->getCell($col.$row)->setValue("Total Hours");
+	$objPHPExcel->getActiveSheet()->getStyle($col.$row)->applyFromArray($styleArray);
+	$col = 'F';
+	$objPHPExcel->getActiveSheet()->getCell($col.$row)->setValue(count($allrows2));
+	$objPHPExcel->getActiveSheet()->getStyle($col.$row)->applyFromArray($styleArray);
 }
 function generate_timetable_spreadsheet() {
-	$tableNames = array("teacher", "teacherShortName", "class", "classShortName", 
-				"batch", "batchName", "room", "roomShortName");
+	$tableNames = array("class", "classShortName", "teacher", "teacherShortName", 
+				"room", "roomShortName", "batch", "batchName");
 	$query = "SELECT * from config WHERE configId = 1";
 	$allrows = sqlGetAllRows($query);
 	$currentSnapshotName = getArgument("snapshotName");
