@@ -151,7 +151,16 @@ function generate_timetable_worksheet($currTableName, $searchParam, $sheetCount,
 			if($currTableName != "class" || $nEntries <= 1) {
 				for($d = 0; $d < $nEntries; $d++) {
 					$currEntry = $thisSlotEntries[$d];	
-
+					if($currEntry["isFixed"] == "1") {
+						$fixedTextQuery = "SELECT * from fixedEntry where ttId=".$currEntry["ttId"];
+						$fixedTextRow = sqlGetOneRow($fixedTextQuery);
+						$fixedText = $fixedTextRow[0]["fixedText"];
+						$currText = $objRichText->createTextRun($fixedText."\n");
+						$currText->getFont()->setBold(true);
+						$currText->getFont()->setSize(10);
+						$currText->getFont()->setColor( new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_BLACK) );
+						continue;
+					}
 					if($currEntry["batchName"] != "NULL" && $currTableName != "batch") {
 						$currText = $objRichText->createTextRun($currEntry["batchName"]."\n");
 						$currText->getFont()->setBold(true);
