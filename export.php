@@ -45,7 +45,7 @@ function find($allrows, $day, $slotNo) {
 }
 /* Generates one worksheet for teacher=teacherShortName, class=classShortName, etc. */
 function generate_timetable_worksheet($currTableName, $searchParam, $sheetCount,
-		$allrows2, $nSlots, $dayBegin, $slotDuration) {
+		$allrows2, $nSlots, $dayBegin, $slotDuration, $deptName) {
 	global $objPHPExcel;
 	#ttlog("generate_timetable_worksheet: $currTableName $searchParam $sheetCount $nSlots");
 	global $objPHPExcel;
@@ -59,7 +59,7 @@ function generate_timetable_worksheet($currTableName, $searchParam, $sheetCount,
 	$objPHPExcel->getActiveSheet()->getPageMargins()->setLeft(0.3);
 	$objPHPExcel->getActiveSheet()->getPageMargins()->setBottom(0.5);
 	# Generate the Header for the worksheet
-	$text = array("College of Engineering Pune", "Dept of Comp Engg and IT", "Timetable For $currTableName: $searchParam");
+	$text = array("College of Engineering Pune", $deptName, "Timetable For $currTableName: $searchParam");
 	for($x = 0; $x < count($text); $x++) { # The header in the worksheet
 			$xx = $x + 1;
 			$objRichText = new PHPExcel_RichText();
@@ -271,6 +271,12 @@ function generate_timetable_spreadsheet() {
 	$dayBegin = $allrows[0]["dayBegin"];
 	$slotDuration = $allrows[0]["slotDuration"];
 	$sheetCount = 0;
+
+	$deptQuery = "SELECT deptName from dept d, config c, snapshot s ".
+				"where s.configId = c.configId and c.deptId = d.deptId".
+				" AND s.snapshotId = $currentSnapshotId";
+	$deptQueryRes = sqlGetOneRow($deptQuery);
+	$deptName = $deptQueryRes[0]["deptName"];
 	for($i = 0; $i < count($tableNames); $i += 2) {
 		# Generate worksheets for each table: teachers, classes, batches, rooms
 		$currTableName = $tableNames[$i];
@@ -285,7 +291,7 @@ function generate_timetable_spreadsheet() {
 			$allrows2 = sqlGetAllRows($query);
 			#ttlog("export: allrows2: ".json_encode($allrows2));
 			generate_timetable_worksheet($currTableName, $searchParam, $sheetCount,
-				$allrows2, $nSlots, $dayBegin, $slotDuration);
+				$allrows2, $nSlots, $dayBegin, $slotDuration, $deptName);
 
 			# print information about subject shortcut names, subject-teacher mapping
 
@@ -568,4 +574,3 @@ class HZip
     $z->close();
   }
 }
-?>

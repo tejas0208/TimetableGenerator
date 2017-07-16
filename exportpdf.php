@@ -51,7 +51,8 @@ function printRow($rowData, $table, $rowspan, $searchParam) { #$rowspan is rowsp
 		$table->printRow();
 	}
 }
-function generate_timetable_pdf($currTableName, $searchParam, $allrows2, $nSlots, $dayBegin, $slotDuration) {
+function generate_timetable_pdf($currTableName, $searchParam, $allrows2, $nSlots, $dayBegin,
+		$slotDuration, $deptName) {
 	$pdf = new exFPDF('L', 'mm', 'A4');
 	$pdf->setTitle("Timetable for COEP");
 	$pdf->setSubject("Subject for Timetable");
@@ -67,7 +68,8 @@ function generate_timetable_pdf($currTableName, $searchParam, $allrows2, $nSlots
 
 	$pdf->Cell(0, 6, "College of Engineering Pune", 0, 1, 'C');
 	$pdf->SetFont('helvetica','',14);
-	$pdf->Cell(0, 6, "Dept of Comp Engg and IT", 0, 1, 'C');
+	//$pdf->Cell(0, 6, "Dept of Comp Engg and IT", 0, 1, 'C');
+	$pdf->Cell(0, 6, $deptName, 0, 1, 'C');
 	$pdf->SetFont('helvetica','BU',14);
 	$pdf->Cell(0, 6, "Timetable For $currTableName: $searchParam", 0, 1, 'C');
 
@@ -383,6 +385,13 @@ function exportPDF() {
 	$nSlots = $allrows[0]["nSlots"];
 	$dayBegin = $allrows[0]["dayBegin"];
 	$slotDuration = $allrows[0]["slotDuration"];
+
+	$deptQuery = "SELECT deptName from dept d, config c, snapshot s ".
+				"where s.configId = c.configId and c.deptId = d.deptId".
+				" AND s.snapshotId = $currentSnapshotId";
+	$deptQueryRes = sqlGetOneRow($deptQuery);
+	$deptName = $deptQueryRes[0]["deptName"];
+
 	for($i = 0; $i < count($tableNames); $i += 2) {
 		# Generate a pdf for each table: teachers, classes, batches, rooms
 		$currTableName = $tableNames[$i];
@@ -410,7 +419,7 @@ function exportPDF() {
 				$classRows = sqlGetAllRows($query);
 				$allrows2 = array_merge($allrows2, $classRows);
 			}
-			generate_timetable_pdf($currTableName, $searchParam, $allrows2, $nSlots, $dayBegin, $slotDuration);
+			generate_timetable_pdf($currTableName, $searchParam, $allrows2, $nSlots, $dayBegin, $slotDuration, $deptName);
 		}
 	}
 	HZip::zipDir('tmp/timetable_pdf', $filename);

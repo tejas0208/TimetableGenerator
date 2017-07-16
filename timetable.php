@@ -111,6 +111,8 @@ switch($reqType) {
 		header("filename:". $filename);	
 		header('Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 		header("Content-Transfer-Encoding: binary");
+		ob_clean();
+		flush();
 		readfile($filename);
 		break;
 	case "exportCSV":
@@ -121,6 +123,8 @@ switch($reqType) {
 		header("filename:". $filename);	
 		header('Content-type: application/zip');
 		header("Content-Transfer-Encoding: binary");
+		ob_clean();
+		flush();
 		readfile($filename);
 		break;
 	case "exportPDF":
@@ -131,10 +135,11 @@ switch($reqType) {
 		header("filename:". $filename);	
 		header('Content-type: application/zip');
 		header("Content-Transfer-Encoding: binary");
+		ob_clean();
+		flush();
 		readfile($filename);
 		break;
 	default:
 		echo $page;
 		break;
 }
-?>
