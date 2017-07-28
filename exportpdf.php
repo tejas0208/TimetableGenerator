@@ -17,43 +17,41 @@
 
 require_once('./fpdf-easytable/exfpdf.php');
 require_once('./fpdf-easytable/easyTable.php');
-function printRow($rowData, $table, $rowspan, $searchParam) { #$rowspan is rowspan for visible cell
-	$filledRows = array_fill(0, count($rowData), 0); #each element is count of virtual rows filled
-	$count = array_fill(0, count($rowData), 0); #each element is data from $rowData used 
-	for($i = 0;$i < $rowspan;$i++) { #for each virtual cell in a day slot
-		for($j = 0;$j < count($rowData);$j++) { #for each cell in a row
+function printRow($rowData, $table, $rowspan, $searchParam) { // $rowspan is rowspan for visible cell
+	$filledRows = array_fill(0, count($rowData), 0); // each element is count of virtual rows filled
+	$count = array_fill(0, count($rowData), 0); // each element is rows printed from $rowData
+	for($i = 0;$i < $rowspan;$i++) { // for each virtual row in a day slot
+		for($j = 0;$j < count($rowData);$j++) { // for each cell in a row
 			if($filledRows[$j] == $i) {
 				$blankRows = $rowspan - count($rowData[$j]);
 				if($i == 0 && count($rowData[$j]) == 1) {
 					$virtualRowspan = $rowspan;
-					$style = "valign:M; border:TBLR;";
+					$style = "valign:M;";
 				}
 				else if($i == 0) {
 					$virtualRowspan = floor($blankRows / 2) + 1;
-					$style = "valign:B; border:TLR;";
+					$style = "valign:B;";
 				}
 				else if($count[$j] == count($rowData[$j]) - 1) {
 					$virtualRowspan = ceil($blankRows / 2) + 1;
-					$style = "valign:T; border:BLR;";
+					$style = "valign:T;";
 				}
-				else {
+				else
 					$virtualRowspan = 1;
-					$style = "border:LR;";
-				}
 				$filledRows[$j] += $virtualRowspan;
-				$style .= "font-size:8; paddingY:0.4";
-				for($k = 0;$k < count($rowData[$j][$count[$j]]);$k++) {
+				$style .= "font-size:10; paddingY:0.4";
+				for($k = 0;$k < count($rowData[$j][$count[$j]]);$k++)
 					$table->easyCell($rowData[$j][$count[$j]][$k]['str'],$rowData[$j][$count[$j]][$k]['style']."rowspan:".$virtualRowspan.";".$style);
-				}
 				$count[$j] += 1;
 			}
 		}
 		$table->printRow();
 	}
 }
+$cellData;
 function generate_timetable_pdf($currTableName, $searchParam, $allrows2, $nSlots, $dayBegin,
 		$slotDuration, $deptName) {
-	$pdf = new exFPDF('L', 'mm', 'A4');
+	$pdf = new exFPDF('L', 'mm', 'A3');
 	$pdf->setTitle("Timetable for COEP");
 	$pdf->setSubject("Subject for Timetable");
 	$pdf->setKeywords("timetable generated");
@@ -62,15 +60,15 @@ function generate_timetable_pdf($currTableName, $searchParam, $allrows2, $nSlots
 	$pdf->AddPage(); //page for timetable
 	$pdf->setMargins(5, 5, 5);
 	$pdf->SetAutoPageBreak(false, 5);
-	$pdf->SetFont('helvetica','B',14);
+	$pdf->SetFont('helvetica','B',16);
 	$pdf->setTextColor(34, 139, 34);
 	$pdf->setY(5);
 
 	$pdf->Cell(0, 6, "College of Engineering Pune", 0, 1, 'C');
-	$pdf->SetFont('helvetica','',14);
+	$pdf->SetFont('helvetica','',16);
 	//$pdf->Cell(0, 6, "Dept of Comp Engg and IT", 0, 1, 'C');
 	$pdf->Cell(0, 6, $deptName, 0, 1, 'C');
-	$pdf->SetFont('helvetica','BU',14);
+	$pdf->SetFont('helvetica','BU',16);
 	$pdf->Cell(0, 6, "Timetable For $currTableName: $searchParam", 0, 1, 'C');
 
 	$width = '{7, ';
@@ -79,7 +77,7 @@ function generate_timetable_pdf($currTableName, $searchParam, $allrows2, $nSlots
 		$width .= ($w.', ');
 	$width .= ($w.'}');
 	/* Main timeTable */
-	$table = new easyTable($pdf, $width, 'align:L; font-style:B; font-size:10;
+	$table = new easyTable($pdf, $width, 'align:L; font-style:B; font-size:13;
 		font-family:helvetica; border:1; border-color:#000000; border-width:0.4; width:'.$pdf->GetPageWidth().';');
 
 	$table->easyCell('');
@@ -108,7 +106,9 @@ function generate_timetable_pdf($currTableName, $searchParam, $allrows2, $nSlots
 			$thisSlotEntries = find($allrows2, $day, $slotNo);
 			$nEntries = count($thisSlotEntries);
 			$cellData = array();
+			$entries = array();
 			$colspan = 1;
+			$entries[0] = array();
 			for($i = 0;$i < $nEntries;$i++) {
 				if($thisSlotEntries[$i]['isFixed'] != 1) {
 					$query = "SELECT eachSlot FROM subject WHERE subjectShortName = \"".
@@ -116,90 +116,160 @@ function generate_timetable_pdf($currTableName, $searchParam, $allrows2, $nSlots
 					$subjectRow = sqlGetOneRow($query);
 					if($subjectRow[0]['eachSlot'] > $colspan)
 						$colspan = $subjectRow[0]['eachSlot'];
+					if($currTableName === "class")
+						array_push($entries[0], array('row' => $thisSlotEntries[$i], 'colspan' => $subjectRow[0]['eachSlot']));
 				}
 			}
 			for($i = 1;$i < $colspan;$i++) {
 				$nextSlotEntries = find($allrows2, $day, $slotNo + $i);
 				for($j = 0;$j < count($thisSlotEntries);$j++) {
 					for($k = 0;$k < count($nextSlotEntries);$k++) {
-						if($nextSlotEntries[$k]['subjectShortName'] === $thisSlotEntries[$j]['subjectShortName'] ||
-							$nextSlotEntries[$k]['batchName'] === $thisSlotEntries[$j]['batchName'] ||
-							$nextSlotEntries[$k]['roomShortName'] === $thisSlotEntries[$j]['roomShortName'])
+						if($nextSlotEntries[$k]['subjectShortName'] === $thisSlotEntries[$j]['subjectShortName'] &&
+							$nextSlotEntries[$k]['batchName'] === $thisSlotEntries[$j]['batchName'] &&
+							$nextSlotEntries[$k]['roomShortName'] === $thisSlotEntries[$j]['roomShortName']) {
 							array_splice($nextSlotEntries, $k, 1);
+							break;
+						}
+					}
+				}
+				if($currTableName === "class") {
+					$entries[$i] = array();
+					for($j = 0;$j < count($nextSlotEntries);$j++) {
+						$query = "SELECT eachSlot FROM subject WHERE subjectShortName = \"".
+							$nextSlotEntries[$j]['subjectShortName']."\"and snapshotId = $snapshotId;";
+						$subjectRow = sqlGetOneRow($query);
+						array_push($entries[$i], array('row' => $nextSlotEntries[$j], 'colspan' => $subjectRow[0]['eachSlot']));
 					}
 				}
 				$thisSlotEntries = array_merge($thisSlotEntries, $nextSlotEntries);
 			}
 			$nEntries = count($thisSlotEntries);
+			$borderBottom = 'B';
+			$borderTop = 'T';
 			if($currTableName != "class" || $nEntries <= 1) {
 				for($d = 0; $d < $nEntries; $d++) {
 					$currEntry = $thisSlotEntries[$d];
-					if($currEntry["batchName"] != "NULL" && $currTableName != "batch") {
+					if($currEntry["batchName"] != NULL && $currTableName != "batch") {
 						array_push($cellData, array(array('str' => $currEntry["batchName"],
 														  'style' => "colspan:".(2 * $colspan).
-																	";font-color:$batchColor; align:C;")
+																	";font-color:$batchColor; align:C;border:LR;")
 													));
 					}
-
-					if($currTableName != "class" && $currTableName != "batch" && $currEntry["batchName"] != "NULL") {
+					if($currTableName != "class" && $currTableName != "batch" && $currEntry["classShortName"] != NULL) {
 						array_push($cellData, array(array('str' => $currEntry["classShortName"],
 														  'style' => "colspan:".(2 * $colspan).
-																	";font-color:$classColor; align:C;")
+																	";font-color:$classColor; align:C;border:LR;")
 													));
 					}
-
-					if($currTableName != "subject" && $currTableName != "room" && $currTableName != "teacher") {
+					if($currTableName != "subject" && $currTableName != "room" && $currTableName != "teacher"
+						&& $currEntry["subjectShortName"] != NULL) {
 						array_push($cellData, array(array('str' => $currEntry["subjectShortName"],
 														  'style' => "colspan:".(2 * $colspan).
-																	";font-color:$subjectColor; align:C;")
+																	";font-color:$subjectColor; align:C;border:LR;")
 													));
 					}
-
-					if($currTableName != "room" && $currTableName != "teacher") {
+					if($currTableName != "room" && $currTableName != "teacher" && $currEntry["roomShortName"] != NULL) {
 						array_push($cellData, array(array('str' => $currEntry["roomShortName"],
 														  'style' => "colspan:".(2 * $colspan).
-																	";font-color:$roomColor; align:C;")
+																	";font-color:$roomColor; align:C;border:LR;")
 													));
 					}
-
 					if($currEntry['isFixed'] == 1) {
 						$query = "SELECT fixedText FROM fixedEntry WHERE ttId = ".$currEntry['ttId']
 							." AND snapshotId = $snapshotId;";
 						$fixedText = sqlGetOneRow($query);
 						array_push($cellData, array(array('str' => $fixedText[0]['fixedText'],
 														  'style' => "colspan:".(2 * $colspan).
-																	";font-color:#000000; align:C;")
+																	";font-color:#000000; align:C;border:LR;")
 													));
 					}
 				}
 				if($currTableName === "teacher" && $nEntries > 0) {//for teacher show roomName and subject name once
 					array_push($cellData, array(array('str' => $thisSlotEntries[0]["roomShortName"],
-													  'style' => "colspan:$colspan;font-color:$roomColor; align:R;"),
+													  'style' => "colspan:$colspan;font-color:$roomColor; align:R;border:L;"),
 												array('str' => $thisSlotEntries[0]["subjectShortName"],
-													  'style' => "colspan:$colspan;font-color:$subjectColor; align:L;")
+													  'style' => "colspan:$colspan;font-color:$subjectColor; align:L;border:R;")
 												));
 				}
 				if($currTableName === "room" && $nEntries > 0) {//for room show subjectName once
 					array_push($cellData, array(array('str' => $thisSlotEntries[0]["subjectShortName"],
 													  'style' => "colspan:".(2 * $colspan).
-																";font-color:$subjectColor; align:C;")
+																";font-color:$subjectColor; align:C;border:LR;")
 												));
 				}
-				if($nEntries === 0)
-					array_push($cellData, array(array('str' => '', 'style' => "colspan:".(2 * $colspan).";")));
+				if($nEntries === 0)// if a slot has no entries add empty string
+					array_push($cellData, array(array('str' => '', 'style' => "colspan:".(2 * $colspan).";border:LR;")));
+				for($d = 0;$d < count($cellData[0]);$d++) {// add top border to topmost row in a cell
+					$pos = strpos($cellData[0][$d]['style'], "border:");
+					$cellData[0][$d]['style'] = substr_replace($cellData[0][$d]['style'], $borderTop, $pos + strlen("border:"), 0);
+				}
+				for($d = 0;$d < count($cellData[count($cellData) - 1]);$d++) {// add bottom border to bottommost row in a cell
+					$pos = strpos($cellData[count($cellData) - 1][$d]['style'], "border:");
+					$cellData[count($cellData) - 1][$d]['style'] = substr_replace($cellData[count($cellData) - 1][$d]['style'], $borderBottom, $pos + strlen("border:"), 0);
+				}
 			}
 			else { /* nEntries > 1 for table = "class" */
-				for($d = 0; $d < $nEntries; $d++) {
-					$currEntry = $thisSlotEntries[$d];
-					array_push($cellData, array(array('str' => $currEntry["batchName"],
-													  'style' => "colspan:".(2 * $colspan).
-																";font-color:$batchColor; align:C;")
-												));
-					array_push($cellData, array(array('str' => $currEntry["roomShortName"],
-													  'style' => "colspan:$colspan;font-color:$roomColor; align:R;"),
-												array('str' => $currEntry["subjectShortName"],
-													  'style' => "colspan:$colspan;font-color:$subjectColor; align:L;")
-												));
+				for($i = 0;$i < count($entries[0]);$i++) {
+					if($entries[0][$i]['colspan'] == $colspan) {
+						$currEntry = $entries[0][$i]['row'];
+						array_push($cellData, array(array('str' => $currEntry["batchName"],
+														  'style' => "colspan:".(2 * $colspan).
+														  			";font-color:$batchColor; align:C;border:LR;")
+													));
+						array_push($cellData, array(array('str' => $currEntry["roomShortName"],
+														  'style' => "colspan:$colspan;font-color:$roomColor; align:R;border:L;"),
+													array('str' => $currEntry["subjectShortName"],
+														  'style' => "colspan:$colspan;font-color:$subjectColor; align:L;border:R;")
+													));
+						array_splice($entries[0], $i, 1);
+						$i--;
+					}
+				}
+				for($d = 0;$d < count($cellData[0]);$d++) {//add top border to topmost row in a cell
+					$pos = strpos($cellData[0][$d]['style'], "border:");
+					$cellData[0][$d]['style'] = substr_replace($cellData[0][$d]['style'], $borderTop, $pos + strlen("border:"), 0);
+				}
+				for($d = 0;$d < count($cellData[count($cellData) - 1]);$d++) {//add bottom border to bottommost row in a cell
+					$pos = strpos($cellData[count($cellData) - 1][$d]['style'], "border:");
+					$cellData[count($cellData) - 1][$d]['style'] = substr_replace($cellData[count($cellData) - 1][$d]['style'], $borderBottom, $pos + strlen("border:"), 0);
+				}
+				for($i = 0;$i < count($entries);$i++) {
+					for($j = 0;$j < count($entries[$i]);$j++) {
+						$row1 = array();
+						$row2 = array();
+						for($k = 0;$k < $i;$k++) {
+							array_push($row1, array('str' => '', 'style' => "colspan:2;border:TLR;"));
+							array_push($row2, array('str' => '', 'style' => "colspan:2;border:BLR;"));
+						}
+						$nextSlot = $i;
+						while($nextSlot < $colspan) {
+							if(count($entries[$nextSlot]) > 0) {
+								array_push($row1, array('str' => $entries[$nextSlot][0]['row']["batchName"],
+														'style' => "colspan:".(2 * $entries[$nextSlot][0]['colspan']).
+																	";font-color:$batchColor; align:C;border:TLR;"));
+								array_push($row2, array('str' => $entries[$nextSlot][0]['row']["roomShortName"],
+														'style' => "colspan:".$entries[$nextSlot][0]['colspan'].
+																	";font-color:$roomColor; align:R;border:LB;"),
+												  array('str' => $entries[$nextSlot][0]['row']["subjectShortName"],
+														'style' => "colspan:".$entries[$nextSlot][0]['colspan'].
+														  			";font-color:$subjectColor; align:L;border:BR;"));
+								if($nextSlot === $i)
+									$j--;
+								$tmp = $nextSlot;
+								$nextSlot += $entries[$nextSlot][0]['colspan'];
+								array_splice($entries[$tmp], 0, 1);
+							}
+							else if(count($entries[$nextSlot]) == 0) {
+								array_push($row1, array('str' => '', 'style' => "colspan:2;border:TLR;"));
+								array_push($row2, array('str' => '', 'style' => "colspan:2;border:BLR;"));
+								$nextSlot++;
+							}
+						}
+						if(count($row1) > 0) {
+							array_push($cellData, $row1);
+							array_push($cellData, $row2);
+						}
+					}
 				}
 			}
 			array_push($rowData, $cellData);
@@ -212,19 +282,19 @@ function generate_timetable_pdf($currTableName, $searchParam, $allrows2, $nSlots
 
 	/*Add color legend*/
 	$pdf->ln();
-	$table = new easyTable($pdf, 5, 'align:C; font-size:10; font-family:helvetica; border:1; border-width:0.4;');
-	$table->easyCell("Color Legend ->", "border:0; align:C;");
+	$table = new easyTable($pdf, 5, 'align:C; font-size:13; font-family:helvetica; border:1; border-width:0.4;');
+	$table->easyCell("Color Legend ->", "border:1; align:C;");
 	$table->easyCell("Batch Name", "font-color:$batchColor; align:C;");
 	$table->easyCell("Room Name", "font-color:$roomColor; align:C;");
 	$table->easyCell("Class Name", "font-color:$classColor; align:C;");
 	$table->easyCell("Subject Name", "font-color:$subjectColor; align:C;");
 	$table->printRow();
 	$table->endTable(0);
-	
+
 	/*on teacher paga add hrs/week */
 	if($currTableName == "teacher") {
 		$pdf->ln();
-		$table = new easyTable($pdf, '{25, 15}', 'align:C; font-size:10; font-family:helvetica;
+		$table = new easyTable($pdf, '{25, 15}', 'align:C; font-size:13; font-family:helvetica;
 										border:1; border-width:0.4; width:40; font-color:#000000;  align:L:');
 		$table->easyCell("Total Load", "font-style:B; align:C;");
 		$table->easyCell(count($allrows2)." Hrs", "font-style:B; align:C;");
@@ -232,53 +302,54 @@ function generate_timetable_pdf($currTableName, $searchParam, $allrows2, $nSlots
 		$table->endTable(0);
 	}
 	/* see next page message*/
-	$pdf->SetFont('helvetica','',10);
+	$pdf->SetFont('helvetica','',12);
 	$pdf->SetY(-15);
 	$pdf->setTextColor(0, 0, 0);
 	$pdf->Cell(0, 5, 'Please see the legend on the next page for details of acronyms', 0, 0, 'C');
-	
+
 	/*Add Page No*/
 	$pdf->ln();
 	$pdf->SetY(-10);
-	$pdf->SetFont('helvetica','',10);
+	$pdf->SetFont('helvetica','',12);
 	$pdf->Cell(0,5,'Page '.$pdf->PageNo(),0,0,'C');
-	
+
 	$align = array('align:L{LC}; ', '', 'align:R; ');
 	$i = 0;
-	$styleCell = 'font-size:8;';
+	$styleCell = 'font-size:10;';
+	$tableWidth = $pdf->GetPageWidth() / 3 - 10;
 	switch($currTableName) {
 		case "teacher":
 			$data = ShortNameMappings($allrows2, "roomShortName", "roomName", "room", array("Room Short Name", "Room Name"));
 			if($data != 0)
-				$y = createTable($pdf, $data, '{25, 60}', 2, $align[$i++], $styleCell);
+				$y = createTable($pdf, $data, '{'. 0.3 * $tableWidth .','. 0.7 * $tableWidth .'}', 2, $align[$i++], $styleCell);
 			break;
 		case "class": case "batch"://show room-short name and subject-teacher mappings
 			$data = ShortNameMappings($allrows2, "roomShortName", "roomName", "room", array("Room Short Name", "Room Name"));
 			if($data != 0)
-				$y = createTable($pdf, $data, '{35, 60}', 2, $align[$i++], $styleCell);
+				$y = createTable($pdf, $data, '{'. 0.37 * $tableWidth .','. 0.63 * $tableWidth .'}', 2, $align[$i++], $styleCell);
 			$data = SubjectTeacherMappings($allrows2, $currTableName, array("Subject Short Name", "Teacher Name"));
 			if($data != 0)
-				$y = createTable($pdf, $data, '{50, 35}', 2, $align[$i++], $styleCell, $y);
+				$y = createTable($pdf, $data, '{'. 0.58 * $tableWidth .','. 0.42 * $tableWidth .'}', 2, $align[$i++], $styleCell, $y);
 			break;
 		case "room"://show subject-teacher mapping
 			$data = SubjectTeacherMappings($allrows2, $currTableName, array("Subject Short Name", "Teacher Name"));
 			if($data != 0)
-				$y = createTable($pdf, $data, '{50, 35}', 2, $align[$i++], $styleCell);
+				$y = createTable($pdf, $data, '{'. 0.58 * $tableWidth .','. 0.42 * $tableWidth .'}', 2, $align[$i++], $styleCell);
 			break;
 	}
 	//show subject-short name mapping
 	$data = ShortNameMappings($allrows2, "subjectShortName", "subjectName", "subject",
 				array("Subject Short Name", "Subject Name"));
 	if($data != 0)
-		$y = createTable($pdf, $data, '{30, 60}', 2, $align[$i++], $styleCell, $y);
+		$y = createTable($pdf, $data, '{'. 0.33 * $tableWidth .','. 0.67 * $tableWidth .'}', 2, $align[$i++], $styleCell, $y);
 	if($pdf->PageNo() == 2) {//if lenged page exists
 		$pdf->SetY(-30);
-		$pdf->SetFont('helvetica','B',10);
+		$pdf->SetFont('helvetica','B',14);
 		$pdf->setTextColor(0, 0, 0);
 		$pdf->Cell($pdf->GetPageWidth() / 2, 10, "Timetable Incharge", 0, 0, 'C');
 		$pdf->Cell($pdf->GetPageWidth() / 2, 10, "Head of Department", 0, 0, 'C');
-		
-		$pdf->SetFont('helvetica','',10);
+
+		$pdf->SetFont('helvetica','',12);
 		$pdf->SetY(-10);
 		$pdf->Cell(0,6,'Page '.$pdf->PageNo(),0,0,'C');
 	}
@@ -288,19 +359,19 @@ function createTable($pdf, $data, $width, $pageNo, $styleTable = '', $styleCell 
 	if($pdf->PageNo() != $pageNo) {
 		$pdf->AddPage(); #legend page
 		$pdf->setMargins(5, 10, 5);
-		$pdf->SetFont('helvetica','B',14);
+		$pdf->SetFont('helvetica','B',16);
 		$pdf->SetX(15);
 		$pdf->Cell(0, 8, "Legend Page", 0, 1, 'C');
-		$pdf->SetFont('helvetica','B',10);
+		$pdf->SetFont('helvetica','B',13);
 		$y=$pdf->GetY();
 	}
 	else
 		$pdf->SetY($y);
 
-	$table = new easyTable($pdf, $width, $styleTable.'width:90; font-style:B; font-size:10;
+	$table = new easyTable($pdf, $width, $styleTable.'width:90; font-style:B; font-size:13;
 				font-family:helvetica; border:1; border-color:#000000; border-width:0.4');
 	for($i = 0;$i < count($data[0]);$i++)
-		$table->easyCell($data[0][$i], 'align:C; valign:M; font-color:#006400 font-size:12');
+		$table->easyCell($data[0][$i], 'align:C; valign:M; font-color:#006400 font-size:14');
 	$table->printRow();
 	for($i = 1;$i < count($data);$i++) {
 		for($j = 0;$j < 2;$j++) {
