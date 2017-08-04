@@ -71,32 +71,15 @@ function generate_timetable_pdf($currTableName, $searchParam, $allrows2, $nSlots
 	$pdf->SetFont('helvetica','BU',16);
 	$pdf->Cell(0, 6, "Timetable For $currTableName: $searchParam", 0, 1, 'C');
 
-	$width = '{7, ';
-	$w = $pdf->GetPageWidth() / $nSlots;
-	for($i = 0;$i <= 2 * ($nSlots - 1);$i++)
-		$width .= ($w.', ');
-	$width .= ($w.'}');
-	/* Main timeTable */
-	$table = new easyTable($pdf, $width, 'align:L; font-style:B; font-size:13;
-		font-family:helvetica; border:1; border-color:#000000; border-width:0.4; width:'.$pdf->GetPageWidth().';');
-
-	$table->easyCell('');
-	$currSlotTime = strtotime($dayBegin);
-	$currSlotTimeFormatted = date("H:i", $currSlotTime);
-	// Generate the Slots-Labels
-	for($i = 0; $i < $nSlots; $i++) {
-		$table->easyCell($currSlotTimeFormatted, 'align:C; valign:M; font-color:#000000; colspan:2;');
-		$currSlotTime += $slotDuration;
-		$currSlotTimeFormatted = date("H:i", $currSlotTime);
-	}
-	$table->printRow();
-
 	$days = array("Mon", "Tue", "Wed", "Thu", "Fri");
 	$batchColor = '#0000cd'; //medium blue
 	$roomColor = '#228b22'; //forest green
 	$classColor = '#ff00ff';//magenta
 	$subjectColor = '#ff0000';//red
-	for($day = 1; $day <= 5; $day++) {
+	$colWidth = array_fill(0, $nSlots, -1);//array to store widths of every column in timetable
+	$rowSpan = array();
+	$tableData = array();// all entries are stored in $tableData to determine the width of a column
+	for($day = 1; $day <= 5; $day++) {//Monday to Friday
 		$rowData = array();
 		$rowspan = 1;
 		array_push($rowData, array(array(array('str' => $days[$day - 1],
@@ -120,6 +103,10 @@ function generate_timetable_pdf($currTableName, $searchParam, $allrows2, $nSlots
 						array_push($entries[0], array('row' => $thisSlotEntries[$i], 'colspan' => $subjectRow[0]['eachSlot']));
 				}
 			}
+			if($nEntries == 1 && $colWidth[$slotNo] < 0)
+				$colWidth[$slotNo] = 0;
+			if($nEntries > 1)
+				$colWidth[$slotNo] = 1;
 			for($i = 1;$i < $colspan;$i++) {
 				$nextSlotEntries = find($allrows2, $day, $slotNo + $i);
 				for($j = 0;$j < count($thisSlotEntries);$j++) {
@@ -141,6 +128,8 @@ function generate_timetable_pdf($currTableName, $searchParam, $allrows2, $nSlots
 						array_push($entries[$i], array('row' => $nextSlotEntries[$j], 'colspan' => $subjectRow[0]['eachSlot']));
 					}
 				}
+				if(count($nextSlotEntries) > 0)
+					$colWidth[$slotNo + $i] = 1;
 				$thisSlotEntries = array_merge($thisSlotEntries, $nextSlotEntries);
 			}
 			$nEntries = count($thisSlotEntries);
@@ -276,10 +265,57 @@ function generate_timetable_pdf($currTableName, $searchParam, $allrows2, $nSlots
 			if(count($cellData) > $rowspan)
 				$rowspan = count($cellData);
 		}
-		printRow($rowData, $table, $rowspan, $searchParam);
+		array_push($tableData, $rowData);
+		array_push($rowSpan, $rowspan);
 	}
-	$table->endTable(0);
 
+	$count = array_fill(0, 3, 0);//{count_of_empty_cols, count_of_cols_with_single_entry_in_cell, count_of_multiple_entry_cols}
+	for($i = 0;$i < $nSlots;$i++)
+		$count[$colWidth[$i] + 1]++;
+	$width = '{8';
+	$w1 = 16;// width for column with no entry
+	$w = ( $pdf->GetPageWidth() - $w1 * $count[0] - 8 )  / ($nSlots - $count[0]);
+	if($count[2] != 0) {
+		$w2 = ( $w - 5 ) / 2;//width for column with cells containing maximum single entry
+		$w3 = ( $w + ( 5 * $count[1] ) / $count[2] ) / 2;//width for column with cells containing multiple entry
+	}
+	else {
+		$w2 = $w / 2;
+		$w3 = $w / 2;
+	}
+	for($i = 0;$i < $nSlots - 1;$i++) {
+		switch ($colWidth[$i]) {
+			case -1:
+				$width .= (', '.$w1.', '.$w1);
+				break;
+			case 0:
+				$width .= (', '.$w2.', '.$w2);
+				break;
+			case 1:
+				$width .= (', '.$w3.', '.$w3);
+				break;
+		}
+	}
+	$width .= '}';
+	/* Main timeTable */
+	$table = new easyTable($pdf, $width, 'align:L; font-style:B; font-size:13;
+		font-family:helvetica; border:1; border-color:#000000; border-width:0.4; width:'.$pdf->GetPageWidth().';');
+
+	$table->easyCell('');
+	$currSlotTime = strtotime($dayBegin);
+	$currSlotTimeFormatted = date("H:i", $currSlotTime);
+	// Generate the Slots-Labels
+	for($i = 0; $i < $nSlots; $i++) {
+		$table->easyCell($currSlotTimeFormatted, 'align:C; valign:M; font-color:#000000; colspan:2;');
+		$currSlotTime += $slotDuration;
+		$currSlotTimeFormatted = date("H:i", $currSlotTime);
+	}
+	$table->printRow();
+	for($i = 0;$i < count($tableData);$i++)
+		printRow($tableData[$i], $table, $rowSpan[$i], $searchParam);
+	$table->endTable(0);
+	if($searchParam == "SYCE")
+		ttlog(print_r($colWidth, true));
 	/*Add color legend*/
 	$pdf->ln();
 	$table = new easyTable($pdf, 5, 'align:C; font-size:13; font-family:helvetica; border:1; border-width:0.4;');
