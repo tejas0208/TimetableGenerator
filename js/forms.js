@@ -2872,7 +2872,6 @@ function teacherDelete(i) {
 	if(sure != true)
 		return;
 	teacherId = document.getElementById("center_" + row).childNodes[0].nodeValue;
-	//teacherShortName = document.getElementById("teacherShortName_" + row).value;
 	document.getElementById("tDeleteButton_" + row).childNodes[0].nodeValue = "Deleting";
 	document.getElementById("tDeleteButton_" + row).disabled = true;
 	document.getElementById("tUpdateButton_" + row).disabled = true;

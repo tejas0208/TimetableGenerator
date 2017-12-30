@@ -127,8 +127,6 @@ function makeTrackerList() {
 			}
 			eachSlot = tracker[index]["eachSlot"];
 			tracker[index]["done"] += (1.0/eachSlot);
-			//console.log("makeTrackerList: " + JSON.stringify(curr));
-			//tracker[index]["done"] = parseInt(tracker[index]["done"]);
 			continue;
 		}
 		if("" + curr["batchId"] == "null") {
@@ -140,13 +138,11 @@ function makeTrackerList() {
 			}
 			eachSlot = tracker[index]["eachSlot"];
 			tracker[index]["done"] += (1.0/eachSlot);
-			//console.log("makeTrackerList: " + JSON.stringify(curr));
 		} else {
 			alert("ERROR: should not come here in makeTrackerList");
 			continue;
 		}
 	}
-	//console.log("Tracker: " + JSON.stringify(tracker));
 }
 var subjectSort = 1, batchSort = 1, teacherSort = 1, doneSort = 1;
 
@@ -384,9 +380,6 @@ function debugPrint(tableName, row) {
 	var res = {};
 	switch(tableName) {
 		case "timeTable":
-			//if((res = search(timeTableReadable, "ttId", row["ttId"])) !== -1)
-				//return JSON.stringify(res);
-
 			res.ttid = row["ttId"];
 			res.day = row["day"];
 			res.slotNo = row["slotNo"];
@@ -456,7 +449,6 @@ function dragStartHandler(e) {
 
 	srcSlotEntry = helperTable[i - 1][j][k];
 	srcI = i;/*Needed afterwards*/
-	//console.log(dragSlotEntry);
   	e.dataTransfer.effectAllowed = 'move';
   	e.dataTransfer.setData('text/html', e.target.innerHTML);
 }
@@ -466,7 +458,6 @@ function dragEnterHandler(e) {
 }
 
 function dragOverHandler(e) {
-	//e.target.parentElement.parentElement.classList.add('over');
   	if (e.preventDefault) {
     	e.preventDefault(); // Necessary. Allows us to drop.
   	}
@@ -543,16 +534,18 @@ function checkValidity(i, j, source) {
 }
 
 function dropHandler(e) {
-	//get id
-	//find in helpertable
-	//if not null
-	//swap
-	//if null
-	///check validatiy of source only
-//validatiy =>subject:eachSlot(teacher free, if class subj==> no batch subj or other class subj, if batch subj==> batch free, no class subj in slot, only overlapping batches)
+	/* get id
+	find in helpertable
+	if not null
+	swap
+	if null
+	check validatiy of source only
+	validatiy =>subject:eachSlot(teacher free, if class subj ==> 
+		no batch subj or other class subj, if batch subj ==> 
+		batch free, no class subj in slot, only overlapping batches)
+	*/
 	console.log("dropHandler: Entered ");
 	var id = e.target.id.replace(/[^0-9\.]/g, '');
-	//console.log(id);
 	if(id.length == 0) {
 		dragSrcEl.style.opacity = 1;
 		return;
@@ -562,13 +555,10 @@ function dropHandler(e) {
 	var k = parseInt(id.substring(id.length - 1, id.length));
 
 	var slotNo = parseInt(srcSlotEntry["slotNo"]);
-	//console.log("i -1"+ (i - 1));
 	var destSlotEntry = helperTable[i - 1][j][k];
-	//alert(destSlotEntry);
 	var srcSubjectRow = search(subject, "subjectId", srcSlotEntry["subjectId"]);
 	if(destSlotEntry !== null) { /*SWAP*/
 		//Sourse valid in destn place
-		//alert("over here");
 		var temp1 = [];/*for dest*/
 		var temp2 = [];/*for src*/
 		var destSubjectRow = search(subject, "subjectId", destSlotEntry["subjectId"]);
@@ -595,7 +585,6 @@ function dropHandler(e) {
 		if(!valid2 || !valid1) {
 			if(temp2.length !== 0) {/*If operation fails*/
 				for(var r = 0; r < srcSubjectRow["eachSlot"]; r++) {
-					//timeTable.push(temp2.pop());
 					temp2[r]["day"] = srcI;
 					temp2[r]["slotNo"] = "" + (slotNo + r);
 				}
@@ -621,11 +610,8 @@ function dropHandler(e) {
 		}
 	}
 	else if(destSlotEntry === null || destSlotEntry == 0) {/*Dest is blank*/
-		//alert("Came here");
 		var valid = checkValidity(i, j, srcSlotEntry);
 		if(valid) {
-			//srcSlotEntry["day"] = ""+i;
-			//srcSlotEntry["slotNo"] = ""+j;
 			for(var r = 0; r < srcSubjectRow["eachSlot"]; r++) {
 				var slot = search(timeTable, "day", srcI,"slotNo", (slotNo + r),
 				"batchId", srcSlotEntry["batchId"], "subjectId", srcSubjectRow["subjectId"],
@@ -795,14 +781,12 @@ function getTimetable(snapshotName) {
 	if(typeof timeTable == "undefined")
 		timeTable = [];
 	currentSnapshotName = snapshotName;
-	//classChange(true);
 }
 function getOneTable(tName, asynchronousOrNot) {/*Loads data from server asynchronously*/
 	var xhttp;
 	xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
-			//alert("getOneTable: " + this.responseText);
 			var db = JSON.parse(this.responseText);
 			return db;
 		}
@@ -862,7 +846,6 @@ function getDeptConfigSnapshot() {
 		return 0;
 	});
 	currentDeptId = dept[0]["deptId"];
-	//alert("dept = " + JSON.stringify(dept) + "\n currDeptId = " + currentDeptId);
 
 	var xhttp = new XMLHttpRequest();
 	xhttp.open("POST", "timetable.php", false);
@@ -900,9 +883,6 @@ function getDeptConfigSnapshot() {
 function getDataTables() {/*Loads data from server asynchronously*/
 	var xhttp;
 	xhttp = new XMLHttpRequest();
-	//xhttp.onreadystatechange = function() {
-		//if (this.readyState == 4 && this.status == 200) {
-			//};
 	xhttp.open("POST", "timetable.php", false);
 	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	xhttp.send("reqType=getDataTables&snapshotId=" + currentSnapshotId);
@@ -1025,7 +1005,6 @@ function getDataTables() {/*Loads data from server asynchronously*/
 	fixedEntry = database.fixedEntry;
 	if(typeof fixedEntry == "undefined")
 		fixedEntry = [];
-//}
 
 }
 
@@ -1075,7 +1054,6 @@ function createTable(days, nSlots, slotTablePerDay, startTime, timePerSlot) {
 		td = document.createElement("th");
 		var text = displayTime(start);
 		start = new Date(start.getTime() + (timePerSlot * 1000)); /*timePerSlot is in seconds*/
-		//text = text + " to<br>" + displayTime(start);
 		td.innerHTML = text;
 		tr.appendChild(td);
 	}
@@ -1148,7 +1126,6 @@ function sort(table) {
 
 function createTimeTableEntry(day, slotNo, roomId, classId, subjectId,
 			teacherId, batchId, snapshotId, isFixed) {
-	//console.log(timeTable);
 	this.day = "" + day;
 	this.slotNo = "" + slotNo;
 	this.roomId = "" + roomId;
@@ -1442,7 +1419,6 @@ function classSelected(selecttag) {
 
 		var classRow = search(classTable, "classShortName", classShortName);
 		var subjectShortName = document.getElementById("subject" + Id).innerHTML;
-		//alert(subjectShortName);
 		var subjectRow = search(subject, "subjectShortName", subjectShortName);
 		var teacherRow = search(subjectClassTeacher, "subjectId", subjectRow["subjectId"],
 					"classId", classRow["classId"]);
@@ -1555,7 +1531,6 @@ function batchSelected(selecttag) {
 			if(type == "class") {
 				var teacherRow = search(subjectBatchTeacher, "subjectId", subjectRow["subjectId"],
 							"batchId", batchRow["batchId"]);
-				//alert(JSON.stringify(teacherRow));
 				teacherRow = search(teacher, "teacherId", teacherRow["teacherId"]);
 				extraInfo += "<div id=\"teacher" + Id +"\" class=\"box\">" +
 							teacherRow["teacherShortName"] +
@@ -1854,7 +1829,6 @@ function teacherBusyInThisSlot(i, j, currSubject, teacherId, logOrNot) {
 		var nEntriesForTeacher = search(timeTable, "day", i, "slotNo", j + n,
 			 "teacherId", teacherId, "snapshotId", currentSnapshotId);
 		if(nEntriesForTeacher != -1) {
-			//console.log("eligibleSubjects: Skipping teacher " + currTeacher["teacherShortName"] + " as busy");
 			if(logOrNot == 1)
 				disabledSubjectAdd(disabledSubjects, currSubject["subjectShortName"],
 							currTeacher["teacherShortName"], "Busy");
@@ -1877,7 +1851,6 @@ function classBusyInThisSlot(i, j, currSubject, classId, logOrNot) {
 			var slotEntries = searchMultipleRows(timeTable, "day", i, "slotNo", (j + n),
 				"classId", classId, "snapshotId", currentSnapshotId);
 			if(slotEntries !== -1) {
-				//console.log("getEligibleSubject: Batched-subject " + supportObject["classShortName"] + " in slot");
 				if(logOrNot == 1)
 					disabledSubjectAdd(disabledSubjects, currSubject["subjectShortName"],
 						search(classTable, "classId", classId)["classShortName"], "Busy");
@@ -1989,7 +1962,6 @@ function batchOverlappingPossible(i, j, osbt, subjectRow) {
 	var bco = searchMultipleRows(batchCanOverlap, "batchId", sbt["batchId"]);
 	for(var p = 0; p < subjectRow["eachSlot"]; p++) {
 		var slotEntries = searchMultipleRows(timeTable, "day", i, "slotNo", (j + p),
-					//"classId", overlappingClassId, "batchId", overlappingBatchId,
 					"classId", overlappingClassId, "snapshotId", currentSnapshotId);
 		if(slotEntries === -1)
 			continue;
@@ -2070,7 +2042,6 @@ function disableSelect(enabledSelect) {
  *
  */
 function getEligibleSubjects(i, j, k) {
-	console.log("getEligibleSubjects: i = " + i + " j = " + j + " k = " + k);
 	var configrow = search(config, "configId", currentConfigId);
 	var nSlotsPerDay = configrow["nSlots"];
 	var select = "<select id= \"subject" + makeIdFromIJK(i, j, k) +
@@ -2231,7 +2202,6 @@ function getEligibleSubjects(i, j, k) {
 /* cell is empty if all helperTable entries for i.j are 0 or null
  */
 function cellEmpty(i, j) {
-	console.log("cellEmpty: i = " + i + " j = " + j);
 	for(var k = 0 ; k < helperTable[i - 1][j].length; k++) {
 		if(helperTable[i - 1][j][k] !== 0 && helperTable[i - 1][j][k] != null) {
 			return false;
@@ -2306,7 +2276,6 @@ function deleteEntry(Span) {
 			}
 			for(var i in osbt) {
 				var batchId = search(subjectBatchTeacher, "sbtId", osbt[i]["sbtId2"])["batchId"];
-						//"teacherId", teacherId, "subjectId", subjectId)["batchId"];
 				var classId = search(batchClass, "batchId", batchId)["classId"];
 				for(var j = 0; j < subjRow["eachSlot"]; j++) {
 					var index = searchIndex(timeTable, "day", day, "slotNo", (parseInt(SlotNo) + j),
@@ -2481,7 +2450,6 @@ function fillTable2(createNewTable) {
 		if(""+ classId == "null")
 			return;
 	}
-	//console.log(JSON.stringify(timeTable));
 	for(var i = 1; i <= days; i++) { /*daywise*/
 		for(var j = 0; j < NoOfSlots; j++) { /*slotwise*/
 			var slotRows;
@@ -2767,7 +2735,6 @@ function classChange(createNewTable){
 	currTableId = classShortName;
 	document.getElementById("teacher-menu").selectedIndex = "-1";
 	document.getElementById("room-menu").selectedIndex = "-1";
-	//document.getElementById("subject-menu").selectedIndex = "-1";
 	document.getElementById("batch-menu").selectedIndex = "-1";
 	getSupportObject();//fills supportObject correctly depending on type and id;
 	/*Filling the table*/
@@ -2801,7 +2768,6 @@ function snapshotChange() {
 
 function roomChange(createNewTable){
 	document.getElementById("teacher-menu").selectedIndex = "-1";
-	//document.getElementById("subject-menu").selectedIndex = "-1";
 	document.getElementById("class-menu").selectedIndex = "-1";
 	document.getElementById("batch-menu").selectedIndex = "-1";
 	var index = document.getElementById("room-menu").selectedIndex; /*Setting the select tag*/
@@ -2828,7 +2794,6 @@ function batchChange(createNewTable){
 	document.getElementById("teacher-menu").selectedIndex = "-1";
 	document.getElementById("room-menu").selectedIndex = "-1";
 	document.getElementById("class-menu").selectedIndex = "-1";
-	//document.getElementById("subject-menu").selectedIndex = "-1";
 	var index = document.getElementById("batch-menu").selectedIndex; /*Setting the select tag*/
 	if(index === 0) {
 		document.getElementById("batch-menu").selectedIndex = "-1";
@@ -2933,12 +2898,10 @@ function loadTeacherMenu() {
 		selectTag.appendChild(createOptionTag(teacher[i]["teacherShortName"],
 								teacher[i]["teacherShortName"], "false"));
 	}
-	//sortSelect(selectTag);
 	selectTag.setAttribute("onchange", "teacherChange(true)");
 	sortSelect(selectTag);
 	selectTag.add(createOptionTag("Add Teacher", "Add Teacher", "false"), 0);
 	document.getElementById("teacher-menu").selectedIndex = -1; /*Setting the select tag*/
-	//$("#teacher-menu").select2();
 }
 function loadClassMenu() {
 	var selectTag = document.getElementById("class-menu");
@@ -2952,8 +2915,6 @@ function loadClassMenu() {
 	selectTag.setAttribute("onchange", "classChange(true)");
 	selectTag.add(createOptionTag("Add Class", "Add Class", "false"), 0);
 	document.getElementById("class-menu").selectedIndex = -1; /*Setting the select tag*/
-	//$("#class-menu").select2();
-	//sortSelect(selectTag);
 }
 function loadBatchMenu() {
 	var selectTag = document.getElementById("batch-menu");
@@ -2964,12 +2925,10 @@ function loadBatchMenu() {
 		selectTag.appendChild(createOptionTag(batch[i]["batchName"],
 								batch[i]["batchName"], "false"));
 	}
-	//sortSelect(selectTag);
 	selectTag.setAttribute("onchange", "batchChange(true)");
 	sortSelect(selectTag);
 	selectTag.add(createOptionTag("Add Batch", "Add Batch", "false"), 0);
 	document.getElementById("batch-menu").selectedIndex = -1; /*Setting the select tag*/
-	//$("#batch-menu").select2();
 }
 function loadRoomMenu() {
 	var selectTag = document.getElementById("room-menu");
@@ -2980,12 +2939,10 @@ function loadRoomMenu() {
 		selectTag.appendChild(createOptionTag(room[i]["roomShortName"],
 								room[i]["roomShortName"], "false"));
 	}
-	//sortSelect(selectTag);
 	selectTag.setAttribute("onchange", "roomChange(true)");
 	sortSelect(selectTag);
 	selectTag.add(createOptionTag("Add Room", "Add Room", "false"), 0);
 	document.getElementById("room-menu").selectedIndex = -1; /*Setting the select tag*/
-	//$("#room-menu").select2();
 }
 function loadSelectMenus() {
 	loadRoomMenu();
@@ -2996,7 +2953,6 @@ function loadSelectMenus() {
 					"entry to see the select menus</div>");
 	}
 	$("#teacher-menu").css("display", "block");
-	//$("#teacher-menu").setAttribute("disabled", "false");
 	loadTeacherMenu();
 	$("#class-menu").css("display", "block");
 	loadClassMenu();
@@ -3021,7 +2977,6 @@ function loadNewSnapshot() {
 	loadSnapshotMenu(search(snapshot, "snapshotId", currentSnapshotId)["snapshotName"]);
 	getSupportObject();
 	console.log("loadNewSnapshot: loaded snapshot " + currentSnapshotId);
-	//alert(JSON.stringify(timeTable));
 	/* If some table was already displayed, then type and id globals will be set
 	 * and this call will redisplay that table. Else, it will just return
 	 */
@@ -3053,7 +3008,6 @@ function loadSnapshotMenu(selectedName) {
 	document.getElementById("saveNewSnapshot").disabled = false;
 	document.getElementById("saveSnapshot").disabled = false;
 	document.getElementById("fetch-snapshot-menu").selectedIndex = index;
-	//sortSelect(selectTag);
 }
 function jsSaveNewSnapshot() {
 	var newSnapshotName = prompt("Enter snapshot Name","snapshot");
@@ -3062,22 +3016,16 @@ function jsSaveNewSnapshot() {
 		xhttp = new XMLHttpRequest();
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
-				//alert("snapshot response: " + this.responseText);
-				//alert(this.responseText);
 				response = JSON.parse(this.responseText);
 				if(response["Success"] == "True") {
 					alert("snapshot " + newSnapshotName + " Saved. Press OK to continue");
 					document.getElementById("saveNewSnapshot").value = "Save As"
 					document.getElementById("saveNewSnapshot").disabled = false;
-					// JS variables are pass by vale, so snapshot can be changed here only
+					// JS variables are passed by vale, so snapshot can be changed here only
 					snapshot = getSnapshotTable().snapshot;
 					currentSnapshotName = newSnapshotName;
 					currentSnapshotId = response["snapshotId"];
-					//getDataTables();
-					//getTimetable(newSnapshotName);
-					//loadSnapshotMenu(newSnapshotName);
 					loadNewSnapshot();
-					//fillTable2(true);
 				} else{
 					alert("Saving New Snapshot Failed. Error: " + response["Error"]);
 					loadSnapshotMenu(currentSnapshotName);
@@ -3113,7 +3061,6 @@ function jsSaveSnapshot(asynchronousOrNot) {
 			if (this.readyState == 4 && this.status == 200) {
 				response = JSON.parse(this.responseText);
 				if(response["Success"] == "True") {
-					//alert("snapshot response: " + this.responseText);
 					alert("snapshot " + currentSnapshotName + " Saved. Press OK to continue");
 					document.getElementById("saveSnapshot").value = "Save";
 					document.getElementById("saveSnapshot").disabled = false;
@@ -3175,10 +3122,10 @@ function jsSQLExport(type) {
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function () {
 		if (this.readyState == 4 && this.status == 200) {
-			//alert(this.response);
 			var blob = this.response;
 			var headers = this.getAllResponseHeaders();
-			var fileName = this.getResponseHeader("filename"); //if you have the fileName header available
+			/* if you have the fileName header available */
+			var fileName = this.getResponseHeader("filename"); 
 			var link=document.createElement('a');
 			link.href=window.URL.createObjectURL(blob);
 			link.download=fileName;
@@ -3198,20 +3145,18 @@ function jsSQLExport(type) {
 	xhttp.open("POST", "timetable.php", true); // asynchronous
 	xhttp.responseType = "blob";
 	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	//xhttp.setRequestHeader("Content-Type", "application/json");
 	xhttp.send("reqType=exportSQL&snapshotName=" + currentSnapshotName+ "&type=" +
 				type + "&snapshotId=" + currentSnapshotId);
-	//window.location='timetable.php';
 
 }
 function jsExport(type) {
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function () {
 		if (this.readyState == 4 && this.status == 200) {
-			//alert(this.response);
 			var blob = this.response;
 			var headers = this.getAllResponseHeaders();
-			var fileName = this.getResponseHeader("filename"); //if you have the fileName header available
+			/* if you have the fileName header available */
+			var fileName = this.getResponseHeader("filename"); 
 			var link=document.createElement('a');
 			link.href=window.URL.createObjectURL(blob);
 			link.download=fileName;
@@ -3237,10 +3182,8 @@ function jsExport(type) {
 	xhttp.open("POST", "timetable.php", true); // asynchronous
 	xhttp.responseType = "blob";
 	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	//xhttp.setRequestHeader("Content-Type", "application/json");
 	xhttp.send("reqType=" + type + "&snapshotName=" + currentSnapshotName +
 			"&snapshotId=" + currentSnapshotId);
-	//window.location='timetable.php';
 
 }
 /**
@@ -3322,8 +3265,6 @@ function load() {
 	if(checkInstallation() === false)
 		return false;
 	if(getDeptConfigSnapshot() === false) {
-		//alert("load(): Loading of Dept/Config/Snapshot Tables Failed. Check your Error Logs");
-		//window.location.replace("http://127.0.0.1/abhijittt/install.php")
 		return false;
 	}
 	/*Load the default snapshot*/

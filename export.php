@@ -473,7 +473,6 @@ function exportCSV() {
 	if($res === false) {
 		ttlog("mkdir Failed");
 	} */
-	//$currentSnapshotName = getArgument("currentSnapshotId");
 	$currentSnapshotName = getArgument("snapshotName");
 	$currentSnapshotId = getArgument("snapshotId");
 

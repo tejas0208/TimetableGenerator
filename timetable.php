@@ -45,7 +45,6 @@ function getTimetable() {
 	ttlog("getTimetable: Query: ". $query);
 	$outp = sqlGetAllRows($query);
 	$tables["timeTable"] = $outp;
-	//ttlog("getTimetable: returning table: ".json_encode($tables));
 	return json_encode($tables);
 }
 

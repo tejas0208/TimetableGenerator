@@ -48,7 +48,6 @@ function getDataTables() {
 		$outp = sqlGetAllRows($query);
 		$tables[$tableNames[$i]] = $outp;
 	}
-	//ttlog(json_encode($tables));
 	return json_encode($tables);
 }
 function getOneTable() {

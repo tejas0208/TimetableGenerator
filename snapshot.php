@@ -155,7 +155,6 @@ function saveSnapshot() {
 							"teacherId, batchId, snapshotId, isFixed) VALUES (".
 							$currRow["day"].",".$currRow["slotNo"].",".
 							"null, $classId, null, null, ".
-							//"(SELECT classId FROM class where classShortName=\"$className\"),".
 							"null, ".
 							$snapshotId.",".
 							$currRow["isFixed"].");";
@@ -286,7 +285,6 @@ function cloneAllTables($currentSnapshotId, $newSnapshotId) {
 			}
 			$selQueryStr .= " snapshotId = '".$newSnapshotId."';";
 			$selQuery = $selectQueryHeader.$selQueryStr;
-			//$allColumnNames[$nColumns - 1]["COLUMN_NAME"]." = ".$allRows[$i][$nColumns - 1].";";
 			ttlog("clone: select query: ".$selQuery);
 
 			if($i < 3) ttlog("clone: Insert Query = ".$insertQuery);
@@ -297,7 +295,6 @@ function cloneAllTables($currentSnapshotId, $newSnapshotId) {
 			}
 			/* We'll need the new Id as foreign keys, store it */
 			$id = sqlGetOneRow($selQuery);
-			//$newIDs[$currTableName][$i] = $id[0][$allColumnNames[0]["COLUMN_NAME"]];
 		}
 	}
 
@@ -320,7 +317,6 @@ function cloneAllTables($currentSnapshotId, $newSnapshotId) {
 				"(SELECT classId FROM class WHERE classShortName=".
 					"(SELECT classShortName from class WHERE classId=".$allRows[$i]["classId"]." AND snapshotId = $currentSnapshotId)".
 				" AND snapshotId = $newSnapshotId), $newSnapshotId) ";
-		//ttlog($insertQuery);
 		$result = sqlUpdate($insertQuery);
 		if($result === false)
 			return false;
@@ -330,7 +326,6 @@ function cloneAllTables($currentSnapshotId, $newSnapshotId) {
 	/* batchCanOverlap Table */
 	$getAllQuery = "SELECT * FROM batchCanOverlap WHERE snapshotId = $currentSnapshotId";
 	$allRows = sqlGetAllRows($getAllQuery);
-	//ttlog(json_encode($allRows));
 	ttlog($getAllQuery);
 	for($i = 0; $i < count($allRows); $i++) {
 		$insertQuery = "INSERT INTO batchCanOverlap(batchId, batchOverlapId, snapshotId) VALUES ".
@@ -341,7 +336,6 @@ function cloneAllTables($currentSnapshotId, $newSnapshotId) {
 				"(SELECT batchId FROM batch WHERE batchName=".
 					"(SELECT batchName from batch WHERE batchId=".$allRows[$i]["batchOverlapId"]." AND snapshotId = $currentSnapshotId)".
 				" AND snapshotId = $newSnapshotId), $newSnapshotId) ";
-		//ttlog($insertQuery));
 		$result = sqlUpdate($insertQuery);
 		if($result === false)
 			return false;
@@ -351,7 +345,6 @@ function cloneAllTables($currentSnapshotId, $newSnapshotId) {
 	/* subjectBatchTeacher Table */
 	$getAllQuery = "SELECT * FROM subjectBatchTeacher WHERE snapshotId = $currentSnapshotId";
 	$allRows = sqlGetAllRows($getAllQuery);
-	//ttlog(json_encode($allRows));
 	ttlog($getAllQuery);
 	for($i = 0; $i < count($allRows); $i++) {
 		ttlog(json_encode($allRows[$i]));
@@ -382,7 +375,6 @@ function cloneAllTables($currentSnapshotId, $newSnapshotId) {
 	/* subjectClassTeacher Table */
 	$getAllQuery = "SELECT * FROM subjectClassTeacher WHERE snapshotId = $currentSnapshotId";
 	$allRows = sqlGetAllRows($getAllQuery);
-	//ttlog(json_encode($allRows));
 	ttlog($getAllQuery);
 	for($i = 0; $i < count($allRows); $i++) {
 		ttlog(json_encode($allRows[$i]));
@@ -621,7 +613,6 @@ function saveNewSnapshot() {
 								" teacherId, batchId, snapshotId, isFixed) VALUES (".
 								$currRow["day"].",".$currRow["slotNo"].",".
 								"null, $newClassId, null, ".
-								//"(SELECT classId FROM class where classShortName=\"$className\"),".
 								"null, null, ".
 								"(SELECT snapshotId FROM snapshot where snapshotName = \"$newSnapshotName\"),".
 								$currRow["isFixed"].");";
