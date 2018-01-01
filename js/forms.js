@@ -169,7 +169,7 @@ function batchForm() {
 		currBatch = batch[i];
 		var row = insertRow(table, count);
 
-		insertTextColumn(row, "center_" + count, currBatch["batchId"]);
+		insertTextColumn(row, "bfCenter_" + count, currBatch["batchId"]);
 
 		insertInputBox(row, "text", "batchName_" + count, "32",
 					"Batch Name", currBatch["batchName"], "Batch Name (Short)");
@@ -309,7 +309,7 @@ function batchUpdate(i) {
 	var batchName, batchCount;
 	batchName = document.getElementById("batchName_" + row).value;
 	batchCount = document.getElementById("batchCount_" + row).value;
-	batchId = document.getElementById("center_" + row).childNodes[0].nodeValue;
+	batchId = document.getElementById("bfCenter_" + row).childNodes[0].nodeValue;
 	//document.getElementById("bUpdateButton_" + row).childNodes[0].nodeValue = "Updating";
 	document.getElementById("bDeleteButton_" + row).disabled = true;
 	//document.getElementById("bUpdateButton_" + row).disabled = true;
@@ -367,7 +367,7 @@ function batchDelete(i) {
 	if(sure != true)
 		return;
 	//batchName = document.getElementById("batchName_" + row).value;
-	batchId = document.getElementById("center_" + row).childNodes[0].nodeValue;
+	batchId = document.getElementById("bfCenter_" + row).childNodes[0].nodeValue;
 	document.getElementById("bDeleteButton_" + row).childNodes[0].nodeValue = "Deleting";
 	document.getElementById("bDeleteButton_" + row).disabled = true;
 	//document.getElementById("bUpdateButton_" + row).disabled = true;
@@ -604,7 +604,7 @@ function batchRoomForm() {
 		currBatchRoom = batchRoom[i];
 		var row = insertRow(table, count);
 
-		insertTextColumn(row, "center_" + count, currBatchRoom["brId"]);
+		insertTextColumn(row, "brCenter_" + count, currBatchRoom["brId"]);
 
 		var cell = insertCell(row);
 		cell.setAttribute("align","center");
@@ -687,7 +687,7 @@ function batchRoomUpdate(i) {
 	if(selectTagsValueEmpty(batchId, roomId) == true) {
 		return;
 	}
-	brId = document.getElementById("center_" + row).childNodes[0].nodeValue;
+	brId = document.getElementById("brCenter_" + row).childNodes[0].nodeValue;
 	document.getElementById("batchRoomUpdateButton_" + row).childNodes[0].nodeValue = "Updating";
 	document.getElementById("batchRoomDeleteButton_" + row).disabled = true;
 	document.getElementById("batchRoomUpdateButton_" + row).disabled = true;
@@ -736,7 +736,7 @@ function batchRoomDelete(i) {
 					+ "This can not be undone. \nAre you sure?");
 	if(sure != true)
 		return;
-	brId = document.getElementById("center_" + row).childNodes[0].nodeValue;
+	brId = document.getElementById("brCenter_" + row).childNodes[0].nodeValue;
 	document.getElementById("batchRoomDeleteButton_" + row).childNodes[0].nodeValue = "Deleting";
 	document.getElementById("batchRoomDeleteButton_" + row).disabled = true;
 	document.getElementById("batchRoomUpdateButton_" + row).disabled = true;
@@ -785,7 +785,7 @@ function classForm() {
 		currClass = classTable[i];
 		var row = insertRow(table, count);
 
-		insertTextColumn(row, "center_" + count, currClass["classId"]);
+		insertTextColumn(row, "cCenter_" + count, currClass["classId"]);
 
 		insertInputBox(row, "text", "className_" + count, "32",
 					"Class Name", currClass["className"], "Class Name");
@@ -860,7 +860,7 @@ function classInsert() {
 function classUpdate(i) {
 	var row = i;
 	var className, classShortName, semester, classCount;
-	classId = document.getElementById("center_" + row).childNodes[0].nodeValue;
+	classId = document.getElementById("cCenter_" + row).childNodes[0].nodeValue;
 	
 	className = document.getElementById("className_" + row);
 	classShortName = document.getElementById("classShortName_" + row);
@@ -929,7 +929,7 @@ function classDelete(i) {
 	if(sure != true)
 		return;
 	//classShortName = document.getElementById("classShortName_" + row).value;
-	classId = document.getElementById("center_" + row).childNodes[0].nodeValue;
+	classId = document.getElementById("cCenter_" + row).childNodes[0].nodeValue;
 	document.getElementById("cDeleteButton_" + row).childNodes[0].nodeValue = "Deleting";
 	document.getElementById("cDeleteButton_" + row).disabled = true;
 	document.getElementById("cUpdateButton_" + row).disabled = true;
@@ -986,7 +986,7 @@ function classRoomForm() {
 		currClassRoom = classRoom[i];
 		var row = insertRow(table, count);
 
-		insertTextColumn(row, "center_" + count, currClassRoom["crId"]);
+		insertTextColumn(row, "crfCenter_" + count, currClassRoom["crId"]);
 
 		var cell = insertCell(row);
 		cell.setAttribute("align","center");
@@ -1082,7 +1082,7 @@ function classRoomUpdate(i) {
 	if(selectTagsValueEmpty(classId, roomId) == true) {
 		return;
 	}
-	crId = document.getElementById("center_" + row).childNodes[0].nodeValue;
+	crId = document.getElementById("crfCenter_" + row).childNodes[0].nodeValue;
 	document.getElementById("classRoomUpdateButton_" + row).childNodes[0].nodeValue = "Updating";
 	document.getElementById("classRoomDeleteButton_" + row).disabled = true;
 	document.getElementById("classRoomUpdateButton_" + row).disabled = true;
@@ -1131,7 +1131,7 @@ function classRoomDelete(i) {
 					+ "This can not be undone. \nAre you sure?");
 	if(sure != true)
 		return;
-	crId = document.getElementById("center_" + row).childNodes[0].nodeValue;
+	crId = document.getElementById("crfCenter_" + row).childNodes[0].nodeValue;
 	document.getElementById("classRoomDeleteButton_" + row).childNodes[0].nodeValue = "Deleting";
 	document.getElementById("classRoomDeleteButton_" + row).disabled = true;
 	document.getElementById("classRoomUpdateButton_" + row).disabled = true;
@@ -1196,7 +1196,7 @@ function configForm() {
 		JSON.stringify(currConfig);
 		var row = insertRow(table, count);
 
-		insertTextColumn(row, "center_" + count, currConfig["configId"]);
+		insertTextColumn(row, "cfCenter_" + count, currConfig["configId"]);
 
 		insertInputBox(row, "text", "configName_" + count, "32",
 					"Config Name", currConfig["configName"]);
@@ -1339,7 +1339,7 @@ function configDelete(i) {
 						  "Are you sure?");
 	if(sure != true)
 		return;
-	var configId = document.getElementById("center_" + row).childNodes[0].nodeValue;
+	var configId = document.getElementById("cfCenter_" + row).childNodes[0].nodeValue;
 	document.getElementById("configDeleteButton_" + row).childNodes[0].nodeValue = "Deleting";
 	document.getElementById("configDeleteButton_" + row).disabled = true;
 	//document.getElementById("configUpdateButton_" + row).disabled = true;
@@ -1424,7 +1424,7 @@ function overlappingSBTForm() {
 		currOverlappingSBT = overlappingSBT[i];
 		var row = insertRow(table, count);
 
-		insertTextColumn(row, "center_" + count, currOverlappingSBT["osbtId"]);
+		insertTextColumn(row, "osbtCenter_" + count, currOverlappingSBT["osbtId"]);
 
 		k = currOverlappingSBT["sbtId1"];
 		currSBT = search(subjectBatchTeacher, "sbtId", k);
@@ -1560,7 +1560,7 @@ function overlappingSBTDelete(i) {
 					+ "This can not be undone. \nAre you sure?");
 	if(sure != true)
 		return;
-	osbtId = document.getElementById("center_" + row).childNodes[0].nodeValue;
+	osbtId = document.getElementById("osbtCenter_" + row).childNodes[0].nodeValue;
 	sbtId1 = search(overlappingSBT, "osbtId", osbtId)["sbtId1"];
 	sbtId2 = search(overlappingSBT, "osbtId", osbtId)["sbtId2"];
 	document.getElementById("overlappingSBTDeleteButton_" + row).childNodes[0].nodeValue = "Deleting";
@@ -1622,7 +1622,7 @@ function roomForm() {
 		currRoom = room[i];
 		var row = insertRow(table, count);
 
-		insertTextColumn(row, "center_" + count, currRoom["roomId"]);
+		insertTextColumn(row, "rCenter_" + count, currRoom["roomId"]);
 
 		insertInputBox(row, "text", "roomName_" + count, "32",
 					"Room Name", currRoom["roomName"], "Room Name");
@@ -1691,7 +1691,7 @@ function roomUpdate(i) {
 	roomName = document.getElementById("roomName_" + row);
 	roomShortName = document.getElementById("roomShortName_" + row);
 	roomCount = document.getElementById("roomCount_" + row);
-	roomId = document.getElementById("center_" + row).childNodes[0].nodeValue;
+	roomId = document.getElementById("rCenter_" + row).childNodes[0].nodeValue;
 	
 	//Checking Parameter
 	if(checkParameterValidity(roomName, roomShortName, 
@@ -1756,7 +1756,7 @@ function roomDelete(i) {
 	if(sure != true)
 		return;
 	//roomShortName = document.getElementById("roomShortName_" + row).value;
-	roomId = document.getElementById("center_" + row).childNodes[0].nodeValue;
+	roomId = document.getElementById("rCenter_" + row).childNodes[0].nodeValue;
 	document.getElementById("rDeleteButton_" + row).childNodes[0].nodeValue = "Deleting";
 	document.getElementById("rDeleteButton_" + row).disabled = true;
 	document.getElementById("rUpdateButton_" + row).disabled = true;
@@ -1856,7 +1856,7 @@ function sbtForm() {
 		currSBT = subjectBatchTeacher[i];
 		var row = insertRow(table, count);
 
-		insertTextColumn(row, "center_" + count, currSBT["sbtId"]);
+		insertTextColumn(row, "sbtCenter_" + count, currSBT["sbtId"]);
 
 		insertTextColumn(row, "sbtBatch_" + count,
 				search(batch, "batchId", currSBT["batchId"])["batchName"]);
@@ -1918,7 +1918,7 @@ function sbtUpdate(i) {
 	batchId = document.getElementById("sbtBatch_" + row).value;
 	subjectId = document.getElementById("sbtSubject_" + row).value;
 	teacherId = document.getElementById("sbtTeacher_" + row).value;
-	sbtId = document.getElementById("center_" + row).childNodes[0].nodeValue;
+	sbtId = document.getElementById("sbtCenter_" + row).childNodes[0].nodeValue;
 	//document.getElementById("sbtUpdateButton_" + row).childNodes[0].nodeValue = "Updating";
 	document.getElementById("sbtDeleteButton_" + row).disabled = true;
 	document.getElementById("sbtUpdateButton_" + row).disabled = true;
@@ -1967,7 +1967,7 @@ function sbtDelete(i) {
 					+ "This can not be undone. \nAre you sure?");
 	if(sure != true)
 		return;
-	sbtId = document.getElementById("center_" + row).childNodes[0].nodeValue;
+	sbtId = document.getElementById("sbtCenter_" + row).childNodes[0].nodeValue;
 	sbtRow =  search(subjectBatchTeacher, "sbtId", sbtId);
 	subjectId = sbtRow["subjectId"];
 	batchId = sbtRow["batchId"];
@@ -2070,7 +2070,7 @@ function sctForm() {
 		currSCT = subjectClassTeacher[i];
 		var row = insertRow(table, count);
 
-		insertTextColumn(row, "center_" + count, currSCT["sctId"]);
+		insertTextColumn(row, "sctCenter_" + count, currSCT["sctId"]);
 
 		insertTextColumn(row, "sctBatch_" + count,
 				search(classTable, "classId", currSCT["classId"])["className"]);
@@ -2132,7 +2132,7 @@ function sctUpdate(i) {
 	classId = document.getElementById("sctClass_" + row).value;
 	subjectId = document.getElementById("sctSubject_" + row).value;
 	teacherId = document.getElementById("sctTeacher_" + row).value;
-	sctId = document.getElementById("center_" + row).childNodes[0].nodeValue;
+	sctId = document.getElementById("sctCenter_" + row).childNodes[0].nodeValue;
 	document.getElementById("sctUpdateButton_" + row).childNodes[0].nodeValue = "Updating";
 	document.getElementById("sctDeleteButton_" + row).disabled = true;
 	document.getElementById("sctUpdateButton_" + row).disabled = true;
@@ -2182,7 +2182,7 @@ function sctDelete(i) {
 					+ "This can not be undone. \nAre you sure?");
 	if(sure != true)
 		return;
-	sctId = document.getElementById("center_" + row).childNodes[0].nodeValue;
+	sctId = document.getElementById("sctCenter_" + row).childNodes[0].nodeValue;
 	sctRow =  search(subjectClassTeacher, "sctId", sctId);
 	subjectId = sctRow["subjectId"];
 	classId = sctRow["classId"];
@@ -2238,7 +2238,7 @@ function subjectForm() {
 		currSubject = subject[i];
 		var row = insertRow(table, count);
 
-		insertTextColumn(row, "center_" + count, currSubject["subjectId"]);
+		insertTextColumn(row, "sCenter_" + count, currSubject["subjectId"]);
 
 		insertInputBox(row, "text", "subjectName_" + count, "32",
 					"Subject Name", currSubject["subjectName"], "Subject Name");
@@ -2332,7 +2332,7 @@ function subjectInsert() {
 function subjectUpdate(i) {
 	var row = i;
 	var subjectName, subjectShortName, eachSlot, nSlots, batches;
-	subjectId = document.getElementById("center_" + row).childNodes[0].nodeValue;
+	subjectId = document.getElementById("sCenter_" + row).childNodes[0].nodeValue;
 	subjectName = document.getElementById("subjectName_" + row);
 	subjectShortName = document.getElementById("subjectShortName_" + row);
 	eachSlot = document.getElementById("eachSlot_" + row).innerHTML;
@@ -2405,7 +2405,7 @@ function subjectDelete(i) {
 						  "Are you sure?");
 	if(sure != true)
 		return;
-	subjectId = document.getElementById("center_" + row).childNodes[0].nodeValue;
+	subjectId = document.getElementById("sCenter_" + row).childNodes[0].nodeValue;
 	//subjectShortName = document.getElementById("subjectShortName_" + row).value;
 	document.getElementById("sDeleteButton_" + row).childNodes[0].nodeValue = "Deleting";
 	document.getElementById("sDeleteButton_" + row).disabled = true;
@@ -2462,7 +2462,7 @@ function subjectRoomForm() {
 		currSubjectRoom = subjectRoom[i];
 		var row = insertRow(table, count);
 
-		insertTextColumn(row, "center_" + count, currSubjectRoom["srId"]);
+		insertTextColumn(row, "srCenter_" + count, currSubjectRoom["srId"]);
 
 		var cell = insertCell(row);
 		cell.setAttribute("align","center");
@@ -2547,7 +2547,7 @@ function subjectRoomUpdate(i) {
 	if(selectTagsValueEmpty(subjectId, roomId) == true) {
 		return;
 	}
-	srId = document.getElementById("center_" + row).childNodes[0].nodeValue;
+	srId = document.getElementById("srCenter_" + row).childNodes[0].nodeValue;
 	document.getElementById("subjectRoomUpdateButton_" + row).childNodes[0].nodeValue = "Updating";
 	document.getElementById("subjectRoomDeleteButton_" + row).disabled = true;
 	document.getElementById("subjectRoomUpdateButton_" + row).disabled = true;
@@ -2593,7 +2593,7 @@ function subjectRoomDelete(i) {
 					+ "This can not be undone. \nAre you sure?");
 	if(sure != true)
 		return;
-	srId = document.getElementById("center_" + row).childNodes[0].nodeValue;
+	srId = document.getElementById("srCenter_" + row).childNodes[0].nodeValue;
 	document.getElementById("subjectRoomDeleteButton_" + row).childNodes[0].nodeValue = "Deleting";
 	document.getElementById("subjectRoomDeleteButton_" + row).disabled = true;
 	document.getElementById("subjectRoomUpdateButton_" + row).disabled = true;
@@ -2656,7 +2656,7 @@ function teacherForm() {
 		currTeacher = teacher[i];
 		var row = insertRow(table, count);
 
-		insertTextColumn(row, "center_" + count, currTeacher["teacherId"]);
+		insertTextColumn(row, "tCenter_" + count, currTeacher["teacherId"]);
 
 		insertInputBox(row, "text", "teacherName_" + count, "32",
 					"Teacher Name", currTeacher["teacherName"], "Teacher's Name");
@@ -2798,7 +2798,7 @@ function teacherInsert() {
 function teacherUpdate(i) {
 	var row = i;
 	var teacherName, teacherShortName, minHrs, maxHrs, dept, teacherId;
-	teacherId = document.getElementById("center_" + row).childNodes[0].nodeValue;
+	teacherId = document.getElementById("tCenter_" + row).childNodes[0].nodeValue;
 	teacherName = document.getElementById("teacherName_" + row);
 	teacherShortName = document.getElementById("teacherShortName_" + row);
 	minHrs = document.getElementById("minHrs_" + row);
@@ -2871,7 +2871,7 @@ function teacherDelete(i) {
 				  "Are you sure?");
 	if(sure != true)
 		return;
-	teacherId = document.getElementById("center_" + row).childNodes[0].nodeValue;
+	teacherId = document.getElementById("tCenter_" + row).childNodes[0].nodeValue;
 	document.getElementById("tDeleteButton_" + row).childNodes[0].nodeValue = "Deleting";
 	document.getElementById("tDeleteButton_" + row).disabled = true;
 	document.getElementById("tUpdateButton_" + row).disabled = true;
