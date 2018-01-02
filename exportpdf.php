@@ -268,7 +268,6 @@ function generate_timetable_pdf($currTableName, $searchParam, $allrows2, $nSlots
 		array_push($tableData, $rowData);
 		array_push($rowSpan, $rowspan);
 	}
-
 	$count = array_fill(0, 3, 0);//{count_of_empty_cols, count_of_cols_with_single_entry_in_cell, count_of_multiple_entry_cols}
 	for($i = 0;$i < $nSlots;$i++)
 		$count[$colWidth[$i] + 1]++;
@@ -363,12 +362,12 @@ function generate_timetable_pdf($currTableName, $searchParam, $allrows2, $nSlots
 			$data = ShortNameMappings($allrows2, "roomShortName", "roomName", "room", array("Room Short Name", "Room Name"));
 			if($data != 0)
 				$y = createTable($pdf, $data, '{'. 0.37 * $tableWidth .','. 0.63 * $tableWidth .'}', 2, $align[$i++], $styleCell);
-			$data = SubjectTeacherMappings($allrows2, $currTableName, array("Subject Short Name", "Teacher Name"));
+			$data = SubjectTeacherMappings($allrows2, $currTableName, array("Subject Short Name: Batch Names", "Teacher Name"));
 			if($data != 0)
 				$y = createTable($pdf, $data, '{'. 0.58 * $tableWidth .','. 0.42 * $tableWidth .'}', 2, $align[$i++], $styleCell, $y);
 			break;
 		case "room"://show subject-teacher mapping
-			$data = SubjectTeacherMappings($allrows2, $currTableName, array("Subject Short Name", "Teacher Name"));
+			$data = SubjectTeacherMappings($allrows2, $currTableName, array("Subject Short Name: Batch Names", "Teacher Name"));
 			if($data != 0)
 				$y = createTable($pdf, $data, '{'. 0.58 * $tableWidth .','. 0.42 * $tableWidth .'}', 2, $align[$i++], $styleCell);
 			break;

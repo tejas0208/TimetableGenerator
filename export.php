@@ -160,7 +160,7 @@ function generate_timetable_worksheet($currTableName, $searchParam, $sheetCount,
 						$currText->getFont()->setColor( new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_BLACK) );
 						continue;
 					}
-					/*if($currEntry["batchName"] != "NULL" && $currTableName != "batch") {
+					if($currEntry["batchName"] != "NULL" && $currTableName != "batch") {
 						$currText = $objRichText->createTextRun($currEntry["batchName"]."\n");
 						$currText->getFont()->setBold(true);
 						$currText->getFont()->setSize(10);
@@ -172,28 +172,24 @@ function generate_timetable_worksheet($currTableName, $searchParam, $sheetCount,
 						$currText->getFont()->setSize(10);
 						$currText->getFont()->setColor( new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKGREEN ) );
 					}
-					*/
 					if($currTableName != "subject") {
 						$currText = $objRichText->createTextRun($currEntry["subjectShortName"]."\n");
 						$currText->getFont()->setBold(true);
 						$currText->getFont()->setSize(10);
 						$currText->getFont()->setColor( new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKRED) );
 					}
-					/*
 					if($currTableName != "teacher") {
 						$currText = $objRichText->createTextRun($currEntry["teacherShortName"]."\n");
 						$currText->getFont()->setBold(true);
 						$currText->getFont()->setSize(10);
 						$currText->getFont()->setColor( new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKBLUE) );
 					}
-
 					if($currTableName != "room") {
 						$currText = $objRichText->createTextRun($currEntry["roomShortName"]."\n");
 						$currText->getFont()->setBold(true);
 						$currText->getFont()->setSize(10);
 						$currText->getFont()->setColor( new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKYELLOW) );
 					}
-					*/
 				}
 				/* Check if there was no row-col with bigger width for same col */
 				if($nEntries == 0 & $widths[$slotNo] < 8.35) {
@@ -211,10 +207,10 @@ function generate_timetable_worksheet($currTableName, $searchParam, $sheetCount,
 			else { /* nEntries > 1 for table = "class" */
 				for($d = 0; $d < $nEntries; $d++) {
 					$currEntry = $thisSlotEntries[$d];
-					/*$currText = $objRichText->createTextRun($currEntry["roomShortName"]."\n");
+					$currText = $objRichText->createTextRun($currEntry["roomShortName"]."\n");
 					$currText->getFont()->setBold(true);
 					$currText->getFont()->setSize(10);
-					$currText->getFont()->setColor( new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKYELLOW) ); */
+					$currText->getFont()->setColor( new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKYELLOW) );
 					$currText = $objRichText->createTextRun($currEntry["subjectShortName"]."(");
 					$currText->getFont()->setBold(true);
 					$currText->getFont()->setSize(10);
@@ -223,10 +219,10 @@ function generate_timetable_worksheet($currTableName, $searchParam, $sheetCount,
 					$currText->getFont()->setBold(true);
 					$currText->getFont()->setSize(10);
 					$currText->getFont()->setColor( new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKGREEN ) );
-					/*$currText = $objRichText->createTextRun($currEntry["teacherShortName"]."\n");
+					$currText = $objRichText->createTextRun($currEntry["teacherShortName"]."\n");
 					$currText->getFont()->setBold(true);
 					$currText->getFont()->setSize(10);
-					$currText->getFont()->setColor( new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKBLUE) ); */
+					$currText->getFont()->setColor( new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKBLUE) );
 				}
 				$width = 16.70;
 				$widths[$slotNo] = 16.70;
