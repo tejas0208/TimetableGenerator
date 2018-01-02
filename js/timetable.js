@@ -1046,7 +1046,13 @@ function createTable(days, nSlots, slotTablePerDay, startTime, timePerSlot) {
 	tr = document.createElement("tr");
 	td = document.createElement("th");
 	text = document.createTextNode("Day");
+	var button = document.createElement("button");
+	button.setAttribute("class", "animateButtonTop");
+	button.style.align = "right";
+	button.appendChild(document.createTextNode("+"));
+	td.appendChild(button);
 	td.appendChild(text);
+	td.appendChild(button);
 	tr.appendChild(td);
 	var start = new Date("February 25, 2017 "+ startTime);
 
@@ -2438,6 +2444,23 @@ function fillTable2(createNewTable) {
 			else {
 				this.innerHTML = "+";
 				$(".animate" + id).fadeOut();
+			}
+		});
+		$(".animateButtonTop").click(function() {
+			var text = this.innerHTML;
+			if(text == "+") {
+				this.innerHTML = "-";
+				for(var i = 1; i <=6; i++) {
+					$(".animate" + i).innerHTML= "-";
+					$(".animate" + i).fadeIn();
+				}
+			}
+			else {
+				this.innerHTML = "+";
+				for(var i = 1; i <=6; i++) {
+					$(".animate" + i).innerHTML= "+";
+					$(".animate" + i).fadeOut();
+				}
 			}
 		});
 	}
