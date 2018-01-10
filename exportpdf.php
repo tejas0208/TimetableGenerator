@@ -32,7 +32,7 @@ function printRow($rowData, $table, $rowspan, $searchParam) { // $rowspan is row
 					$virtualRowspan = floor($blankRows / 2) + 1;
 					$style = "valign:B;";
 				}
-				else if($count[$j] == count($rowData[$j]) - 1) {
+				else if($count[$j] == ( count($rowData[$j]) - 1 ) ) {
 					$virtualRowspan = ceil($blankRows / 2) + 1;
 					$style = "valign:T;";
 				}
@@ -40,14 +40,58 @@ function printRow($rowData, $table, $rowspan, $searchParam) { // $rowspan is row
 					$virtualRowspan = 1;
 				$filledRows[$j] += $virtualRowspan;
 				$style .= "font-size:10; paddingY:0.4";
-				for($k = 0;$k < count($rowData[$j][$count[$j]]);$k++)
+				for($k = 0;$k < count($rowData[$j][$count[$j]]);$k++) {
 					$table->easyCell($rowData[$j][$count[$j]][$k]['str'],$rowData[$j][$count[$j]][$k]['style']."rowspan:".$virtualRowspan.";".$style);
+				}
 				$count[$j] += 1;
 			}
 		}
 		$table->printRow();
 	}
 }
+/* Pseudo-code ->
+Create a pdf object
+set all attributes for pdf document
+for each day
+	for each slot
+		fetch all entries in a slot
+		(for multiple column spanning entries,
+		consider all the columns spanned by that entry as single slot and)
+		create multidimensional array similar to helperTable in timetable.js
+		In this helpertable each entry has associated colspan.
+		store entries of a slot in an array cellData
+		store cellData in an array rowData
+	store array rowData in array tableData(tableData is helperTable)
+adjust column width of table for empty columns, columns with at max single entry and columns with multiple entries.
+pass each entry in tableData to printRow() which actually renders the row in pdf document.
+for legend page create mappings of subject-teacher, subjectShortName-subject, roomShortName-Room mappings
+save the pdf document to tmp/timetable_pdf/ directory
+
+structure of tableData(helperTable)
+array(**this is tableData**
+		array(**this is rowData**
+			array(**this is cellData**
+				array(string, style of the string) /This are
+				array(string, style of the string) /the entries in
+				array(string, style of the string) /timetable slot
+				.
+				.
+				.
+			)
+			.
+			.
+			.
+			.
+			maximum cells equal to no of slots in a day
+		)
+		.
+		.
+		.
+		.
+		rows equal to count of days
+	)
+style of a string contains fontColor of string, colspan for the entry(for overlapping entries in a slot colspan can be different))
+*/
 $cellData;
 function generate_timetable_pdf($currTableName, $searchParam, $allrows2, $nSlots, $dayBegin,
 		$slotDuration, $deptName) {
@@ -125,6 +169,8 @@ function generate_timetable_pdf($currTableName, $searchParam, $allrows2, $nSlots
 						$query = "SELECT eachSlot FROM subject WHERE subjectShortName = \"".
 							$nextSlotEntries[$j]['subjectShortName']."\"and snapshotId = $snapshotId;";
 						$subjectRow = sqlGetOneRow($query);
+						if($subjectRow[0]['eachSlot'] + $i > $colspan)
+							$colspan = $subjectRow[0]['eachSlot'] + $i ;
 						array_push($entries[$i], array('row' => $nextSlotEntries[$j], 'colspan' => $subjectRow[0]['eachSlot']));
 					}
 				}
@@ -198,30 +244,6 @@ function generate_timetable_pdf($currTableName, $searchParam, $allrows2, $nSlots
 				}
 			}
 			else { /* nEntries > 1 for table = "class" */
-				for($i = 0;$i < count($entries[0]);$i++) {
-					if($entries[0][$i]['colspan'] == $colspan) {
-						$currEntry = $entries[0][$i]['row'];
-						array_push($cellData, array(array('str' => $currEntry["batchName"],
-														  'style' => "colspan:".(2 * $colspan).
-														  			";font-color:$batchColor; align:C;border:LR;")
-													));
-						array_push($cellData, array(array('str' => $currEntry["roomShortName"],
-														  'style' => "colspan:$colspan;font-color:$roomColor; align:R;border:L;"),
-													array('str' => $currEntry["subjectShortName"],
-														  'style' => "colspan:$colspan;font-color:$subjectColor; align:L;border:R;")
-													));
-						array_splice($entries[0], $i, 1);
-						$i--;
-					}
-				}
-				for($d = 0;$d < count($cellData[0]);$d++) {//add top border to topmost row in a cell
-					$pos = strpos($cellData[0][$d]['style'], "border:");
-					$cellData[0][$d]['style'] = substr_replace($cellData[0][$d]['style'], $borderTop, $pos + strlen("border:"), 0);
-				}
-				for($d = 0;$d < count($cellData[count($cellData) - 1]);$d++) {//add bottom border to bottommost row in a cell
-					$pos = strpos($cellData[count($cellData) - 1][$d]['style'], "border:");
-					$cellData[count($cellData) - 1][$d]['style'] = substr_replace($cellData[count($cellData) - 1][$d]['style'], $borderBottom, $pos + strlen("border:"), 0);
-				}
 				for($i = 0;$i < count($entries);$i++) {
 					for($j = 0;$j < count($entries[$i]);$j++) {
 						$row1 = array();
@@ -260,6 +282,14 @@ function generate_timetable_pdf($currTableName, $searchParam, $allrows2, $nSlots
 						}
 					}
 				}
+				for($d = 0;$d < count($cellData[0]);$d++) {//add top border to topmost row in a cell
+					$pos = strpos($cellData[0][$d]['style'], "border:");
+					$cellData[0][$d]['style'] = substr_replace($cellData[0][$d]['style'], $borderTop, $pos + strlen("border:"), 0);
+				}
+				for($d = 0;$d < count($cellData[count($cellData) - 1]);$d++) {//add bottom border to bottommost row in a cell
+					$pos = strpos($cellData[count($cellData) - 1][$d]['style'], "border:");
+					$cellData[count($cellData) - 1][$d]['style'] = substr_replace($cellData[count($cellData) - 1][$d]['style'], $borderBottom, $pos + strlen("border:"), 0);
+				}
 			}
 			array_push($rowData, $cellData);
 			if(count($cellData) > $rowspan)
@@ -273,14 +303,20 @@ function generate_timetable_pdf($currTableName, $searchParam, $allrows2, $nSlots
 		$count[$colWidth[$i] + 1]++;
 	$width = '{8';
 	$w1 = 16;// width for column with no entry
-	$w = ( $pdf->GetPageWidth() - $w1 * $count[0] - 8 )  / ($nSlots - $count[0]);
-	if($count[2] != 0) {
-		$w2 = ( $w - 5 ) / 2;//width for column with cells containing maximum single entry
-		$w3 = ( $w + ( 5 * $count[1] ) / $count[2] ) / 2;//width for column with cells containing multiple entry
+	if($nSlots - $count[0]) {
+		$w = ( $pdf->GetPageWidth() - $w1 * $count[0] - 8 )  / ($nSlots - $count[0]);
+		if($count[2] != 0) {
+			$w2 = ( $w - 10 ) / 2;//width for column with cells containing maximum single entry
+			$w3 = ( $w + ( 10 * $count[1] ) / $count[2] ) / 2;//width for column with cells containing multiple entry
+		}
+		else {
+			$w2 = $w / 2;
+			$w3 = $w / 2;
+		}
 	}
 	else {
-		$w2 = $w / 2;
-		$w3 = $w / 2;
+		$w = $pdf->GetPageWidth() - 8;
+		$w1 = ($w / $nSlots);
 	}
 	for($i = 0;$i < $nSlots - 1;$i++) {
 		switch ($colWidth[$i]) {
@@ -313,8 +349,6 @@ function generate_timetable_pdf($currTableName, $searchParam, $allrows2, $nSlots
 	for($i = 0;$i < count($tableData);$i++)
 		printRow($tableData[$i], $table, $rowSpan[$i], $searchParam);
 	$table->endTable(0);
-	if($searchParam == "SYCE")
-		ttlog(print_r($colWidth, true));
 	/*Add color legend*/
 	$pdf->ln();
 	$table = new easyTable($pdf, 5, 'align:C; font-size:13; font-family:helvetica; border:1; border-width:0.4;');
@@ -476,8 +510,10 @@ function exportPDF() {
 	$filename = "timetable_pdf.zip";
 	if(!file_exists("tmp"))
 		mkdir("tmp");
-	if(!file_exists("tmp/timetable_pdf"))
+	if(!file_exists("tmp/timetable_pdf"))#if directory doesn't exists, create it.
 		mkdir("tmp/timetable_pdf");
+	else#if directory exists, delete existing pdf files
+		array_map('unlink', glob("tmp/timetable_pdf/*"));
 	$tableNames = array("teacher", "teacherShortName", "class", "classShortName",
 				"batch", "batchName", "room", "roomShortName");
 	$query = "SELECT * from config WHERE configId = 1";
@@ -488,7 +524,7 @@ function exportPDF() {
 	# on teacherTT, classTT, batchTT, etc. and have a specific code in each.
 
 	/* TODO: Change this to use currentConfigId */
-	$nSlots = $allrows[0]["nSlots"];
+	$nSlots = $allrows[0]["nSlots"] + 1;/*extra one slot for displaying day name*/
 	$dayBegin = $allrows[0]["dayBegin"];
 	$slotDuration = $allrows[0]["slotDuration"];
 
