@@ -43,6 +43,10 @@ var timeTableReadable;
 var currentSnapshotId;
 var currentSnapshotName;
 var currentDeptId;
+
+/*this variables are used to cancel xlsx or pdf export*/
+var exportType = null;
+var xmlObject = null;
 /* In future give a menu option to select a Config, and then a snapshot in that config */
 var currentConfigId = 1;
 
@@ -3174,6 +3178,8 @@ function jsSQLExport(type) {
 }
 function jsExport(type) {
 	var xhttp = new XMLHttpRequest();
+	exportType = type;
+	xmlObject = xhttp;
 	xhttp.onreadystatechange = function () {
 		if (this.readyState == 4 && this.status == 200) {
 			var blob = this.response;
@@ -3208,6 +3214,21 @@ function jsExport(type) {
 	xhttp.send("reqType=" + type + "&snapshotName=" + currentSnapshotName +
 			"&snapshotId=" + currentSnapshotId);
 
+}
+function shortcutEscButton() {
+	if(currentFormName != null)
+		formClose(currentFormName)
+	else if(exportType == "exportXLSX" || exportType == "exportPDF") {
+		cancel = confirm("Do you want to cancel the export process?\n Press OK to stop, cancel to continue.");
+		if(cancel == true) {
+			$("#mainTimeTable").show();
+			$("#selection-menu-column").show();
+			$("#configuration-menu-column").show();
+			$("#waitMessage").hide();
+			xmlObject.onreadystatechange = function () {return;};
+			exportType = null;
+		}
+	}
 }
 /**
  * function wait():
@@ -3308,7 +3329,7 @@ function load() {
 		fillTable2(true);
 	});
 
-	shortcut.add("Esc", function () {formClose(currentFormName)});
+	shortcut.add("Esc", function () {shortcutEscButton()});
 	shortcut.add("Ctrl+s", function () { jsSaveSnapshot(false)});
 	shortcut.add("Ctrl+shift+s", function () { jsSaveNewSnapshot()});
 	return res;

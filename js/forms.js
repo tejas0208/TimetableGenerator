@@ -23,8 +23,9 @@ function formClose(formName) {
 	document.getElementById(formName).style.height = "0%";
 	document.getElementById("outerTable").style.display = "table";
 	document.getElementById(formName).style.display = "none";
+	currentFormName = null;
 }
-var currentFormName;
+var currentFormName = null;
 function formOpen(formName) {
 	document.getElementById(formName).style.height = "auto";
 	document.getElementById(formName).style.display = "block";
