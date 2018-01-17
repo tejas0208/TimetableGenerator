@@ -1983,6 +1983,12 @@ function sbtDelete(i) {
 				document.getElementById("sbtDeleteButton_" + row).value = "Delete"
 				subjectBatchTeacher.splice(i - 2, 1);
 				getTimetable(currentSnapshotName);
+				for(var k = 0; k < overlappingSBT.length; k++) {
+					if(overlappingSBT[k]["sbtId1"] == sbtId ||
+						overlappingSBT[k]["sbtId2"] == sbtId)  {
+						overlappingSBT.splice(k--, 1);
+					}
+				}
 				fillTable2(true);
 				sbtForm();
 			} else {
