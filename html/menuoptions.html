@@ -21,210 +21,213 @@
  */
 -->
 
-<table border = "0" padding = "0" style = "width:100%;" id="outerTable">
-	<tr>
-		<td class="outercol1"> 
-			<div id="title" align="center"> <h2> COEP TimeTable </h2> </div>
-		</td>
-	</tr>
-	<tr>
-	<!-- The Menus -->
-		<td  class="outercol1" id="selection-menu-column">
+<header id="header">
+	<div  id="title" align="center">
+		<h2>TimeTable</h2>
+	</div>
+</header>
+
+<div class="modal-container">
+	<input type="checkbox" class="modal-toggle" id="config">
+	<button>Config</button>
+	<div class="modal-backdrop">
+		<div class="modal-content">
+			<label class="modal-close" for="config">x</label>
+			<h2>Configuration</h2>
+			<hr/>
+			<div id="configurationDiv">
+				<select id="configuration-menu" class="select-menu" >
+					<option id = "selectOne" value = "selectOne" selected></option>
+					<optgroup label="Primary Data">
+						<option value = "teachers" onclick="teacherForm()">Teachers</option>
+						<option value = "subjects" onclick="subjectForm()">Subjects</option>
+						<option value = "classes" onclick="classForm()">Classes</option>
+						<option value = "batchs" onclick="batchForm()">Batches</option>
+						<option value = "rooms" onclick="roomForm()">Rooms</option>
+						<option value = "depts" onclick="deptForm()">Depts</option>
+					</optgroup>
+					<optgroup label="Mappings">
+						<option value = "subjectClassMapping" onclick="sctForm()"> 
+						Class-Subject-Teacher</option>
+						<option value = "subjectBatchMapping" onclick="sbtForm()"> 
+						Batch-Subject-Teacher</option>
+					</optgroup>
+					<optgroup label="Overlaps">
+						<option value = "batchCanOverlap" onclick="batchCanOverlapForm()"> 
+						Overlaps Allowed</option>
+						<option value = "overlappingSBT" onclick="overlappingSBTForm()"> 
+						Overlaps Must</option>
+					</optgroup>
+					<optgroup label="Room Preferences">
+						<option value = "classRoom" onclick="classRoomForm()"> 
+						For Classes</option>
+						<option value = "batchRoom" onclick="batchRoomForm()"> 
+						For Batches</option>
+						<option value = "subjectRoom" onclick="subjectRoomForm()"> 
+						For Subjects</option>
+					</optgroup>
+					<option value = "config" onclick="configForm()"> 
+					Configure Timetable</option>
+					<option value = "user" onclick="userForm()">Users</option>
+				</select>
+			</div>
+			<label class="modal-close button" for="config">Close</label>
+		</div>	
+	</div>
+</div>
+
+<div class="modal-container track">
+	<input class="modal-toggle" type="checkbox" id="trackme">
+	<button>Track</button>
+	<div class="modal-backdrop trackme-back">
+		<div class="modal-content trackme-con">
+			<label class="modal-close" for="trackme">x</label>
+			<h2>Tracker</h2>
+			<hr/>
+			<div id="trackerDiv">
+				<span id="completionTag"></span>
+				<div id="tracker" rows = "3" cols = "20" readonly="readonly"></div>
+			</div>
+			<label class="modal-close button" for="trackme">Close</label>
+		</div>
+	</div>
+</div>
+
+<div class="modal-container warn">
+	<input class="modal-toggle" type="checkbox" id="warnme">
+	<button>Warn</button>
+	<div class="modal-backdrop trackme-back">
+		<div class="modal-content trackme-con">
+			<label class="modal-close" for="warnme">x</label>
+			<h2>Warning</h2>
+			<hr/>
+			<!-- CONTENT DIVS -->
+			<label class="modal-close button" for="warnme">Close</label>
+		</div>
+	</div>
+</div>
+
+<div class="container row menus" id="selection-menu-column">
+	<div class="col-md-1"> 
 		<div class = "selection-menu">
 			See Classwise<br>
-			<select id = "class-menu" class= "select-menu" display="none">
+			<select id = "class-menu" class= "select-menu"  >
 				<option value = "EMPTY"> </option>
 			</select>
 		</div>
+	</div>
+	<div class="col-md-1">
 		<div class = "selection-menu">
 			See Roomwise<br>
-				<select id = "room-menu" class= "select-menu" display="none">
+			<select id = "room-menu" class= "select-menu"  >
 				<option value = "EMPTY"> </option>
 			</select> 
 		</div>
+	</div>
+	<div class="col-md-1">
 		<div class = "selection-menu">
 			See Teacherwise<br>
-			<select id = "teacher-menu" class= "select-menu" display="none">
-					<option value = "EMPTY" selected> </option>
+			<select id = "teacher-menu" class= "select-menu"  >
+				<option value = "EMPTY" selected> </option>
 			</select>
 		</div>
-			<div class = "selection-menu">
+	</div>
+	<div class="col-md-1">
+		<div class = "selection-menu">
 			See Batchwise<br>
-				<select id = "batch-menu" class= "select-menu" display="none">
+			<select id = "batch-menu" class= "select-menu"  >
 				<option value = "EMPTY"> </option>
 			</select>
 		</div>
-		<div> 
-		</div>
+	</div>
+	<div class="col-md-1">
 		<div class = "selection-menu">
 			Select Snapshot<br>
-			<select id = "fetch-snapshot-menu" class= "select-menu" display="none">
+			<select id = "fetch-snapshot-menu" class= "select-menu"  >
 				<option value = "" selected></option>
 			</select>
 		</div>
-		<div class="selection-menu" id="save-snapshot-menu" display="none">
-			<input type=button id="saveSnapshot" value="Save"
-				onclick="jsSaveSnapshot(true)" >   <br>
-			<input type=button id="saveNewSnapshot" value="Save As"
-						onclick="jsSaveNewSnapshot()" >
-		</div>
-		<div class="selection-menu" display="none">
-			<input type=button id="undoButton" value="undo"
-				onclick="undo()" >   <br>
-			<input type=button id="redoButton" value="redo"
-				onclick="redo()" >
-		</div>
-		<div class = "selection-menu">
+	</div>
+	<div class="col-md-1">
+		<div class="selection-menu">
 			<form action="timetable.php" method="POST">
-			Export/Import <br>
-			<select name="type" class= "select-menu" id="export-menu" display="none"  onchange="exportImportHelper(this.value)">
-				<option id = "selectEmpty" value = "selectEmpty" selected></option>
-				<option value = "jsExport.exportXLSX">Timetable as Excelx</option>
-				<option value = "jsSQLExport.timetable">Database as SQL</option>
-				<option value = "jsExport.exportConfigXLSX">Configuration as Excelx</option>
-				<option value = "jsExport.exportCSV" >Timetable as CSV</option>
-				<option value = "jsExport1.exportPDFsingle">Current Timetable as PDF</option>
-				<option value = "jsExport.exportPDF">Timetable as PDF</option>
-				<option value = "jsExportNotSupported.Importing Timetable as xlsx"
-								>Import Timetable as Excelx</option>
-				<option value = "jsExportNotSupported.Importing Configuration as xlsx"
-										>Import Configuration as Excelx</option>
-				<option value = "jsExport.exportCurrentXLSX">Current timetable as Excelx</option>
-				<option value = "jsExport.exportWorkloadXLSX">Workload as Excelx</option>
-			</select>
+				Export/Import <br>
+				<select name="type" class= "select-menu" id="export-menu" display="none"  onchange="exportImportHelper(this.value)">
+					<option id = "selectEmpty" value = "selectEmpty" selected></option>
+					<option value = "jsExport.exportXLSX">Timetable as Excelx</option>
+					<option value = "jsSQLExport.timetable">Database as SQL</option>
+					<option value = "jsExport.exportConfigXLSX">Configuration as Excelx</option>
+					<option value = "jsExport.exportCSV" >Timetable as CSV</option>
+					<option value = "jsExport1.exportPDFsingle">Current Timetable as PDF</option>
+					<option value = "jsExport.exportPDF">Timetable as PDF</option>
+					<option value = "jsExportNotSupported.Importing Timetable as xlsx"
+									>Import Timetable as Excelx</option>
+					<option value = "jsExportNotSupported.Importing Configuration as xlsx"
+											>Import Configuration as Excelx</option>
+					<option value = "jsExport.exportCurrentXLSX">Current timetable as Excelx</option>
+					<option value = "jsExport.exportWorkloadXLSX">Workload as Excelx</option>
+				</select>
 			</form>
 		</div>
 		<script>
-				$('#export-menu').keyup(function(event) {
-					if(event.which==13) {
-						var text = $(this).val();
-						if(text == "Excelx") {
-							jsExport("exportXLSX");
-						}
-						if(text == "SQL") {
-							jsSQLExport("timetable");
-						}
-						if(text == "DExcelx") {
-							jsExport("exportConfigXLSX");
-						}
-						if(text == "zip") {
-							jsExport("exportCSV");
-						}
-						if(text == "pdf") {
-							jsExport("exportPDF");
-						}
-						if(text == "ExcelxImport") {
-							alert("not supported");
-						}
-						if(text == "DExcelxImport") {
-							alert("not supported");
-						}
-						if(text == "CExcelx") {
-							jsExport("exportCurrentXLSX");
-						}
-						if(text == "BExcelx") {
-							jsExport("exportWorkloadXLSX");
-						}
+			$('#export-menu').keyup(function(event) {
+				if(event.which==13) {
+					var text = $(this).val();
+					if(text == "Excelx") {
+						jsExport("exportXLSX");
 					}
+					if(text == "SQL") {
+						jsSQLExport("timetable");
+					}
+					if(text == "DExcelx") {
+						jsExport("exportConfigXLSX");
+					}
+					if(text == "zip") {
+						jsExport("exportCSV");
+					}
+					if(text == "pdf") {
+						jsExport("exportPDF");
+					}
+					if(text == "ExcelxImport") {
+						alert("not supported");
+					}
+					if(text == "DExcelxImport") {
+						alert("not supported");
+					}
+					if(text == "CExcelx") {
+						jsExport("exportCurrentXLSX");
+					}
+					if(text == "BExcelx") {
+						jsExport("exportWorkloadXLSX");
+					}
+				}
 
-				});
-			</script>
-		<div class="selection-menu" id="clear-snapshot" display="none">
-			<input type=button id="clearAll" value="Clear All" onclick="clearAll(true)">
+			});
+		</script>
+	</div>
+	<div class="col-md-1 small">
+		<div class="selection-menu" id="save-snapshot-menu"> 
+			<input type=button id="saveSnapshot" value="Save" onclick="jsSaveSnapshot(true)" >
+			<input type=button id="saveNewSnapshot" value="Save As"		onclick="jsSaveNewSnapshot()" >
 		</div>
-		</td>
-		<!--td class="outercol2">
-		</td-->
-	</tr>
-	<!-- The Main TimeTable-->
-	<tr width: 99%>
-		<td id = "mainTimeTable" class="outercol1" style="z-index: 0; position:relative">
-		</td>
-		<!--td class="outercol2">
-		</td-->
-	</tr>
-</table>
-
-<!---Working area-->
-<div class="outercol2" border="1" id="configuration-menu-column"
-style="
-	position:fixed;
-	z-index:1;
-	right:3px;
-	overflow:auto;
-	height:45em;
-	top: 0;
-	background-color:rgba(0, 0, 0, 0.5);
-">
-	<table class="outercol2Table" id="outercol2Table">
-	<tr>
-		<td>
-			<div id="hideButton" class="hideButton" style="">
-				<a href="javascript:void(0)" onclick='hideSidePane()'> Hide &gt;
-				</a>
+	</div>
+	<div class="col-md-1 small">
+		<div class="selection-menu">
+			<input type=button id="undoButton" value="undo"
+				onclick="undo()" >
+			<input type=button id="redoButton" value="redo"
+				onclick="redo()" >
+		</div>
+	</div>
+	<div class="col-md-1 small">
+		<div class="selection-menu">
+			<div id="clear-snapshot">
+				<input type=button id="clearAll" value="Clear All" onclick="clearAll(true)">
 			</div>
-		</td>
-	</tr>
-	<tr>
-		<td>
-			<div id="configurationDiv" class="selection-menu">
-				Configuration
-				<select id="configuration-menu"  class="select-menu" display="none" onchange ="window[this.value + 'Form']();">
-					<option id = "selectOne" value = "selectOne" selected></option>
-					<optgroup label="Primary Data">
-					<option value = "teacher">Teachers</option>
-					<option value = "subject">Subjects</option>
-					<option value = "class">Classes</option>
-					<option value = "batch">Batches</option>
-					<option value = "room">Rooms</option>
-					<option value = "dept">Depts</option>
-					</optgroup>
-					<optgroup label="Mappings">
-					<option value = "sct">
-							Class-Subject-Teacher</option>
-					<option value = "sbt">
-							Batch-Subject-Teacher</option>
-					</optgroup>
-					<optgroup label="Overlaps">
-					<option value = "batchCanOverlap">
-							Overlaps Allowed</option>
-					<option value = "overlappingSBT">
-							Overlaps Must</option>
-					</optgroup>
-					<optgroup label="Room Preferences">
-					<option value = "classRoom">
-							For Classes</option>
-					<option value = "batchRoom">
-							For Batches</option>
-					<option value = "subjectRoom">
-							For Subjects</option>
-					</optgroup>
-					<option value = "snapshot">
-							Manage Snapshots</option>
-					<option value = "config">
-							Configure Timetable</option>
-					<option value = "user">Users</option>
-				</select>
-			</div>
-		</td>
-	</tr>
-	<tr>
-		<td>
-			<div id="trackerDiv" class="selection-menu">
-				Dashboard
-				<span id="completionTag"> </span>
-				<a href="javascript:void(0)" onclick='hideTracker()'> Hide </a>
-				<div id="tracker" rows = "3" cols = "20" readonly="readonly">
-				</div>
-			</div>
-		</td>
-	</tr>
-	<tr>
-		<td>
-			<div id="warningsDiv" class="selection-menu">
-				Warnings
-			</div>
-		</td>
-	</tr>
-</table>
+			<div id="hideButton"></div>
+		</div>
+	</div>
 </div>
+
+	<!-- The Main TimeTable-->
+<div id = "mainTimeTable"></div>

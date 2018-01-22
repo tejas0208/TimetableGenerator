@@ -576,6 +576,7 @@ function showTrackerList() {
 		completion = 0;
 	document.getElementById("completionTag").innerHTML = "Done: " + completion.toFixed(1) + "%";
 	trackerElem = document.getElementById("tracker");
+    /*trackerElem.style.height = (trackerElem.scrollHeight)+"px";*/
 }
 
 function debugPrint(tableName, row) {
@@ -987,7 +988,7 @@ function selected(element) {
 	}
 	element.style.borderColor = "green";
 	element.style.borderStyle = "solid";
-	element.style.borderWidth = "5px";
+	element.style.borderWidth = "3px";
 	selectedCell = element;
 }
 /* TODO: Remove copy() and paste() */
@@ -1288,7 +1289,7 @@ function displayTime(date) {
 	var am_pm = date.getHours() >= 12 ? "PM" : "AM";
 	hours = hours < 10 ? "0" + hours : hours;
 	var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-	return hours + ":" + minutes +" " + am_pm;
+	return hours + ":" + minutes + " " + am_pm;
 }
 
 /* initializeEnableRowArray:
@@ -1316,14 +1317,12 @@ function createTable(days, nSlots, slotTablePerDay, startTime, timePerSlot) {
 	button.style.align = "right";
 	button.appendChild(document.createTextNode("+"));
 
-
     td.setAttribute("style", "width: 35px;")
 	td.appendChild(button);
     td.appendChild(text);
     //td.appendChild(colorRow);
     td.appendChild(button);
 	tr.appendChild(td);
-
 	var start = new Date("February 25, 2017 "+ startTime);
 
 	for(i = 0; i < nSlots; i++) {
@@ -2820,6 +2819,7 @@ function fillTable2(createNewTable) {
 	makeTrackerList();
 	uniqueSubject = [];
 	uniqueFixedEntry = [];
+
 	var configrow = search(config, "configId", currentConfigId);
 	NoOfSlots = configrow["nSlots"];
 	var days = parseInt(configrow["daysInWeek"]);
@@ -2836,9 +2836,8 @@ function fillTable2(createNewTable) {
 	if(createNewTable) {
 		/*Clear previous timetable or message*/
 		var tdTimetable = document.getElementById("mainTimeTable");
-		if(tdTimetable.childNodes[1] != null)
-			tdTimetable.removeChild(tdTimetable.childNodes[1]);
-
+		if(tdTimetable.childNodes[0] != null)
+			tdTimetable.removeChild(tdTimetable.childNodes[0]);
 		/*Data needed for empty table*/
 
 		var dayBegin = configrow["dayBegin"];
@@ -3931,46 +3930,6 @@ function checkInstallation() {
 		return false;
 	}
 }
-hiddenTracker = 0;
-function hideTracker() {
-	if(!hiddenTracker)  {
-		$("#trackerDiv").hide();
-		$("#trackerDiv").html("Dashboard <span id=\"completionTag\"> </span>" +
-							"<a href=\"javascript:void(0)\" onclick='hideTracker()'> Show </a>");
-		$("#trackerDiv").show();
-		hiddenTracker = 1;
-	} else {
-		$("#trackerDiv").hide();
-		$("#trackerDiv").html("Dashboard <span id=\"completionTag\"> </span>" +
-						"<a href=\"javascript:void(0)\" onclick='hideTracker()'> Hide </a>" +
-						"<div id=\"tracker\" rows = \"3\" cols = \"20\" readonly=\"readonly\">");
-		$("#trackerDiv").show();
-		showTrackerList();
-		hiddenTracker = 0;
-	}
-}
-hiddenSidePane = 0;
-function hideSidePane() {
-	if(!hiddenSidePane) {
-		$("#configurationDiv").hide();
-		$("#trackerDiv").hide();
-		$("#warningsDiv").hide();
-		$(".outercol2").css("width", "5%");
-		$("#hideButton").html("<a href=\"javascript:void(0)\" onclick='hideSidePane()'> Show &lt; </a>");
-		$(".outercol2").css("height", "4%");
-		hiddenSidePane = 1;
-	} else {
-		$("#configurationDiv").show();
-		$("#trackerDiv").show();
-		$("#warningsDiv").show();
-		$(".outercol2").css("width", "20%");
-		$("#hideButton").html("<a href=\"javascript:void(0)\" onclick='hideSidePane()'> Hide &gt; </a>");
-		$(".outercol2").css("height", "45em");
-		hiddenSidePane = 0;
-		addColourCheckbox();
-	}
-}
-
 function addColourCheckbox() {
 	addColor = document.createTextNode("Color Timetable");
 	checkbox = document.createElement("input");
@@ -4061,7 +4020,7 @@ function generateRandomColors(h) {
  * the display timeTable. Load default Snapshot
  */
 function load() {
-	var i;
+	var res;
 	if(checkInstallation() === false)
 		return false;
 	if(getDeptConfigSnapshot() === false) {
@@ -4074,7 +4033,7 @@ function load() {
 		return false;
 	}
 
-	$("#mainTimeTable").append("<center><B>No TimeTable loaded </B><br>" +
+	$("#mainTimeTable").append("<center style=\"clear:both\"><B>No TimeTable loaded </B><br>" +
 								"Please select option from above catgories</center>");
 	document.getElementById("title").innerHTML =  "<h2> Timetable for " +
 				search(dept, "deptId", currentDeptId)["deptName"] + "</h2>";
@@ -4452,6 +4411,7 @@ function clearAll() {
 				break;
 		}
 		dirtyTimeTable = true;
+		document.getElementById("saveSnapshot").disabled = false;
 		fillTable2(true);
 		return;
 	}

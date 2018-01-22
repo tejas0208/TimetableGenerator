@@ -22,47 +22,97 @@
  * Copyright 2017 Vinay Desai (desaivinay1997@gmail.com) 
  */
 
+/* Credits: Some parts of the styles have been borrowed from bootstrap 
+ * https://getbootstrap.com/
+ */
 
 /*-----------------------------------------------------------------------/
 /* Main Timetable Display Related */
+body {
+	margin: 0;
+	overflow-x: hidden;
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 14px;
+	line-height: 1.42857143;
+}
+input {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+header {
+  display: block;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 500;
+  line-height: 1.1;
+}
+.animateButton, .animateButtonTop {
+	font-size: 10px;
+	padding: 2px 5px;
+	margin: 0;
+}
 .waitMessage {
 	z-index: 1;
 }
 .currTitle {
-	color: brown;
+	color: #bd3528;
 }
 .selection-menu { 
-	border: 4px solid brown;
-	border-radius: 5px;
 	float: left;
-	margin: 5px;
-	/*width : 10%;*/
+	margin: 2px;
 	padding: 2px;
 	font-family: Courier;
 	font-size: 14px;
 	font-weight: bold;
+	position: relative;
 	display: none;
-	background-color: #eeeeee;
 	text-align: center;
 }
-#title {
-	background-color: cyan;
-	white-space:nowrap;
+@media (min-width: 992px) {
+	.selection-menu {
+		width: 100%;
+	}
 }
-.row {
-	border: 1px solid black;
+#configuration-menu {
+	width: 30%;
+}
+#selection-menu-column {
+	clear: both;
+}
+#title {
+	background-color: #81b3fd;
+	padding: 2px;
+	margin: 0;
+}
+#title h2 {
+	margin-bottom: 20px;
 }
 .over {
 	border: 2px dashed green;
 }
-
+.outercol2 {
+	width: 20%;
+	border: 1px solid black;
+	vertical-align: top;
+}
+.outercol1 {
+	width: 80%;
+	padding: 0;
+	vertical-align: top;
+	top: 0%;
+}
+#outerTable {
+	vertical-align: top;
+}
 .select-menu {
 	width: 100%;
 }
-/*th {
-	text-align: center;
-	text: bold 16px Times;
-} */
 option, select{
 	font-size: 13px;
 }
@@ -89,18 +139,18 @@ select.disablelook {
 	color: magenta
 }
 .timeTable {
-	max-width: 100;
+        max-width: 100;
 }
 .timeTableTable {
-	border-collapse: collapse;
-	border: 3px solid black;
-	padding: 0px;
-	table-layout: fixed;
-	width: 99%;
-	margin-left: 0;
+        border-collapse: collapse;
+        border: 3px solid black;
+        padding: 0px;
+        table-layout: fixed;
+        width: 99%;
+        margin-left: 0;
 }
 .timeTableTable select{
-	max-width: 75%;
+        max-width: 75%;
 }
 .slottable {
 	padding: 0px;
@@ -124,18 +174,11 @@ select.disablelook {
 	/*width: auto;
 	border: 1px solid black;*/
 }
-
 .dayname {
 	width: 10px;
 	height: 5px;
 	padding: 0px;
 } 
-
-.animateButton {
-	padding: 0px;
-	margin: 0px;
-}
-
 .delete {
 	cursor: pointer;
 	float: right;
@@ -184,12 +227,17 @@ select.disablelook {
 #outerTable {
 	vertical-align: top;
 }
-#hideButton {
-	font: 13px courier bold;
+.hideButn {
+	float: left;
+	font-size: 15px;
+	font-family: Roboto;
 }
 .mainTableRow {
 	margin: 0px;
 	padding: 0px;
+}
+#mainTimeTable {
+	margin: 0 6px 25px 6px;
 }
 /*-----------------------------------------------------------------------/
 /* Tracker Related */
@@ -202,8 +250,7 @@ select.disablelook {
 }
 .trackertable {
 	border: 1px solid black;
-	padding: 0px;
-	margin: 0px;
+	margin: 8px auto;
 }
 .trackercol {
 	border-top: 1px solid black;
@@ -219,7 +266,6 @@ select.disablelook {
 	padding: 1px;
 	margin: 1px;
 }
-
 /*-----------------------------------------------------------------------/
 /* Installation Related */
 .userinput {
@@ -251,18 +297,18 @@ select.disablelook {
 /*-----------------------------------------------------------------------/
 /* All Configuration Forms Related */
 .inputForm{
-	background-color: #d3c8c8;
-	width: auto;
-	height: 0%;
-	z-index: 1;
+	box-shadow: 0 0 5px rgba(0,0,0,0.4);
+	background-color: #fff;
+	margin: 20px auto;
+	padding: 20px;
 	text-align: center;
 	transition: 0.5s;
 	display: none;
 	overflow-y: scroll;
 	overflow: auto;
-	position: absolute;
-	left:5%;
+	position: relative;
 	vertical-align:top;
+
 }
 .inputFormTitleTable {
 	width: 100%;
@@ -270,6 +316,7 @@ select.disablelook {
 .inputFormTitle {
 	font: 20px courier bold;
 	width: 90%;
+	padding-bottom: 20px;
 }
 .subsort .batchsort .teachersort .donesort {
 	width: 10%;
@@ -278,22 +325,37 @@ select.disablelook {
 	font: 13px Tahoma bold black;
 	background-color: cyan;
 }
+.closebtn a {
+	color: black;
+}
+.closebtn a:hover, .closebtn a:focus {
+	color: #aa4239;
+}
+.closebtn a {
+	color: black;
+}
+.closebtn a:hover, .closebtn a:focus {
+	color: #aa4239;
+}
 .inputFormTable {
-	padding: 3px;
-	font-family: courier;
-	float: left;
+	width: 100%;
 }
 
 .inputFormHeader {
 	font: 20px Times bold;
-	color: brown;
+	color: #aa4239;
 	text-align: center;
 	vertical-align: middle;
 	background-color: cyan;
 }
 .headerRow {
-	background-color: #ffaabb;
-	font: 15px bold courier;	
+	background-color: #bf4a40;
+	color: #fff;
+	font: 15px bold courier;
+}
+.headerRow th {
+	text-align: center;
+	padding: 3px;
 }
 .formText {
 	font: 15px Tahoma bold;
@@ -330,7 +392,6 @@ toggle {
 	box-shadow: 0px 0px 1px 1px rgba(30, 144, 255, 1);
 
 }
-
 .toggle:hover {
 	cursor: pointer;
 	-webkit-box-shadow: 0px 0px 3px 3px rgba(155, 155, 255, 0.2);
@@ -379,8 +440,164 @@ toggle {
 	/*filter: IE6-9 fallback on horizontal gradient */
 	filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#87e0fd', endColorstr='#05abe0',GradientType=1 ); 
 }
-
-html, body
-{
-    width:100%;
+.container {
+  margin: 5px;
 }
+.row {
+  margin-right: -15px;
+  margin-left: -15px;
+}
+.col-md-1 {
+	position: relative;
+  	min-height: 1px;
+ 	padding-left: 15px;
+  	float: left;
+}
+/* SELECT MENU WIDTH ADJUSTMENT */
+@media (min-width: 992px) {
+  .menus .col-md-1 {
+    width: 11.11%;
+  }
+  .col-md-1.small {
+  	width: 6.8%;
+  }
+}
+/* MODAL */
+.modal-container {
+  padding: 10px;
+  position: fixed;
+  left: 1%;
+  top: 2%;
+  z-index: 1;
+}
+.track {
+	margin-top: 35px;
+}
+@media (min-width: 300px) {
+	.modal-container.warn {
+		left: 75%;
+	}
+}
+@media (min-width: 460px) {
+	.modal-container.warn {
+		left: 80%;
+	}
+}
+@media (min-width: 600px) {
+	.modal-container.warn {
+		left: 88%;
+	}
+}
+@media (min-width: 900px) {
+	.modal-container.warn {
+		left: 92%;
+	}
+}
+@media (min-width: 1020px) {
+	.modal-container.warn {
+		left: 94%;
+	}
+}
+.modal-container button {
+  display: block;
+  color: #fff;
+  line-height: 25px;
+  background: #bd3528;
+  font-size: 15px;
+  border: 0;
+  border-radius: 6px;
+  box-shadow: -1px 1px 1px 1px #333;
+  transition: 0.2s ease-in;
+}
+.modal-container .modal-backdrop {
+  height: 0;
+  width: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: opacity 0.2s ease-in;
+}
+.modal-container .modal-toggle {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.modal-container .modal-toggle:hover ~ button { background: #fff; color: #3685fc;}
+.modal-container .modal-toggle:checked ~ .modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.6);
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 1;
+}
+.modal-container .modal-toggle:checked ~ .modal-backdrop.trackme-back {
+	width: 22vw;
+}
+.modal-container .modal-toggle:checked ~ .modal-backdrop .modal-content {
+  background-color: #fff;
+  max-width: 85%;
+  max-height: 100%;
+  overflow-y: auto;
+  padding: 10px 20px;
+  position: relative;
+  display: block;
+  margin: 0 auto;
+  top: 5%;
+  border-radius: 4px;
+  pointer-events: auto;
+  cursor: auto;
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.6);
+}
+.modal-container .modal-toggle:checked ~ .modal-backdrop .modal-content.trackme-con {
+  max-width: 100%;
+  padding: 10px 15px;
+  margin: 0 10px;
+  top: 2%;
+}
+@media (min-width: 760px) {
+	.modal-container .modal-toggle:checked ~ .modal-backdrop.trackme-back {
+		width: 28vw;
+	}
+	.trackertable {
+		margin: 8px -6px;
+	}
+}
+.modal-container .modal-toggle:checked ~ .modal-backdrop .modal-content .modal-close {
+  color: #666;
+  position: relative;
+  float: right;
+  background: #fff;
+  font-size: 20px;
+  width: 28px;
+  height: 28px;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  float: right;
+}
+.modal-container .modal-toggle:checked ~ .modal-backdrop .modal-content .modal-close.button {
+  padding: 8px;
+  background: #81b3fd;
+  color: #fff;
+  width: auto;
+  height: auto;
+  border-radius: 2px;
+  font-size: 15px;
+  font-weight: normal;
+  margin-bottom: 40px;
+}
+
+.modal-container .modal-toggle:checked ~ .modal-backdrop .modal-content .modal-close.button:hover {
+  color: #fff;
+  background: #bd3528;
+}
+.modal-container .modal-toggle:checked ~ .modal-backdrop .modal-content .modal-close:hover {
+	color: #333;
