@@ -17,6 +17,7 @@
 /**
  * Copyright 2017 Abhijit A. M.(abhijit13@gmail.com)
  */
+
 var index1;
 var rowcount; /*Number of rows in a table in a particular config*/
 function resetConfigurationHeader() {
@@ -62,22 +63,16 @@ function PrintTitle(Name) {
 }
 
 function formClose(formName) {
-	document.getElementById(formName).style.height = "0%";
-	document.getElementById("outerTable").style.display = "table";
 	document.getElementById(formName).style.display = "none";
-	document.getElementById('configuration-menu-column').style.display = "block";
-	showTrackerList();
-	currentFormName = null;
-	onClose();
 }
-var currentFormName = null;
+var currentFormName;
 function formOpen(formName) {
-	document.getElementById(formName).style.height = "auto";
-	document.getElementById(formName).style.display = "block";
-	document.getElementById("outerTable").style.display = "none";
-	document.getElementById('configuration-menu-column').style.display = "none";
+	if (currentFormName)
+		formClose(currentFormName);
+	var form = document.getElementById(formName);
+	document.getElementById("configurationDiv").appendChild(form);
+	form.style.display = "block";
 	currentFormName = formName;
-	resetConfigurationHeader();
 }
 function insertHeaderRow(tableName) {
 	var table = document.getElementById(tableName);
@@ -691,7 +686,7 @@ function batchCanOverlapForm() {
 		document.getElementById("batchCanOverlapAdd")[0]);
 	$("#batchCanOverlapAdd").select2({
 		tokenSeparators: [','],
-		width: 'resolve',
+		width: '90%',
 	});
 	$("#batchCanOverlapAdd").on("change", filterBatchCanOverlapSelect); 
 	
@@ -863,13 +858,13 @@ function batchRoomForm() {
 	selectTag = insertSelectTag(row, "brBatchAdd", batch, "batchId", "batchName");
 	$("#brBatchAdd").select2({
 		placeholder: "Insert Batch Name",
-		width: 'resolve'
+		width: '90%'
 	});
 
 	selectTag = insertSelectTag(row, "brRoomAdd", room, "roomId", "roomShortName");
 	$("#brRoomAdd").select2({
 		placeholder: "Room Name",
-		width: 'resolve'
+		width: '80%'
 	});
 
 	cell = insertAddButton(row, "batchRoomInsert()", 2);
@@ -1339,13 +1334,13 @@ function classRoomForm() {
 	selectTag = insertSelectTag(row, "crClassAdd", classTable,"classId", "classShortName");
 	$("#crClassAdd").select2({
 		placeholder: "Insert Class Name",
-		width: 'resolve'
+		width: '90%'
 	});
 
 	selectTag = insertSelectTag(row, "crRoomAdd", room, "roomId", "roomShortName");
 	$("#crRoomAdd").select2({
 		placeholder: "Room Name",
-		width: 'resolve'
+		width: '80%'
 	});
 
 	cell = insertAddButton(row, "classRoomInsert()", 2);
@@ -1811,7 +1806,7 @@ function overlappingSBTForm() {
 	cell.appendChild(selectTag);
 	$("#sbtAdd1").select2({
 		placeholder: "SBT Name",
-		width: 'resolve'
+		width: '90%'
 	});
 	$("#sbtAdd1").on("change", makesbtAdd2);
 
@@ -1825,7 +1820,7 @@ function overlappingSBTForm() {
 	$("#sbtAdd2").select2({
 		placeholder: "Matching SBT",
 		dropdownAutoWidth : true,
-		width: 'resolve'
+		width: '90%'
 	});
 
 	cell = insertAddButton(row, "overlappingSBTInsert()", 1);
@@ -1911,7 +1906,7 @@ function makesbtAdd2() {
 	}
 	if(count == 0)
 		selectTag.innerHTML = "<option> No matching Subject-Batches </option>";
-	selectTag.style.width = "100%";
+	selectTag.style.width = "90%";
 }
 function overlappingSBTInsert() {
 	var sbtId2, teacherId, osbtId;
@@ -2336,7 +2331,7 @@ function sbtForm() {
 	insertSelectTag(row, "batchAdd", batch, "batchId", "batchName");
 	$("#batchAdd").select2({
 		placeholder: "Insert Batch Name",
-		width: 'resolve'
+		width: '90%'
 	});
 
 	var cell = insertCell(row);
@@ -2354,13 +2349,13 @@ function sbtForm() {
 	cell.appendChild(selectTag);
 	$("#subjectAdd").select2({
 		placeholder: "Subject Name",
-		width: 'resolve'
+		width: '90%'
 	});
 
 	insertSelectTag(row, "teacherAdd", teacher, "teacherId", "teacherName");
 	$("#teacherAdd").select2({
 		placeholder: "Teacher Name",
-		width: 'resolve'
+		width: '90%'
 	});
 
 	cell = insertAddButton(row, "sbtInsert()", 2);
@@ -2651,7 +2646,7 @@ function sctForm() {
 	insertSelectTag(row, "classAdd", classTable, "classId", "className");
 	$("#classAdd").select2({
 		placeholder: "Insert Class Name",
-		width: 'resolve'
+		width: '98%'
 	});
 
 	var cell = insertCell(row);
@@ -2669,13 +2664,13 @@ function sctForm() {
 	cell.appendChild(selectTag);
 	$("#subjectAdd").select2({
 		placeholder: "Subject Name",
-		width: 'resolve'
+		width: '90%'
 	});
 
 	insertSelectTag(row, "teacherAdd", teacher, "teacherId", "teacherName");
 	$("#teacherAdd").select2({
 		placeholder: "Teacher Name",
-		width: 'resolve'
+		width: '90%'
 	});
 
 	cell = insertAddButton(row, "sctInsert()", 2);
@@ -3205,13 +3200,13 @@ function subjectRoomForm() {
 	insertSelectTag(row, "srSubjectAdd", subject,"subjectId", "subjectName");
 	$("#srSubjectAdd").select2({
 		placeholder: "Insert Subject Name",
-		width: 'resolve'
+		width: '92%'
 	});
 
 	insertSelectTag(row, "srRoomAdd", room, "roomId", "roomShortName");
 	$("#srRoomAdd").select2({
 		placeholder: "Room Name",
-		width: 'resolve'
+		width: '92%'
 	});
 
 	cell = insertAddButton(row, "subjectRoomInsert()", 2);

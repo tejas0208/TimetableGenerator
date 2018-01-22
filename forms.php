@@ -51,10 +51,10 @@ function generateInputForms() {
 			"<table class=\"inputFormTitleTable\"> <tr>
 					<td class=\"inputFormTitle\"> ".$formsList[$i][1].
 					"</td>
-					<td> <button onclick = deleteSelectedFrom".$formsList[$i][2]."() >Delete Selected</button> </td>
+					<td> <button style=\"white-space:nowrap;\" onclick = deleteSelectedFrom".$formsList[$i][2]."() >Delete Selected</button> </td>
 					<td class=\"closebtn\">  <a href=\"javascript:void(0)\"
 							onclick='formClose(\"".$formsList[$i][0]."\")'>
-							<-- Back </a>
+							Close Form </a>
 					</td>
 			</table>
 			<table id=\"".$formsList[$i][2]."\" class=\"inputFormTable\">
