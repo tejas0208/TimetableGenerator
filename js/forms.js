@@ -17,13 +17,49 @@
 /**
  * Copyright 2017 Abhijit A. M.(abhijit13@gmail.com)
  */
-
+var index1;
+function resetConfigurationHeader() {
+	var i, Len, Options;
+	Options = document.getElementById("configuration-menu");
+	Len = Options.options.length;
+	for(i = 0; i < Len; i++) {
+		if(Options.options[i].value = "selectOne") {
+			Options.options[i].selected = true;
+			break;
+		}
+	}
+}
+function onClose(){
+	var Name;
+	if(type == "class") {
+		index = document.getElementById("class-menu").selectedIndex;
+		Name = document.getElementById("class-menu").options[index].text;
+		PrintTitle(Name);
+	}
+	else if(type == "room") {
+		Name = document.getElementById("room-menu").options[index1].text;
+		PrintTitle(Name);
+	}
+	else if(type == "teacher") {
+		Name = document.getElementById("teacher-menu").options[index1].text;
+		PrintTitle(Name);
+	}
+	return;
+}
+function PrintTitle(Name) {
+	document.getElementById("title").innerHTML =
+		"<h2> " + search(dept, "deptId", currentDeptId)["deptName"] +
+		"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+		"Timetable for " +
+		"<span class=\"currTitle\"> Class: " + Name + " </span> </h2>";
+}
 
 function formClose(formName) {
 	document.getElementById(formName).style.height = "0%";
 	document.getElementById("outerTable").style.display = "table";
 	document.getElementById(formName).style.display = "none";
 	currentFormName = null;
+	onClose();
 }
 var currentFormName = null;
 function formOpen(formName) {
@@ -31,6 +67,7 @@ function formOpen(formName) {
 	document.getElementById(formName).style.display = "block";
 	document.getElementById("outerTable").style.display = "none";
 	currentFormName = formName;
+	resetConfigurationHeader();
 }
 function insertHeaderRow(tableName) {
 	var table = document.getElementById(tableName);

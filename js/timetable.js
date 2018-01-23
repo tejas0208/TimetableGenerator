@@ -75,6 +75,8 @@ var tracker = [];
 var completion;
 
 var roomSizeDelta = 10;
+/*Following varaiables used in printing the heading in tracker list in dashboard*/
+var printSub = "Sub^", printBatch = "Batch^<br>Class^", printTeacher = "Teacher^", printDone = "Done^";
 
 function makeTrackerList() {
 	tracker = [];
@@ -159,6 +161,18 @@ function sortTrackerOnTeacher() {
 		if(x > y)
 			return ((teacherSort == 1? 1 : -1) * (1));
 	});
+	var i, x = document.getElementsByClassName("teachersort");
+	for(i = 0; i < x.length; i++) {
+		if(x[i].innerHTML == "Teacher^") {
+			printTeacher = 'Teacher<sup>v</sup>';
+			break;
+		}
+		else if(x[i].innerHTML == 'Teacher<sup>v</sup>') {
+			printTeacher = 'Teacher^';
+			break;
+		}
+	}
+
 	teacherSort = 1 - teacherSort;
 	showTrackerList();
 	$(".teachersort").css("background-color", "red");
@@ -172,6 +186,17 @@ function sortTrackerOnSub() {
 		if(x > y)
 			return ((subjectSort == 1? 1 : -1) * (1));
 	});
+	var i, x = document.getElementsByClassName("subsort");
+	for(i = 0; i < x.length; i++) {
+		if(x[i].innerHTML == "Sub^") {
+			printSub = 'Sub<sup>v</sup>';
+			break;
+		}
+		else if(x[i].innerHTML == 'Sub<sup>v</sup>') {
+			printSub = 'Sub^';
+			break;
+		}
+	}
 	subjectSort = 1 - subjectSort;
 	showTrackerList();
 	$(".subsort").css("background-color", "red");
@@ -189,6 +214,17 @@ function sortTrackerOnBatch() {
 		if(x > y)
 			return ((batchSort == 1? 1 : -1) * (1));
 	});
+	var i, x = document.getElementsByClassName("batchsort");
+	for(i = 0; i < x.length; i++) {
+		if(x[i].innerHTML == "Batch^<br>Class^") {
+			printBatch = 'Batch<sup>v</sup><br>Class<sup>v</sup>';
+			break;
+		}
+		else if(x[i].innerHTML == 'Batch<sup>v</sup><br>Class<sup>v</sup>') {
+			printBatch = 'Batch^<br>Class^';
+			break;
+		}
+	}
 	batchSort = 1 - batchSort;
 	showTrackerList();
 	$(".batchsort").css("background-color", "red");
@@ -202,6 +238,18 @@ function sortTrackerOnDone() {
 		if(x > y)
 			return ((doneSort == 1? 1 : -1) * (1));
 	});
+	var i, x = document.getElementsByClassName("donesort");
+	for(i = 0; i < x.length; i++) {
+		if(x[i].innerHTML == "Done^") {
+			printDone = 'Done<sup>v</sup>';
+			break;
+		}
+		else if(x[i].innerHTML == 'Done<sup>v</sup>') {
+			printDone = 'Done^';
+			break;
+		}
+	}
+
 	doneSort = 1 - doneSort;
 	showTrackerList();
 	$(".donesort").css("background-color", "red");
@@ -245,16 +293,16 @@ function showTrackerList() {
 	trackerStr += "<tr class=\"trackerrow\">";
 	trackerStr += "<td class=\"trackercol\"> <a href=\"javascript:void(0) " +
 					"\"class=\"subsort\" onclick=\"sortTrackerOnSub()\">" +
-					"Sub^ </a></td>";
+					printSub + "</a></td>";
 	trackerStr += "<td class=\"trackercol\"> <a href=\"javascript:void(0) " +
 					"\"class=\"batchsort\" onclick=\"sortTrackerOnBatch()\">" +
-					"Batch^ <br> Class^ </a></td>";
+					printBatch + "</a></td>";
 	trackerStr += "<td class=\"trackercol\"> <a href=\"javascript:void(0) " +
 					"\"class=\"teachersort\" onclick=\"sortTrackerOnTeacher()\">" +
-					"Teacher^ </a></td>";
+					printTeacher + "</a></td>";
 	trackerStr += "<td class=\"trackercol\"> <a href=\"javascript:void(0) " +
 					"\"class=\"donesort\" onclick=\"sortTrackerOnDone()\">" +
-					"Done^ </a></td>";
+					printDone + "</a></td>";
 	trackerStr += "</tr>";
 	completionNSlots = 0;
 	completionDone = 0;
@@ -2857,6 +2905,7 @@ function roomChange(createNewTable){
 	getSupportObject();//fills supportObject correctly depending on type and id;
 	/*Filling the table*/
 	fillTable2(createNewTable);
+	index1 = index;
 }
 
 function batchChange(createNewTable){
@@ -2905,6 +2954,7 @@ function teacherChange(createNewTable){
 	getSupportObject();//fills supportObject correctly depending on type and id;
 	/*Filling the table*/
 	fillTable2(createNewTable);
+	index1 = index;
 }
 /*if a snapshot was displayed before selecting add option then
 this function will reselect the option which was selected before selcting add option*/
