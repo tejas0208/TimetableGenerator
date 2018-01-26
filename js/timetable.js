@@ -695,8 +695,11 @@ function dragLeaveHandler(e) {
 
 /*i, j of destn slot and source object*/
 /*There is no need to check for max entry of subject*/
-function checkValidity(i, j, source) {
+/*for swapping of entries destination is the entry in i, j slot getting replaced by source*/
+function checkValidity(i, j, source, destination = null) {
 	var subjectRow = search(subject, "subjectId", source["subjectId"]);
+	if(destination !== null)
+		destEachSlot = search(subject, "subjectId", destination["subjectId"])["eachSlot"];
 	var bco = searchMultipleRows(batchCanOverlap, "batchId", source["batchId"]);
 	if((j + parseInt(subjectRow["eachSlot"])) > parseInt(NoOfSlots)) {
 		alert("Operation Not Possible.\nReason: The subject entry is exceeding " +
@@ -708,16 +711,20 @@ function checkValidity(i, j, source) {
 		var tEntry = search(timeTable, "day", i, "slotNo", (j + p),
 			"teacherId", source["teacherId"], "snapshotId", currentSnapshotId);
 		if(tEntry !== -1) {
-			valid = false;
-			alert("Operation Not Possible.\nReason: Teacher Busy");
-			break;
+			if(destination === null || destEachSlot > p || source["teacherId"] !== destination["teacherId"]) {
+				valid = false;
+				alert("Operation Not Possible.\nReason: Teacher Busy");
+				break;
+			}
 		}
 		tEntry = search(timeTable, "day", i, "slotNo", (j + p), "roomId", source["roomId"],
 				 "snapshotId", currentSnapshotId);
 		if(tEntry !== -1) {
-			valid = false;
-			alert("Operation Not Possible.\nReason: Room not free");
-			break;
+			if(destination === null || destEachSlot > p || source["roomId"] !== destination["roomId"]) {
+				valid = false;
+				alert("Operation Not Possible.\nReason: Room not free");
+				break;
+			}
 		}
 		tEntry = searchMultipleRows(timeTable, "day", i, "slotNo", (j + p),
 					"classId", source["classId"], "snapshotId", currentSnapshotId);
@@ -731,7 +738,7 @@ function checkValidity(i, j, source) {
 		}
 		else {/*Batch subject*/
 			for(var q in tEntry) {
-				if(tEntry[q]["batchId"] == "1") {/*Class entry present*/
+				if(tEntry[q]["batchId"] == "0") {/*Class entry present*/
 					valid = false;
 					alert("Operation Not Possible.\nReason: Class subj cannot be "+
 					"overlapped with batch subj");
@@ -787,12 +794,12 @@ function dropHandler(e) {
 		var temp2 = [];/*for src*/
 		var destSubjectRow = search(subject, "subjectId", destSlotEntry["subjectId"]);
 		for(var r = 0; r < destSubjectRow["eachSlot"]; r++) {
-			temp1[r] = search(timeTable, "day", i, "slotNo", (j + r), "batchId", srcSlotEntry["batchId"],
+			temp1[r] = search(timeTable, "day", i, "slotNo", (j + r), "batchId", destSlotEntry["batchId"],
 					 "subjectId", destSubjectRow["subjectId"], "classId", destSlotEntry["classId"]);
 			temp1[r]["day"] = "-1";/*equivalent to removing*/
 			temp1[r]["slotNo"] = "-1";
 		}
-		var valid1 = checkValidity(i, j, srcSlotEntry);
+		var valid1 = checkValidity(i, j, srcSlotEntry, destSlotEntry);
 		var valid2= false;
 		//destn valid in source
 		if(valid1) {
@@ -803,7 +810,7 @@ function dropHandler(e) {
 				temp2[r]["day"] = "-1";
 				temp2[r]["slotNo"] = "-1";
 			}
-			valid2 = checkValidity(srcI, slotNo, destSlotEntry);
+			valid2 = checkValidity(srcI, slotNo, destSlotEntry, srcSlotEntry);
 
 		}
 		if(!valid2 || !valid1) {
