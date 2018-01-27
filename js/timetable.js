@@ -743,9 +743,15 @@ function insertAfter(elem, refElem) {
 
 /* Highlight the selected cell */
 function selected(element) {
-	if(typeof selectedCell != "undefined")
-		selectedCell.style.border = prevBorder;
-	prevBorder = element.style.border;
+	if(typeof selectedCell != "undefined") {
+		[i, j, k] = makeIJKFromId(selectedCell.id);
+		if(k == 0)
+			selectedCell.style.borderStyle = "solid solid none";
+		else
+			selectedCell.style.borderStyle = "none solid";
+		selectedCell.style.borderColor = "black";
+		selectedCell.style.borderWidth = "1px";
+	}
 	element.style.borderColor = "green";
 	element.style.borderStyle = "solid";
 	element.style.borderWidth = "5px";
@@ -1091,7 +1097,7 @@ function createTable(days, nSlots, slotTablePerDay, startTime, timePerSlot) {
 				td = document.createElement("td");
 				td.setAttribute("id", "cell"+ makeIdFromIJK(i, j, k));
 				td.setAttribute("class", "cell");
-				td.setAttribute("onclick", "selected(this)");
+				td.setAttribute("onmousedown", "selected(this)");
 				var div = document.createElement("div");
 				div.setAttribute("class", "div"+ i + j);
 				var slottable = document.createElement("table");
