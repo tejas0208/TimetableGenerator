@@ -2696,7 +2696,7 @@ function teacherForm() {
 	}
 }
 function getDeptId(deptShortName) {
-	count = 1;
+	count = 0;
 	for (i in dept) {
 		if(dept[i]["deptShortName"] == deptShortName)
 			return count;
@@ -2876,7 +2876,7 @@ function teacherUpdate(i) {
 				teacher[row]["teacherShortName"] = teacherShortName;
 				teacher[row]["minHrs"] = minHrs;
 				teacher[row]["maxHrs"] = maxHrs;
-				teacher[row]["dept"] = deptId;
+				teacher[row]["deptId"] = deptId;
 				loadSelectMenus();
 				teacherForm();
 			}
