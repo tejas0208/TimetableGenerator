@@ -2814,8 +2814,6 @@ function classChange(createNewTable){
 function snapshotChange() {
 	var index = document.getElementById("fetch-snapshot-menu").selectedIndex;
 	var snapshotName = document.getElementById("fetch-snapshot-menu").options[index].text;
-	if(snapshotName == currentSnapshotName)
-		return;
 	if(dirtyTimeTable) {
 			save = confirm("Timetable Modified. Your changes will be lost if not saved. Save current timeTable?");
 			if(save == true) {
