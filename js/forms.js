@@ -148,6 +148,17 @@ function insertCell(row) {
 	cell.setAttribute("class", "inputFormCell");
 	return cell;
 }
+function validateAlNumFields(input, inputName) {
+	var regex = new RegExp("^[a-zA-Z]+[a-zA-Z0-9_~!@#=$ ^%&*:()'+.,<>/-]*$");
+	if(regex.test(input)) {
+		return true;
+	}
+	else {
+		alert('The \"'+ inputName + '\" can contain only letters, digits, ' +
+			'special characters except \'\"\' and should start only with an alphabet');
+		return false;
+	}
+}
 function batchForm() {
 	formOpen("inputBatchForm");
 
@@ -220,6 +231,8 @@ function batchInsert() {
 		return;
 	}
 	batchName = batchName.value;
+	if(!validateAlNumFields(batchName,"Batch Name"))
+		return;
 	batchCount = batchCount.value;
 	classId = classId.value;
 	var xhttp = new XMLHttpRequest();
@@ -824,7 +837,11 @@ function classInsert() {
 	}
 	
 	className = className.value;
+	if(!validateAlNumFields(className, "Class Name"))
+		return;
 	classShortName = classShortName.value;
+	if(!validateAlNumFields(classShortName, "Class Short Name"))
+		return;
 	semester = semester.value;
 	classCount = classCount.value;
 
@@ -879,7 +896,11 @@ function classUpdate(i) {
 	}
 	
 	className = className.value;
+	if(!validateAlNumFields(className, "Class Name"))
+		return;
 	classShortName = classShortName.value;
+	if(!validateAlNumFields(classShortName, "Class Short Name"))
+		return;
 	semester = semester.value;
 	classCount = classCount.value;
 	document.getElementById("cUpdateButton_" + row).childNodes[0].nodeValue = "Updating";
@@ -1246,6 +1267,8 @@ function configInsert() {
 	}
 	
 	configName = configName.value;
+	if(!validateAlNumFields(configName, "config Name"))
+		return;
 	dayBegin = dayBeginAdd.value;
 	slotDuration = slotDuration.value;
 	nSlots = nSlots.value;
@@ -1657,7 +1680,11 @@ function roomInsert() {
 	}
 
 	roomName = roomName.value;
+	if(!validateAlNumFields(roomName,"Room Name"))
+		return;
 	roomShortName = roomShortName.value;
+	if(!validateAlNumFields(roomShortName,"Room Short Name"))
+		return;
 	roomCount = roomCount.value;
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function () {
@@ -1706,7 +1733,11 @@ function roomUpdate(i) {
 
 	
 	roomName = roomName.value;
+	if(!validateAlNumFields(roomName,"Room Name"))
+		return;
 	roomShortName = roomShortName.value;
+	if(!validateAlNumFields(roomShortName,"Room Short Name"))
+		return;
 	roomCount = roomCount.value;
 	
 	document.getElementById("rUpdateButton_" + row).childNodes[0].nodeValue = "Updating";
@@ -2297,7 +2328,11 @@ function subjectInsert() {
 		return;	
 	}
 	subjectName = subjectName.value;
+	if(!validateAlNumFields(subjectName,"Subject Name"))
+		return;
 	subjectShortName = subjectShortName.value;
+	if(!validateAlNumFields(subjectShortName,"Subject Short Name"))
+		return;
 	eachSlot = eachSlot.value;
 	nSlots = nSlots.value;
 	batches = batches.value;
@@ -2360,7 +2395,11 @@ function subjectUpdate(i) {
 	}
 	
 	subjectName = subjectName.value;
+	if(!validateAlNumFields(subjectName,"Subject Name"))
+		return;
 	subjectShortName = subjectShortName.value;
+	if(!validateAlNumFields(subjectShortName,"Subject Short Name"))
+		return;
 	nSlots = nSlots.value;
 	
 	
@@ -2790,7 +2829,11 @@ function teacherInsert() {
 		return;	
 	}
 	teacherName = teacherName.value;
+	if(!validateAlNumFields(teacherName,"Full Name"))
+		return;
 	teacherShortName = teacherShortName.value;
+	if(!validateAlNumFields(teacherShortName,"Short Name"))
+		return;
 	minHrs = minHrs.value;
 	maxHrs = maxHrs.value;
 	dept = dept.value;
@@ -2852,7 +2895,11 @@ function teacherUpdate(i) {
 	}
 	
 	teacherName = teacherName.value;
+	if(!validateAlNumFields(teacherName,"Teacher Name"))
+		return;
 	teacherShortName = teacherShortName.value;
+	if(!validateAlNumFields(teacherShortName,"Teacher Short Name"))
+		return;
 	minHrs = minHrs.value;
 	maxHrs = maxHrs.value;
 	dept = dept.value;
