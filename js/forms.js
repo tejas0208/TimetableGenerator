@@ -285,7 +285,25 @@ function insertInputBox(row, type, id, size, placeholder, value, title, minValue
 function insertRow(table, count) {
 	row = table.insertRow(count);
 	row.setAttribute("class", "inputFormRow");
+	row.setAttribute("id", count);
 	return row;
+}
+function highlightRowAfterAdd(formType) {
+	var rows = formType.getElementsByTagName('tr');
+	for (var i = 0; i < rows.length; i++) {
+		if (((formType.getAttribute('id') != "inputBatchCanOverlapForm") &&
+			(rows[i].getAttribute('id') == 2))
+			||
+			((rows[i].getAttribute('id') == 3) &&
+			(formType.getAttribute('id') == "inputoverlappingSBTForm"))
+			) {
+				rows[i].setAttribute("style", "background-color : green");
+        }
+        if(formType.getAttribute('id') == "inputBatchCanOverlapForm" &&
+			rows[i].getAttribute('id') == (rows.length - 2)) {
+				rows[i].setAttribute("style", "background-color : green");
+		}
+	}
 }
 function insertCell(row) {
 	var cell = row.insertCell(-1);
@@ -427,6 +445,8 @@ function batchInsert() {
 				loadSelectMenus();
 				fillTable2(true);
 				batchForm();
+				var formType = document.getElementById("inputBatchForm");
+				highlightRowAfterAdd(formType);
 			} else {
 				alert("batchInsert " + batchName + " Failed. Error: " + response["Error"]);
 			}
@@ -750,6 +770,8 @@ function batchCanOverlapInsert() {
 				batchCanOverlap = getOneTable("batchCanOverlap", false).batchCanOverlap;
 				fillTable2(true);
 				batchCanOverlapForm();
+				var formType = document.getElementById("inputBatchCanOverlapForm");
+				highlightRowAfterAdd(formType);
 			} else {
 				alert("batchInsert " + batchNames + " Failed. \n" +
 					  "Possibly the batches are already part of some overlapping batchgroup.\n" +
@@ -855,6 +877,8 @@ function batchRoomInsert() {
 				batchRoom.unshift(newBatchRoom);
 				fillTable2(true);
 				batchRoomForm();
+				var formType = document.getElementById("inputBatchRoomForm");
+				highlightRowAfterAdd(formType);
 			} else {
 				alert("Insert batch: "
 						+ batchName + " Failed. \nError From Server: \n" + response["Error"]);
@@ -1038,6 +1062,8 @@ function classInsert() {
 				loadSelectMenus();
 				fillTable2(true);
 				classForm();
+				var formType = document.getElementById("inputClassForm");
+				highlightRowAfterAdd(formType);
 			} else {
 				alert("classInsert " + classShortName + " Failed. Error: " + response["Error"]);
 			}
@@ -1250,6 +1276,8 @@ function classRoomInsert() {
 				classRoom.unshift(newClassRoom);
 				fillTable2(true);
 				classRoomForm();
+				var formType = document.getElementById("inputClassRoomForm");
+				highlightRowAfterAdd(formType);
 			} else {
 				alert("Insert class: "
 					+ classShortName + " Failed. \nError From Server: \n" +
@@ -1752,6 +1780,8 @@ function overlappingSBTInsert() {
 				overlappingSBT.unshift(newoverlappingSBT);
 				fillTable2(true);
 				overlappingSBTForm();
+				var formType = document.getElementById("inputoverlappingSBTForm");
+				highlightRowAfterAdd(formType);
 			} else {
 				alert("Insert " + sbtString + " Failed. \nError From Server: \n" +
 					response["Error"]);
@@ -1890,6 +1920,8 @@ function roomInsert() {
 				loadSelectMenus();
 				fillTable2(true);
 				roomForm();
+				var formType = document.getElementById("inputRoomForm");
+				highlightRowAfterAdd(formType);
 			} else {
 				alert("roomInsert " + roomShortName + " Failed. Error: " + response["Error"]);
 			}
@@ -2119,6 +2151,8 @@ function sbtInsert() {
 				subjectBatchTeacher.unshift(newSBT);
 				fillTable2(true);
 				sbtForm();
+				var formType = document.getElementById("inputSBTForm");
+				highlightRowAfterAdd(formType);
 			} else {
 				alert("Insert teacher:" + teacherShortName + " subject: " + subjectShortName + " batch: "
 						+ batchName + " Failed. \nError From Server: \n" + response["Error"]);
@@ -2339,6 +2373,8 @@ function sctInsert() {
 				subjectClassTeacher.unshift(newSCT);
 				fillTable2(true);
 				sctForm();
+				var formType = document.getElementById("inputSCTForm");
+				highlightRowAfterAdd(formType);
 			} else {
 				alert("Insert teacher:" + teacherShortName + " subject: " + subjectShortName + " class: "
 						+ classShortName + " Failed. \nError From Server: \n" + response["Error"]);
@@ -2550,6 +2586,8 @@ function subjectInsert() {
 				subject.unshift(newsubject);
 				fillTable2(true);
 				subjectForm();
+				var formType = document.getElementById("inputSubjectForm");
+				highlightRowAfterAdd(formType);
 			} else {
 				alert("subjectInsert " + subjectShortName + " Failed. Error: " +
 					response["Error"]);
@@ -2767,6 +2805,8 @@ function subjectRoomInsert() {
 				subjectRoom.unshift(newSubjectRoom);
 				fillTable2(true);
 				subjectRoomForm();
+				var formType = document.getElementById("inputSubjectRoomForm");
+				highlightRowAfterAdd(formType);
 			} else {
 				alert("Insert subject: "
 						+ subjectName + " Failed. \nError From Server: \n" + response["Error"]);
@@ -3052,6 +3092,8 @@ function teacherInsert() {
 				teacher.unshift(newteacher);
 				loadSelectMenus();
 				teacherForm();
+				var formType = document.getElementById("inputTeacherForm");
+				highlightRowAfterAdd(formType);
 			} else {
 				alert("teacherInsert " + teacherShortName + " Failed. Error: " + response["Error"]);
 			}
