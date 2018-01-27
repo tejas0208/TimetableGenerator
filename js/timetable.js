@@ -3397,3 +3397,8 @@ function load() {
 }
 
 window.onload = load;
+window.onbeforeunload = function(event)
+{
+	if(dirtyTimeTable == true)
+		return "Confirm refresh";
+};
