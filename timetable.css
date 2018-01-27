@@ -255,7 +255,7 @@ option, select{
 	font: 20px courier bold;
 	width: 90%;
 }
-.closebtn {
+.subsort .batchsort .teachersort .donesort {
 	width: 10%;
 	text-align: right;
 	vertical-align: middle;

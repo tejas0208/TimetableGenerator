@@ -119,7 +119,7 @@ function makeTrackerList() {
 			index = searchIndex(tracker, "subjectId", curr["subjectId"],
 						"batchId", curr["batchId"], "classId", curr["classId"]);
 			if(index == -1) {
-				alert("ERROR: index -1 in makeTrackerList i = . " + i + " curr = " +
+				alert("ERROR: index -1 in searchIndex i = . " + i + " curr = " +
 						JSON.stringify(curr) + "Tracker: " + JSON.stringify(
 							search(tracker, "batchId", curr["batchId"])) + JSON.stringify(
 							search(tracker, "teacherId", curr["teacherId"])) + JSON.stringify(
@@ -137,7 +137,7 @@ function makeTrackerList() {
 			index = searchIndex(tracker, "subjectId", curr["subjectId"],
 						"classId", curr["classId"]);
 			if(index == -1) {
-				alert("ERROR: index -1 in makeTrackerList i = . " + i + " curr = " +
+				alert("ERROR: index -1 in searchIndex i = . " + i + " curr = " +
 						JSON.stringify(curr) + "Tracker: " + JSON.stringify(tracker));
 			}
 			eachSlot = tracker[index]["eachSlot"];
@@ -161,6 +161,7 @@ function sortTrackerOnTeacher() {
 	});
 	teacherSort = 1 - teacherSort;
 	showTrackerList();
+	$(".teachersort").css("background-color", "red");
 }
 function sortTrackerOnSub() {
 	tracker.sort(function(a, b) {
@@ -173,6 +174,7 @@ function sortTrackerOnSub() {
 	});
 	subjectSort = 1 - subjectSort;
 	showTrackerList();
+	$(".subsort").css("background-color", "red");
 }
 function sortTrackerOnBatch() {
 	tracker.sort(function(a, b) {
@@ -189,6 +191,7 @@ function sortTrackerOnBatch() {
 	});
 	batchSort = 1 - batchSort;
 	showTrackerList();
+	$(".batchsort").css("background-color", "red");
 }
 function sortTrackerOnDone() {
 	tracker.sort(function (a, b) {
@@ -201,6 +204,7 @@ function sortTrackerOnDone() {
 	});
 	doneSort = 1 - doneSort;
 	showTrackerList();
+	$(".donesort").css("background-color", "red");
 }
 var trackerStr = "";
 function addOSBTRowToTrackerShow(trackerRow) {
@@ -240,16 +244,16 @@ function showTrackerList() {
 	trackerStr = "<table class=\"trackertable\">";
 	trackerStr += "<tr class=\"trackerrow\">";
 	trackerStr += "<td class=\"trackercol\"> <a href=\"javascript:void(0) " +
-					"\"class=\"closebtn\" onclick=\"sortTrackerOnSub()\">" +
+					"\"class=\"subsort\" onclick=\"sortTrackerOnSub()\">" +
 					"Sub^ </a></td>";
 	trackerStr += "<td class=\"trackercol\"> <a href=\"javascript:void(0) " +
-					"\"class=\"closebtn\" onclick=\"sortTrackerOnBatch()\">" +
+					"\"class=\"batchsort\" onclick=\"sortTrackerOnBatch()\">" +
 					"Batch^ <br> Class^ </a></td>";
 	trackerStr += "<td class=\"trackercol\"> <a href=\"javascript:void(0) " +
-					"\"class=\"closebtn\" onclick=\"sortTrackerOnTeacher()\">" +
+					"\"class=\"teachersort\" onclick=\"sortTrackerOnTeacher()\">" +
 					"Teacher^ </a></td>";
 	trackerStr += "<td class=\"trackercol\"> <a href=\"javascript:void(0) " +
-					"\"class=\"closebtn\" onclick=\"sortTrackerOnDone()\">" +
+					"\"class=\"donesort\" onclick=\"sortTrackerOnDone()\">" +
 					"Done^ </a></td>";
 	trackerStr += "</tr>";
 	completionNSlots = 0;
