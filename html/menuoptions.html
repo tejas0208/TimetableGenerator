@@ -40,39 +40,39 @@
 				<td>
 					<div id="configurationDiv" class="selection-menu">
 						Configuration	
-						<select id="configuration-menu" class="select-menu" display="none">
+						<select id="configuration-menu"  class="select-menu" display="none" onchange ="window[this.value + 'Form']();">
 							<option id = "selectOne" value = "selectOne" selected></option>
 							<optgroup label="Primary Data">
-							<option value = "teachers" onclick="teacherForm()">Teachers</option>
-							<option value = "subjects" onclick="subjectForm()">Subjects</option>
-							<option value = "classes" onclick="classForm()">Classes</option>
-							<option value = "batchs" onclick="batchForm()">Batches</option>
-							<option value = "rooms" onclick="roomForm()">Rooms</option>
-							<option value = "depts" onclick="deptForm()">Depts</option>
+							<option value = "teacher">Teachers</option>
+							<option value = "subject">Subjects</option>
+							<option value = "class">Classes</option>
+							<option value = "batch">Batches</option>
+							<option value = "room">Rooms</option>
+							<option value = "dept">Depts</option>
 							</optgroup>
 							<optgroup label="Mappings">
-							<option value = "subjectClassMapping" onclick="sctForm()"> 
+							<option value = "sct">
 									Class-Subject-Teacher</option>
-							<option value = "subjectBatchMapping" onclick="sbtForm()"> 
+							<option value = "sbt">
 									Batch-Subject-Teacher</option>
 							</optgroup>
 							<optgroup label="Overlaps">
-							<option value = "batchCanOverlap" onclick="batchCanOverlapForm()"> 
+							<option value = "batchCanOverlap">
 									Overlaps Allowed</option>
-							<option value = "overlappingSBT" onclick="overlappingSBTForm()"> 
+							<option value = "overlappingSBT">
 									Overlaps Must</option>
 							</optgroup>
 							<optgroup label="Room Preferences">
-							<option value = "classRoom" onclick="classRoomForm()"> 
+							<option value = "classRoom">
 									For Classes</option>
-							<option value = "batchRoom" onclick="batchRoomForm()"> 
+							<option value = "batchRoom">
 									For Batches</option>
-							<option value = "subjectRoom" onclick="subjectRoomForm()"> 
+							<option value = "subjectRoom">
 									For Subjects</option>
 							</optgroup>
-							<option value = "config" onclick="configForm()"> 
+							<option value = "config">
 									Configure Timetable</option>
-							<option value = "user" onclick="userForm()">Users</option>
+							<option value = "user">Users</option>
 						</select>
 					</div>
 				</td>
