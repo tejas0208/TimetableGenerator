@@ -2319,9 +2319,13 @@ function subjectInsert() {
 	batches = document.getElementById("batchesAdd");
 	
 	//Checking Parameter
+
 	if(checkParameterValidity(subjectName, subjectShortName, 
 		eachSlot, nSlots, batches) == false ) {
 		return;	
+	}
+	if(alreadyValueNotPresentInDB(subject, "subjectName", subjectName.value) == false) {
+		return;
 	}
 	if(alreadyValueNotPresentInDB(subject,  "subjectShortName", 
 				subjectShortName.value) == false) {
@@ -2388,6 +2392,10 @@ function subjectUpdate(i) {
 	if(checkParameterValidity(subjectName, subjectShortName, 
 			nSlots) == false ) {
 		return;	
+	}
+	if(alreadyValueNotPresentInDB(subject, "subjectName", subjectName.value, 
+		"subjectId", subjectId) == false) {
+		return;
 	}
 	if(alreadyValueNotPresentInDB(subject,  "subjectShortName", 
 				subjectShortName.value, "subjectId", subjectId) == false) {
