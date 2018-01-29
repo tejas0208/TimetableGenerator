@@ -3089,6 +3089,7 @@ function jsSaveNewSnapshot() {
 					currentSnapshotName = newSnapshotName;
 					currentSnapshotId = response["snapshotId"];
 					loadNewSnapshot();
+					dirtyTimeTable = false;
 				} else{
 					alert("Saving New Snapshot Failed. Error: " + response["Error"]);
 					loadSnapshotMenu(currentSnapshotName);
