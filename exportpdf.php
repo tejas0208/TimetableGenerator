@@ -434,7 +434,10 @@ function generate_timetable_pdf($currTableName, $searchParam, $allrows2, $nSlots
 		$pdf->SetY(-10);
 		$pdf->Cell(0,6,'Page '.$pdf->PageNo(),0,0,'C');
 	}
-	$pdf->output('F', dirname(__FILE__).'/tmp/timetable_pdf/'.$currTableName."_".$searchParam.".pdf");
+	if (PHP_OS == 'Windows' || PHP_OS == 'WINNT' || PHP_OS == 'WIN32')
+		$pdf->output('F', sys_get_temp_dir()."\\timetable_pdf\\".$currTableName."_".$searchParam.".pdf");
+	else
+		$pdf->output('F', sys_get_temp_dir()."/timetable_pdf/".$currTableName."_".$searchParam.".pdf");
 }
 function createTable($pdf, $data, $width, $pageNo, $styleTable = '', $styleCell = '', $y = 0) {
 	if($pdf->PageNo() != $pageNo) {
@@ -519,13 +522,20 @@ function SubjectTeacherMappings($allrows2, $currTableName, $headerRow) {
 	return 0;
 }
 function exportPDF() {
-	$filename = "timetable_pdf.zip";
-	if(!file_exists("tmp"))
-		mkdir("tmp");
-	if(!file_exists("tmp/timetable_pdf"))#if directory doesn't exists, create it.
-		mkdir("tmp/timetable_pdf");
-	else#if directory exists, delete existing pdf files
-		array_map('unlink', glob("tmp/timetable_pdf/*"));
+	if (PHP_OS == 'Windows' || PHP_OS == 'WINNT' || PHP_OS == 'WIN32') {
+		$filename = sys_get_temp_dir()."\\timetable_pdf\\timetable_pdf.zip";
+		if(!file_exists(sys_get_temp_dir()."\\timetable_pdf\\"))
+			mkdir(sys_get_temp_dir()."\\timetable_pdf\\");
+		else
+			array_map('unlink', glob(sys_get_temp_dir()."\\timetable_pdf\\*"));
+	}
+	else {
+		$filename = sys_get_temp_dir()."/timetable_pdf/timetable_pdf.zip";
+		if(!file_exists(sys_get_temp_dir().'/timetable_pdf/'))
+			mkdir(sys_get_temp_dir().'/timetable_pdf/');
+		else
+			array_map('unlink', glob(sys_get_temp_dir().'/timetable_pdf/*'));
+	}
 	$tableNames = array("teacher", "teacherShortName", "class", "classShortName",
 				"batch", "batchName", "room", "roomShortName");
 	$query = "SELECT * from config WHERE configId = 1";
@@ -576,7 +586,10 @@ function exportPDF() {
 			generate_timetable_pdf($currTableName, $searchParam, $allrows2, $nSlots, $dayBegin, $slotDuration, $deptName);
 		}
 	}
-	HZip::zipDir('tmp/timetable_pdf', $filename);
+	if (PHP_OS == 'Windows' || PHP_OS == 'WINNT' || PHP_OS == 'WIN32')
+		HZip::zipDir(sys_get_temp_dir()."\\timetable_pdf\\", $filename);
+	else
+		HZip::zipDir(sys_get_temp_dir()."/timetable_pdf/", $filename);
 	return $filename;
 }
 ?>
