@@ -2249,16 +2249,18 @@ function deleteEntry(Span) {
 	/* Delete Fixed Entry */
 	if(isFixed == "1") {
 		var index = timeTable.indexOf(row);
-		console.log("Deleting TT Entry: " + debugPrint("timeTable", timeTable[index]));
-		if(index != -1)
+		if(index != -1) {
 			timeTable.splice(index, 1);/*Delete entry from table*/
+			console.log("Deleting TT Entry: " + debugPrint("timeTable", timeTable[index]));
+		}
 		else
 			console.log("Error Deleting TT Entry: Couldn't find index");
 
 		index = searchIndex(fixedEntry, "ttId", row["ttId"]);
-		console.log("Deleting Fixed Entry: " + debugPrint("fixedEntry", fixedEntry[index]));
-		if(index != -1)
+		if(index != -1) {
+			console.log("Deleting Fixed Entry: " + debugPrint("fixedEntry", fixedEntry[index]));
 			fixedEntry.splice(index, 1);/*Delete entry from table*/
+		}
 		else
 			console.log("Error Deleting TT Entry: Couldn't find index");
 
@@ -2301,9 +2303,10 @@ function deleteEntry(Span) {
 					var index = searchIndex(timeTable, "day", day, "slotNo", (parseInt(SlotNo) + j),
 						"subjectId", subjRow["subjectId"], "batchId", batchId,
 						"classId", classId, "snapshotId", currentSnapshotId);
-					console.log("Deleting TT Entry: " + debugPrint("timeTable", timeTable[index]));
-					if(index != -1)
+					if(index != -1) {
+						console.log("Deleting TT Entry: " + debugPrint("timeTable", timeTable[index]));
 						timeTable.splice(index, 1);
+					}
 				}
 			}
 		}
