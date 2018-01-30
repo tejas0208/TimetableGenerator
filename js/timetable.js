@@ -3694,6 +3694,48 @@ function shortcutEscButton() {
 		}
 	}
 }
+// To export PDF of timetable in current view with respective ID (Output : Single PDF)
+function jsExport1(expType) {
+	if (type == undefined || currTableId == undefined ) {
+			alert("Please select a timeTable before exporting PDF");
+			return;	
+	}
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function () {
+		if (this.readyState == 4 && this.status == 200) {
+			var blob = this.response;
+			var headers = this.getAllResponseHeaders();
+			/* if you have the fileName header available */
+			var fileName = this.getResponseHeader("filename"); 
+			var link=document.createElement('a');
+			link.href=window.URL.createObjectURL(blob);
+			link.download=fileName;
+			link.style.display = 'none';
+			document.body.appendChild(link);
+			link.click();
+			$("#mainTimeTable").show();
+			$("#selection-menu-column").show();
+			$("#configuration-menu-column").show();
+			$("#waitMessage").hide();
+		}
+	}
+	$("#mainTimeTable").hide();
+	$("#selection-menu-column").hide();
+	$("#configuration-menu-column").hide();
+	$("#waitMessage").show();
+	if(dirtyTimeTable) {
+		save = confirm("Timetable not saved. Save before exporting?");
+		if(save == true) {
+			jsSaveSnapshot(false);
+		}
+	}
+	xhttp.open("POST", "timetable.php", true); // asynchronous
+	xhttp.responseType = "blob";
+	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xhttp.send("reqType=" + expType + "&snapshotName=" + currentSnapshotName +
+			"&snapshotId=" + currentSnapshotId + "&viewtype=" + type + "&viewId=" + currTableId);
+
+}
 /**
  * function wait():
  * Attribution: http://stackoverflow.com/questions/14226803/javascript-wait-5-seconds-before-executing-next-line

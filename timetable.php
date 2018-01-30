@@ -162,6 +162,18 @@ switch($reqType) {
 		flush();
 		readfile($filename);
 		break;
+	case "exportPDFsingle":
+		$filename = exportPDFsingle();
+		header("Cache-Control: public");
+		header("Content-Description: File Transfer");
+		header("Content-disposition: attachment");
+		header("filename:". $filename);	
+		header('Content-type: application/pdf');
+		header("Content-Transfer-Encoding: binary");
+		ob_clean();
+		flush();
+		readfile($filename);
+		break;
 	default:
 		echo $page;
 		break;

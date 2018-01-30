@@ -17,6 +17,11 @@
 
 require_once('./fpdf-easytable/exfpdf.php');
 require_once('./fpdf-easytable/easyTable.php');
+
+// Global variable for name of output file (for PDF purpose: single and multiple )
+$path = '';
+$filename = '';
+
 function printRow($rowData, $table, $rowspan, $searchParam) { // $rowspan is rowspan for visible cell
 	$filledRows = array_fill(0, count($rowData), 0); // each element is count of virtual rows filled
 	$count = array_fill(0, count($rowData), 0); // each element is rows printed from $rowData
@@ -434,10 +439,9 @@ function generate_timetable_pdf($currTableName, $searchParam, $allrows2, $nSlots
 		$pdf->SetY(-10);
 		$pdf->Cell(0,6,'Page '.$pdf->PageNo(),0,0,'C');
 	}
-	if (PHP_OS == 'Windows' || PHP_OS == 'WINNT' || PHP_OS == 'WIN32')
-		$pdf->output('F', sys_get_temp_dir()."\\timetable_pdf\\".$currTableName."_".$searchParam.".pdf");
-	else
-		$pdf->output('F', sys_get_temp_dir()."/timetable_pdf/".$currTableName."_".$searchParam.".pdf");
+		$pdf->output('F', sys_get_temp_dir().$GLOBALS['path'].$currTableName."_".$searchParam.".pdf");
+	
+		$GLOBALS['filename'] = sys_get_temp_dir().$GLOBALS['path'].$currTableName."_".$searchParam.".pdf";
 }
 function createTable($pdf, $data, $width, $pageNo, $styleTable = '', $styleCell = '', $y = 0) {
 	if($pdf->PageNo() != $pageNo) {
@@ -524,6 +528,7 @@ function SubjectTeacherMappings($allrows2, $currTableName, $headerRow) {
 function exportPDF() {
 	if (PHP_OS == 'Windows' || PHP_OS == 'WINNT' || PHP_OS == 'WIN32') {
 		$filename = sys_get_temp_dir()."\\timetable_pdf\\timetable_pdf.zip";
+		$GLOBALS['path'] = "\\timetable_pdf\\";	
 		if(!file_exists(sys_get_temp_dir()."\\timetable_pdf\\"))
 			mkdir(sys_get_temp_dir()."\\timetable_pdf\\");
 		else
@@ -531,6 +536,7 @@ function exportPDF() {
 	}
 	else {
 		$filename = sys_get_temp_dir()."/timetable_pdf/timetable_pdf.zip";
+		$GLOBALS['path'] ="/timetable_pdf/";
 		if(!file_exists(sys_get_temp_dir().'/timetable_pdf/'))
 			mkdir(sys_get_temp_dir().'/timetable_pdf/');
 		else
@@ -591,5 +597,71 @@ function exportPDF() {
 	else
 		HZip::zipDir(sys_get_temp_dir()."/timetable_pdf/", $filename);
 	return $filename;
+}
+// To export only single PDF and save in 'tmp' folder 
+function exportPDFsingle() {
+	if (PHP_OS == 'Windows' || PHP_OS == 'WINNT' || PHP_OS == 'WIN32') {
+		$GLOBALS['path'] = "\\timetable_pdf\\";	
+		if(!file_exists(sys_get_temp_dir()."\\timetable_pdf\\"))
+			mkdir(sys_get_temp_dir()."\\timetable_pdf\\");
+		else
+			array_map('unlink', glob(sys_get_temp_dir()."\\timetable_pdf\\*"));
+	}
+	else {
+		$GLOBALS['path'] ="/timetable_pdf/";
+		if(!file_exists(sys_get_temp_dir().'/timetable_pdf/'))
+			mkdir(sys_get_temp_dir().'/timetable_pdf/');
+		else
+			array_map('unlink', glob(sys_get_temp_dir().'/timetable_pdf/*'));
+	}
+	$tableNames = array("teacher", "teacherShortName", "class", "classShortName",
+				"batch", "batchName", "room", "roomShortName");
+	$query = "SELECT * from config WHERE configId = 1";
+	$allrows = sqlGetAllRows($query);
+	$currentSnapshotName = getArgument("snapshotName");
+	$currentSnapshotId = getArgument("snapshotId");
+	# consider having a timetable class with derived classes
+	# on teacherTT, classTT, batchTT, etc. and have a specific code in each.
+
+	/* TODO: Change this to use currentConfigId */
+	$nSlots = $allrows[0]["nSlots"];
+	$dayBegin = $allrows[0]["dayBegin"];
+	$slotDuration = $allrows[0]["slotDuration"];
+
+	$deptQuery = "SELECT deptName from dept d, config c, snapshot s ".
+				"where s.configId = c.configId and c.deptId = d.deptId".
+				" AND s.snapshotId = $currentSnapshotId";
+	$deptQueryRes = sqlGetOneRow($deptQuery);
+	$deptName = $deptQueryRes[0]["deptName"];
+
+	# currParam is short name and searchParam is actual name 
+	$currTableName = getArgument("viewtype");
+	// Loop to find the corresponding short name and assign to currParam
+	for($x = 0; $x < 7; $x=$x+2) {
+		if ($tableNames[$x] == $currTableName) {
+			$currParam = $tableNames[$x+1] ;	
+		}
+	}
+	$searchParam = getArgument("viewId");
+	$query = "SELECT * FROM timeTableReadable WHERE  $currParam = \"$searchParam\" ".
+			"AND snapshotName = \"$currentSnapshotName\"";
+	$allrows2 = sqlGetAllRows($query);
+	if($currTableName == "batch") {
+		if(count($allrows2) == 0) {
+			$query = "SELECT classShortName FROM batchClassReadable WHERE batchName = \"".
+				"$searchParam\" AND snapshotName = \"$currentSnapshotName\"";
+			$classRow = sqlGetOneRow($query);
+			$classShortName = $classRow[0]['classShortName'];
+		}
+		else {
+			$classShortName = $allrows2[0]['classShortName'];
+		}
+		$query = "SELECT * FROM timeTableReadable WHERE classShortName = \"$classShortName".
+			"\" AND batchName IS NULL AND snapshotName = \"$currentSnapshotName\"";
+		$classRows = sqlGetAllRows($query);
+		$allrows2 = array_merge($allrows2, $classRows);
+	}
+	generate_timetable_pdf($currTableName, $searchParam, $allrows2, $nSlots + 1, $dayBegin, $slotDuration, $deptName);
+	return $GLOBALS['filename']; 
 }
 ?>
