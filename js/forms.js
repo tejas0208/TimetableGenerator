@@ -173,10 +173,16 @@ function batchForm() {
 
 	cell = insertAddButton(row, "batchInsert()", 1);
 
+	/* ---- Adding Search Box -----------*/
+	var searchrow = insertRow(table, 2);
+	insertTextColumn(searchrow, "blankID", "");
+	insertInputBox(searchrow, "text", "myInput", 32, "Filter List: Type text here", "", "Batch Name (Short)");
+	searchrow.addEventListener("keyup", rowSearch);
+
 	/* Add the existing batch entries */
 	tr = document.getElementById("batchTable").rows[0];
 	var ncells = tr.cells.length;
-	var count = 2;
+	var count = 3;
 	for (i in batch) {
 		currBatch = batch[i];
 		var row = insertRow(table, count);
@@ -211,6 +217,25 @@ function batchForm() {
 		insertDeleteButton(row, "bDeleteButton_" + count, "batchDelete(" + count + ")");
 
 		count++;
+	}
+}
+function rowSearch() {
+	var input, filter, table, tr, td, i;
+	input = document.getElementById("myInput");
+	filter = input.value.toUpperCase();
+	table = document.getElementById("batchTable");
+	tr = table.getElementsByTagName("tr");
+
+	// Loop through all table rows, and hide those who don't match the search query
+	for (i = 3; i < tr.length; i++) {
+		cellValue = document.getElementById("batchName_" + i).value.toUpperCase();
+		if (cellValue) {
+			if (cellValue.indexOf(filter) > -1)
+				tr[i].style.display = "";
+			} else {
+				tr[i].style.display = "none";
+			}
+		}
 	}
 }
 function batchInsert() {
@@ -391,7 +416,7 @@ function batchDelete(i) {
 			response = JSON.parse(this.responseText);
 			if(response["Success"] == "True") {
 				document.getElementById("bDeleteButton_" + row).value = "Delete"
-				batch.splice(i - 2, 1);
+				batch.splice(i - 3, 1);
 				loadSelectMenus();
 				fillTable2(true);
 				batchForm();
