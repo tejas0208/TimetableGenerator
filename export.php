@@ -296,6 +296,41 @@ function generate_timetable_spreadsheet() {
 		}
 	}
 }
+function generate_current_timetable_spreadsheet() {
+	$query = "SELECT * from config WHERE configId = 1";
+	$allrows = sqlGetAllRows($query);
+	$currentSnapshotName = getArgument("snapshotName");
+	$currentSnapshotId = getArgument("snapshotId");
+
+	$nSlots = $allrows[0]["nSlots"];
+	$dayBegin = $allrows[0]["dayBegin"];
+	$slotDuration = $allrows[0]["slotDuration"];
+
+	$sheetCount = 0;
+	$deptQuery = "SELECT deptName from dept d, config c, snapshot s ".
+				"where s.configId = c.configId and c.deptId = d.deptId".
+				" AND s.snapshotId = $currentSnapshotId";
+	$deptQueryRes = sqlGetOneRow($deptQuery);
+	$deptName = $deptQueryRes[0]["deptName"];
+
+	$currTableName = getArgument("tableName");
+	if($currTableName == "class")
+		$currParam = "classShortName";
+	else if($currTableName == "teacher")
+		$currParam = "teacherShortName";
+	else if($currTableName == "room")
+		$currParam = "roomShortName";
+	else if($currTableName == "batch")
+		$currParam = "batchName";
+
+	$searchParam = getArgument("option");
+	$query = "SELECT * FROM timeTableReadable WHERE  $currParam = \"$searchParam\" ".
+					 "AND snapshotName = \"$currentSnapshotName\"";
+	$allrows2 = sqlGetAllRows($query);
+
+	generate_timetable_worksheet($currTableName, $searchParam, $sheetCount,
+				$allrows2, $nSlots, $dayBegin, $slotDuration, $deptName);
+}
 function generate_data_worksheet($currTableName, $sheetCount, $nameOrId) {
 	global $objPHPExcel;
 
@@ -458,6 +493,22 @@ function exportXLSX() {
 
 	generate_timetable_spreadsheet();
 	$savefilename = "timetable.EXT";
+	$filename = saveFile($savefilename);
+	return $filename;
+}
+function exportCurrentXLSX() {
+	global $objPHPExcel;
+	$option = getArgument("option");
+	$objPHPExcel = new PHPExcel();
+	$objPHPExcel->getProperties()->setCreator("Abhijit A.M.")
+						->setLastModifiedBy("Abhijit A. M.")
+						->setTitle("Timetable for COEP")
+						->setSubject("Subject for Timetable")
+						->setDescription("This is description of timetable")
+						->setKeywords("timetable generated");
+
+	generate_current_timetable_spreadsheet();
+	$savefilename = $option."_timetable.EXT";
 	$filename = saveFile($savefilename);
 	return $filename;
 }

@@ -3217,6 +3217,17 @@ function jsSQLExport(type) {
 
 }
 function jsExport(type) {
+	if(type == "exportCurrentXLSX"){
+		if(window.type == "class" || window.type == "room" ||
+			window.type == "teacher" || window.type == "batch"){
+			var optionSelected = currTableId;
+		}
+
+		else{
+			alert("please select any timetable");
+			return;
+		}
+	}
 	var xhttp = new XMLHttpRequest();
 	exportType = type;
 	xmlObject = xhttp;
@@ -3251,8 +3262,15 @@ function jsExport(type) {
 	xhttp.open("POST", "timetable.php", true); // asynchronous
 	xhttp.responseType = "blob";
 	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	xhttp.send("reqType=" + type + "&snapshotName=" + currentSnapshotName +
+	if(type == "exportCurrentXLSX"){
+		xhttp.send("reqType=" + type + "&tableName=" + window.type + "&option=" +
+			optionSelected + "&snapshotName=" + currentSnapshotName +
 			"&snapshotId=" + currentSnapshotId);
+	}
+	else{
+		xhttp.send("reqType=" + type + "&snapshotName=" + currentSnapshotName +
+			"&snapshotId=" + currentSnapshotId);
+	}
 
 }
 function shortcutEscButton() {

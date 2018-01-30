@@ -114,6 +114,18 @@ switch($reqType) {
 		flush();
 		readfile($filename);
 		break;
+	case "exportCurrentXLSX":
+		$filename = exportCurrentXLSX();
+		header("Cache-Control: public");
+		header("Content-Description: File Transfer");
+		header("Content-disposition: attachment");
+		header("filename:". $filename);
+		header('Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		header("Content-Transfer-Encoding: binary");
+		ob_clean();
+		flush();
+		readfile($filename);
+		break;
 	case "exportCSV":
 		$filename = exportCSV();
 		header("Cache-Control: public");
