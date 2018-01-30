@@ -2726,6 +2726,27 @@ function checkMinMaxHrs(minhrs, maxhrs){
 	return true;
 }
 
+function checkMinMaxBounds(minHrs, maxHrs) {
+	//Get number of slots and duration of each slot
+	var configrow = search(config, "configId", currentConfigId);
+	var nSlotsPerDay = parseInt(configrow["nSlots"]);
+	var slotDuration = parseInt(configrow["slotDuration"]);
+	var minSeconds = parseInt(minHrs.value) * 3600;
+	var maxSeconds = parseInt(maxHrs.value) * 3600;
+	//No of days per week
+	var days = 6;
+	var limit = nSlotsPerDay * slotDuration * days;
+
+	if(minSeconds > limit) {
+		alert("Min work should be <= " + limit / 3600);
+		return false;
+	}
+	if(maxSeconds > limit) {
+		alert("Max work should be <= " + limit / 3600);
+		return false;
+	}
+	return true;
+}
 /*If same field value alreay available in DB
 *	return false
 * tableIdCol n idValue is used while Updating
@@ -2761,7 +2782,10 @@ function teacherInsert() {
 	if(checkMinMaxHrs(minHrs, maxHrs) == false) {
 		return;
 	}
-	if(alreadyValueNotPresentInDB(teacher,  "teacherShortName", 
+	if(checkMinMaxBounds(minHrs, maxHrs) == false) {
+		return;
+	}
+	if(alreadyValueNotPresentInDB(teacher,  "teacherShortName",
 				teacherShortName.value) == false) {
 		return;	
 	}
@@ -2819,7 +2843,10 @@ function teacherUpdate(i) {
 	if(checkMinMaxHrs(minHrs, maxHrs) == false) {
 		return;
 	}
-	if(alreadyValueNotPresentInDB(teacher,  "teacherShortName", 
+	if(checkMinMaxBounds(minHrs, maxHrs) == false) {
+		return;
+	}
+	if(alreadyValueNotPresentInDB(teacher,  "teacherShortName",
 				teacherShortName.value, "teacherId", teacherId) == false) {
 		return;	
 	}
