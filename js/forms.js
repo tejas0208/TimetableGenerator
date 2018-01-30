@@ -260,6 +260,13 @@ function batchInsert() {
 		return;
 	batchCount = batchCount.value;
 	classId = classId.value;
+	className = search(classTable, "classId", classId)["classShortName"]
+	newClassCount = search(classTable, "classShortName", className)["classCount"];
+	if(parseInt(batchCount) > parseInt(newClassCount)) {
+		alert("Error: Batch strength exceeds class strength." +
+			"\n\tStrength of "+ className + " is " + newClassCount + ".");
+		return;
+	}
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function () {
 		if(this.readyState == 4 && this.status == 200) {
