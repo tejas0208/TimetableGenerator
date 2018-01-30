@@ -34,7 +34,7 @@ function rollback() {
 	} else
 		ttlog("rollback: Success");
 	$resString = "{\"Success\": \"False\",";
-	$resString .= "\"Error\" : ".json_encode($CFG->conn->error);
+	$resString .= "\"Error\" : ".json_encode($CFG->conn->error).",";
 	$resString .= "\"Query\" : \"".$CFG->last_query."\"}";
 	return $resString;
 }
