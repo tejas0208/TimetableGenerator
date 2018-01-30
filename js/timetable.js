@@ -1388,9 +1388,12 @@ function getEligibleRoom(i, j, k, capacity, subjectRow, roomFound) {
 			}
 		}
 		if(validPreferred == 1) {
-			optionString += "<option value = \"" + roomRow["roomShortName"] +
+			var temporary_row = search(room, "roomId", roomRow['roomId']);
+			if(parseInt(temporary_row['roomCount']) + roomSizeDelta > capacity){
+				optionString += "<option value = \"" + roomRow["roomShortName"] +
 						"\" selected=\"selected\">" + roomRow["roomShortName"] +
 						"</option>";
+			}
 		}
 	}
 	disabledRooms = []
