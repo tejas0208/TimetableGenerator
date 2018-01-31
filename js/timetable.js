@@ -778,6 +778,8 @@ function getSupportObject() {
 			break;
 		case "batch": supportObject = search(batch, "batchName", currTableId);
 			break;
+		case "snaphot": supportObject = search(snapshot, "snapshotName", currTableId);
+			break;
 		default:
 			console.log("ERROR: getSupportObject: should not come here in default");
 			break;
@@ -2868,6 +2870,12 @@ function classChange(createNewTable){
 }
 function snapshotChange() {
 	var index = document.getElementById("fetch-snapshot-menu").selectedIndex;
+	if(index === 0) {
+		document.getElementById("fetch-snapshot-menu").selectedIndex = "-1";
+		snapshotForm();
+		selectoption();
+		return;
+	}
 	var snapshotName = document.getElementById("fetch-snapshot-menu").options[index].text;
 	if(dirtyTimeTable) {
 			save = confirm("Timetable Modified. Your changes will be lost if not saved. Save current timeTable?");
@@ -2983,6 +2991,12 @@ function selectoption() {
 			var value = supportObject["teacherShortName"];
 			var table = "teacher";
 			break;
+		case "snapshot":
+			var selectTag = document.getElementById("fetch-snapshot-menu");
+			var value = supportObject["snapshotName"];
+			var table = "snapshot";
+			break;
+
 	}
 	for(i = 0;i < selectTag.options.length;i++) {
 		if(selectTag.options[i].value === value) {
@@ -3127,7 +3141,8 @@ function loadSnapshotMenu(selectedName) {
 	selectTag.setAttribute("onchange", "snapshotChange()");
 	document.getElementById("saveNewSnapshot").disabled = false;
 	document.getElementById("saveSnapshot").disabled = false;
-	document.getElementById("fetch-snapshot-menu").selectedIndex = index;
+	selectTag.add(createOptionTag("Manage Snapshots", "Manage Snapshots", "false"), 0);
+	document.getElementById("fetch-snapshot-menu").selectedIndex = -1; /*Setting the select tag*/
 }
 function jsSaveNewSnapshot() {
 	var newSnapshotName = prompt("Enter snapshot Name","snapshot");
