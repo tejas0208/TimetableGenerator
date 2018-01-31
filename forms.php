@@ -38,6 +38,7 @@ $formsList = array(
 	array("inputClassRoomForm", "Room Preferences for Classes", "classRoomTable"),
 	array("inputSubjectRoomForm", "Room Preferences for Subjects", "subjectRoomTable"),
 	/* */
+	array("inputSnapshotForm", "Manage Snapshots", "snapshotTable"),
 	array("inputConfigForm", "Manage timetable Configurations", "configTable"),
 );
 $formsHTML = "";
@@ -1019,6 +1020,24 @@ function batchRoomUpdate() {
 		return failMessage();
 	}
 	ttlog("batchRoomUpdate(): resString: ".successMessage());
+	return successMessage();
+}
+
+function snapshotDelete() {
+	global $CFG;
+	header("Content-Type: application/JSON: charset=UTF-8");
+
+	$snapshotId = getArgument("snapshotId");
+
+	$query = "DELETE FROM snapshot WHERE snapshotId = $snapshotId;";
+
+	$result = sqlUpdate($query);
+	ttlog("snapshotDelete(): $query Result: ".json_encode($result));
+
+	if($result === false) {
+		ttlog("snapshotDelete(): resString: ".failMessage());
+		return failMessage();
+	}
 	return successMessage();
 }
 

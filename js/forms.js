@@ -3068,3 +3068,77 @@ function teacherDelete(i) {
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhttp.send("reqType=teacherDelete&teacherId=" + teacherId + "&snapshotId=" + currentSnapshotId);
 }
+
+function snapshotForm() {
+	formOpen("inputSnapshotForm");
+
+	/* ---- Adding Header Row -----------------------*/
+	var table = insertHeaderRow("snapshotTable", "ID", "Snapshot Name", 1);
+
+	/* Add the existing snapshot entries */
+	tr = document.getElementById("snapshotTable").rows[0];
+	var ncells = tr.cells.length;
+	var count = 1;
+
+	for (i in snapshot) {
+		currSnapshot = snapshot[i];
+		var row = insertRow(table, count);
+
+		insertTextColumn(row, "sstCenter_" + count, currSnapshot["snapshotId"]);
+		insertTextColumn(row, "snapshotName_" + count, currSnapshot["snapshotName"]);
+		insertDeleteButton(row, "sstDeleteButton_" + count,
+							"snapshotDelete(" + count + ")");
+
+			count++;
+	}
+}
+function snapshotDelete(i) {
+	var row = i;
+	var snapshotName, snapshotId;
+	var sure = confirm("Warning: Deleting the snapshot will delete all related " +
+				  "rooms, classes, teachers, subjects, batches, timetable entries, etc.\n" +
+				  "This can not be undone. \n" +
+				  "Are you sure?");
+	if(sure != true)
+		return;
+	snapshotId = document.getElementById("sstCenter_" + row).childNodes[0].nodeValue;
+	document.getElementById("sstDeleteButton_" + row).childNodes[0].nodeValue = "Deleting";
+	document.getElementById("sstDeleteButton_" + row).disabled = true;
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function () {
+		if(this.readyState == 4 && this.status == 200) {
+			response = JSON.parse(this.responseText);
+			if(response["Success"] == "True") {
+				document.getElementById("sstDeleteButton_" + row).value = "Delete"
+				snapshot.splice(i - 1, 1);
+				var snapshotChangeNeeded = 0;
+				if(currentSnapshotId === snapshotId) {
+					snapshotChangeNeeded = 1;
+				}
+				/* If there is atleast one snapshot left after deletion*/
+				if(snapshot.length > 1) {
+					if(snapshotChangeNeeded) {
+						loadSnapshotMenu();
+						document.getElementById("fetch-snapshot-menu").selectedIndex = 1;
+						dirtyTimeTable = 0;//Set dirty bit to zero so that the save snapshot alert won't pop up
+						snapshotChange();
+					}
+					else {
+						loadSnapshotMenu();
+					}
+				}
+				else {
+					load();
+				}
+				snapshotForm();
+			} else {
+				alert("Snapshot " + snapshotName + ": Deletion Failed.\nError:\n" + response["Error"]);
+				document.getElementById("sstDeleteButton_" + row).value = "Delete"
+				document.getElementById("sstDeleteButton_" + row).childNodes[0].nodeValue = "Can't Delete";
+			}
+		}
+	}
+	xhttp.open("POST", "timetable.php", true); // asynchronous
+	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	xhttp.send("reqType=snapshotDelete&snapshotId=" + snapshotId);
+}

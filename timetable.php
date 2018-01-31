@@ -87,7 +87,7 @@ switch($reqType) {
 	case "batchRoomDelete": case "batchRoomInsert": case "batchRoomUpdate":
 	case "subjectRoomDelete": case "subjectRoomInsert": case "subjectRoomUpdate":
 	case "overlappingSBTDelete": case "overlappingSBTInsert": case "overlappingSBTUpdate":
-	case "configDelete": case "configInsert": case "configUpdate":
+	case "configDelete": case "configInsert": case "configUpdate": case "snapshotDelete":
 	case "exportSQL":
 		/* call the function which has same name as reqType */
 		echo $reqType();
