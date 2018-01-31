@@ -2958,6 +2958,7 @@ function teacherUpdate(i) {
 				teacher[row]["maxHrs"] = maxHrs;
 				teacher[row]["deptId"] = deptId;
 				loadSelectMenus();
+				fillTable2(true);
 				teacherForm();
 			}
 			else {
