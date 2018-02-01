@@ -47,6 +47,7 @@
 }
 #title {
 	background-color: cyan;
+	white-space:nowrap;
 }
 .row {
 	border: 1px solid black;
