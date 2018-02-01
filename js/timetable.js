@@ -565,7 +565,7 @@ function showTrackerList() {
 			}
 			break;
 		default:
-			trackerStr = "<tr> <td> ERROR: Please check</td> </tr>";
+			trackerStr = "<tr> <td> Please select a timeTable</td> </tr>";
 			break;
 	}
 	trackerStr += "</table>";
