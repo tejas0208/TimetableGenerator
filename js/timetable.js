@@ -3408,7 +3408,6 @@ function checkInstallation() {
 	$("#checkMessage").hide();
 	$("#checkMessage").html("<h1>Checking Installation... Please wait</h1>");
 	$("#checkMessage").show();
-	wait(1000);
 	var response = JSON.parse(xhttp.responseText);
 	if(response["Success"] == "True")
 		return true;
@@ -3417,7 +3416,6 @@ function checkInstallation() {
 		$("#checkMessage").hide();
 		$("#checkMessage").html("<h1>Installation incomplete, redirecting to install.php</h1>");
 		$("#checkMessage").show();
-		wait(1000);
 		var currLocation = window.location.href;
 		window.location.replace("install.php");
 		/* Dead code */
