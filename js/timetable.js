@@ -1285,8 +1285,11 @@ function roomSelected(selecttag) {
 	Id = makeIdFromIJK(iid, jid, kid);
 	var roomShortName = document.getElementById("room" + Id).
 				options[document.getElementById("room" + Id).selectedIndex].text;
-	if(roomShortName == "--Room--")
+	if(roomShortName == "--Room--"){
+		alert("Enter room");
+		document.getElementById("checkbox" + Id).checked = false;
 		return;
+	}
 	var roomRow = search(room, "roomShortName", roomShortName);
 
 	var batchId = null;
@@ -2853,6 +2856,7 @@ function classChange(createNewTable){
 		return;
 	}
 	var classShortName = document.getElementById("class-menu").options[index].text;
+	var sem = search(classTable,"classShortName",classShortName,"snapshotId",currentSnapshotId)["semester"];
 	type = "class";
 	currTableId = classShortName;
 	document.getElementById("teacher-menu").selectedIndex = "-1";
@@ -2864,7 +2868,7 @@ function classChange(createNewTable){
 				"<h2> " + search(dept, "deptId", currentDeptId)["deptName"] +
 				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
 				"Timetable for " +
-				"<span class=\"currTitle\"> Class: " + classShortName + " </span> </h2>";
+				"<span class=\"currTitle\"> Class: " + classShortName + " Sem: " + sem + " </span></h2>";
 	fillTable2(createNewTable);
 
 }
@@ -2929,11 +2933,14 @@ function batchChange(createNewTable){
 		return;
 	}
 	var batchName = document.getElementById("batch-menu").options[index].text;
+	var batchId = search(batch,"batchName",batchName,"snapshotId",currentSnapshotId)["batchId"];
+	var classId = search(batchClass,"batchId",batchId,"snapshotId",currentSnapshotId)["classId"];
+	var sem = search(classTable,"classId",classId)["semester"];
 	document.getElementById("title").innerHTML =
 				"<h2> " + search(dept, "deptId", currentDeptId)["deptName"] +
 				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
 				"Timetable for " +
-				"<span class=\"currTitle\"> Batch: " + batchName + " </span> </h2>";
+				"<span class=\"currTitle\"> Batch: " + batchName + " Sem: " + sem + " </span></h2>";
 	type = "batch";
 	currTableId = batchName;
 	getSupportObject();//fills supportObject correctly depending on type and id;
@@ -3110,6 +3117,31 @@ function loadNewSnapshot() {
 	loadSelectMenus(); /* load Teacher, Class, Batch, Room Menu */
 	loadSnapshotMenu(search(snapshot, "snapshotId", currentSnapshotId)["snapshotName"]);
 	getSupportObject();
+	if(supportObject == -1){
+		document.getElementById("title").innerHTML =
+					"<h2> " + search(dept, "deptId", currentDeptId)["deptName"] +
+					"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+	}
+	else{
+		if(type === "class"){
+			sem = search(classTable,"classShortName",currTableId,"snapshotId",currentSnapshotId)["semester"];
+			document.getElementById("title").innerHTML =
+				"<h2> " + search(dept, "deptId", currentDeptId)["deptName"] +
+				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+				"Timetable for " +
+				"<span class=\"currTitle\"> Class: " + currTableId + " Sem: " + sem + " </span></h2>";
+		}
+		if(type === "batch"){
+			var batchId = search(batch,"batchName",currTableId,"snapshotId",currentSnapshotId)["batchId"];
+			var classId = search(batchClass,"batchId",batchId,"snapshotId",currentSnapshotId)["classId"];
+			sem = search(classTable,"classId",classId)["semester"];
+			document.getElementById("title").innerHTML =
+				"<h2> " + search(dept, "deptId", currentDeptId)["deptName"] +
+				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+				"Timetable for " +
+				"<span class=\"currTitle\"> Batch: " + currTableId + " Sem: " + sem + " </span></h2>";
+		}
+	}
 	console.log("loadNewSnapshot: loaded snapshot " + currentSnapshotId);
 	/* If some table was already displayed, then type and id globals will be set
 	 * and this call will redisplay that table. Else, it will just return
