@@ -13,6 +13,11 @@ Lines begining with '>' indicate GNU/Linux commands.
 
 * Install the needed php packages 
   > sudo apt-get install php5-mysqlnd
+  > sudo apt-get update
+  > sudo apt-get install php-gd
+  > sudo apt-get install php-zip
+  > sudo apt-get install php-xml
+  > sudo apt-get install php-mbstring  
 
 * Copy the code of 'taasika' into any folder 
   > cd 
