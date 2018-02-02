@@ -27,6 +27,24 @@ Lines begining with '>' indicate GNU/Linux commands.
 * Create a link from your DocumentRoot (typically /var/www/html) to the taasika code 
   > sudo ln -s ~/src/taasika /var/www/html/
 
+* Create and add errorlog file.
+  (Creating timetable.log file in /var/log/taasika/timetable.log)
+  (Adding timetable.log file in /etc/logrotate.conf)
+  > cd /var/log/
+  > sudo mkdir taasika
+  > cd ./taasika
+  > sudo touch timetable.log
+  > sudo chown www-data ./timetable.log
+  > cd --
+  > sudo [gedit/vim] /etc/logrotate.conf
+  (Copy the given lines at end of logrotate.conf and save it)
+  	/var/log/taasika/timetable.log {
+    	weekly
+    	rotate 4
+    	compress
+	}
+  > sudo logrotate -fv /etc/logrotate.conf
+
 * Access the 'taasika' code.  Type in your browser http://127.0.0.1/taasika/
 
 Follow the onscreen installation instructions. Note: the installation is not very robust and often

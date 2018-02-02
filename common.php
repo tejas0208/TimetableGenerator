@@ -73,10 +73,13 @@ function ttlog($string) {
 		if($CFG->logfileName)
 			$logfileName = $CFG->logfileName;
 		else {
-			/* TODO: if the name was /tmp/timetable.log or /var/log/timetable.log
-			 * Then fwrite succeeds, but file is not written. Check this 
-			 */
-			$logfileName = "timetable.log";
+			if (PHP_OS == 'Windows' || PHP_OS == 'WINNT' || PHP_OS == 'WIN32'){
+				$logfileName = sys_get_temp_dir()."\\taasika\\timetable.log";
+				if(!file_exists(sys_get_temp_dir().'/taasika/'))
+					mkdir(sys_get_temp_dir().'/taasika/');
+			}
+			else
+				$logfileName = "/var/log/taasika/timetable.log";
 			$CFG->logfileName = $logfileName;
 		}
 		$logfile = fopen($logfileName, "a");
