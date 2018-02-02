@@ -66,6 +66,34 @@ function checkMySqlSetup() {
 		die;
 	}
 }
+function checkPhp_gdSetup() {
+	if(!extension_loaded('gd')) {
+		echo "Need php-gd installed for exporting as excel. <br> ".
+			"On Ubuntu try running \"sudo apt-get install php-gd\"";
+		die;
+	}
+}
+function checkPhp_zipSetup() {
+	if(!extension_loaded('zip')) {
+		echo "Need php-zip installed for exporting as zip. <br> ".
+			"On Ubuntu try running \"sudo apt-get install php-zip\"";
+		die;
+	}
+}
+function checkPhp_xmlSetup() {
+	if(!extension_loaded('xml')) {
+		echo "Need php-xml installed for exporting as excel. <br> ".
+			"On Ubuntu try running \"sudo apt-get install php-xml\"";
+		die;
+	}
+}
+function checkPhp_mbstringSetup() {
+	if(!extension_loaded('mbstring')) {
+		echo "Need php-mbstring installed for exporting as excel. <br> ".
+			"On Ubuntu try running \"sudo apt-get install php-mbstring\"";
+		die;
+	}
+}
 global $msgStr;
 function message($string) {
 	global $msgStr;
@@ -77,6 +105,10 @@ function message($string) {
 checkPHPVersion();
 checkWebServer();
 checkMySqlSetup();
+checkPhp_gdSetup();
+checkPhp_zipSetup();
+checkPhp_xmlSetup();
+checkPhp_mbstringSetup();
 
 function configFileExists() {
 	$configfile = './config.php';
