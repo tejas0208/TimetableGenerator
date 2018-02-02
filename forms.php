@@ -51,9 +51,9 @@ function generateInputForms() {
 			"<table class=\"inputFormTitleTable\"> <tr>
 					<td class=\"inputFormTitle\"> ".$formsList[$i][1].
 					"</td>
-					<td class=\"closebtn\">  <a href=\"javascript:void(0)\"
+					<td class=\"backbtn\">  <a href=\"javascript:void(0)\"
 							onclick='formClose(\"".$formsList[$i][0]."\")'>
-							Close &times; </a>
+							<-- Back </a>
 					</td>
 			</table>
 			<table id=\"".$formsList[$i][2]."\" class=\"inputFormTable\">
