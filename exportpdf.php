@@ -49,6 +49,18 @@ function printRow($rowData, $table, $rowspan, $searchParam) { // $rowspan is row
 		$table->printRow();
 	}
 }
+function countTotalLoad($allrows2) {
+	$total = count($allrows2);
+	for($i = 0; $i < count($allrows2); $i++) {
+		for($j = $i + 1; $j < count($allrows2); $j++) {
+			$one = $allrows2[$i];
+			$two = $allrows2[$j];
+			if($one["day"] == $two["day"] && $one["slotNo"] == $two["slotNo"])
+				$total--;
+		}
+	}
+	return $total;
+}
 /* Pseudo-code ->
 Create a pdf object
 set all attributes for pdf document
@@ -366,7 +378,7 @@ function generate_timetable_pdf($currTableName, $searchParam, $allrows2, $nSlots
 		$table = new easyTable($pdf, '{25, 15}', 'align:C; font-size:13; font-family:helvetica;
 										border:1; border-width:0.4; width:40; font-color:#000000;  align:L:');
 		$table->easyCell("Total Load", "font-style:B; align:C;");
-		$table->easyCell(count($allrows2)." Hrs", "font-style:B; align:C;");
+		$table->easyCell(countTotalLoad($allrows2)." Hrs", "font-style:B; align:C;");
 		$table->printRow();
 		$table->endTable(0);
 	}
