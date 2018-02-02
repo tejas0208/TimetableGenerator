@@ -59,6 +59,7 @@ function formClose(formName) {
 	document.getElementById("outerTable").style.display = "table";
 	document.getElementById(formName).style.display = "none";
 	document.getElementById('configuration-menu-column').style.display = "block";
+	showTrackerList();
 	currentFormName = null;
 	onClose();
 }
@@ -994,6 +995,8 @@ function classUpdate(i) {
 				classTable[row]["semester"] = semester;
 				classTable[row]["classCount"] = classCount;
 				loadSelectMenus();
+				if(type == "class")
+					currTableId = classShortName;
 				fillTable2(true);
 				classForm();
 			}
@@ -3013,6 +3016,8 @@ function teacherUpdate(i) {
 				teacher[row]["minHrs"] = minHrs;
 				teacher[row]["maxHrs"] = maxHrs;
 				teacher[row]["deptId"] = deptId;
+				if(type == "teacher")
+					currTableId = teacherShortName;
 				loadSelectMenus();
 				fillTable2(true);
 				teacherForm();
