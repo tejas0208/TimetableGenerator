@@ -96,6 +96,110 @@ function insertHeaderRow(tableName) {
 	th.appendChild(tc);
 	return table;
 }
+var sortTeachersOnFullName = 1, sortTeachersOnShortName = 1, sortTeachersOnMinHrs = 1, sortTeachersOnMaxHrs = 1;
+function sortTeacherOnFullName() {
+	teacher.sort(function(a, b) {
+		var x = a.teacherName.toLowerCase();
+		var y = b.teacherName.toLowerCase();
+		if(x < y)
+			return ((sortTeachersOnFullName == 1? 1 : -1) * (-1));
+		if(x > y)
+			return ((sortTeachersOnFullName == 1? 1 : -1) * (1));
+		return 0;
+	});
+	sortTeachersOnFullName = 1 - sortTeachersOnFullName;
+	teacherForm();
+}
+function sortTeacherOnShortName() {
+	teacher.sort(function(a, b) {
+		var x = a.teacherShortName.toLowerCase();
+		var y = b.teacherShortName.toLowerCase();
+		if(x < y)
+			return ((sortTeachersOnShortName == 1? 1 : -1) * (-1));
+		if(x > y)
+			return ((sortTeachersOnShortName == 1? 1 : -1) * (1));
+		return 0;
+	});
+	sortTeachersOnShortName = 1 - sortTeachersOnShortName;
+	teacherForm();
+}
+function sortTeacherOnMinHrs() {
+	teacher.sort(function(a, b) {
+		var x = parseInt(a.minHrs);
+		var y = parseInt(b.minHrs);
+		if(x < y)
+			return ((sortTeachersOnMinHrs == 1? 1 : -1) * (-1));
+		if(x > y)
+			return ((sortTeachersOnMinHrs == 1? 1 : -1) * (1));
+		return 0;
+	});
+	sortTeachersOnMinHrs = 1 - sortTeachersOnMinHrs;
+	teacherForm();
+}
+function sortTeacherOnMaxHrs() {
+	teacher.sort(function(a, b) {
+		var x = parseInt(a.maxHrs);
+		var y = parseInt(b.maxHrs);
+		if(x < y)
+			return ((sortTeachersOnMaxHrs == 1? 1 : -1) * (-1));
+		if(x > y)
+			return ((sortTeachersOnMaxHrs == 1? 1 : -1) * (1));
+		return 0;
+	});
+	sortTeachersOnMaxHrs = 1 - sortTeachersOnMaxHrs;
+	teacherForm();
+}
+function insertHeaderRowTeacher(tableName) {
+	var table = document.getElementById(tableName);
+	/* Set to empty. Required for recursive calls*/
+	table.innerHTML = "";
+
+	var tr = document.createElement("tr");
+	tr.setAttribute("class", "headerRow");
+	table.appendChild(tr);
+	var th = document.createElement("th");
+	tr.appendChild(th);
+	var tc = document.createTextNode(arguments[1]);
+	th.appendChild(tc);
+	var switchCaseTeacher;
+	for(var j = 2; j < arguments.length - 2; j++) {
+		th = document.createElement("th");
+		var a = document.createElement("a");
+		a.setAttribute("href", "javascript:void(0)");
+		switchCaseTeacher = arguments[j];
+		switch(switchCaseTeacher) {
+			case arguments[2]:
+				a.setAttribute("onClick", "sortTeacherOnFullName()");
+				break;
+			case arguments[3]:
+				a.setAttribute("onClick", "sortTeacherOnShortName()");
+				break;
+			case arguments[4]:
+				a.setAttribute("onClick", "sortTeacherOnMinHrs()");
+				break;
+			case arguments[5]:
+				a.setAttribute("onClick", "sortTeacherOnMaxHrs()");
+				break;
+		}
+		th.appendChild(a);
+		tr.appendChild(th);
+		tc = document.createTextNode(arguments[j]);
+		a.appendChild(tc);
+	}
+
+	th = document.createElement("th");
+	tr.appendChild(th);
+	tc = document.createTextNode(arguments[j]);
+	th.appendChild(tc);
+
+	th = document.createElement("th");
+	th.setAttribute("colspan", 2);
+	th.setAttribute("text-align", "center");
+	tr.appendChild(th);
+	tc = document.createTextNode("Actions");
+	th.appendChild(tc);
+	return table;
+}
 function insertAddButton(row, onClickFunction, colspan) {
 	var cell = insertCell(row);
 	cell.setAttribute("colspan", colspan);
@@ -2759,7 +2863,7 @@ function subjectRoomDelete(i) {
 function teacherForm() {
 	formOpen("inputTeacherForm");
 	/* ---- Adding Header Row -----------------------*/
-	var table = insertHeaderRow("teacherTable", "ID", "Full Name", "Short Name",
+	var table = insertHeaderRowTeacher("teacherTable", "ID", "Full Name", "Short Name",
 					"Min Hrs", "Max Hrs", "Dept", 2);
 	/* ---- Adding "Add Teacher Row" -----------------------*/
 	row = insertRow(table, 1);
