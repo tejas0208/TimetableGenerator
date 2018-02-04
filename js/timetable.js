@@ -211,6 +211,11 @@ function redo() {
 	redoStack.pop();
 }
 
+var uniqueSubject = [], uniqueFixedEntry = [];
+var colors = [];
+colorAdded = 0;
+var checked = 0;
+
 function makeTrackerList() {
 	tracker = [];
 	for (i in subjectClassTeacher) {
@@ -1308,21 +1313,26 @@ function initializeEnableRowArray(row, cols, slottableCount, initial_value) {
 
 function createTable(days, nSlots, slotTablePerDay, startTime, timePerSlot) {
 	var table = document.createElement("TABLE");
-	var i, j, k, tr, td, text;
+	var i, j, k, tr, td, text, checkbox, addColor, br;
 	table.setAttribute("class", "timeTableTable");
 	//table.setAttribute("border", "3px solid black");
 	tr = document.createElement("tr");
 	td = document.createElement("th");
 	text = document.createTextNode("Day");
-	var button = document.createElement("button");
+
+    var button = document.createElement("button");
 	button.setAttribute("class", "animateButtonTop");
 	button.style.align = "right";
 	button.appendChild(document.createTextNode("+"));
-	td.setAttribute("style", "width: 35px;")
+
+
+    td.setAttribute("style", "width: 35px;")
 	td.appendChild(button);
-	td.appendChild(text);
-	td.appendChild(button);
+    td.appendChild(text);
+    //td.appendChild(colorRow);
+    td.appendChild(button);
 	tr.appendChild(td);
+
 	var start = new Date("February 25, 2017 "+ startTime);
 
 	for(i = 0; i < nSlots; i++) {
@@ -2765,6 +2775,8 @@ function getPosition(day1, slotNo, rowEntry, eachSlot) {
  */
 function fillTable2(createNewTable) {
 	makeTrackerList();
+	uniqueSubject = [];
+	uniqueFixedEntry = [];
 	var configrow = search(config, "configId", currentConfigId);
 	NoOfSlots = configrow["nSlots"];
 	var days = parseInt(configrow["daysInWeek"]);
@@ -2857,6 +2869,8 @@ function fillTable2(createNewTable) {
 	}
 
 	initializeEnableRowArray(days, parseInt(NoOfSlots), slottablePerDay, 0);
+	if(checked == true)
+		document.getElementById("colorCells").checked = true;
 
 	var classId;
 	if(type == "batch") {
@@ -2944,6 +2958,9 @@ function fillTable2(createNewTable) {
 									"</div>" +
 								"</td>" +
 							"</tr>";
+						if ($('#colorCells').is(':checked')) {
+							colorCell(i, j, position);
+						}
 						continue;
 					}
 					/* For each NON-Fixed Slot Entry */
@@ -3021,6 +3038,9 @@ function fillTable2(createNewTable) {
 						"</tr>";
 					slottable.setAttribute("draggable", "true");
 					slottable.setAttribute("ondragstart", "dragStartHandler(event)");
+					if ($('#colorCells').is(':checked')) {
+						colorCell(i, j, position);
+					}
 					if(eachSlot > 1) {/**/
 						for(var p = 1; p < eachSlot; p++) {
 							document.getElementById("cell" + makeIdFromIJK(i, j + p, position)).style.display = "none";
@@ -3140,6 +3160,92 @@ function fillTable2(createNewTable) {
 	width2 = window.width = width1;
 	$(".cell").width(width1);
 	$(".outercol2").width(width2);
+}
+
+function fillColour() {
+	var checkBox = document.getElementById("colorCells");
+	if(checkBox.checked == true) {
+		checked = 1;
+	}
+	else {
+		checked = 0;
+	}
+
+	putColor();
+	if (checkBox.checked == true){
+		var configrow = search(config, "configId", currentConfigId);
+		NoOfSlots = configrow["nSlots"];
+		var days = 6;
+		var slottablePerDay = 1;
+		if(type == undefined || currTableId == undefined)
+			return;
+		if(type == "class") {
+			var row = searchMultipleRows(batchClass, "classId", supportObject["classId"]);
+			/*Depending on the no of batches in a class. TODO: check + 1*/
+			if(row !== -1)
+				slottablePerDay = row.length;
+		}
+		initializeEnableRowArray(6, parseInt(NoOfSlots), slottablePerDay, 0);
+
+		var classId;
+		if(type == "batch") {
+			classId = search(batchClass, "batchId", supportObject["batchId"])["classId"];
+			if(""+ classId == "null")
+				return;
+		}
+		for(var i = 1; i <= days; i++) { /*daywise*/
+			for(var j = 0; j < NoOfSlots; j++) { /*slotwise*/
+				var slotRows;
+				if(type == "batch") {
+					xbatchId = search(batch, "batchName", currTableId)["batchId"];
+					slotRows = searchMultipleRows(timeTable, "day", i, "slotNo", j,
+						"classId", classId, "batchId", xbatchId,
+						"snapshotId", currentSnapshotId);
+					slotRows2 = searchMultipleRows(timeTable, "day", i, "slotNo", j,
+						"classId", classId, "batchId", null,
+						"snapshotId", currentSnapshotId);
+					if(slotRows != -1)
+						for(k in slotRows2)
+							slotRows.push(slotRows2[k]);
+					else
+						slotRows = slotRows2;
+				}
+				else {
+					slotRows = searchMultipleRows(timeTable, "day", i, "slotNo", j,
+						type + "Id", supportObject[type + "Id"],
+						"snapshotId", currentSnapshotId);
+				}
+				if(slotRows != -1) {
+					sort(slotRows);
+					/*within each slot*/
+					for(var k = 0; k < slotRows.length; k++) {
+						var teacherShortName = "", classShortName = "",
+							batchName = "", roomShortName = "";
+						/*For Fixed Slot Entries*/
+						if(slotRows[k]["isFixed"] == "1") {
+							var position = getPosition(i, j, slotRows[k], 1);
+							if(position == null) {
+								alert("ERROR: i: " + i + "slot " + j + "k = " + k + " fixed slot. got position 	null");
+								continue;
+							}
+							colorCell(i, j, position);
+							continue;
+						}
+						/* For each NON-Fixed Slot Entry */
+						var subjectRow = search(subject, "subjectId", slotRows[k]["subjectId"]);
+						var position = getPosition(i, j, slotRows[k], subjectRow["eachSlot"]);
+						if(position == null)
+							continue;
+						var slottable = document.getElementById("slottable" + makeIdFromIJK(i,  j, position));
+						colorCell(i, j, position);
+					}
+				} /* end if-else cells having entry, vacant cells */
+			} /* end for each slot */
+		} /* end for each day */
+	}
+	else {
+	    fillTable2(true);
+	}
 }
 
 function classChange(createNewTable){
@@ -3817,8 +3923,96 @@ function hideSidePane() {
 		$("#hideButton").html("<a href=\"javascript:void(0)\" onclick='hideSidePane()'> Hide &gt; </a>");
 		$(".outercol2").css("height", "45em");
 		hiddenSidePane = 0;
+		addColourCheckbox();
 	}
 }
+
+function addColourCheckbox() {
+	addColor = document.createTextNode("Color Timetable");
+	checkbox = document.createElement("input");
+	checkbox.type = "checkbox";
+	checkbox.id = "colorCells";
+	checkbox.addEventListener('change', fillColour);
+    colorRow = document.createElement("span");
+	colorRow.style.fontSize = "10px";
+	colorRow.appendChild(addColor);
+    colorRow.appendChild(checkbox);
+	colorRow.id = "colorRow";
+	hideLink = document.getElementById("hideButton");
+	hideLink.appendChild(colorRow);
+}
+function colorCell(i, j, k) {
+	if(document.getElementById("subject" + makeIdFromIJK(i, j, k)) != null)
+	var temp = document.getElementById("subject" + makeIdFromIJK(i, j, k)).innerText;
+	var temp1 = document.getElementById("fixed" + makeIdFromIJK(i, j, k));
+	var present = 0;
+	if(temp1 != null) {
+		for(var q = 0; q < uniqueFixedEntry.length; q++) {
+			if(uniqueFixedEntry[q] == temp1.innerText) {
+				present = 1;
+				document.getElementById("cell" + makeIdFromIJK(i, j, k)).style.backgroundColor = colors[1][q];
+				break;
+			}
+		}
+		if(present == 0) {
+			uniqueFixedEntry.push(temp1.innerText);
+			document.getElementById("cell" + makeIdFromIJK(i, j, k)).style.backgroundColor = colors[1][q];
+		}
+		return;
+	}
+	for(var q = 0; q < uniqueSubject.length; q++) {
+		if(uniqueSubject[q] == temp) {
+			present = 1;
+			document.getElementById("cell" + makeIdFromIJK(i, j, k)).style.backgroundColor = colors[0][q];
+			break;
+		}
+	}
+	if(present == 0) {
+		uniqueSubject.push(temp);
+		document.getElementById("cell" + makeIdFromIJK(i, j, k)).style.backgroundColor = colors[0][q];
+	}
+	return;
+}
+
+function putColor() {
+	if(colorAdded == 1)
+		return;
+	colorAdded = 1;
+	var present = 0;
+	var colors1 = [];
+	var colors2 = [];
+	var temp, result;
+	var h = Math.floor(Math.random());
+	temp = h;
+	for(i = 0; i < 50; i++) {
+		result = generateRandomColors(h);
+		h = result;
+		result *= 360;
+		result = Math.round(result);
+		colors1.push("hsl(" + result + ", 40%, 80%)");
+//		colors1.push("hsl(180, 100%, 50%)");
+	}
+	for(i = 0; i < 25; i++) {
+		result = generateRandomColors(h);
+		h = result;
+		result *= 360;
+		result = Math.round(result);
+		colors2.push("hsl(" + result + ", 90%, 80%)");
+//		colors2.push("hsl(180, 10%, 50%)");
+	}
+	colors.push(colors1);
+	colors.push(colors2);
+	console.log(colors);
+}
+
+function generateRandomColors(h) {
+	var goldenRatioConjugate = 0.618033988749895;
+	h += goldenRatioConjugate;
+	h %= 1;
+
+	return h;
+}
+
 /* Load all tables, including Dept, Config, Snapshot and Initialize
  * the display timeTable. Load default Snapshot
  */
@@ -3873,6 +4067,7 @@ function load() {
 		verticalCellTraverseOnKeyPress("down");
 	});
 
+	addColourCheckbox();
 	return res;
 }
 
