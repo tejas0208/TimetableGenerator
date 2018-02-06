@@ -624,6 +624,9 @@ function debugPrint(tableName, row) {
 	return JSON.stringify(res);
 }
 function dragStartHandler(e) {
+	if(cutSrcEl !== null)
+		return;
+	
 	e.target.style.opacity = '0.4';
 	dragSrcEl = e.target;
 	/*var i = parseInt(e.target.id.substring(9, 10));
@@ -639,10 +642,16 @@ function dragStartHandler(e) {
 }
 
 function dragEnterHandler(e) {
+	if(cutSrcEl !== null)
+		return;
+	
 	e.target.classList.add('over');
 }
 
 function dragOverHandler(e) {
+	if(cutSrcEl !== null)
+		return;
+	
   	if (e.preventDefault) {
     	e.preventDefault(); // Necessary. Allows us to drop.
   	}
@@ -653,6 +662,9 @@ function dragOverHandler(e) {
 }
 
 function dragLeaveHandler(e) {
+	if(cutSrcEl !== null)
+		return;
+	
 	e.target.classList.remove('over');
 }
 
@@ -719,6 +731,8 @@ function checkValidity(i, j, source) {
 }
 
 function dropHandler(e) {
+	if(cutSrcEl !== null)
+		return;
 	/* get id
 	find in helpertable
 	if not null
@@ -814,6 +828,8 @@ function dropHandler(e) {
 }
 
 function dragEndHandler(e) {
+	if(cutSrcEl !== null)
+		return;
 	dragSrcEl.style.opacity = 1;
 }
 
@@ -1590,7 +1606,7 @@ function getEligibleRoom(i, j, k, capacity, subjectRow, roomFound) {
 			}
 		}
 	}
-	disabledRooms = []
+	disabledRooms = [];
 	for(var y = 0; y < room.length; y++) {
 		var valid = 1;
 		for(var z =0; z < eachSlot; z++) {
@@ -2449,6 +2465,7 @@ function cellEmpty(i, j) {
 /*For deleting an entry from timeTable*/
 function deleteEntry(Span) {
 	var Id = Span.id; /* Id of "x" */
+	console.log(Id);
 	[day, SlotNo, slottableNo ] = makeIJKFromId(Id);
 	Id = makeIdFromIJK(day, SlotNo, slottableNo);
 
@@ -3240,7 +3257,7 @@ function loadTeacherMenu() {
 		selectTag.appendChild(createOptionTag(teacher[i]["teacherShortName"],
 								teacher[i]["teacherShortName"], "false"));
 	}
-	selectTag.setAttribute("onchange", "teacherChange(true)");
+	selectTag.setAttribute("onchange", "teacherChange(true);contextMenuReset();");
 	sortSelect(selectTag);
 	selectTag.add(createOptionTag("Add Teacher", "Add Teacher", "false"), 0);
 	document.getElementById("teacher-menu").selectedIndex = -1; /*Setting the select tag*/
@@ -3254,7 +3271,7 @@ function loadClassMenu() {
 		selectTag.appendChild(createOptionTag(classTable[i]["classShortName"],
 								classTable[i]["classShortName"], "false"));
 	}
-	selectTag.setAttribute("onchange", "classChange(true)");
+	selectTag.setAttribute("onchange", "classChange(true);contextMenuReset();");
 	selectTag.add(createOptionTag("Add Class", "Add Class", "false"), 0);
 	document.getElementById("class-menu").selectedIndex = -1; /*Setting the select tag*/
 }
@@ -3267,7 +3284,7 @@ function loadBatchMenu() {
 		selectTag.appendChild(createOptionTag(batch[i]["batchName"],
 								batch[i]["batchName"], "false"));
 	}
-	selectTag.setAttribute("onchange", "batchChange(true)");
+	selectTag.setAttribute("onchange", "batchChange(true);contextMenuReset();");
 	sortSelect(selectTag);
 	selectTag.add(createOptionTag("Add Batch", "Add Batch", "false"), 0);
 	document.getElementById("batch-menu").selectedIndex = -1; /*Setting the select tag*/
@@ -3281,7 +3298,7 @@ function loadRoomMenu() {
 		selectTag.appendChild(createOptionTag(room[i]["roomShortName"],
 								room[i]["roomShortName"], "false"));
 	}
-	selectTag.setAttribute("onchange", "roomChange(true)");
+	selectTag.setAttribute("onchange", "roomChange(true);contextMenuReset();");
 	sortSelect(selectTag);
 	selectTag.add(createOptionTag("Add Room", "Add Room", "false"), 0);
 	document.getElementById("room-menu").selectedIndex = -1; /*Setting the select tag*/
@@ -3371,7 +3388,7 @@ function loadSnapshotMenu(selectedName) {
 						snapshot[i]["snapshotName"], "false");
 		selectTag.appendChild(option);
 	}
-	selectTag.setAttribute("onchange", "snapshotChange()");
+	selectTag.setAttribute("onchange", "snapshotChange();contextMenuReset();");
 	document.getElementById("saveNewSnapshot").disabled = false;
 	document.getElementById("saveSnapshot").disabled = true;
 	selectTag.add(createOptionTag("Manage Snapshots", "Manage Snapshots", "false"), 0);
@@ -3703,6 +3720,10 @@ function load() {
 	shortcut.add("Ctrl+l", function () { clearAll()});
 	shortcut.add("Ctrl+z", function () { undo() });
 	shortcut.add("Ctrl+y", function () { redo() })
+	shortcut.add("Ctrl+c", function () { copyShortcut()	});
+	shortcut.add("Ctrl+x", function () { cutShortcut() });
+	shortcut.add("Ctrl+v", function () { pasteShortcut() });
+	shortcut.add("delete", function() { deleteShortcut() });
 	return res;
 }
 
