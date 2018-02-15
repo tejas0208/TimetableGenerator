@@ -2444,10 +2444,32 @@ function fillTable2(createNewTable) {
 			if(text == "+") {
 				this.innerHTML= "-";
 				$(".animate" + id).fadeIn();
+				var all_buttons = document.getElementsByClassName("animateButton");
+				var j;
+				for(j = 0; j < 6; j++) {
+					if(all_buttons[j].innerHTML != "-") {
+						break;
+					}
+				}
+				if(j == 6) {
+					var top_button = document.getElementsByClassName("animateButtonTop");
+					top_button[0].innerHTML = "-";
+				}
 			}
 			else {
 				this.innerHTML = "+";
 				$(".animate" + id).fadeOut();
+				var all_buttons = document.getElementsByClassName("animateButton");
+				var j;
+				for(j = 0; j < 6; j++) {
+					if(all_buttons[j].innerHTML != "+") {
+						break;
+					}
+				}
+				if(j == 6) {
+					var top_button = document.getElementsByClassName("animateButtonTop");
+					top_button[0].innerHTML = "+";
+				}
 			}
 		});
 		$(".animateButtonTop").click(function() {
@@ -2455,15 +2477,21 @@ function fillTable2(createNewTable) {
 			if(text == "+") {
 				this.innerHTML = "-";
 				for(var i = 1; i <=6; i++) {
-					$(".animate" + i).innerHTML= "-";
 					$(".animate" + i).fadeIn();
+				}
+				var all_buttons = document.getElementsByClassName("animateButton");
+				for(var j = 0; j < 6; j++) {
+					all_buttons[j].innerHTML = "-";
 				}
 			}
 			else {
 				this.innerHTML = "+";
 				for(var i = 1; i <=6; i++) {
-					$(".animate" + i).innerHTML= "+";
 					$(".animate" + i).fadeOut();
+				}
+				var all_buttons = document.getElementsByClassName("animateButton");
+				for(var j = 0; j < 6; j++) {
+					all_buttons[j].innerHTML = "+";
 				}
 			}
 		});
