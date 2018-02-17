@@ -54,10 +54,10 @@ var type;// = "class";
 var currTableId;// = "SYBT-CE";
 var supportObject;
 
-var daysName = ["Sun", "Mon", "Tues", "Wed", "Thur", "Fri", "Sat"];
+var daysName = ["TEMP", "Mon", "Tues", "Wed", "Thur", "Fri", "Sat", "Sun"];
 var enabledRows = [];
 
-/* helperTable has size 6 * nSlots * maxPossibleRows. It's a cube. Let's say each entry
+/* helperTable has size days * nSlots * maxPossibleRows. It's a cube. Let's say each entry
  * is a cube-cell.
  * It stores timeTable[] entries as objects, as they appear on screen.
  * Thus, if DSA-Lab_SY-IT appears on Monday,at Slot2 for 2 hours as third entry in cell,
@@ -2467,7 +2467,7 @@ function getPosition(day1, slotNo, rowEntry, eachSlot) {
  * If(createNewTable)
  *    createNewTable
  * initializeEnableRowArray();
- * for 6 days : i
+ * for 7 days : i
  *   for each of the nSlots : j
  *     slotRows = getAllTTRowsOn-day-i-slot-j
  *     if slotRows,
@@ -2482,7 +2482,7 @@ function fillTable2(createNewTable) {
 	makeTrackerList();
 	var configrow = search(config, "configId", currentConfigId);
 	NoOfSlots = configrow["nSlots"];
-	var days = 6;
+	var days = parseInt(configrow["daysInWeek"]);
 	var slottablePerDay = 1;
 	if(type == undefined || currTableId == undefined)
 		return;
@@ -2520,12 +2520,12 @@ function fillTable2(createNewTable) {
 				$(".animate" + id).fadeIn();
 				var all_buttons = document.getElementsByClassName("animateButton");
 				var j;
-				for(j = 0; j < 6; j++) {
+				for(j = 0; j < days; j++) {
 					if(all_buttons[j].innerHTML != "-") {
 						break;
 					}
 				}
-				if(j == 6) {
+				if(j == days) {
 					var top_button = document.getElementsByClassName("animateButtonTop");
 					top_button[0].innerHTML = "-";
 				}
@@ -2535,12 +2535,12 @@ function fillTable2(createNewTable) {
 				$(".animate" + id).fadeOut();
 				var all_buttons = document.getElementsByClassName("animateButton");
 				var j;
-				for(j = 0; j < 6; j++) {
+				for(j = 0; j < days; j++) {
 					if(all_buttons[j].innerHTML != "+") {
 						break;
 					}
 				}
-				if(j == 6) {
+				if(j == days) {
 					var top_button = document.getElementsByClassName("animateButtonTop");
 					top_button[0].innerHTML = "+";
 				}
@@ -2550,28 +2550,28 @@ function fillTable2(createNewTable) {
 			var text = this.innerHTML;
 			if(text == "+") {
 				this.innerHTML = "-";
-				for(var i = 1; i <=6; i++) {
+				for(var i = 1; i <=days; i++) {
 					$(".animate" + i).fadeIn();
 				}
 				var all_buttons = document.getElementsByClassName("animateButton");
-				for(var j = 0; j < 6; j++) {
+				for(var j = 0; j < days; j++) {
 					all_buttons[j].innerHTML = "-";
 				}
 			}
 			else {
 				this.innerHTML = "+";
-				for(var i = 1; i <=6; i++) {
+				for(var i = 1; i <=days; i++) {
 					$(".animate" + i).fadeOut();
 				}
 				var all_buttons = document.getElementsByClassName("animateButton");
-				for(var j = 0; j < 6; j++) {
+				for(var j = 0; j < days; j++) {
 					all_buttons[j].innerHTML = "+";
 				}
 			}
 		});
 	}
 
-	initializeEnableRowArray(6, parseInt(NoOfSlots), slottablePerDay, 0);
+	initializeEnableRowArray(days, parseInt(NoOfSlots), slottablePerDay, 0);
 
 	var classId;
 	if(type == "batch") {
@@ -2840,7 +2840,7 @@ function fillTable2(createNewTable) {
 			} /* end if-else cells having entry, vacant cells */
 		} /* end for each slot */
 	} /* end for each day */
-	for(var i = 1; i <= 6; i++) {
+	for(var i = 1; i <= days; i++) {
 		/* Initially hiding extra rows */
 		$(".animate" + i).hide();
 	}

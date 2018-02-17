@@ -33,7 +33,7 @@ require_once('forms.php');
 require_once('export.php');
 require_once('exportsql.php');
 require_once('exportpdf.php');
-
+require_once('upgrade.php');
 function getTimetable() {
 	header("Content-Type: application/JSON; charset=UTF-8");
 	$snapshotName = getArgument("snapshotName");
