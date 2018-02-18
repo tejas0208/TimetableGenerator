@@ -1215,7 +1215,7 @@ function configForm() {
 	formOpen("inputConfigForm");
 	/* ---- Adding Header Row -----------------------*/
 	var table = insertHeaderRow("configTable", "configId", "Config Name", "Day Begins",
-						"Slot Duration(Secs)", "No of Slots Per Day", "Dept", "Owner", 2);
+						"Slot Duration(Mins)", "No of Slots Per Day", "Dept", "Owner", 2);
 	var count = 1;
 	if(config.length < 1) {
 		var row = insertRow(table, count);
@@ -1256,8 +1256,11 @@ function configForm() {
 					"Config Name", currConfig["configName"]);
 		insertInputBox(row, "time", "dayBegin_" + count, "8",
 					"Day Begins At", currConfig["dayBegin"]);
+
+		var slotDurationMin = parseInt(currConfig["slotDuration"]);
+		slotDurationMin = slotDurationMin / 60;
 		insertInputBox(row, "number", "slotDuration_" + count, "3",
-					"Slot Duration(Secs)", currConfig["slotDuration"]);
+					"Slot Duration(Mins)", slotDurationMin);
 		insertInputBox(row, "number", "nSlots_" + count, "3",
 					"No. of Slots per Day", currConfig["nSlots"]);
 		insertInputBox(row, "text", "deptId_" + count, "8",
@@ -1304,6 +1307,10 @@ function configInsert() {
 	dayBegin = dayBeginAdd.value;
 	slotDuration = slotDuration.value;
 	nSlots = nSlots.value;
+
+	//Converting minutes to seconds
+	slotDuration = slotDuration * 60;
+
 	if(checkParameters(configName, dayBegin, slotDuration, nSlots, deptId, incharge) === false)
 		return;
 	var xhttp = new XMLHttpRequest();
@@ -1349,6 +1356,9 @@ function configUpdate(i) {
 	document.getElementById("configUpdateButton_" + row).childNodes[0].nodeValue = "Updating";
 	document.getElementById("configDeleteButton_" + row).disabled = true;
 	document.getElementById("configUpdateButton_" + row).disabled = true;
+
+	//Converting minutes to seconds
+	slotDuration = slotDuration * 60;
 
 	row = i - 2;
 	var configOrigName = config[row]["configName"];
