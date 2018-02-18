@@ -230,7 +230,7 @@ function rowSearch() {
 	for (i = 3; i < tr.length; i++) {
 		cellValue = document.getElementById("batchName_" + i).value.toUpperCase();
 		if (cellValue) {
-			if (cellValue.indexOf(filter) > -1)
+			if (cellValue.indexOf(filter) > -1) {
 				tr[i].style.display = "";
 			} else {
 				tr[i].style.display = "none";
