@@ -2253,8 +2253,8 @@ function deleteEntry(Span) {
 	if(isFixed == "1") {
 		var index = timeTable.indexOf(row);
 		if(index != -1) {
-			timeTable.splice(index, 1);/*Delete entry from table*/
 			console.log("Deleting TT Entry: " + debugPrint("timeTable", timeTable[index]));
+			timeTable.splice(index, 1);/*Delete entry from table*/
 		}
 		else
 			console.log("Error Deleting TT Entry: Couldn't find index");
