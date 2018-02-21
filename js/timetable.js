@@ -3489,7 +3489,221 @@ function load() {
 	shortcut.add("Esc", function () {shortcutEscButton()});
 	shortcut.add("Ctrl+s", function () { jsSaveSnapshot(false)});
 	shortcut.add("Ctrl+shift+s", function () { jsSaveNewSnapshot()});
+	shortcut.add("Ctrl+l", function () { clearAll()});
 	return res;
+}
+
+function clearAll() {
+	var index, row, i, fixedEntryRow;
+	if(!type) {
+		alert("No Timetable loaded");
+		return;
+	}
+	if(confirm("Warning: All the table will be cleared for this view!!!")) {
+		switch(type) {
+			case "class":
+				var classId = search(classTable, "classShortName", currTableId)["classId"];
+				row = searchMultipleRows(timeTable, "classId", classId,
+						"snapshotId", currentSnapshotId);
+				for(i in row) {
+					if(row[i]["isFixed"] == "1") {
+						index = searchIndex(fixedEntry, "ttId", row[i]["ttId"]);
+						if(index != -1) {
+							console.log("Deleting Fixed Entry: " +
+								debugPrint("fixedEntry", fixedEntry[index]));
+							fixedEntry.splice(index, 1);/*Delete entry from table*/
+						}
+						else
+							console.log("Error Deleting TT Entry: Couldn't find index");
+					}
+					index = timeTable.indexOf(row[i]);
+					var batchId = timeTable[index]["batchId"];
+					var subjectId = timeTable[index]["subjectId"];
+					var teacherId = timeTable[index]["teacherId"];
+					var SlotNo = timeTable[index]["slotNo"];
+					var subjRow = search(subject, "subjectId",
+							timeTable[index]["subjectId"]);
+					var day = timeTable[index]["day"];
+					if(index != -1) {
+						console.log("Deleting TT Entry: " +
+							debugPrint("timeTable", timeTable[index]));
+						timeTable.splice(index, 1);/*Delete entry from table*/
+					}
+					else
+						console.log("Error Deleting TT Entry: Couldn't find index");
+
+					if(batchId != "" + null) {
+						var sbt = search(subjectBatchTeacher, "subjectId",
+									subjectId, "batchId", batchId,
+									"teacherId", teacherId);
+						if(sbt != -1) {
+							var osbt = searchMultipleRows(overlappingSBT, "sbtId1", sbt["sbtId"]);
+							if(osbt != -1) {
+								for(var i in osbt) {
+									var batchId = search(subjectBatchTeacher,
+													"sbtId", osbt[i]["sbtId2"])["batchId"];
+									var classId = search(batchClass, "batchId", batchId)["classId"];
+									for(var j = 0; j < subjRow["eachSlot"]; j++) {
+										index = searchIndex(timeTable, "day", day,
+													"slotNo", (parseInt(SlotNo) + j),
+													"subjectId", subjRow["subjectId"],
+													"batchId", batchId,"classId", classId,
+													"snapshotId", currentSnapshotId);
+										if(index != -1) {
+											console.log("Deleting TT Entry: " + debugPrint("timeTable", timeTable[index]));
+											timeTable.splice(index, 1);/*Delete entry from table*/
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				break;
+			case "teacher":
+				var teacherId = search(teacher, "teacherShortName", currTableId)["teacherId"];
+				console.log(teacherId);
+				row = searchMultipleRows(timeTable, "teacherId", teacherId,
+						"snapshotId", currentSnapshotId);
+				for(i in row) {
+					if(row[i]["isFixed"] == "1") {
+						index = searchIndex(fixedEntry, "ttId", row[i]["ttId"]);
+						if(index != -1) {
+							console.log("Deleting Fixed Entry: " +
+								debugPrint("fixedEntry", fixedEntry[index]));
+							fixedEntry.splice(index, 1);/*Delete entry from table*/
+						}
+						else
+							console.log("Error Deleting TT Entry: Couldn't find index");
+					}
+					index = timeTable.indexOf(row[i]);
+					if(index != -1) {
+						console.log("Deleting TT Entry: " +
+							debugPrint("timeTable", timeTable[index]));
+						timeTable.splice(index, 1);/*Delete entry from table*/
+					}
+					else
+						console.log("Error Deleting TT Entry: Couldn't find index");
+				}
+				break;
+			case "room":
+				var roomId = search(room, "roomShortName", currTableId)["roomId"];
+				row = searchMultipleRows(timeTable, "roomId", roomId,
+						"snapshotId", currentSnapshotId);
+				for(i in row) {
+					if(row[i]["isFixed"] == "1") {
+						index = searchIndex(fixedEntry, "ttId", row[i]["ttId"]);
+						if(index != -1) {
+							console.log("Deleting Fixed Entry: " +
+								debugPrint("fixedEntry", fixedEntry[index]));
+							fixedEntry.splice(index, 1);/*Delete entry from table*/
+						}
+						else
+							console.log("Error Deleting TT Entry: Couldn't find index");
+					}
+					index = timeTable.indexOf(row[i]);
+					if(index != -1) {
+						console.log("Deleting TT Entry: " +
+							debugPrint("timeTable", timeTable[index]));
+						timeTable.splice(index, 1);/*Delete entry from table*/
+					}
+					else
+						console.log("Error Deleting TT Entry: Couldn't find index");
+				}
+				break;
+			case "batch":
+				var batchId = search(batch, "batchName", currTableId)["batchId"];
+				row = searchMultipleRows(timeTable, "batchId", batchId,
+						"snapshotId", currentSnapshotId);
+				for(i in row) {
+					index = timeTable.indexOf(row[i]);
+					if(index != -1) {
+						console.log("Deleting TT Entry: " +
+							debugPrint("timeTable", timeTable[index]));
+						timeTable.splice(index, 1);/*Delete entry from table*/
+					}
+					else
+						console.log("Error Deleting TT Entry: Couldn't find index");
+				}
+				var classId = search(batchClass, "batchId", batchId)["classId"];
+				row = searchMultipleRows(timeTable, "classId", classId,
+						"snapshotId", currentSnapshotId);
+				for(i in row) {
+					if(row[i]["isFixed"] == "1") {
+						index = searchIndex(fixedEntry, "ttId", row[i]["ttId"]);
+						if(index != -1) {
+							console.log("Deleting Fixed Entry: " +
+								debugPrint("fixedEntry", fixedEntry[index]));
+							fixedEntry.splice(index, 1);/*Delete entry from table*/
+						}
+						else
+							console.log("Error Deleting TT Entry: Couldn't find index");
+
+						index = timeTable.indexOf(row[i]);
+						if(index != -1) {
+							console.log("Deleting TT Entry: " +
+								debugPrint("timeTable", timeTable[index]));
+							timeTable.splice(index, 1);/*Delete entry from table*/
+						}
+						else
+							console.log("Error Deleting TT Entry: Couldn't find index");
+					}
+					else {
+						index = timeTable.indexOf(row[i]);
+						var batchId = timeTable[index]["batchId"];
+						var subjectId = timeTable[index]["subjectId"];
+						var teacherId = timeTable[index]["teacherId"];
+						var SlotNo = timeTable[index]["slotNo"];
+						var subjRow = search(subject, "subjectId", timeTable[index]["subjectId"]);
+						var day = timeTable[index]["day"];
+						if(timeTable[index]["batchId"] == null) {
+							if(index != -1) {
+								console.log("Deleting TT Entry: " + debugPrint("timeTable", timeTable[index]));
+								timeTable.splice(index, 1);/*Delete entry from table*/
+							}
+							else
+								console.log("Error Deleting TT Entry: Couldn't find index");
+
+							if(batchId != "" + null) {
+								var sbt = search(subjectBatchTeacher, "subjectId",
+										subjectId, "batchId", batchId, "teacherId", teacherId);
+								if(sbt != -1) {
+									var osbt = searchMultipleRows(overlappingSBT, "sbtId1", sbt["sbtId"]);
+									if(osbt != -1) {
+										for(var i in osbt) {
+											var batchId = search(subjectBatchTeacher, "sbtId",
+												osbt[i]["sbtId2"])["batchId"];
+											var classId = search(batchClass, "batchId", batchId)["classId"];
+											for(var j = 0; j < subjRow["eachSlot"]; j++) {
+												index = searchIndex(timeTable, "day", day,
+													"slotNo", (parseInt(SlotNo) + j),"subjectId",
+													subjRow["subjectId"], "batchId", batchId,
+													"classId", classId, "snapshotId", currentSnapshotId);
+												if(index != -1) {
+													console.log("Deleting TT Entry: " +
+														debugPrint("timeTable", timeTable[index]));
+													timeTable.splice(index, 1);/*Delete entry from table*/
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				break;
+			default:
+				alert("No Timetable loaded");
+				break;
+		}
+		dirtyTimeTable = true;
+		fillTable2(true);
+		return;
+	}
+	else {
+		return;
+	}
 }
 
 window.onload = load;

@@ -40,46 +40,52 @@ function rollback() {
 	return $resString;
 }
 function findNewTTId($ttId, $ttData, $currentSnapshotId, $newSnapshotId) {
+	$index = -1;
 	for($i = 0; $i < count($ttData); $i++) {
 		if($ttData[$i]["ttId"] == $ttId) {
 			$index = $i;
 			break;
 		}
 	}
-	$row = $ttData[$index];
-	$newClassQuery = "SELECT classId from class WHERE classShortName = ".
-						"(SELECT classShortName from class where classId = ".$row["classId"].
-						" AND snapshotId = $currentSnapshotId )".
-					" AND snapshotId = $newSnapshotId";
-	$result = sqlGetOneRow($newClassQuery);
-	$newClassId = $result[0]["classId"];
-	$selectQuery = "SELECT ttId FROM timeTable WHERE".
-					" day = ". $row["day"] . " AND slotNo = ". $row["slotNo"].
-					" AND classId = ". $newClassId.
-					/*" AND roomId = ".$row["roomId"]. " AND teacherId = ".$row["teacherId"].
-					" AND batchId = ". $row["batchId"].
-					" AND subjectId = ".$row["subjectId"]. */
-					" AND isFixed = ".$row["isFixed"]. " AND snapshotId = $newSnapshotId;";
-	$res = sqlGetOneRow($selectQuery);
-	return $res[0]["ttId"];
+	if($index != -1) {
+		$row = $ttData[$index];
+		$newClassQuery = "SELECT classId from class WHERE classShortName = ".
+							"(SELECT classShortName from class where classId = ".$row["classId"].
+							" AND snapshotId = $currentSnapshotId )".
+						" AND snapshotId = $newSnapshotId";
+		$result = sqlGetOneRow($newClassQuery);
+		$newClassId = $result[0]["classId"];
+		$selectQuery = "SELECT ttId FROM timeTable WHERE".
+						" day = ". $row["day"] . " AND slotNo = ". $row["slotNo"].
+						" AND classId = ". $newClassId.
+						/*" AND roomId = ".$row["roomId"]. " AND teacherId = ".$row["teacherId"].
+						" AND batchId = ". $row["batchId"].
+						" AND subjectId = ".$row["subjectId"]. */
+						" AND isFixed = ".$row["isFixed"]. " AND snapshotId = $newSnapshotId;";
+		$res = sqlGetOneRow($selectQuery);
+		return $res[0]["ttId"];
+	}
 }
 function findTTId($ttId, $ttData, $snapshotId) {
+	$index = -1;
 	for($i = 0; $i < count($ttData); $i++) {
 		if($ttData[$i]["ttId"] == $ttId) {
 			$index = $i;
 			break;
 		}
 	}
-	$row = $ttData[$index];
-	$selectQuery = "SELECT ttId FROM timeTable WHERE".
-					" day = ". $row["day"] . " AND slotNo = ". $row["slotNo"].
-					" AND classId = ". $row["classId"].
-					/*" AND roomId = ".$row["roomId"]. " AND teacherId = ".$row["teacherId"].
-					" AND batchId = ". $row["batchId"].
-					" AND subjectId = ".$row["subjectId"]. */
-					" AND isFixed = ".$row["isFixed"]. " AND snapshotId = $snapshotId;";
-	$res = sqlGetOneRow($selectQuery);
-	return $res[0]["ttId"];
+	if($index != -1) {
+		$row = $ttData[$index];
+		$selectQuery = "SELECT ttId FROM timeTable WHERE".
+						" day = ". $row["day"] . " AND slotNo = ". $row["slotNo"].
+						" AND classId = ". $row["classId"].
+						/*" AND roomId = ".$row["roomId"]. " AND teacherId = ".$row["teacherId"].
+						" AND batchId = ". $row["batchId"].
+						" AND subjectId = ".$row["subjectId"]. */
+						" AND isFixed = ".$row["isFixed"]. " AND snapshotId = $snapshotId;";
+		$res = sqlGetOneRow($selectQuery);
+		return $res[0]["ttId"];
+	}
 }
 function insertSnapshotEntry() {
 	header("Content-Type: application/JSON: charset=UTF-8");
