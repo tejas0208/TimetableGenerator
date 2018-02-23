@@ -1103,7 +1103,7 @@ function initializeEnableRowArray(row, cols, slottableCount, initial_value) {
 function createTable(days, nSlots, slotTablePerDay, startTime, timePerSlot) {
 	var table = document.createElement("TABLE");
 	var i, j, k, tr, td, text;
-	table.setAttribute("class", "timeTable");
+	table.setAttribute("class", "timeTableTable");
 	//table.setAttribute("border", "3px solid black");
 	tr = document.createElement("tr");
 	td = document.createElement("th");
@@ -1112,6 +1112,7 @@ function createTable(days, nSlots, slotTablePerDay, startTime, timePerSlot) {
 	button.setAttribute("class", "animateButtonTop");
 	button.style.align = "right";
 	button.appendChild(document.createTextNode("+"));
+	td.setAttribute("style", "width: 35px;")
 	td.appendChild(button);
 	td.appendChild(text);
 	td.appendChild(button);
@@ -3400,7 +3401,7 @@ function hideSidePane() {
 		$("#configurationDiv").hide();
 		$("#trackerDiv").hide();
 		$("#warningsDiv").hide();
-		$(".outercol2").css("width", "1%");
+		$(".outercol2").css("width", "5%");
 		$("#hideButton").html("<a href=\"javascript:void(0)\" onclick='hideSidePane()'> Show &lt; </a>");
 		hiddenSidePane = 1;
 	} else {

@@ -81,10 +81,18 @@ option, select{
 	color: magenta
 }
 .timeTable {
-	border-collapse: collapse; 
+	max-width: 100;
+}
+.timeTableTable {
+	border-collapse: collapse;
 	border: 3px solid black;
 	padding: 0px;
-	/*width: 1024px;*/
+	table-layout: fixed;
+	width: 99%;
+	margin-left: 0;
+}
+.timeTableTable select{
+	max-width: 75%;
 }
 .slottable {
 	padding: 0px;
@@ -160,7 +168,7 @@ option, select{
 	vertical-align: top;
 }
 .outercol1 {
-	width: 80%;
+	width: 99%;
 	padding: 0;
 	vertical-align: top;
 	top: 0%;
@@ -364,3 +372,7 @@ toggle {
 	filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#87e0fd', endColorstr='#05abe0',GradientType=1 ); 
 }
 
+html, body
+{
+    width:100%;
+}
