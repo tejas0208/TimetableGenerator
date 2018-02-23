@@ -21,7 +21,7 @@
  * Copyright 2017 Abhijit A. M.(abhijit13@gmail.com)
  */
 
-
+ 
 if(!file_exists('db.php'))
 	header("Location: install.php");
 if(!file_exists('config.php'))

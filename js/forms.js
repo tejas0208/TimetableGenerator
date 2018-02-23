@@ -58,6 +58,7 @@ function formClose(formName) {
 	document.getElementById(formName).style.height = "0%";
 	document.getElementById("outerTable").style.display = "table";
 	document.getElementById(formName).style.display = "none";
+	document.getElementById('configuration-menu-column').style.display = "block";
 	currentFormName = null;
 	onClose();
 }
@@ -66,6 +67,7 @@ function formOpen(formName) {
 	document.getElementById(formName).style.height = "auto";
 	document.getElementById(formName).style.display = "block";
 	document.getElementById("outerTable").style.display = "none";
+	document.getElementById('configuration-menu-column').style.display = "none";
 	currentFormName = formName;
 	resetConfigurationHeader();
 }
