@@ -27,8 +27,8 @@ function dbConnect() {
 		return $CFG->conn;
 	}
 	$conn = new mysqli($CFG->server, $CFG->db_user, $CFG->db_pass, $CFG->db_database);
-	if($conn->error) {
-		die("connection error ". $conn->error . "<br>"); 
+	if($conn->connect_error) {
+		die("connection error ". $conn->connect_error . "<br>");
 		return false;
 	}
 	$CFG->conn = $conn;
