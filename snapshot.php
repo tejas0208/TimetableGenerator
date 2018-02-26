@@ -93,10 +93,11 @@ function insertSnapshotEntry() {
 	$snapshotName = getArgument("snapshotName");
 	$snapshotCreator = getArgument("snapshotCreator");
 	$configId = getArgument("configId");
+	date_default_timezone_set("Asia/Kolkata");
 
 	$query = "INSERT INTO snapshot (snapshotName, snapshotCreator, createTime,".
 				"modifyTime, configId) VALUES ('$snapshotName', $snapshotCreator,".
-				"\"080000\", \"080000\", $configId);";
+				"now(), now(), $configId);";
 	$result = sqlUpdate($query);
 	if($result === false) {
 		ttlog("insertSnapshotEntry: $query Failed");
@@ -124,6 +125,7 @@ function saveSnapshot() {
 	$crData = json_decode($crd, true);
 	$brData = json_decode($brd, true);
 	$srData = json_decode($srd, true);
+	date_default_timezone_set("Asia/Kolkata");
 
 	$startTransactionQuery = "START TRANSACTION;";
 	$result = sqlUpdate($startTransactionQuery);
@@ -237,6 +239,13 @@ function saveSnapshot() {
 		if($result != true)
 			return rollback();
 	}
+
+	$snapshotUpdateQuery = "UPDATE snapshot SET modifyTime = now() where snapshotId = $snapshotId;";
+	ttlog("saveSnapshot: query: $snapshotUpdateQuery");
+	$result = sqlUpdate($snapshotUpdateQuery);
+	if($result != true)
+		return rollback();
+
 	sqlUpdate("COMMIT;");
 	$resString = "{\"Success\": \"True\"}";
 	ttlog("saveSnapShot: Success True".  $resString);
@@ -523,6 +532,7 @@ function saveNewSnapshot() {
 	$brData = json_decode($brd, true);
 	$srd = getArgument("srData");
 	$srData = json_decode($srd, true);
+	date_default_timezone_set("Asia/Kolkata");
 
 	$startTransactionQuery = "START TRANSACTION;";
 	$result = sqlUpdate($startTransactionQuery);
@@ -531,7 +541,7 @@ function saveNewSnapshot() {
 
 	$snapshotCreateQuery = "INSERT INTO snapshot (snapshotName, snapshotCreator, createTime, modifyTime, configId) ".
 							"VALUES (\"".
-							$newSnapshotName."\",1,1000,2000, $configId);";
+							$newSnapshotName."\",1,now(),now(), $configId);";
 	$result = sqlUpdate($snapshotCreateQuery);
 	ttlog("saveNewSnapshot: query: ". $result);
 	if($result === false)
