@@ -18,6 +18,7 @@
  * Copyright 2017 Abhijit A. M.(abhijit13@gmail.com)
  */
 var index1;
+var rowcount; /*Number of rows in a table in a particular config*/
 function resetConfigurationHeader() {
 	var i, Len, Options;
 	Options = document.getElementById("configuration-menu");
@@ -32,17 +33,23 @@ function resetConfigurationHeader() {
 function onClose(){
 	var Name;
 	if(type == "class") {
-		index = document.getElementById("class-menu").selectedIndex;
-		Name = document.getElementById("class-menu").options[index].text;
-		PrintTitle(Name);
+		if(classTable.length > 0) {
+			index = document.getElementById("class-menu").selectedIndex;
+			Name = document.getElementById("class-menu").options[index].text;
+			PrintTitle(Name);
+		}
 	}
 	else if(type == "room") {
-		Name = document.getElementById("room-menu").options[index1].text;
-		PrintTitle(Name);
+		if(roomTable.length > 0) {
+			Name = document.getElementById("room-menu").options[index1].text;
+			PrintTitle(Name);
+		}
 	}
 	else if(type == "teacher") {
-		Name = document.getElementById("teacher-menu").options[index1].text;
-		PrintTitle(Name);
+		if(teacherTable.length > 0) {
+			Name = document.getElementById("teacher-menu").options[index1].text;
+			PrintTitle(Name);
+		}
 	}
 	return;
 }
@@ -380,6 +387,7 @@ function batchForm() {
 
 		count++;
 	}
+	rowcount = count;
 }
 function rowSearch() {
 	var input, filter, table, tr, td, i;
@@ -583,7 +591,7 @@ function batchDelete(i) {
 						  "Are you sure?");
 	if(sure != true)
 		return;
-	//batchName = document.getElementById("batchName_" + row).value;
+	batchName = document.getElementById("batchName_" + row).value;
 	batchId = document.getElementById("bfCenter_" + row).childNodes[0].nodeValue;
 
 	// Check undo/redo stack for clashing batchId
@@ -599,10 +607,38 @@ function batchDelete(i) {
 		if(this.readyState == 4 && this.status == 200) {
 			response = JSON.parse(this.responseText);
 			if(response["Success"] == "True") {
-				document.getElementById("bDeleteButton_" + row).value = "Delete"
-				batch.splice(i - 3, 1);
+				document.getElementById("bDeleteButton_" + row).value = "Delete";
+				batch.splice(row - 3, 1);
+				if(type == "batch") {
+					var index2 = document.getElementById("batch-menu").selectedIndex;
+					var currBatchName = document.getElementById("batch-menu").options[index2].text;
+				}
 				loadSelectMenus();
-				fillTable2(true);
+				if(type == "batch" && currBatchName == batchName) {
+					var j;
+					if(row == rowcount - 1)
+						j = 3;
+					else
+						j = row + 1;
+					var batchOptions = document.getElementById("batch-menu");
+					if(batchOptions.options.length != 1) {
+						batchName = document.getElementById("batchName_" + j).value;
+						for(var i = 0; i < batchOptions.options.length; i++) {
+							if(batchOptions.options[i].value == batchName) {
+								batchOptions.options[i].selected = true;
+								break;
+							}
+						}
+						batchChange(true);
+					}
+					else { /*No timetable to be loaded*/
+						$("#mainTimeTable").append("<center><B>No TimeTable to be loaded </B><br>" +
+							"Please select option from above catgories</center>");
+						document.getElementById("title").innerHTML =  "<h2> Timetable for Computer Engg and IT (Effective 15 Jan 2018)</h2>";
+					}
+				}
+				else
+					fillTable2(true);
 				batchForm();
 			} else {
 				alert("Batch " + batchName + ": Deletion Failed");
@@ -1042,6 +1078,7 @@ function classForm() {
 
 		count++;
 	}
+	rowcount = count;
 }
 function classInsert() {
 	var row = i;
@@ -1187,7 +1224,7 @@ function classDelete(i) {
 				  "Are you sure?");
 	if(sure != true)
 		return;
-	//classShortName = document.getElementById("classShortName_" + row).value;
+	classShortName = document.getElementById("classShortName_" + row).value;
 	classId = document.getElementById("cCenter_" + row).childNodes[0].nodeValue;
 
 	// Check undo/redo stack for clashing classId
@@ -1203,10 +1240,39 @@ function classDelete(i) {
 		if(this.readyState == 4 && this.status == 200) {
 			response = JSON.parse(this.responseText);
 			if(response["Success"] == "True") {
-				document.getElementById("cDeleteButton_" + row).value = "Delete"
-				classTable.splice(i - 2, 1);
+				document.getElementById("cDeleteButton_" + row).value = "Delete";
+				classTable.splice(row - 2, 1);
+				if(type == "class") {
+					var index2 = document.getElementById("class-menu").selectedIndex;
+					var classname = document.getElementById("class-menu").options[index2].text;
+				}
 				loadSelectMenus();
-				fillTable2(true);
+				if(type == "class" && classname == classShortName) {
+					var j;
+					if(row == rowcount - 1)
+						j = 2;
+					else
+						j = row + 1;
+					var classOptions = document.getElementById("class-menu");
+					if(classOptions.options.length != 1) {
+						classShortName = document.getElementById("classShortName_" + j).value;
+						for(var i = 0; i < classOptions.options.length; i++) {
+							if(classOptions.options[i].value == classShortName) {
+								classOptions.options[i].selected = true;
+								break;
+							}
+						}
+						classChange(true);
+					}
+					else { /*No timetable to be loaded*/
+						$("#mainTimeTable").append("<center><B>No TimeTable to be loaded </B><br>" +
+							"Please select option from above catgories</center>");
+						document.getElementById("title").innerHTML =  "<h2> Timetable for " +
+						search(dept, "deptId", currentDeptId)["deptName"] + "</h2>";
+					}
+				}
+				else
+					fillTable2(true);
 				classForm();
 			} else {
 				alert("Class " + classShortName + ": Deletion Failed.");
@@ -1930,6 +1996,7 @@ function roomForm() {
 							"roomDelete(" + count + ")");
 		count++;
 	}
+	rowcount = count;
 }
 function roomInsert() {
 	var row = i;
@@ -2065,7 +2132,7 @@ function roomDelete(i) {
 				  "Are you sure?");
 	if(sure != true)
 		return;
-	//roomShortName = document.getElementById("roomShortName_" + row).value;
+	roomShortName = document.getElementById("roomShortName_" + row).value;
 	roomId = document.getElementById("rCenter_" + row).childNodes[0].nodeValue;
 
 	// Check undo/redo stack for clashing roomId
@@ -2081,10 +2148,39 @@ function roomDelete(i) {
 		if(this.readyState == 4 && this.status == 200) {
 			response = JSON.parse(this.responseText);
 			if(response["Success"] == "True") {
-				document.getElementById("rDeleteButton_" + row).value = "Delete"
-				room.splice(i - 2, 1);
+				document.getElementById("rDeleteButton_" + row).value = "Delete";
+				room.splice(row - 2, 1);
+				if(type == "room") {
+					var index2 = document.getElementById("room-menu").selectedIndex;
+					var roomname = document.getElementById("room-menu").options[index2].text;
+				}
 				loadSelectMenus();
-				fillTable2(true);
+				if(type == "room" && roomname == roomShortName) {
+					var j;
+					if(row == rowcount - 1)
+						j = 2;
+					else
+						j = row + 1;
+					var roomOptions = document.getElementById("room-menu");
+					if(roomOptions.options.length != 1) {
+						roomShortName = document.getElementById("roomShortName_" + j).value;
+						for(var i = 0; i < roomOptions.options.length; i++) {
+							if(roomOptions.options[i].value == roomShortName) {
+								roomOptions.options[i].selected = true;
+								break;
+							}
+						}
+						roomChange(true);
+					}
+					else { /*No timetable to be loaded*/
+						$("#mainTimeTable").append("<center><B>No TimeTable to be loaded </B><br>" +
+							"Please select option from above catgories</center>");
+						document.getElementById("title").innerHTML =  "<h2> Timetable for " +
+						search(dept, "deptId", currentDeptId)["deptName"] + "</h2>";
+					}
+				}
+				else
+					fillTable2(true);
 				roomForm();
 			} else {
 				alert("Room " + roomShortName + ": Deletion Failed.");
@@ -3224,6 +3320,7 @@ function teacherForm() {
 							"teacherDelete(" + count + ")");
 		count++;
 	}
+	rowcount = count;
 }
 function getDeptId(deptShortName) {
 	count = 0;
@@ -3456,6 +3553,7 @@ function teacherDelete(i) {
 				  "Are you sure?");
 	if(sure != true)
 		return;
+	teacherShortName = document.getElementById("teacherShortName_" + row).value;
 	teacherId = document.getElementById("tCenter_" + row).childNodes[0].nodeValue;
 
 	// Check undo/redo stack for clashing teacherId
@@ -3508,10 +3606,38 @@ function teacherDelete(i) {
 							for(xy = sbtList.length - 1; xy >= 0; xy--) {
 								subjectBatchTeacher.splice(sbtList[xy], 1);
 							}
-							fillTable2(true);
 						}
 				}
+				if(type == "teacher") {
+					var index2 = document.getElementById("teacher-menu").selectedIndex;
+					var teachername = document.getElementById("teacher-menu").options[index2].text;
+				}
 				loadSelectMenus();
+				if(type == "teacher" && teachername == teacherShortName) {
+					var j;
+					if(row == rowcount - 1)
+						j = 2;
+					else
+						j = row + 1;
+					var teacherOptions = document.getElementById("teacher-menu");
+					if(teacherOptions.options.length != 1) {
+						teacherShortName = document.getElementById("teacherShortName_" + j).value;
+						for(var i = 0; i < teacherOptions.options.length; i++) {
+							if(teacherOptions.options[i].value == teacherShortName) {
+								teacherOptions.options[i].selected = true;
+								break;
+							}
+						}
+						teacherChange(true);
+					}
+					else { /*No timetable to be loaded*/
+						$("#mainTimeTable").append("<center><B>No TimeTable to be loaded </B><br>" +
+							"Please select option from above catgories</center>");
+						document.getElementById("title").innerHTML =  "<h2> Timetable for Computer Engg and IT (Effective 15 Jan 2018)</h2>";
+					}
+				}
+				else
+					fillTable2(true);
 				teacherForm();
 			} else {
 				alert("Teacher " + teacherShortName + ": Deletion Failed.");
