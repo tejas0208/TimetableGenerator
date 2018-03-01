@@ -1414,11 +1414,23 @@ function createTimeTableEntry(day, slotNo, roomId, classId, subjectId,
 	this.day = "" + day;
 	this.slotNo = "" + slotNo;
 	this.roomId = "" + roomId;
-	this.classId = "" + classId;
-	this.subjectId = "" + subjectId;
-	this.teacherId = "" + teacherId;
-	this.batchId = "" + batchId;
-	this.isFixed = "" + isFixed;
+	if(this.classId != null)
+		this.classId = "" + classId;
+	else
+		this.classId = classId;
+	if(this.subjectId != null)
+		this.subjectId = "" + subjectId;
+	else
+		this.subjectId = subjectId;
+    if(this.teacherId != null)
+		this.teacherId = "" + teacherId;
+    else
+    	this.teacherId = teacherId;
+    if(this.batchId != null)
+		this.batchId = "" + batchId;
+	else
+		this.batchId = batchId;
+    this.isFixed = "" + isFixed;
 	this.snapshotId = "" + snapshotId;
 	if(timeTable.length == 0)
 		this.ttId = 1;
@@ -1457,10 +1469,6 @@ function createSubjectRoomEntry(subjectId, roomId) {
 
 function makeTimeTableEntry(day, slotNo, roomId, classId, subjectId,
 		teacherId, batchId, currentSnapshotId, isFixed, eachSlot) {
-	if(classId == null && batchId == null) {
-		alert("ERROR. See Console Log for more details. Your Data May be corrupt");
-		console.log("ERROR: makeTimeTableEntry: classId is null");
-	}
 	for(var i = 0; i < eachSlot; i++) {
 		var newEntry = new createTimeTableEntry(day, (parseInt(slotNo) + i),
 						roomId, classId, subjectId, teacherId, batchId,
@@ -1913,6 +1921,12 @@ function fixedSlotEntry(i, j, k) {
 			makeTimeTableEntry(i, j, null, classId, null,
 				null, supportObject["batchId"], currentSnapshotId, 1, 1);
 		}
+        else if(type == "teacher") {
+			makeTimeTableEntry(i, j, null, null, null, supportObject["teacherId"], null, currentSnapshotId, 1, 1);
+		}
+		else {
+			makeTimeTableEntry(i, j, supportObject["roomId"], null, null, null, null, currentSnapshotId, 1, 1);
+		}
 		fixedEntry.push(new fixedEntryObject(timeTable[timeTable.length - 1]["ttId"], label));
 
 		var undoRedoEntry = {};
@@ -1923,6 +1937,7 @@ function fixedSlotEntry(i, j, k) {
 			undoStack.push(undoRedoEntry);
 		if(doingUndo === true)
 			redoStack.push(undoRedoEntry);
+
 
 		/*var slottable = document.getElementById("slottable" + makeIdFromIJK(i, j, k));
 		if(slottable == null) {
@@ -1963,7 +1978,6 @@ function fixedSlotEntry(i, j, k) {
 function subjectSelected(selecttag) {
 	var index = selecttag.selectedIndex;
 	var subjectShortName = selecttag.options[index].value;
-
 	var Id = selecttag.getAttribute("id");
 	[iid, jid, kid] = makeIJKFromId(Id);
 	Id = makeIdFromIJK(iid, jid, kid);
@@ -2488,35 +2502,73 @@ function getEligibleSubjects(i, j, k) {
 						search(teacher, "teacherId", sbtlist[m]["teacherId"])["teacherShortName"]
 						]);
 	}
-	if(subjectsList.length == 0) {
-		var select = "<select disabled=true id=\"subject" + makeIdFromIJK(i, j, k) + "\" " +
-				" onmouseenter=enableSelect(this)"+
-				" onmouseout=disableSelect(this)"+
-				">" +
-				"<option value=\"NOT_SELECTED\">Subject" +
-				"</option>";
-		for(x = 0; x < disabledSubjects.length; x++) {
-			select += "<option class=\"disabledEntries1\" disabled=\"disabled\"" +
-			  "value = \"\">" + disabledSubjects[x][0] + "</option>";
-			for(y = 1; y < disabledSubjects[x].length; y++) {
-				  select += "<option class=\"disabledEntries2\" disabled=\"disabled\"" +
-				  "value = \"\">&nbsp&nbsp" + disabledSubjects[x][y][0] + "</option>";
-				  select += "<option class=\"disabledEntries3\" disabled=\"disabled\"" +
-				  "value = \"\">&nbsp:" + disabledSubjects[x][y][1] + "</option>";
-			}
+    select += "<option title=\"Insert a fixed slot/ LUNCH slot\" " +
+        "value = \"FixedEntry\">Fixed Slot</option>";
+    if(subjectsList.length == 0) {
+    	var check = 0;
+		for(k = 0; k < helperTable[i-1][j].length; k++) {
+			var temp = helperTable[i-1][j][k]
+			if(temp!= null && temp["isFixed"] == 1) {
+                check = 1;
+                break;
+            }
 		}
-		return select;
-	}
+		if(check) {
+            var select = "<select disabled=true id=\"subject" + makeIdFromIJK(i, j, k) + "\" " +
+                " onmouseenter=enableSelect(this)" +
+                " onmouseout=disableSelect(this)" +
+                ">" +
+                "<option value=\"NOT_SELECTED\">Subject" +
+                "</option>";
+            for (x = 0; x < disabledSubjects.length; x++) {
+                select += "<option class=\"disabledEntries1\" disabled=\"disabled\"" +
+                    "value = \"\">" + disabledSubjects[x][0] + "</option>";
+                for (y = 1; y < disabledSubjects[x].length; y++) {
+                    select += "<option class=\"disabledEntries2\" disabled=\"disabled\"" +
+                        "value = \"\">&nbsp&nbsp" + disabledSubjects[x][y][0] + "</option>";
+                    select += "<option class=\"disabledEntries3\" disabled=\"disabled\"" +
+                        "value = \"\">&nbsp:" + disabledSubjects[x][y][1] + "</option>";
+                }
+            }
+            select += "</select>";
+        }
+        else {
+            var select = "<select disabled=true id=\"subject" + makeIdFromIJK(i, j, k) + "\" " +
+                " onmouseenter=enableSelect(this)" +
+                " onmouseout=disableSelect(this)" +
+                ">" +
+                "<option value=\"NOT_SELECTED\">Subject" +
+                "</option>";
+            for (x = 0; x < disabledSubjects.length; x++) {
+                select += "<option class=\"disabledEntries1\" disabled=\"disabled\"" +
+                    "value = \"\">" + disabledSubjects[x][0] + "</option>";
+                for (y = 1; y < disabledSubjects[x].length; y++) {
+                    select += "<option class=\"disabledEntries2\" disabled=\"disabled\"" +
+                        "value = \"\">&nbsp&nbsp" + disabledSubjects[x][y][0] + "</option>";
+                    select += "<option class=\"disabledEntries3\" disabled=\"disabled\"" +
+                        "value = \"\">&nbsp:" + disabledSubjects[x][y][1] + "</option>";
+                }
+            }
+            select += "</select>";
+            select += "<select  id=\"fixed" + makeIdFromIJK(i, j, k) + "\" " +
+                "onchange=\"subjectSelected(this)\"" +
+                "class = \"disablelook\"" +
+                ">" +
+                "<option value=\"NOT_SELECTED\">" +
+                "</option>";
+            select += "<option title=\"Insert a fixed slot/ LUNCH slot\" " +
+                "value = \"FixedEntry\">Fixed Slot</option>";
+            select += "</select>";
+        }
+        return select;
+    }
 	for(var r in subjectsList) {
 		var subj = subjectsList[r][0];
 		select += "<option value =\"" + subj + "\" " +
 					"title=\"" + subjectsList[r][1] + "," + subjectsList[r][2] + "\"" +
 					">" + subj + "</option>";
 	}
-	if((type == "batch" || type == "class") &&  cellEmpty(i, j)) {
-		select += "<option title=\"Insert a fixed slot/ LUNCH slot\" " +
-				  "value = \"FixedEntry\">Fixed Slot</option>";
-	}
+
 	for(x = 0; x < disabledSubjects.length; x++) {
 		select += "<option class=\"disabledEntries1\" disabled=\"disabled\"" +
 		  "value = \"\">" + disabledSubjects[x][0] + "</option>";
@@ -2706,7 +2758,7 @@ function getPosition(day1, slotNo, rowEntry, eachSlot) {
 				continue;
 			if(temp !== 0) {/*means Row Entry is there*/
 				if(temp["subjectId"] === subjectId && temp["batchId"] === batchId
-					&& temp["classId"] === classId) {
+					&& temp["classId"] === classId && temp["isFixed"] != 1) {
 					/* This rowEntry was already displayed, because it was a multi-column entry
 					 * and the first call for first column already filled in all the other columns
 					 */
@@ -2780,13 +2832,13 @@ function fillTable2(createNewTable) {
 	var configrow = search(config, "configId", currentConfigId);
 	NoOfSlots = configrow["nSlots"];
 	var days = parseInt(configrow["daysInWeek"]);
-	var slottablePerDay = 1;
+	var slottablePerDay = 2;
 	if(type == undefined || currTableId == undefined)
 		return;
 	if(type == "class") {
 		var row = searchMultipleRows(batchClass, "classId", supportObject["classId"]);
 		/*Depending on the no of batches in a class. TODO: check + 1*/
-		if(row !== -1)
+		if(row !== -1  && row.length > slottablePerDay)
 			slottablePerDay = row.length;
 	}
 
@@ -2915,7 +2967,6 @@ function fillTable2(createNewTable) {
 							console.log("ERROR: i: " + i + "slot " + j + "k = " + k + " fixed slot. got position null");
 							continue;
 						}
-						subjectHasBatches = "0";
 						var slottable = document.getElementById("slottable" + makeIdFromIJK(i, j, position));
 						if(slottable == null) {
 							alert("ERROR. See Console Log for more details. Your Data May be corrupt");
@@ -2976,7 +3027,6 @@ function fillTable2(createNewTable) {
 
 					var eachSlot = subjectRow["eachSlot"];
 
-					subjectHasBatches = subjectRow["batches"];
 					batchName = "";
 					batchIdNull = ("" + slotRows[k]["batchId"] == "null");
 					if(!batchIdNull) { // && (type != "batch"))
@@ -3052,7 +3102,6 @@ function fillTable2(createNewTable) {
 				 * Display subject select box on class page,
 				 * only if subject has batches
 				 */
-				if(subjectHasBatches !== "0" && type == "class") {
 					var position = getPosition(i, j, null, 1);
 					if(position == null) {
 						console.log("WARNING: subjectHasBatches true, on class Page, got positionn null at " + i + " " + j);
@@ -3090,13 +3139,12 @@ function fillTable2(createNewTable) {
 							" onclick=roomSelected(this)>" +
 						"</td>" +
 					"</tr>";
-				}
 				/* Cells with existing Entries. Set Rowspan. refers to dayname td*/
 				var rowspan = document.getElementById("" + i).getAttribute("rowspan");
 				if(rowspan == null) {
 					rowspan = "" + 1;
 				}
-				if(parseInt(rowspan) <= slotRows.length && type == "class") {
+				if(parseInt(rowspan) <= slotRows.length) {
 					document.getElementById("" + i).setAttribute("rowspan",
 						(slotRows.length + parseInt(subjectHasBatches)));
 				}
@@ -3660,6 +3708,7 @@ function jsSaveSnapshot(asynchronousOrNot) {
 				JSON.stringify(timeTable) + "&feData=" + JSON.stringify(fixedEntry) + "&brData="
 				+ JSON.stringify(batchRoom) + "&crData=" + JSON.stringify(classRoom) +
 				"&srData=" + JSON.stringify(subjectRoom));
+
 		$("#mainTimeTable").hide();
 		$("#selection-menu-column").hide();
 		$("#configuration-menu-column").hide();
