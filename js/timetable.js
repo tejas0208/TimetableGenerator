@@ -3655,6 +3655,7 @@ function hideSidePane() {
 		$("#warningsDiv").hide();
 		$(".outercol2").css("width", "5%");
 		$("#hideButton").html("<a href=\"javascript:void(0)\" onclick='hideSidePane()'> Show &lt; </a>");
+		$(".outercol2").css("height", "4%");
 		hiddenSidePane = 1;
 	} else {
 		$("#configurationDiv").show();
@@ -3662,6 +3663,7 @@ function hideSidePane() {
 		$("#warningsDiv").show();
 		$(".outercol2").css("width", "20%");
 		$("#hideButton").html("<a href=\"javascript:void(0)\" onclick='hideSidePane()'> Hide &gt; </a>");
+		$(".outercol2").css("height", "45em");
 		hiddenSidePane = 0;
 	}
 }
