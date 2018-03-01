@@ -38,6 +38,7 @@ var room, classRoom, batchRoom, subjectRoom;
 var subject, subjectBatchTeacher, subjectClassTeacher, overlappingSBT;
 var fixedEntry;
 var timeTableReadable;
+var timeTable;
 
 /* These three represent the current Dept/Snapshot/Config we are working on */
 var currentSnapshotId;
