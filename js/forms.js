@@ -3282,10 +3282,47 @@ function teacherDelete(i) {
 		if(this.readyState == 4 && this.status == 200) {
 			response = JSON.parse(this.responseText);
 			if(response["Success"] == "True") {
-				document.getElementById("tDeleteButton_" + row).value = "Delete"
-				teacher.splice(i - 2, 1);
+				document.getElementById("tDeleteButton_" + row).value = "Delete";
+				teacher.splice(row - 2, 1);
+				timeTableList = [];
+				sctList = [];
+				sbtList = [];
+				timeTablelength = timeTable.length;
+				sctLength = subjectClassTeacher.length;
+				sbtLength = subjectBatchTeacher.length;
+				for(j = 0; j < timeTablelength; j++) {
+					tempTimeTable = timeTable[j];
+					if(tempTimeTable["teacherId"] == teacherId) {
+						timeTableList.push(j);
+					}
+					if(j == timeTablelength - 1) {
+						for(xy = timeTableList.length - 1; xy >= 0; xy--) {
+							timeTable.splice(timeTableList[xy], 1);
+						}
+					}
+				}
+				for(k = 0; k < sctLength; k++) {
+					tempSct = subjectClassTeacher[k];
+					if(tempSct["teacherId"] == teacherId)
+						sctList.push(k);
+					if(k == sctLength - 1) {
+						for(xy = sctList.length - 1; xy >= 0; xy--) {
+							subjectClassTeacher.splice(sctList[xy], 1);
+						}
+					}
+				}
+				for(l = 0; l < sbtLength; l++) {
+					tempSbt = subjectBatchTeacher[l];
+						if(tempSbt["teacherId"] == teacherId)
+							sbtList.push(l);
+						if(l == sbtLength - 1) {
+							for(xy = sbtList.length - 1; xy >= 0; xy--) {
+								subjectBatchTeacher.splice(sbtList[xy], 1);
+							}
+							fillTable2(true);
+						}
+				}
 				loadSelectMenus();
-				fillTable2(true);
 				teacherForm();
 			} else {
 				alert("Teacher " + teacherShortName + ": Deletion Failed.\nError:\n" + response["Error"]);
