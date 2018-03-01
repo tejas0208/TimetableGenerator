@@ -1211,6 +1211,7 @@ function createTimeTableEntry(day, slotNo, roomId, classId, subjectId,
 	else
 		this.ttId = "" + (parseInt(timeTable[timeTable.length - 1]["ttId"]) + 1);
 	dirtyTimeTable = true;
+	document.getElementById("saveSnapshot").disabled = false;
 }
 
 function createClassRoomEntry(classId, roomId) {
@@ -2323,6 +2324,7 @@ function deleteEntry(Span) {
 
 		fillTable2(true);
 		dirtyTimeTable = true;
+		document.getElementById("saveSnapshot").disabled = false;
 		return;
 	}
 	/* Delete Non-Fixed Entry, both batched and non-batched */
@@ -2351,6 +2353,7 @@ function deleteEntry(Span) {
 							" batch: " + batchId + "teacher: " + teacherId);
 				fillTable2(true);
 				dirtyTimeTable = true;
+				document.getElementById("saveSnapshot").disabled = false;
 				return;
 			}
 			for(var i in osbt) {
@@ -2369,6 +2372,7 @@ function deleteEntry(Span) {
 		}
 	}
 	dirtyTimeTable = true;
+	document.getElementById("saveSnapshot").disabled = false;
 	fillTable2(true);
 }
 
@@ -3172,12 +3176,16 @@ function loadSnapshotMenu(selectedName) {
 	}
 	selectTag.setAttribute("onchange", "snapshotChange()");
 	document.getElementById("saveNewSnapshot").disabled = false;
-	document.getElementById("saveSnapshot").disabled = false;
+	document.getElementById("saveSnapshot").disabled = true;
 	selectTag.add(createOptionTag("Manage Snapshots", "Manage Snapshots", "false"), 0);
 	document.getElementById("fetch-snapshot-menu").selectedIndex = -1; /*Setting the select tag*/
 }
 function jsSaveNewSnapshot() {
-	var newSnapshotName = prompt("Enter snapshot Name","snapshot");
+	var newSnapshotName = prompt("Enter snapshot Name","New Snapshot");
+	if(search(snapshot, "snapshotName", newSnapshotName) != -1) {
+		alert("Snapshot name: "+newSnapshotName+" already in use.\nYou should use another name.");
+		return;
+	}
 	if(newSnapshotName != null) {
 		var xhttp;
 		xhttp = new XMLHttpRequest();
@@ -3221,7 +3229,7 @@ function jsSaveNewSnapshot() {
 	}
 }
 function jsSaveSnapshot(asynchronousOrNot) {
-	if(currentSnapshotName != null) {
+	if(currentSnapshotName != null && dirtyTimeTable == true) {
 		var xhttp;
 		xhttp = new XMLHttpRequest();
 		if(asynchronousOrNot === true)
@@ -3275,6 +3283,8 @@ function jsSaveSnapshot(asynchronousOrNot) {
 				document.getElementById("saveSnapshot").disabled = false;
 			}
 		}
+	} else if (dirtyTimeTable == false) {
+		alert("jsSaveSnapshot: No TimeTable loaded.\nPlease select timetable from catgories");
 	} else {
 		alert("jsSaveSnapshot: can't find currentSnapshotName");
 	}
@@ -3485,7 +3495,9 @@ function load() {
 		/* do something */
 		fillTable2(true);
 	});
-
+	if (dirtyTimeTable == false) {
+		document.getElementById("saveSnapshot").disabled = true;
+	}
 	shortcut.add("Esc", function () {shortcutEscButton()});
 	shortcut.add("Ctrl+s", function () { jsSaveSnapshot(false)});
 	shortcut.add("Ctrl+shift+s", function () { jsSaveNewSnapshot()});
