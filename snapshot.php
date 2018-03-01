@@ -48,19 +48,43 @@ function findNewTTId($ttId, $ttData, $currentSnapshotId, $newSnapshotId) {
 	}
 	if($index != -1) {
 		$row = $ttData[$index];
-		$newClassQuery = "SELECT classId from class WHERE classShortName = ".
-							"(SELECT classShortName from class where classId = ".$row["classId"].
-							" AND snapshotId = $currentSnapshotId )".
-						" AND snapshotId = $newSnapshotId";
-		$result = sqlGetOneRow($newClassQuery);
-		$newClassId = $result[0]["classId"];
-		$selectQuery = "SELECT ttId FROM timeTable WHERE".
-						" day = ". $row["day"] . " AND slotNo = ". $row["slotNo"].
-						" AND classId = ". $newClassId.
-						/*" AND roomId = ".$row["roomId"]. " AND teacherId = ".$row["teacherId"].
-						" AND batchId = ". $row["batchId"].
-						" AND subjectId = ".$row["subjectId"]. */
-						" AND isFixed = ".$row["isFixed"]. " AND snapshotId = $newSnapshotId;";
+        if($row["classId"] != null) {
+            $newClassQuery = "SELECT classId from class WHERE classShortName = ".
+                "(SELECT classShortName from class where classId = ".$row["classId"].
+                " AND snapshotId = $currentSnapshotId )".
+                " AND snapshotId = $newSnapshotId";
+            $result = sqlGetOneRow($newClassQuery);
+            $newClassId = $result[0]["classId"];
+            $selectQuery = "SELECT ttId FROM timeTable WHERE".
+                " day = ". $row["day"] . " AND slotNo = ". $row["slotNo"].
+                " AND classId = ". $newClassId.
+                " AND isFixed = ".$row["isFixed"]. " AND snapshotId = $newSnapshotId;";
+        }
+		elseif ($row["teacherId"] != null) {
+            $newTeacherQuery = "SELECT teacherId from teacher WHERE teacherShortName = ".
+                "(SELECT teacherShortName from teacher where teacherId = ".$row["teacherId"].
+                " AND snapshotId = $currentSnapshotId )".
+                " AND snapshotId = $newSnapshotId";
+            $result = sqlGetOneRow($newTeacherQuery);
+            $newTeacherId = $result[0]["teacherId"];
+            $selectQuery = "SELECT ttId FROM timeTable WHERE".
+                " day = ". $row["day"] . " AND slotNo = ". $row["slotNo"].
+                " AND teacherId = ". $newTeacherId.
+                " AND isFixed = ".$row["isFixed"]. " AND snapshotId = $newSnapshotId;";
+        }
+		elseif ($row["roomId"] != null) {
+            $newRoomQuery = "SELECT roomId from room WHERE roomShortName = ".
+                "(SELECT roomShortName from room where roomId = ".$row["roomId"].
+                " AND snapshotId = $currentSnapshotId )".
+                " AND snapshotId = $newSnapshotId";
+            $result = sqlGetOneRow($newRoomQuery);
+            $newRoomId = $result[0]["roomId"];
+            $selectQuery = "SELECT ttId FROM timeTable WHERE".
+                " day = ". $row["day"] . " AND slotNo = ". $row["slotNo"].
+                " AND roomId = ". $newRoomId.
+                " AND isFixed = ".$row["isFixed"]. " AND snapshotId = $newSnapshotId;";
+
+        }
 		$res = sqlGetOneRow($selectQuery);
 		return $res[0]["ttId"];
 	}
@@ -75,13 +99,29 @@ function findTTId($ttId, $ttData, $snapshotId) {
 	}
 	if($index != -1) {
 		$row = $ttData[$index];
-		$selectQuery = "SELECT ttId FROM timeTable WHERE".
-						" day = ". $row["day"] . " AND slotNo = ". $row["slotNo"].
-						" AND classId = ". $row["classId"].
-						/*" AND roomId = ".$row["roomId"]. " AND teacherId = ".$row["teacherId"].
-						" AND batchId = ". $row["batchId"].
-						" AND subjectId = ".$row["subjectId"]. */
-						" AND isFixed = ".$row["isFixed"]. " AND snapshotId = $snapshotId;";
+		if($row["classId"] != null) {
+            $selectQuery = "SELECT ttId FROM timeTable WHERE" .
+                " day = " . $row["day"] . " AND slotNo = " . $row["slotNo"] .
+                " AND classId = " . $row["classId"] .
+                /*" AND roomId = ".$row["roomId"]. " AND teacherId = ".$row["teacherId"].
+                " AND batchId = ". $row["batchId"].
+                " AND subjectId = ".$row["subjectId"]. */
+                " AND isFixed = " . $row["isFixed"] . " AND snapshotId = $snapshotId;";
+        }
+        elseif ($row["teacherId"] != null) {
+            $selectQuery = "SELECT ttId FROM timeTable WHERE" .
+                " day = " . $row["day"] . " AND slotNo = " . $row["slotNo"] .
+                " AND teacherId = " . $row["teacherId"] .
+                " AND isFixed = " . $row["isFixed"] . " AND snapshotId = $snapshotId;";
+
+        }
+        elseif ($row["roomId"] != null) {
+            $selectQuery = "SELECT ttId FROM timeTable WHERE" .
+                " day = " . $row["day"] . " AND slotNo = " . $row["slotNo"] .
+                " AND roomId = " . $row["roomId"] .
+                " AND isFixed = " . $row["isFixed"] . " AND snapshotId = $snapshotId;";
+
+        }
 		$res = sqlGetOneRow($selectQuery);
 		return $res[0]["ttId"];
 	}
@@ -157,14 +197,37 @@ function saveSnapshot() {
 	for($k = 0; $k < count($ttData); $k++) {
 		$currRow = $ttData[$k];
 		$classId = $currRow["classId"];
+        $roomId = $currRow["roomId"];
+        $teacherId = $currRow["teacherId"];
 		if($currRow["isFixed"] == 1) {
-			$ttInsertQuery = "INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, ".
-							"teacherId, batchId, snapshotId, isFixed) VALUES (".
-							$currRow["day"].",".$currRow["slotNo"].",".
-							"null, $classId, null, null, ".
-							"null, ".
-							$snapshotId.",".
-							$currRow["isFixed"].");";
+			if($classId != null) {
+                $ttInsertQuery = "INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, " .
+                    "teacherId, batchId, snapshotId, isFixed) VALUES (" .
+                    $currRow["day"] . "," . $currRow["slotNo"] . "," .
+                    "null, $classId, null, null, " .
+                    "null, " .
+                    $snapshotId . "," .
+                    $currRow["isFixed"] . ");";
+            }
+            elseif($teacherId != null){
+                $ttInsertQuery = "INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, " .
+                    "teacherId, batchId, snapshotId, isFixed) VALUES (" .
+                    $currRow["day"] . "," . $currRow["slotNo"] . "," .
+                    "null, null, null, $teacherId,".
+                    "null, " .
+                    $snapshotId . "," .
+                    $currRow["isFixed"] . ");";
+            }
+            elseif($roomId != null){
+                $ttInsertQuery = "INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, " .
+                    "teacherId, batchId, snapshotId, isFixed) VALUES (" .
+                    $currRow["day"] . "," . $currRow["slotNo"] . "," .
+                    "$roomId , null, null, null, " .
+                    "null, " .
+                    $snapshotId . "," .
+                    $currRow["isFixed"] . ");";
+			}
+
 		} else {
 			$batchStr = ($currRow["batchId"] == ""? "null": $currRow["batchId"]);
 			$ttInsertQuery = "INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, ".
@@ -622,13 +685,33 @@ function saveNewSnapshot() {
 				$newBatchId = "null";
 
 			if($currRow["isFixed"] == 1) {
-				$ttInsertQuery = "INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, ".
-								" teacherId, batchId, snapshotId, isFixed) VALUES (".
-								$currRow["day"].",".$currRow["slotNo"].",".
-								"null, $newClassId, null, ".
-								"null, null, ".
-								"(SELECT snapshotId FROM snapshot where snapshotName = \"$newSnapshotName\"),".
-								$currRow["isFixed"].");";
+                if($classId != null) {
+                    $ttInsertQuery = "INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, " .
+                        "teacherId, batchId, snapshotId, isFixed) VALUES (" .
+                        $currRow["day"] . "," . $currRow["slotNo"] . "," .
+                        "null, $newClassId, null, null, " .
+                        "null, " .
+                        "(SELECT snapshotId FROM snapshot where snapshotName = \"$newSnapshotName\"),".
+                        $currRow["isFixed"].");";
+                }
+				elseif($teacherId != null){
+                    $ttInsertQuery = "INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, " .
+                        "teacherId, batchId, snapshotId, isFixed) VALUES (" .
+                        $currRow["day"] . "," . $currRow["slotNo"] . "," .
+                        "null, null, null, $newTeacherId,".
+                        "null, " .
+                        "(SELECT snapshotId FROM snapshot where snapshotName = \"$newSnapshotName\"),".
+                        $currRow["isFixed"].");";
+                }
+				elseif($roomId != null){
+                    $ttInsertQuery = "INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, " .
+                        "teacherId, batchId, snapshotId, isFixed) VALUES (" .
+                        $currRow["day"] . "," . $currRow["slotNo"] . "," .
+                        "$newRoomId , null, null, null, " .
+                        "null, " .
+                        "(SELECT snapshotId FROM snapshot where snapshotName = \"$newSnapshotName\"),".
+                        $currRow["isFixed"].");";
+                }
 			} else {
 				$ttInsertQuery = "INSERT INTO timeTable(day, slotNo, roomId, classId, subjectId, ".
 								" teacherId, batchId, snapshotId, isFixed) VALUES (".
