@@ -448,7 +448,8 @@ function batchInsert() {
 				var formType = document.getElementById("inputBatchForm");
 				highlightRowAfterAdd(formType);
 			} else {
-				alert("batchInsert " + batchName + " Failed. Error: " + response["Error"]);
+				alert("batchInsert " + batchName + " Failed");
+				console.log("batchInsert " + batchName + " Failed. Error: " + response["Error"]);
 			}
 		}
 	}
@@ -559,7 +560,8 @@ function batchUpdate(i) {
 			}
 			else {
 				//document.getElementById("bUpdateButton_" + i).childNodes[0].nodeValue = "Update";
-				alert("Batch " + batchName + ": Update Failed.\nError:\n" + response["Error"]);
+				alert("Batch " + batchName + ": Update Failed");
+				console.log("Batch " + batchName + ": Update Failed.\nError:\n" + response["Error"]);
 				document.getElementById("bDeleteButton_" + i).disabled = false;
 				//document.getElementById("bUpdateButton_" + i).disabled = false;
 				batchForm();
@@ -603,7 +605,8 @@ function batchDelete(i) {
 				fillTable2(true);
 				batchForm();
 			} else {
-				alert("Batch " + batchName + ": Deletion Failed.\nError:\n" + response["Error"]);
+				alert("Batch " + batchName + ": Deletion Failed");
+				console.log("Batch " + batchName + ": Deletion Failed.\nError:\n" + response["Error"]);
 				document.getElementById("bDeleteButton_" + row).value = "Delete"
 				//document.getElementById("bUpdateButton_" + row).disabled = false;
 				document.getElementById("bDeleteButton_" + row).childNodes[0].nodeValue = "Can't Delete";
@@ -725,6 +728,8 @@ function batchCanOverlapDelete(i) {
 				batchCanOverlapForm();
 			} else {
 				alert("BatchCanOverlap " + JSON.stringify(overlaps[row]) +
+						": Deletion Failed");
+				console.log("BatchCanOverlap " + JSON.stringify(overlaps[row]) +
 						": Deletion Failed.\nError:\n" + response["Error"]);
 				document.getElementById("batchCanOverlapDeleteButton_" + i).value = "Delete"
 				document.getElementById("batchCanOverlapUpdateButton_" + i).disabled = false;
@@ -784,8 +789,11 @@ function batchCanOverlapInsert() {
 				highlightRowAfterAdd(formType);
 			} else {
 				alert("batchInsert " + batchNames + " Failed. \n" +
+					  "Possibly the batches are already part of some overlapping batchgroup.");
+				console.log("batchInsert " + batchNames + " Failed. \n" +
 					  "Possibly the batches are already part of some overlapping batchgroup.\n" +
 					  "Server's Error: " + response["Error"]);
+
 			}
 		}
 	}
@@ -891,7 +899,10 @@ function batchRoomInsert() {
 				highlightRowAfterAdd(formType);
 			} else {
 				alert("Insert batch: "
+						+ batchName + " Failed.");
+				console.log("Insert batch: "
 						+ batchName + " Failed. \nError From Server: \n" + response["Error"]);
+
 			}
 		}
 	}
@@ -939,8 +950,11 @@ function batchRoomUpdate(i) {
 				document.getElementById("batchRoomUpdateButton_" +
 						i).childNodes[0].nodeValue = "Update";
 				alert("brId = " + brId + ": Update Failed for Subject: " +
+									roomShortName + + " batch: " + batchName);
+				console.log("brId = " + brId + ": Update Failed for Subject: " +
 									roomShortName + + " batch: " + batchName
 									+ "\nError:\n" + response["Error"]);
+
 				document.getElementById("batchRoomDeleteButton_" + i).disabled = false;
 				document.getElementById("batchRoomUpdateButton_" + i).disabled = false;
 				batchRoomForm();
@@ -974,7 +988,8 @@ function batchRoomDelete(i) {
 				fillTable2(true);
 				batchRoomForm();
 			} else {
-				alert("batchRoom " + brId + ": Deletion Failed.\nError:\n" + response["Error"]);
+				alert("batchRoom " + brId + ": Deletion Failed.");
+				console.log("batchRoom " + brId + ": Deletion Failed.\nError:\n" + response["Error"]);
 				document.getElementById("batchRoomDeleteButton_" + row).value = "Delete"
 				document.getElementById("batchRoomUpdateButton_" + row).disabled = false;
 				document.getElementById("batchRoomDeleteButton_" + row).childNodes[0].nodeValue = "Can't Delete";
@@ -1075,7 +1090,8 @@ function classInsert() {
 				var formType = document.getElementById("inputClassForm");
 				highlightRowAfterAdd(formType);
 			} else {
-				alert("classInsert " + classShortName + " Failed. Error: " + response["Error"]);
+				alert("classInsert " + classShortName + " Failed");
+				console.log("classInsert " + classShortName + " Failed. Error: " + response["Error"]);
 			}
 		}
 	}
@@ -1148,7 +1164,8 @@ function classUpdate(i) {
 			}
 			else {
 				document.getElementById("cUpdateButton_" + i).childNodes[0].nodeValue = "Update";
-				alert("Class " + classShortName + ": Update Failed.\nError:\n" + response["Error"]);
+				alert("Class " + classShortName + ": Update Failed.");
+				console.log("Class " + classShortName + ": Update Failed.\nError:\n" + response["Error"]);
 				document.getElementById("cDeleteButton_" + i).disabled = false;
 				document.getElementById("cUpdateButton_" + i).disabled = false;
 				classForm();
@@ -1192,7 +1209,8 @@ function classDelete(i) {
 				fillTable2(true);
 				classForm();
 			} else {
-				alert("Class " + classShortName + ": Deletion Failed.\nError:\n" + response["Error"]);
+				alert("Class " + classShortName + ": Deletion Failed.");
+				console.log("Class " + classShortName + ": Deletion Failed.\nError:\n" + response["Error"]);
 				document.getElementById("cDeleteButton_" + row).value = "Delete"
 				document.getElementById("cUpdateButton_" + row).disabled = false;
 				document.getElementById("cDeleteButton_" + row).childNodes[0].nodeValue = "Can't Delete";
@@ -1302,8 +1320,11 @@ function classRoomInsert() {
 				highlightRowAfterAdd(formType);
 			} else {
 				alert("Insert class: "
+					+ classShortName + " Failed.");
+				console.log("Insert class: "
 					+ classShortName + " Failed. \nError From Server: \n" +
 					response["Error"]);
+
 			}
 		}
 	}
@@ -1360,6 +1381,8 @@ function classRoomUpdate(i) {
 				document.getElementById("classRoomUpdateButton_" +
 						i).childNodes[0].nodeValue = "Update";
 				alert("crId = " + crId + ": Update Failed for Subject: " +
+									roomShortName + + " class: " + classShortName);
+				console.log("crId = " + crId + ": Update Failed for Subject: " +
 									roomShortName + + " class: " + classShortName
 									+ "\nError:\n" + response["Error"]);
 				document.getElementById("classRoomDeleteButton_" + i).disabled = false;
@@ -1395,7 +1418,8 @@ function classRoomDelete(i) {
 				fillTable2(true);
 				classRoomForm();
 			} else {
-				alert("classRoom " + crId + ": Deletion Failed.\nError:\n" + response["Error"]);
+				alert("classRoom " + crId + ": Deletion Failed.");
+				console.log("classRoom " + crId + ": Deletion Failed.\nError:\n" + response["Error"]);
 				document.getElementById("classRoomDeleteButton_" + row).value = "Delete"
 				document.getElementById("classRoomUpdateButton_" + row).disabled = false;
 				document.getElementById("classRoomDeleteButton_" +
@@ -1529,7 +1553,8 @@ function configInsert() {
 				formClose("inputConfigForm");
 				getDeptConfigSnapshot();
 			} else {
-				alert("configInsert " + configName + " Failed. Error: " + response["Error"]);
+				alert("configInsert " + configName + " Failed.");
+				console.log("configInsert " + configName + " Failed. Error: " + response["Error"]);
 			}
 		}
 	}
@@ -1578,7 +1603,8 @@ function configUpdate(i) {
 			}
 			else {
 				document.getElementById("configUpdateButton_" + i).childNodes[0].nodeValue = "Update";
-				alert("Config " + dayBegin + ": Update Failed.\nError:\n" + response["Error"]);
+				alert("Config " + dayBegin + ": Update Failed.");
+				console.log("Config " + dayBegin + ": Update Failed.\nError:\n" + response["Error"]);
 				document.getElementById("configDeleteButton_" + i).disabled = false;
 				document.getElementById("configUpdateButton_" + i).disabled = false;
 				configForm();
@@ -1616,7 +1642,8 @@ function configDelete(i) {
 				fillTable2(true);
 				configForm();
 			} else {
-				alert("Config " + configId + ": Deletion Failed.\nError:\n" + response["Error"]);
+				alert("Config " + configId + ": Deletion Failed.");
+				console.log("Config " + configId + ": Deletion Failed.\nError:\n" + response["Error"]);
 				document.getElementById("configDeleteButton_" + row).value = "Delete"
 				document.getElementById("configUpdateButton_" + row).disabled = false;
 				document.getElementById("configDeleteButton_" + row).childNodes[0].nodeValue = "Can't Delete";
@@ -1805,7 +1832,8 @@ function overlappingSBTInsert() {
 				var formType = document.getElementById("inputoverlappingSBTForm");
 				highlightRowAfterAdd(formType);
 			} else {
-				alert("Insert " + sbtString + " Failed. \nError From Server: \n" +
+				alert("Insert " + sbtString + " Failed.");
+				console.log("Insert " + sbtString + " Failed. \nError From Server: \n" +
 					response["Error"]);
 			}
 		}
@@ -1851,7 +1879,8 @@ function overlappingSBTDelete(i) {
 				fillTable2(true);
 				overlappingSBTForm();
 			} else {
-				alert("overlappingSBT " + osbtId + ": Deletion Failed.\nError:\n" + response["Error"]);
+				alert("overlappingSBT " + osbtId + ": Deletion Failed.");
+				console.log("overlappingSBT " + osbtId + ": Deletion Failed.\nError:\n" + response["Error"]);
 				document.getElementById("overlappingSBTDeleteButton_" +
 						row).value = "Delete"
 				document.getElementById("overlappingSBTDeleteButton_" +
@@ -1945,7 +1974,8 @@ function roomInsert() {
 				var formType = document.getElementById("inputRoomForm");
 				highlightRowAfterAdd(formType);
 			} else {
-				alert("roomInsert " + roomShortName + " Failed. Error: " + response["Error"]);
+				alert("roomInsert " + roomShortName + " Failed.");
+				console.log("roomInsert " + roomShortName + " Failed. Error: " + response["Error"]);
 			}
 		}
 	}
@@ -2011,7 +2041,8 @@ function roomUpdate(i) {
 			}
 			else {
 				document.getElementById("rUpdateButton_" + i).childNodes[0].nodeValue = "Update";
-				alert("Room " + roomShortName + ": Update Failed.\nError:\n" + response["Error"]);
+				alert("Room " + roomShortName + ": Update Failed.");
+				console.log("Room " + roomShortName + ": Update Failed.\nError:\n" + response["Error"]);
 				document.getElementById("rDeleteButton_" + i).disabled = false;
 				document.getElementById("rUpdateButton_" + i).disabled = false;
 				roomForm();
@@ -2056,7 +2087,8 @@ function roomDelete(i) {
 				fillTable2(true);
 				roomForm();
 			} else {
-				alert("Room " + roomShortName + ": Deletion Failed.\nError:\n" + response["Error"]);
+				alert("Room " + roomShortName + ": Deletion Failed.");
+				console.log("Room " + roomShortName + ": Deletion Failed.\nError:\n" + response["Error"]);
 				document.getElementById("rDeleteButton_" + row).value = "Delete"
 				document.getElementById("rUpdateButton_" + row).disabled = false;
 				document.getElementById("rDeleteButton_" + row).childNodes[0].nodeValue = "Can't Delete";
@@ -2191,6 +2223,8 @@ function sbtInsert() {
 				highlightRowAfterAdd(formType);
 			} else {
 				alert("Insert teacher:" + teacherShortName + " subject: " + subjectShortName + " batch: "
+						+ batchName + " Failed.");
+				console.log("Insert teacher:" + teacherShortName + " subject: " + subjectShortName + " batch: "
 						+ batchName + " Failed. \nError From Server: \n" + response["Error"]);
 			}
 		}
@@ -2362,6 +2396,7 @@ function sbtDelete(i) {
 				sbtForm();
 			} else {
 				alert("sbt " + sbtId + ": Deletion Failed.\nError:\n" + response["Error"]);
+				console.log("sbt " + sbtId + ": Deletion Failed.");
 				document.getElementById("sbtDeleteButton_" + row).value = "Delete"
 				document.getElementById("sbtDeleteButton_" + row).childNodes[0].nodeValue = "Can't Delete";
 				document.getElementById("sbtDeleteButton_" + row).disabled = false;
@@ -2494,6 +2529,8 @@ function sctInsert() {
 				highlightRowAfterAdd(formType);
 			} else {
 				alert("Insert teacher:" + teacherShortName + " subject: " + subjectShortName + " class: "
+						+ classShortName + " Failed.");
+				console.log("Insert teacher:" + teacherShortName + " subject: " + subjectShortName + " class: "
 						+ classShortName + " Failed. \nError From Server: \n" + response["Error"]);
 			}
 		}
@@ -2659,7 +2696,8 @@ function sctDelete(i) {
 				fillTable2(true);
 				sctForm();
 			} else {
-				alert("sct " + sctId + ": Deletion Failed.\nError:\n" + response["Error"]);
+				alert("sct " + sctId + ": Deletion Failed.");
+				console.log("sct " + sctId + ": Deletion Failed.\nError:\n" + response["Error"]);
 				document.getElementById("sctDeleteButton_" + row).value = "Delete"
 				document.getElementById("sctDeleteButton_" + row).disabled = false;
 				document.getElementById("sctDeleteButton_" + row).childNodes[0].nodeValue = "Can't Delete";
@@ -2786,7 +2824,8 @@ function subjectInsert() {
 				var formType = document.getElementById("inputSubjectForm");
 				highlightRowAfterAdd(formType);
 			} else {
-				alert("subjectInsert " + subjectShortName + " Failed. Error: " +
+				alert("subjectInsert " + subjectShortName + " Failed.");
+				console.log("subjectInsert " + subjectShortName + " Failed. Error: " +
 					response["Error"]);
 			}
 		}
@@ -2863,7 +2902,8 @@ function subjectUpdate(i) {
 			}
 			else {
 				document.getElementById("sUpdateButton_" + i).childNodes[0].nodeValue = "Update";
-				alert("Subject " + subjectShortName + ": Update Failed.\nError:\n" + response["Error"]);
+				alert("Subject " + subjectShortName + ": Update Failed.");
+				console.log("Subject " + subjectShortName + ": Update Failed.\nError:\n" + response["Error"]);
 				document.getElementById("sDeleteButton_" + i).disabled = false;
 				document.getElementById("sUpdateButton_" + i).disabled = false;
 				subjectForm();
@@ -2907,7 +2947,8 @@ function subjectDelete(i) {
 				fillTable2(true);
 				subjectForm();
 			} else {
-				alert("Subject " + subjectShortName + ": Deletion Failed.\nError:\n" + response["Error"]);
+				alert("Subject " + subjectShortName + ": Deletion Failed.");
+				console.log("Subject " + subjectShortName + ": Deletion Failed.\nError:\n" + response["Error"]);
 				document.getElementById("sDeleteButton_" + row).value = "Delete"
 				document.getElementById("sUpdateButton_" + row).disabled = false;
 				document.getElementById("sDeleteButton_" + row).childNodes[0].nodeValue = "Can't Delete";
@@ -3016,7 +3057,10 @@ function subjectRoomInsert() {
 				highlightRowAfterAdd(formType);
 			} else {
 				alert("Insert subject: "
+						+ subjectName + " Failed.");
+				console.log("Insert subject: "
 						+ subjectName + " Failed. \nError From Server: \n" + response["Error"]);
+
 			}
 		}
 	}
@@ -3061,8 +3105,11 @@ function subjectRoomUpdate(i) {
 			else {
 				document.getElementById("subjectRoomUpdateButton_" + i).childNodes[0].nodeValue = "Update";
 				alert("srId = " + srId + ": Update Failed for Subject: " +
+									roomShortName + + " subject: " + subjectName);
+				console.log("srId = " + srId + ": Update Failed for Subject: " +
 									roomShortName + + " subject: " + subjectName
 									+ "\nError:\n" + response["Error"]);
+
 				document.getElementById("subjectRoomDeleteButton_" + i).disabled = false;
 				document.getElementById("subjectRoomUpdateButton_" + i).disabled = false;
 				subjectRoomForm();
@@ -3096,7 +3143,8 @@ function subjectRoomDelete(i) {
 				fillTable2(true);
 				subjectRoomForm();
 			} else {
-				alert("subjectRoom " + srId + ": Deletion Failed.\nError:\n" + response["Error"]);
+				alert("subjectRoom " + srId + ": Deletion Failed.");
+				console.log("subjectRoom " + srId + ": Deletion Failed.\nError:\n" + response["Error"]);
 				document.getElementById("subjectRoomDeleteButton_" + row).value = "Delete"
 				document.getElementById("subjectRoomUpdateButton_" + row).disabled = false;
 				document.getElementById("subjectRoomDeleteButton_" + row).childNodes[0].nodeValue = "Can't Delete";
@@ -3302,7 +3350,8 @@ function teacherInsert() {
 				var formType = document.getElementById("inputTeacherForm");
 				highlightRowAfterAdd(formType);
 			} else {
-				alert("teacherInsert " + teacherShortName + " Failed. Error: " + response["Error"]);
+				alert("teacherInsert " + teacherShortName + " Failed.");
+				console.log("teacherInsert " + teacherShortName + " Failed. Error: " + response["Error"]);
 			}
 		}
 	}
@@ -3383,7 +3432,8 @@ function teacherUpdate(i) {
 			}
 			else {
 				document.getElementById("tUpdateButton_" + i).childNodes[0].nodeValue = "Update";
-				alert("Teacher " + teacherShortName + ": Update Failed.\nError:\n" + response["Error"]);
+				alert("Teacher " + teacherShortName + ": Update Failed.");
+				console.log("Teacher " + teacherShortName + ": Update Failed.\nError:\n" + response["Error"]);
 				document.getElementById("tDeleteButton_" + i).disabled = false;
 				document.getElementById("tUpdateButton_" + i).disabled = false;
 				teacherForm();
@@ -3464,7 +3514,8 @@ function teacherDelete(i) {
 				loadSelectMenus();
 				teacherForm();
 			} else {
-				alert("Teacher " + teacherShortName + ": Deletion Failed.\nError:\n" + response["Error"]);
+				alert("Teacher " + teacherShortName + ": Deletion Failed.");
+				console.log("Teacher " + teacherShortName + ": Deletion Failed.\nError:\n" + response["Error"]);
 				document.getElementById("tDeleteButton_" + row).value = "Delete"
 				document.getElementById("tUpdateButton_" + row).disabled = false;
 				document.getElementById("tDeleteButton_" + row).childNodes[0].nodeValue = "Can't Delete";
@@ -3539,7 +3590,8 @@ function snapshotDelete(i) {
 				}
 				snapshotForm();
 			} else {
-				alert("Snapshot " + snapshotName + ": Deletion Failed.\nError:\n" + response["Error"]);
+				alert("Snapshot " + snapshotName + ": Deletion Failed.");
+				console.log("Snapshot " + snapshotName + ": Deletion Failed.\nError:\n" + response["Error"]);
 				document.getElementById("sstDeleteButton_" + row).value = "Delete"
 				document.getElementById("sstDeleteButton_" + row).childNodes[0].nodeValue = "Can't Delete";
 			}

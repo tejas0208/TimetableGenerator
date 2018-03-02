@@ -254,7 +254,7 @@ function makeTrackerList() {
 			index = searchIndex(tracker, "subjectId", curr["subjectId"],
 						"batchId", curr["batchId"], "classId", curr["classId"]);
 			if(index == -1) {
-				alert("ERROR: index -1 in searchIndex i = . " + i + " curr = " +
+				console.log("ERROR: index -1 in searchIndex i = . " + i + " curr = " +
 						JSON.stringify(curr) + "Tracker: " + JSON.stringify(
 							search(tracker, "batchId", curr["batchId"])) + JSON.stringify(
 							search(tracker, "teacherId", curr["teacherId"])) + JSON.stringify(
@@ -272,13 +272,13 @@ function makeTrackerList() {
 			index = searchIndex(tracker, "subjectId", curr["subjectId"],
 						"classId", curr["classId"]);
 			if(index == -1) {
-				alert("ERROR: index -1 in searchIndex i = . " + i + " curr = " +
+				console.log("ERROR: index -1 in searchIndex i = . " + i + " curr = " +
 						JSON.stringify(curr) + "Tracker: " + JSON.stringify(tracker));
 			}
 			eachSlot = tracker[index]["eachSlot"];
 			tracker[index]["done"] += (1.0/eachSlot);
 		} else {
-			alert("ERROR: should not come here in makeTrackerList");
+			console.log("ERROR: should not come here in makeTrackerList");
 			continue;
 		}
 	}
@@ -622,7 +622,7 @@ function debugPrint(tableName, row) {
 				res.snapshotName = "null";
 			break;
 		default:
-			alert(tableName + " table not supported yet in debugPrint");
+			console.log(tableName + " table not supported yet in debugPrint");
 			break;
 	}
 	return JSON.stringify(res);
@@ -1077,7 +1077,8 @@ function getDeptConfigSnapshot() {
 	database = JSON.parse(xhttp.responseText);
 	dept = database.dept;
 	if(typeof dept == "undefined") {
-		alert("Table: dept not found. Check your Error Logs");
+		console.log("Table: dept not found. Check your Error Logs");
+		console.log("In getDeptConfigSnapshot() -> Table: dept not found.");
 		return false;
 	}
 	dept.sort(function(a, b) {
@@ -1098,7 +1099,8 @@ function getDeptConfigSnapshot() {
 	database = JSON.parse(xhttp.responseText);
 	config = database.config;
 	if(typeof config == "undefined") {
-		alert("Table: config not found. Check your Error Logs");
+		console.log("Table: config not found. Check your Error Logs");
+		console.log("In getDeptConfigSnapshot() -> Table: config not found.");
 		return false;
 	}
 	if(config.length < 1) {
@@ -1114,7 +1116,8 @@ function getDeptConfigSnapshot() {
 		getDeptConfigSnapshot();
 	}
 	if(typeof snapshot == "undefined") {
-		alert("Table: snapshot not found. Check your Error Logs");
+		console.log("Table: snapshot not found. Check your Error Logs");
+		console.log("In getDeptConfigSnapshot() -> Table: snapshot not found.");
 		return false;
 	}
 	currentSnapshotId = snapshot[0]["snapshotId"];
@@ -1133,7 +1136,8 @@ function getDataTables() {/*Loads data from server asynchronously*/
 	database = JSON.parse(xhttp.responseText);
 	teacher = database.teacher;
 	if(typeof teacher == "undefined") {
-		alert("Table: teacher not found. Check your Error Logs");
+		console.log("Table: teacher not found. Check your Error Logs");
+		console.log("In getDataTablesTable() -> : teacher not found. Check your Error Logs");
 		return false;
 	}
 	teacher.sort(function(a, b) {
@@ -1148,7 +1152,8 @@ function getDataTables() {/*Loads data from server asynchronously*/
 
 	classTable = database.class;
 	if(typeof classTable == "undefined") {
-		alert("Table: class not found. Check your Error Logs");
+		console.log("Table: class not found. Check your Error Logs");
+		console.log("In getDataTables() -> Table: class not found.");
 		return false;
 	}
 	classTable.sort(function(a, b) {
@@ -1163,7 +1168,8 @@ function getDataTables() {/*Loads data from server asynchronously*/
 
 	batch = database.batch;
 	if(typeof batch == "undefined") {
-		alert("Table: batch not found. Check your Error Logs");
+		console.log("Table: batch not found. Check your Error Logs");
+		console.log("In getDataTables() -> Table: batch not found.");
 		return false;
 	}
 	batch.sort(function(a, b) {
@@ -1178,13 +1184,15 @@ function getDataTables() {/*Loads data from server asynchronously*/
 
 	batchCanOverlap = database.batchCanOverlap;
 	if(typeof batchCanOverlap == "undefined") {
-		alert("Table: batchCanOverlap not found. Check your Error Logs");
+		console.log("Table: batchCanOverlap not found. Check your Error Logs");
+		console.log("In getDataTables() -> Table: batchCanOverlap not found.");
 		return false;
 	}
 
 	room = database.room;
 	if(typeof room == "undefined") {
-		alert("Table: room not found. Check your Error Logs");
+		console.log("Table: room not found. Check your Error Logs");
+		console.log("In getDataTables() -> Table: room not found.");
 		return false;
 	}
 	room.sort(function(a, b) {
@@ -1199,13 +1207,15 @@ function getDataTables() {/*Loads data from server asynchronously*/
 
 	batchClass = database.batchClass;
 	if(typeof batchClass == "undefined") {
-		alert("Table: batchClass not found. Check your Error Logs");
+		console.log("Table: batchClass not found. Check your Error Logs");
+		console.log("In get DataTables() -> Table: batchClass not found.");
 		return false;
 	}
 
 	subject = database.subject;
 	if(typeof subject == "undefined") {
-		alert("Table: subject not found. Check your Error Logs");
+		console.log("Table: subject not found. Check your Error Logs");
+		console.log("In getDataTables() -> Table: subject not found.");
 		return false;
 	}
 	subject.sort(function(a, b) {
@@ -1220,13 +1230,15 @@ function getDataTables() {/*Loads data from server asynchronously*/
 
 	subjectBatchTeacher = database.subjectBatchTeacher; // subjectBatch
 	if(typeof subjectBatchTeacher == "undefined") {
-		alert("Table: subjectBatchTeacher not found. Check your Error Logs");
+		console.log("Table: subjectBatchTeacher not found. Check your Error Logs");
+		console.log("In getDataTables() -> Table: subjectBatchTeacher not found.");
 		return false;
 	}
 
 	subjectClassTeacher = database.subjectClassTeacher;
 	if(typeof subjectClassTeacher == "undefined") {
-		alert("Table: subjectClassTeacher not found. Check your Error Logs");
+		console.log("Table: subjectClassTeacher not found. Check your Error Logs");
+		console.log("In getDataTables() -> Table: subjectClassTeacher not found.");
 		return false;
 	}
 
@@ -1424,7 +1436,7 @@ function createSubjectRoomEntry(subjectId, roomId) {
 function makeTimeTableEntry(day, slotNo, roomId, classId, subjectId,
 		teacherId, batchId, currentSnapshotId, isFixed, eachSlot) {
 	if(classId == null && batchId == null) {
-		alert("ERROR: makeTimeTableEntry: classId is null");
+		console.log("ERROR: makeTimeTableEntry: classId is null");
 	}
 	for(var i = 0; i < eachSlot; i++) {
 		var newEntry = new createTimeTableEntry(day, (parseInt(slotNo) + i),
@@ -1561,7 +1573,7 @@ function getEligibleBatches(i, j, k, subjectRow) {
 	else if(type == "room") {
 		sbtlist = searchMultipleRows(subjectBatchTeacher, "subjectId", subjectRow["subjectId"]);
 	} else {
-		alert("ERROR: getEligibleBatches: type = " + type + ". Should not come here");
+		console.log("ERROR: getEligibleBatches: type = " + type + ". Should not come here");
 	}
 	var eachSlot = parseInt(subjectRow["eachSlot"]);
 
@@ -1723,7 +1735,7 @@ function classSelected(selecttag) {
 		roomSelect.innerHTML = getEligibleRoom(parseInt(iid), parseInt(jid), parseInt(kid),
 								 capacity, subjectRow, roomFound);/*room option*/
 	} else {
-		alert("ERROR: classSelected wrong type");
+		console.log("ERROR: classSelected wrong type");
 	}
 }
 
@@ -1759,7 +1771,7 @@ function getEligibleClass(i, j, k, subjectRow) {
 		classlist.push(search(classTable, "classId", classId));
 	}
 	if(classlist.length == 0) {
-		alert("ERROR: getEligibleClass: No eligible class found");
+		console.log("ERROR: getEligibleClass: No eligible class found");
 		fillTable2(false);
 		return  "";
 	}
@@ -1841,7 +1853,7 @@ function batchSelected(selecttag) {
 			return;
 			break;
 		default:
-			alert("ERROR: batchSelected: should not come here in default");
+			console.log("ERROR: batchSelected: should not come here in default");
 			break;
 	}
 	selecttag.parentElement.innerHTML =	"<div id= \"batch" + Id + "\"class= \"box\">"
@@ -2035,7 +2047,7 @@ function subjectSelected(selecttag) {
 			}
 			break;
 		default:
-			alert("ERROR: subjectSelected: should not have come here.");
+			console.log("ERROR: subjectSelected: should not have come here.");
 			break;
 		}
 		/* TODO: should we do fillTable2(false) here, or it can be done
@@ -2133,7 +2145,7 @@ function classBusyInThisSlot(i, j, currSubject, classId, logOrNot) {
  		 * only if the slot had no entry?
 		 */
 		if(classId == "undefined") {
-			alert("classBusyInThisSlot ERROR: classId undefined subject: " +
+			console.log("classBusyInThisSlot ERROR: classId undefined subject: " +
 					currSubject["subjectShortName"]);
 		}
 		for(var n = 0; n < currSubject["eachSlot"]; n++) {
@@ -2165,7 +2177,7 @@ function BatchBusyInThisSlot(i, j, currSubject, classId, batchId, logOrNot) {
 	if(typeof classId == "undefined")
 		classId = search(batchClass, "batchId", batchId) ["classId"];
 	if(batchId == "undefined") {
-		alert("BatchBusyInThisSlot ERROR: batchId undefined subject: " +
+		console.log("BatchBusyInThisSlot ERROR: batchId undefined subject: " +
 				currSubject["subjectShortName"]);
 	}
 	/* We check three conditions for each of the j + n slots.
@@ -2369,7 +2381,7 @@ function getEligibleSubjects(i, j, k) {
 			sbtlist = searchMultipleRows(subjectBatchTeacher, "batchId", supportObject["batchId"]);
 			break;
 		default:
-			alert("ERROR: getEligibleSubjects: default: shouldn't come here");
+			console.log("ERROR: getEligibleSubjects: default: shouldn't come here");
 			break;
 	}
 	/* Handle all SCT Entries */
@@ -2863,18 +2875,21 @@ function fillTable2(createNewTable) {
 					if(slotRows[k]["isFixed"] == "1") {
 						var position = getPosition(i, j, slotRows[k], 1);
 						if(position == null) {
-							alert("ERROR: i: " + i + "slot " + j + "k = " + k + " fixed slot. got position null");
+							alert("Error in filltable. Check Error logs");
+							console.log("ERROR: i: " + i + "slot " + j + "k = " + k + " fixed slot. got position null");
 							continue;
 						}
 						subjectHasBatches = "0";
 						var slottable = document.getElementById("slottable" + makeIdFromIJK(i, j, position));
 						if(slottable == null) {
-							alert("ERROR. i: " + i + "slot " + j + "k = " + k + " got slottabble  null. ERROR");
+							alert("Error in filltable. Check Error logs");
+							console.log("ERROR. i: " + i + "slot " + j + "k = " + k + " got slottabble  null. ERROR");
 							continue;
 						}
 						var label = search(fixedEntry, "ttId", slotRows[k]["ttId"])["fixedText"];
 						if(typeof label == "undefined"){
-							alert("ERROR. i: " + i + "slot " + j + "k = " + k + " got fixedText null. ERROR");
+							alert("Error in filltable. Check Error logs");
+							console.log("ERROR. i: " + i + "slot " + j + "k = " + k + " got fixedText null. ERROR");
 							label = "LUNCH";
 						}
 						//if(slotRows[k]["batchId"] != 1)
@@ -2883,7 +2898,8 @@ function fillTable2(createNewTable) {
 							batchName = search(batch, "batchId",slotRows[k]["batchId"])["batchName"];
 							subjectHasBatches = "1";
 							if(typeof batchName == "undefined") {
-								alert("ERROR. i: " + i + "slot " + j + "k = " + k + " got batchName undefined. ERROR");
+								alert("Error in filltable. Check Error logs");
+								console.log("ERROR. i: " + i + "slot " + j + "k = " + k + " got batchName undefined. ERROR");
 								batchName = "";
 							}
 						}
@@ -2938,12 +2954,13 @@ function fillTable2(createNewTable) {
 						continue;
 					var slottable = document.getElementById("slottable" + makeIdFromIJK(i,  j, position));
 					if(slottable == null) {
-						alert("ERROR. i: " + i + "slot " + j + "k = " + k + " position = " + position + " got slottabble  null. ERROR");
+						alert("Error in filltable. Check Error logs");
+						console.log("ERROR. i: " + i + "slot " + j + "k = " + k + " position = " + position + " got slottabble  null. ERROR");
 						continue;
 					}
  					// Note: inside i=days * j=NoOfSlots loop
 					if(batchName == "undefined")
-						alert("ERROR: undefined batchName");
+						console.log("ERROR: undefined batchName");
 					/* Display the Non-fixed Slot Entry in colspan = eachSlot */
 					slottable.innerHTML =
 						"<tr class=\"mainTableRow\">" +
@@ -3047,7 +3064,8 @@ function fillTable2(createNewTable) {
 				var k = getPosition(i, j, null, 1);
 				slottable = document.getElementById("slottable" + makeIdFromIJK(i, j, k));
 				if(slottable == null) {
-					alert("ERROR: slottable null, i = " + i + " j = " + j + " k = " + k);
+					alert("Error in filltable. Check Error logs");
+					console.log("ERROR: slottable null, i = " + i + " j = " + j + " k = " + k);
 					continue;
 				}
 				// Note: inside i=days * j=NoOfSlots loop, subjectHasBatches !=0
@@ -3454,7 +3472,8 @@ function jsSaveNewSnapshot() {
 					loadNewSnapshot();
 					dirtyTimeTable = false;
 				} else{
-					alert("Saving New Snapshot Failed. Error: " + response["Error"]);
+					alert("Saving New Snapshot Failed.");
+					console.log("Saving New Snapshot Failed. Error: " + response["Error"]);
 					loadSnapshotMenu(currentSnapshotName);
 					document.getElementById("saveNewSnapshot").value = "Save New Snapshot";
 					document.getElementById("saveNewSnapshot").disabled = false;
@@ -3494,7 +3513,8 @@ function jsSaveSnapshot(asynchronousOrNot) {
 					loadSnapshotMenu(currentSnapshotName);
 					dirtyTimeTable = false;
 				} else {
-					alert("Saving snapshot failed. Error = " + response["Error"]);
+					alert("Saving snapshot failed.");
+					console.log("Saving snapshot failed. Error = " + response["Error"]);
 					document.getElementById("saveSnapshot").value = "Save";
 					document.getElementById("saveSnapshot").disabled = false;
 				}
@@ -3529,7 +3549,8 @@ function jsSaveSnapshot(asynchronousOrNot) {
 				loadSnapshotMenu(currentSnapshotName);
 				dirtyTimeTable = false;
 			} else {
-				alert("Saving snapshot failed. Error = " + response["Error"]);
+				alert("Saving snapshot failed.");
+				console.log("Saving snapshot failed. Error = " + response["Error"]);
 				document.getElementById("saveSnapshot").value = "Save";
 				document.getElementById("saveSnapshot").disabled = false;
 			}
@@ -3537,7 +3558,8 @@ function jsSaveSnapshot(asynchronousOrNot) {
 	} else if (dirtyTimeTable == false) {
 		alert("jsSaveSnapshot: No TimeTable loaded.\nPlease select timetable from catgories");
 	} else {
-		alert("jsSaveSnapshot: can't find currentSnapshotName");
+		alert("Saving snapshot failed.");
+		console.log("jsSaveSnapshot: can't find currentSnapshotName");
 	}
 }
 
