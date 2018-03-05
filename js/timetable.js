@@ -78,6 +78,135 @@ var roomSizeDelta = 10;
 /*Following varaiables used in printing the heading in tracker list in dashboard*/
 var printSub = "Sub^", printBatch = "Batch^<br>Class^", printTeacher = "Teacher^", printDone = "Done^";
 
+var doingUndo = false;
+
+// Each stack object consists of
+// option 0 -> insert : 1 -> delete
+// global timeTable array entries to be inserted
+// global fixedEntry array entries to be inserted
+function createStack() {
+	var stack = {
+		arr : [],
+		push : function push(element) {
+			this.arr.push(element);
+		},
+		pop : function pop() {
+			this.arr.pop();
+		},
+		top : function top() {
+			return this.arr[this.arr.length-1];
+		},
+		isEmpty : function isEmpty() {
+			return this.arr.length == 0;
+		}
+	}
+	return stack;
+}
+
+var undoStack = createStack();
+var redoStack = createStack();
+
+// helper function to urCheck
+// Iterates over undoStack / redoStack (var stack argument) for checking violations
+function urCheckIterator(stack, args) {
+	var i, j, k;
+	for(i = 0; i < stack.length; i++) {
+		var arr = stack[i].timeTable;
+		for(j = 0; j < arr.length; j++) {
+			for(k = 0; k < args.length; k += 2)
+				if(arr[j][args[k]] === args[k+1]) {
+					var option = confirm("You have unsaved changes for this entry. You won't be able to undo/redo your earlier changes if do this change. Do you want to continue ?");
+					if(option === true) {
+						undoStack = createStack();
+						redoStack = createStack();
+					}
+					return option;
+				}
+		}
+	}
+	return false;
+}
+
+// check stack for violations
+// due to update or delete in configurations (teacher, subject, ...)
+function urCheck() {
+	var option_1 = urCheckIterator(undoStack.arr, arguments);
+	var option_2 = urCheckIterator(redoStack.arr, arguments);
+	return option_1 || option_2;
+}
+
+function urInsertEntry(top) {
+	var i;
+	for(i = 0; i < top.timeTable.length; i++) {
+		timeTable.push(top.timeTable[i]);
+	}
+	if(top.isFixed === true) {
+		fixedEntry.push(top.fixedEntry);
+	}
+	dirtyTimeTable = true;
+	fillTable2(true);
+
+	var day = top.timeTable[0]["day"];
+	var slotNo = top.timeTable[0]["slotNo"];
+	var index = searchIndex(helperTable[day-1][slotNo], top.timeTable[0]);
+	console.log("Added at " + makeIdFromIJK(day, slotNo, index));
+
+	var undoRedoEntry = {};
+	undoRedoEntry.option = 1;
+	undoRedoEntry.Id = makeIdFromIJK(day, slotNo, index);
+	undoRedoEntry.timeTable = [top.timeTable[0]];
+	return undoRedoEntry;
+}
+function urDeleteEntry(top) {
+	var Span = {};
+	[day, slotNo, index ] = makeIJKFromId(top.Id);
+	for(var k = 0; k < helperTable[day-1][slotNo].length; k++) {
+		if(helperTable[day-1][slotNo][k] === top.timeTable[0]) {
+			Span.id = makeIdFromIJK(day, slotNo, k);
+			break;
+		}
+	}
+	console.log("Deleting at " + Span.id);
+	deleteEntry(Span);
+}
+
+function undo() {
+	//check if stack is empty()
+	if(undoStack.isEmpty())
+		return;
+
+	doingUndo = true;
+	var top = undoStack.top();
+
+	if(top.option === 0) {
+		undoRedoEntry = urInsertEntry(top);
+		redoStack.push(undoRedoEntry);
+	}
+	else {
+		urDeleteEntry(top);
+	}
+
+	doingUndo = false;
+	undoStack.pop();
+}
+function redo() {
+	//check if stack is empty
+	if(redoStack.isEmpty())
+		return;
+
+	var top = redoStack.top();
+
+	if(top.option === 0) {
+		undoRedoEntry = urInsertEntry(top);
+		undoStack.push(undoRedoEntry);
+	}
+	else {
+		urDeleteEntry(top);
+	}
+
+	redoStack.pop();
+}
+
 function makeTrackerList() {
 	tracker = [];
 	for (i in subjectClassTeacher) {
@@ -1284,6 +1413,7 @@ function roomSelected(selecttag) {
 	var Id = selecttag.getAttribute("id");
 	[iid, jid, kid ] = makeIJKFromId(Id);
 	Id = makeIdFromIJK(iid, jid, kid);
+
 	var roomShortName = document.getElementById("room" + Id).
 				options[document.getElementById("room" + Id).selectedIndex].text;
 	if(roomShortName == "--Room--"){
@@ -1291,8 +1421,17 @@ function roomSelected(selecttag) {
 		document.getElementById("checkbox" + Id).checked = false;
 		return;
 	}
-	var roomRow = search(room, "roomShortName", roomShortName);
 
+	var undoRedoEntry = {};
+	undoRedoEntry.option = 1;
+	undoRedoEntry.Id = Id;
+	undoRedoEntry.timeTable = [ helperTable[iid-1][jid][kid] ];
+	if(doingUndo === false)
+		undoStack.push(undoRedoEntry);
+	if(doingUndo === true)
+		redoStack.push(undoRedoEntry);
+
+	var roomRow = search(room, "roomShortName", roomShortName);
 	var batchId = null;
 	var classId;
 	var teacherId;
@@ -1495,6 +1634,15 @@ function classSelected(selecttag) {
 		[iid, jid, kid ] = makeIJKFromId(Id);
 		Id = makeIdFromIJK(iid, jid, kid);
 
+		var undoRedoEntry = {};
+		undoRedoEntry.option = 1;
+		undoRedoEntry.Id = Id;
+		undoRedoEntry.timeTable = [ helperTable[iid-1][jid][kid] ];
+		if(doingUndo === false)
+			undoStack.push(undoRedoEntry);
+		if(doingUndo === true)
+			redoStack.push(undoRedoEntry);
+
 		var classRow = search(classTable, "classShortName", classShortName);
 		var subjectShortName = document.getElementById("subject" + Id).innerHTML;
 		var subjectRow = search(subject, "subjectShortName", subjectShortName);
@@ -1677,6 +1825,16 @@ function fixedSlotEntry(i, j, k) {
 				null, supportObject["batchId"], currentSnapshotId, 1, 1);
 		}
 		fixedEntry.push(new fixedEntryObject(timeTable[timeTable.length - 1]["ttId"], label));
+
+		var undoRedoEntry = {};
+		undoRedoEntry.option = 1;
+		undoRedoEntry.Id = makeIdFromIJK(i, j, k);
+		undoRedoEntry.timeTable = [ helperTable[iid-1][jid][kid] ];
+		if(doingUndo === false)
+			undoStack.push(undoRedoEntry);
+		if(doingUndo === true)
+			redoStack.push(undoRedoEntry);
+
 		/*var slottable = document.getElementById("slottable" + makeIdFromIJK(i, j, k));
 		if(slottable == null) {
 			alert("ERROR: slottable null for fixedEntry");
@@ -2295,6 +2453,7 @@ function deleteEntry(Span) {
 	Id = makeIdFromIJK(day, SlotNo, slottableNo);
 
 	var row = helperTable[day - 1][SlotNo][slottableNo];
+	//console.log("helperTable " + JSON.stringify(row, null, 4));
 
 	var batchId, classId, teacherId, roomId, isFixed;
 	roomId = row["roomId"];
@@ -2304,12 +2463,23 @@ function deleteEntry(Span) {
 	isFixed = row["isFixed"];
 	subjectId = row["subjectId"];
 
+	var undoRedoEntry = {};
+	undoRedoEntry.option = 0;	//insert entry
+	undoRedoEntry.isFixed = false;
+	undoRedoEntry.timeTable = [];
+	undoRedoEntry.index = [];
+
 	/* Delete Fixed Entry */
 	if(isFixed == "1") {
+		undoRedoEntry.isFixed = true;
+
 		var index = timeTable.indexOf(row);
 		if(index != -1) {
 			console.log("Deleting TT Entry: " + debugPrint("timeTable", timeTable[index]));
 			timeTable.splice(index, 1);/*Delete entry from table*/
+
+			undoRedoEntry.index.push(index);
+			undoRedoEntry.timeTable.push(timeTable[index]);
 		}
 		else
 			console.log("Error Deleting TT Entry: Couldn't find index");
@@ -2317,6 +2487,14 @@ function deleteEntry(Span) {
 		index = searchIndex(fixedEntry, "ttId", row["ttId"]);
 		if(index != -1) {
 			console.log("Deleting Fixed Entry: " + debugPrint("fixedEntry", fixedEntry[index]));
+
+			undoRedoEntry.fixedEntryIndex = index;
+			undoRedoEntry.fixedEntry = fixedEntry[index];
+			if(doingUndo === false)
+				undoStack.push(undoRedoEntry);	// add to the undoStack for insert
+			if(doingUndo === true)
+				redoStack.push(undoRedoEntry);
+
 			fixedEntry.splice(index, 1);/*Delete entry from table*/
 		}
 		else
@@ -2336,11 +2514,16 @@ function deleteEntry(Span) {
 					"classId", classId, "snapshotId", currentSnapshotId);
 		if(index != -1) {
 			console.log("Deleting TT Entry: " + debugPrint("timeTable", timeTable[index]));
+
+			undoRedoEntry.index.push(index);
+			undoRedoEntry.timeTable.push(timeTable[index]);
+
 			timeTable.splice(index, 1);/*Delete entry from table*/
 		} else {
 			console.log("ERROR: Deleting TT Entry: Couldn't find index");
 		}
 	}
+
 	/*For overlapping sbt, delete OSBT entries*/
 	if(batchId != "" + null) {
 		var sbt = search(subjectBatchTeacher, "subjectId", subjectId,
@@ -2354,6 +2537,11 @@ function deleteEntry(Span) {
 				fillTable2(true);
 				dirtyTimeTable = true;
 				document.getElementById("saveSnapshot").disabled = false;
+
+				if(doingUndo === false)
+					undoStack.push(undoRedoEntry);	// add to the undoStack for insert
+				if(doingUndo === true)
+					redoStack.push(undoRedoEntry);
 				return;
 			}
 			for(var i in osbt) {
@@ -2365,12 +2553,21 @@ function deleteEntry(Span) {
 						"classId", classId, "snapshotId", currentSnapshotId);
 					if(index != -1) {
 						console.log("Deleting TT Entry: " + debugPrint("timeTable", timeTable[index]));
+
+						undoRedoEntry.index.push(index);
+						undoRedoEntry.timeTable.push(timeTable[index]);
+
 						timeTable.splice(index, 1);
 					}
 				}
 			}
 		}
 	}
+	if(doingUndo == false)
+		undoStack.push(undoRedoEntry);	// add to the undoStack for insert
+	if(doingUndo === true)
+		redoStack.push(undoRedoEntry);
+
 	dirtyTimeTable = true;
 	document.getElementById("saveSnapshot").disabled = false;
 	fillTable2(true);
@@ -3502,6 +3699,8 @@ function load() {
 	shortcut.add("Ctrl+s", function () { jsSaveSnapshot(false)});
 	shortcut.add("Ctrl+shift+s", function () { jsSaveNewSnapshot()});
 	shortcut.add("Ctrl+l", function () { clearAll()});
+	shortcut.add("Ctrl+z", function () { undo() });
+	shortcut.add("Ctrl+y", function () { redo() })
 	return res;
 }
 

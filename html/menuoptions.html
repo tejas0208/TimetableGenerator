@@ -62,11 +62,17 @@
 				<option value = "" selected></option>
 			</select>
 		</div>
-		<div class="selection-menu" id="save-snapshot-menu" display="none"> 
+		<div class="selection-menu" id="save-snapshot-menu" display="none">
 			<input type=button id="saveSnapshot" value="Save"
 				onclick="jsSaveSnapshot(true)" >   <br>
-			<input type=button id="saveNewSnapshot" value="Save As" 
+			<input type=button id="saveNewSnapshot" value="Save As"
 						onclick="jsSaveNewSnapshot()" >
+		</div>
+		<div class="selection-menu" display="none">
+			<input type=button id="undoButton" value="undo"
+				onclick="undo()" >   <br>
+			<input type=button id="redoButton" value="redo"
+				onclick="redo()" >
 		</div>
 		<div class = "selection-menu">
 			<form action="timetable.php" method="POST">
