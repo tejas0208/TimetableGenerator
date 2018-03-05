@@ -536,6 +536,11 @@ function batchUpdate(i) {
 		batchClassUpdate(row, currBatchId, newClassId);
 	}
 
+	// Check undo/redo stack for clashing batchId
+	ret = urCheck("batchId", batchId);
+	if(ret === false)
+		return;
+
 	row = i - 2;
 	//var batchOrigName = batch[row]["batchName"];
 	var xhttp = new XMLHttpRequest();
@@ -578,6 +583,12 @@ function batchDelete(i) {
 		return;
 	//batchName = document.getElementById("batchName_" + row).value;
 	batchId = document.getElementById("bfCenter_" + row).childNodes[0].nodeValue;
+
+	// Check undo/redo stack for clashing batchId
+	ret = urCheck("batchId", batchId);
+	if(ret === false)
+		return;
+
 	document.getElementById("bDeleteButton_" + row).childNodes[0].nodeValue = "Deleting";
 	document.getElementById("bDeleteButton_" + row).disabled = true;
 	//document.getElementById("bUpdateButton_" + row).disabled = true;
@@ -1103,6 +1114,12 @@ function classUpdate(i) {
 	classShortName = classShortName.value;
 	if(!validateAlNumFields(classShortName, "Class Short Name"))
 		return;
+
+	// Check undo/redo stack for clashing classId
+	ret = urCheck("classId", classId);
+	if(ret === false)
+		return;
+
 	semester = semester.value;
 	classCount = classCount.value;
 	document.getElementById("cUpdateButton_" + row).childNodes[0].nodeValue = "Updating";
@@ -1156,6 +1173,12 @@ function classDelete(i) {
 		return;
 	//classShortName = document.getElementById("classShortName_" + row).value;
 	classId = document.getElementById("cCenter_" + row).childNodes[0].nodeValue;
+
+	// Check undo/redo stack for clashing classId
+	ret = urCheck("classId", classId);
+	if(ret === false)
+		return;
+
 	document.getElementById("cDeleteButton_" + row).childNodes[0].nodeValue = "Deleting";
 	document.getElementById("cDeleteButton_" + row).disabled = true;
 	document.getElementById("cUpdateButton_" + row).disabled = true;
@@ -1959,6 +1982,11 @@ function roomUpdate(i) {
 	if(!validateAlNumFields(roomShortName,"Room Short Name"))
 		return;
 	roomCount = roomCount.value;
+
+	// Check undo/redo stack for clashing roomId
+	ret = urCheck("roomId", roomId);
+	if(ret === false)
+		return;
 	
 	document.getElementById("rUpdateButton_" + row).childNodes[0].nodeValue = "Updating";
 	document.getElementById("rDeleteButton_" + row).disabled = true;
@@ -2009,6 +2037,12 @@ function roomDelete(i) {
 		return;
 	//roomShortName = document.getElementById("roomShortName_" + row).value;
 	roomId = document.getElementById("rCenter_" + row).childNodes[0].nodeValue;
+
+	// Check undo/redo stack for clashing roomId
+	ret = urCheck("roomId", roomId);
+	if(ret === false)
+		return;
+
 	document.getElementById("rDeleteButton_" + row).childNodes[0].nodeValue = "Deleting";
 	document.getElementById("rDeleteButton_" + row).disabled = true;
 	document.getElementById("rUpdateButton_" + row).disabled = true;
@@ -2173,6 +2207,12 @@ function sbtUpdate(i) {
 	subjectId = document.getElementById("sbtSubject_" + row).value;
 	teacherId = document.getElementById("sbtTeacher_" + row).value;
 	sbtId = document.getElementById("sbtCenter_" + row).childNodes[0].nodeValue;
+
+	// Check undo/redo stack for clashing subjectId || batchId || teacherId
+	ret = urCheck("subjectId", subjectId, "batchId", batchId, "teacherId", teacherId);
+	if(ret === false)
+		return;
+
 	//document.getElementById("sbtUpdateButton_" + row).childNodes[0].nodeValue = "Updating";
 	document.getElementById("sbtDeleteButton_" + row).disabled = true;
 	document.getElementById("sbtUpdateButton_" + row).disabled = true;
@@ -2226,6 +2266,12 @@ function sbtDelete(i) {
 	subjectId = sbtRow["subjectId"];
 	batchId = sbtRow["batchId"];
 	teacherId = sbtRow["teacherId"];
+
+	// Check undo/redo stack for clashing subjectId || batchId || teacherId
+	ret = urCheck("subjectId", subjectId, "batchId", batchId, "teacherId", teacherId);
+	if(ret === false)
+		return;
+
 	document.getElementById("sbtDeleteButton_" + row).childNodes[0].nodeValue = "Deleting";
 	document.getElementById("sbtDeleteButton_" + row).disabled = true;
 	var xhttp = new XMLHttpRequest();
@@ -2395,6 +2441,12 @@ function sctUpdate(i) {
 	subjectId = document.getElementById("sctSubject_" + row).value;
 	teacherId = document.getElementById("sctTeacher_" + row).value;
 	sctId = document.getElementById("sctCenter_" + row).childNodes[0].nodeValue;
+
+	// Check undo/redo stack for clashing subjectId || classId || teacherId
+	ret = urCheck("subjectId", subjectId, "classId", classId, "teacherId", teacherId);
+	if(ret === false)
+		return;
+
 	document.getElementById("sctUpdateButton_" + row).childNodes[0].nodeValue = "Updating";
 	document.getElementById("sctDeleteButton_" + row).disabled = true;
 	document.getElementById("sctUpdateButton_" + row).disabled = true;
@@ -2449,6 +2501,12 @@ function sctDelete(i) {
 	subjectId = sctRow["subjectId"];
 	classId = sctRow["classId"];
 	teacherId = sctRow["teacherId"];
+
+	// Check undo/redo stack for clashing subjectId || classId || teacherId
+	ret = urCheck("subjectId", subjectId, "classId", classId, "teacherId", teacherId);
+	if(ret === false)
+		return;
+
 	document.getElementById("sctDeleteButton_" + row).childNodes[0].nodeValue = "Deleting";
 	document.getElementById("sctDeleteButton_" + row).disabled = true;
 	var xhttp = new XMLHttpRequest();
@@ -2635,8 +2693,12 @@ function subjectUpdate(i) {
 	if(!validateAlNumFields(subjectShortName,"Subject Short Name"))
 		return;
 	nSlots = nSlots.value;
-	
-	
+
+	// Check undo/redo stack for clashing subjectId
+	ret = urCheck("subjectId", subjectId);
+	if(ret === false)
+		return;
+
 	document.getElementById("sUpdateButton_" + row).childNodes[0].nodeValue = "Updating";
 	document.getElementById("sDeleteButton_" + row).disabled = true;
 	document.getElementById("sUpdateButton_" + row).disabled = true;
@@ -2687,6 +2749,12 @@ function subjectDelete(i) {
 		return;
 	subjectId = document.getElementById("sCenter_" + row).childNodes[0].nodeValue;
 	//subjectShortName = document.getElementById("subjectShortName_" + row).value;
+
+	// Check undo/redo stack for clashing subjectId
+	ret = urCheck("subjectId", subjectId);
+	if(ret === false)
+		return;
+
 	document.getElementById("sDeleteButton_" + row).childNodes[0].nodeValue = "Deleting";
 	document.getElementById("sDeleteButton_" + row).disabled = true;
 	document.getElementById("sUpdateButton_" + row).disabled = true;
@@ -3138,6 +3206,12 @@ function teacherUpdate(i) {
 	teacherShortName = teacherShortName.value;
 	if(!validateAlNumFields(teacherShortName,"Teacher Short Name"))
 		return;
+
+	// Check undo/redo stack for clashing teacherId
+	ret = urCheck("teacherId", teacherId);
+	if(ret === false)
+		return;
+
 	minHrs = minHrs.value;
 	maxHrs = maxHrs.value;
 	dept = dept.value;
@@ -3194,6 +3268,12 @@ function teacherDelete(i) {
 	if(sure != true)
 		return;
 	teacherId = document.getElementById("tCenter_" + row).childNodes[0].nodeValue;
+
+	// Check undo/redo stack for clashing teacherId
+	ret = urCheck("teacherId", teacherId);
+	if(ret === false)
+		return;
+
 	document.getElementById("tDeleteButton_" + row).childNodes[0].nodeValue = "Deleting";
 	document.getElementById("tDeleteButton_" + row).disabled = true;
 	document.getElementById("tUpdateButton_" + row).disabled = true;
