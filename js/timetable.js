@@ -3728,7 +3728,153 @@ function load() {
 	shortcut.add("Ctrl+x", function () { cutShortcut() });
 	shortcut.add("Ctrl+v", function () { pasteShortcut() });
 	shortcut.add("delete", function() { deleteShortcut() });
+
+	shortcut.add("left", function() {
+		horizontalCellTraverseOnKeyPress("left");
+	});
+	shortcut.add("right", function() {
+		horizontalCellTraverseOnKeyPress("right");
+	});
+	shortcut.add("up", function() {
+		verticalCellTraverseOnKeyPress("up");
+	});
+	shortcut.add("down", function() {
+		verticalCellTraverseOnKeyPress("down");
+	});
+
 	return res;
+}
+
+function verticalCellTraverseOnKeyPress(direction) {
+	if(selectedCell === undefined)
+		return;
+	[i,j,k] = makeIJKFromId(selectedCell.id);
+	k = parseInt(k);
+	i = parseInt(i);
+	var slotTableRowCount = helperTable[0][0].length;
+	if(direction === "up") {
+		if(i === 1 && k === 0) {
+			selectedCell.style.borderColor = "red";
+			setTimeout(function(){
+				selectedCell.style.borderColor = "green";
+			},300);
+			return;
+		}
+		else {
+			if(i > 1 & k === 0) {
+				i--;
+				k = slotTableRowCount - 1;
+			}
+			else if(k !== 0) {
+				k--;
+			}
+			while((k !== 0) &&
+				(document.getElementById("row"+i+k).style.display === "none"))
+				k--;
+
+		}
+	}
+	else if(direction === "down") {
+		if(k !== slotTableRowCount - 1) {
+			k++;
+			while((k !== slotTableRowCount - 1) &&
+				(document.getElementById("row"+i+k).style.display
+					=== "none"))
+				k++;
+		}
+		if((i === 7) && (k === slotTableRowCount - 1)) {
+			selectedCell.style.borderColor = "red";
+			setTimeout(function(){
+				selectedCell.style.borderColor = "green";
+			},300);
+			return;
+		}
+		else {
+			if((i !== 7) && (k === slotTableRowCount - 1)) {
+				i++;
+				k = 0;
+			}
+		}
+	}
+
+	if((helperTable[i-1][j][k] !== 0) &&
+		(helperTable[i-1][j][k] !== null) &&
+		(helperTable[i-1][j][k]["batchId"] !== null)) {
+				while (((j-1) >= 0) &&
+					(helperTable[i-1][j-1][k] !== null) &&
+					(helperTable[i-1][j-1][k]["batchId"] !== null) &&
+					(helperTable[i-1][j][k]["batchId"] ===
+						helperTable[i-1][j-1][k]["batchId"]) &&
+					(helperTable[i-1][j][k]["subjectId"] ===
+						helperTable[i-1][j-1][k]["subjectId"])
+					)
+						j--;
+	}
+	var cell = document.getElementById("cell"+makeIdFromIJK(i,j,k));
+	selected(cell);
+	scrollCell(cell);
+}
+
+function horizontalCellTraverseOnKeyPress(direction) {
+	if(selectedCell === undefined) {
+		if(direction === "right") {
+			var temp = document.getElementById("cell_1_0_0");
+			if(temp !== null)
+				selected(document.getElementById("cell_1_0_0"));
+			return;
+		}
+		return;
+	 }
+	[i,j,k] = makeIJKFromId(selectedCell.id);
+	j = parseInt(j);
+	var boundaryValue = NoOfSlots - 1;
+	if(direction === "left")
+		boundaryValue = 0;
+	if(j === boundaryValue) {
+		selectedCell.style.borderColor = "red";
+		setTimeout(function(){
+			selectedCell.style.borderColor = "green";
+		},300);
+	}
+	else {
+		if(direction === "right")
+			j++;
+		else if(direction === "left")
+			j--;
+		else
+			return;
+		while((document.getElementById("cell" +
+				makeIdFromIJK(i,j,k)).style.display === "none")
+					&& (j !== boundaryValue)) {
+			if(direction === "right")
+				j++;
+			else if(direction === "left")
+				j--;
+		}
+		var cell = document.getElementById("cell"+makeIdFromIJK(i,j,k));
+		selected(cell);
+		scrollCell(cell);
+	}
+}
+
+function scrollCell(element) {
+	var positionInfo = element.getBoundingClientRect();
+	var height = positionInfo.height;
+	var width = positionInfo.width;
+	var viewportHeight = document.documentElement.clientHeight;
+	var viewportWidth = document.documentElement.clientWidth;
+	var top = positionInfo.top;
+	var bottom = positionInfo.bottom;
+	var left = positionInfo.left;
+	var right = positionInfo.right;
+	if(top <= 0)
+			window.scrollBy(0,(top - height - 10));
+	if(bottom >= viewportHeight)
+			window.scrollBy(0,(bottom - viewportHeight + 10));
+	if(left <= 0)
+			window.scrollBy((left - width - 10), 0);
+	if(right >= viewportWidth)
+			window.scrollBy((right - viewportWidth + 10), 0);
 }
 
 function clearAll() {
