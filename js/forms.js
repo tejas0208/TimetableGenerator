@@ -651,11 +651,10 @@ function batchCanOverlapForm() {
 	$("#batchCanOverlapAdd").on("change", filterBatchCanOverlapSelect); 
 	
 	cell = insertAddButton(row, "batchCanOverlapInsert()", 1);
-
 	/* Add the existing batch entries */
 	tr = document.getElementById("batchCanOverlapTable").rows[0];
 	var ncells = tr.cells.length;
-	var count = 2;
+	//var count = 2;
 	/* This code assumes that we can ALWAYS find mutually exclusive,
 	 * sets of overlapping batches from batchCanOverlap table
 	 */
@@ -691,7 +690,7 @@ function batchCanOverlapForm() {
 		}
 	}
 
-	var count = 2;
+	count = 2;
 	for(i = 0; i < overlaps.length; i++) {
 		curr = overlaps[i];
 		currText = "";
@@ -2086,6 +2085,7 @@ function sbtPossible() {
 	}
 	return 1;
 }
+var c;
 function sbtForm() {
 	if(!sbtPossible()) {
 		alert("This form is not available. Enter at least one batchable Subject, " +
@@ -2131,7 +2131,7 @@ function sbtForm() {
 		width: 'resolve'
 	});
 
-	cell = insertAddButton(row, "sbtInsert()", 1);
+	cell = insertAddButton(row, "sbtInsert()", 2);
 
 	/* Add the existing sbt entries */
 	tr = document.getElementById("sbtTable").rows[0];
@@ -2150,13 +2150,15 @@ function sbtForm() {
 		insertTextColumn(row, "sbtSubject_" + count,
 				search(subject, "subjectId", currSBT["subjectId"])["subjectName"]);
 
-		insertTextColumn(row, "sbtSubject_" + count,
+		insertTextColumn(row, "sbtTeacher_" + count,
 				search(teacher, "teacherId", currSBT["teacherId"])["teacherName"]);
-
+		insertUpdateButton(row, "sbtUpdateButton_" + count,
+							"sbtUpdate(" + count +")");
 		insertDeleteButton(row, "sbtDeleteButton_" + count,
 							"sbtDelete(" + count + ")");
 		count++;
 	}
+	c = 0;
 }
 function sbtInsert() {
 	var batchId, subjectId, teacheId, sbtId;
@@ -2199,60 +2201,122 @@ function sbtInsert() {
 			teacherId + "&batchId=" + batchId + "&snapshotId=" + currentSnapshotId);
 
 }
-
+function newSubjectBatchTeacher(i){
+	var a = document.getElementById("teacher"+i);
+	newTeacherName = a.options[a.selectedIndex].text;
+	document.getElementById("sbtUpdateButton_" + i).childNodes[0].nodeValue = "Confirm";
+	document.getElementById("sbtDeleteButton_" + i).disabled = true;
+	document.getElementById("sbtUpdateButton_" + i).disabled = false;
+}
 function sbtUpdate(i) {
-	var row = i;
-	var batchId, subjectId, teacheId, sbtId;
-	batchId = document.getElementById("sbtBatch_" + row).value;
-	subjectId = document.getElementById("sbtSubject_" + row).value;
-	teacherId = document.getElementById("sbtTeacher_" + row).value;
-	sbtId = document.getElementById("sbtCenter_" + row).childNodes[0].nodeValue;
-
-	// Check undo/redo stack for clashing subjectId || batchId || teacherId
-	ret = urCheck("subjectId", subjectId, "batchId", batchId, "teacherId", teacherId);
-	if(ret === false)
-		return;
-
-	//document.getElementById("sbtUpdateButton_" + row).childNodes[0].nodeValue = "Updating";
-	document.getElementById("sbtDeleteButton_" + row).disabled = true;
-	document.getElementById("sbtUpdateButton_" + row).disabled = true;
-	/* debug */
-	teacherShortName = search(teacher, "teacherId", teacherId)["teacherShortName"];
-	subjectShortName = search(subject, "subjectId", subjectId)["subjectShortName"];
-	batchName= search(batch, "batchId", batchId)["batchName"];
-
-	row = i - 2;
-	var xhttp = new XMLHttpRequest();
-	xhttp.onreadystatechange = function () {
-		if(this.readyState == 4 && this.status == 200) {
-			//alert("sbt Row " + row + "Updated");
-			response = JSON.parse(this.responseText);
-			if(response["Success"] == "True") {
-				document.getElementById("sbtUpdateButton_" + i).childNodes[0].nodeValue = "Updated";
-				document.getElementById("sbtDeleteButton_" + i).disabled = false;
-				document.getElementById("sbtUpdateButton_" + i).disabled = false;
-				subjectBatchTeacher[row]["teacherId"] = teacherId;
-				subjectBatchTeacher[row]["subjectId"] = subjectId;
-				subjectBatchTeacher[row]["batchId"] = batchId;
-				fillTable2(true);
-				sbtForm();
-			}
-			else {
-				document.getElementById("sbtUpdateButton_" + i).childNodes[0].nodeValue = "Update";
-				alert("sbtId = " + sbtId + ": Update Failed for Teacher: " + teacherShortName
-								+ " Subject: " + subjectShortName + + " batch: " + batchName
-									+ "\nError:\n" + response["Error"]);
-				document.getElementById("sbtDeleteButton_" + i).disabled = false;
-				document.getElementById("sbtUpdateButton_" + i).disabled = false;
-				sbtForm();
+	if(document.getElementById("sbtUpdateButton_" + i).childNodes[0].nodeValue == "Update") {
+		c++;
+		if(c != 1){
+			sbtForm();
+		}
+		var row = i;
+		oldTeacherName = document.getElementById("sbtTeacher_" + row).childNodes[0].nodeValue;
+		teacherRow = document.getElementById("sbtTeacher_" + row);
+		while (teacherRow.firstChild) {
+			teacherRow.removeChild(teacherRow.firstChild);
+		}
+		var selectTag = document.createElement("select");
+		selectTag.setAttribute("id", "teacher" + row);
+		var tag = createOptionTag(-1, "", false);
+		selectTag.appendChild(tag);
+		for(k in teacher) {
+			var tag = createOptionTag(teacher[k]["teacherId"], teacher[k]["teacherName"], false);
+			selectTag.appendChild(tag);
+		}
+		selectTag.setAttribute("onchange", "newSubjectBatchTeacher(" + row + ")");
+		teacherRow.appendChild(selectTag);
+		$("#teacher" + row).select2({
+			width: 'resolve'
+		});
+	}
+	else if(document.getElementById("sbtUpdateButton_" + i).childNodes[0].nodeValue == "Confirm") {
+		var sure = confirm("Warning: Changing Teacher will delete all overlaps \n" +
+				  "This can not be undone. \n" +
+				  "Are you sure?");
+		if(sure != true)
+			return;
+		teacherRow = document.getElementById("sbtTeacher_" + i);
+		while (teacherRow.firstChild) {
+			teacherRow.removeChild(teacherRow.firstChild);
+		}
+		var centerTag = document.createElement("center");
+		centerTag.setAttribute("id", "teacher" + i);
+		centerTag.setAttribute("class", "formText");
+		centerTag.setAttribute("value", newTeacherName);
+		var centerText = document.createTextNode(newTeacherName);
+		centerTag.appendChild(centerText);
+		teacherRow.appendChild(centerTag);
+		document.getElementById("sbtUpdateButton_" + i).childNodes[0].nodeValue = "Update";
+		document.getElementById("sbtDeleteButton_" + i).disabled = false;
+		document.getElementById("sbtUpdateButton_" + i).disabled = false;
+		var batchId, subjectId, teacheId, sbtId;
+		batchName = document.getElementById("sbtBatch_" + i).childNodes[0].nodeValue;
+		subjectName = document.getElementById("sbtSubject_" + i).childNodes[0].nodeValue;
+		batchId = search(batch, "batchName", batchName)["batchId"];
+		subjectId = search(subject, "subjectName", subjectName)["subjectId"];
+		sbtId = document.getElementById("sbtCenter_" +i).childNodes[0].nodeValue;
+		oldTeacherId = search(teacher, "teacherName", oldTeacherName)["teacherId"];
+		newTeacherId = search(teacher, "teacherName", newTeacherName)["teacherId"];
+		// Check undo/redo stack for clashing subjectId || batchId || teacherId
+		ret = urCheck("subjectId", subjectId, "batchId", batchId, "teacherId", oldTeacherId);
+		if(ret === false)
+			return;
+		/* debug */
+		row = i - 2;
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function () {
+			if(this.readyState == 4 && this.status == 200) {
+				response = JSON.parse(this.responseText);
+				if(response["Success"] == "True") {
+					document.getElementById("sbtUpdateButton_" + i).childNodes[0].nodeValue = "Updated";
+					document.getElementById("sbtDeleteButton_" + i).disabled = false;
+					document.getElementById("sbtUpdateButton_" + i).disabled = false;
+					subjectBatchTeacher[row]["teacherId"] = newTeacherId;
+						subjectBatchTeacher[row]["subjectId"] = subjectId;
+					subjectBatchTeacher[row]["batchId"] = batchId;
+					row = searchMultipleRows (timeTable, "teacherId", oldTeacherId, "batchId", batchId,
+								"subjectId", subjectId, "snapshotId", currentSnapshotId);
+					var j;
+					for(k in row) {
+						j = searchIndex(timeTable, "teacherId", oldTeacherId, "batchId", batchId,
+							"subjectId", subjectId, "snapshotId", currentSnapshotId,
+							"slotNo", row[k]["slotNo"], "day", row[k]["day"]);
+						currSubject = search(subject, "subjectId", subjectId);
+						if(teacherBusyInThisSlot(row[k]["day"], row[k]["slotNo"], currSubject, newTeacherId, 0)) {
+							timeTable.splice(j, 1);
+						}
+						else{
+							timeTable[j]["teacherId"] = newTeacherId;
+						}
+					}
+					fillTable2(true);
+					sbtForm();
+				}
+				else {
+					document.getElementById("sbtUpdateButton_" + i).childNodes[0].nodeValue = "Update";
+					alert("sbtId = " + sbtId + ": Update Failed for Teacher: " + oldTeacherName
+									+ " Subject: " + subjectName + " batch: " + batchName
+										+ "\nError:\n" + response["Error"]
+											+"\nsearching teacherId of " + newTeacherName
+												+ " returns " + teacherId
+													+" Problem with database values");
+					document.getElementById("sbtDeleteButton_" + i).disabled = false;
+					document.getElementById("sbtUpdateButton_" + i).disabled = false;
+					sbtForm();
+				}
 			}
 		}
+		xhttp.open("POST", "timetable.php", false); // asynchronous
+		xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+		xhttp.send("reqType=sbtUpdate&subjectId=" + subjectId + "&newTeacherId=" +
+			newTeacherId + "&oldTeacherId=" + oldTeacherId + "&batchId=" + batchId + "&sbtId=" + sbtId +
+			"&snapshotId=" + currentSnapshotId);
 	}
-	xhttp.open("POST", "timetable.php", false); // asynchronous
-	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("reqType=sbtUpdate&subjectId=" + subjectId + "&teacherId=" +
-			teacherId + "&batchId=" + batchId + "&sbtId=" + sbtId + "&snapshotId=" + currentSnapshotId);
-
 }
 function sbtDelete(i) {
 	var row = i;
@@ -2329,7 +2393,7 @@ function sctForm() {
 	}
 	formOpen("inputSCTForm");
 	/* ---- Adding Header Row -----------------------*/
-	var table = insertHeaderRow("sctTable", "ID", "Class", "Subject", "Teacher", 1);
+	var table = insertHeaderRow("sctTable", "ID", "Class", "Subject", "Teacher", 2);
 
 	/* ---- Adding "Add sct Row" -----------------------*/
 	row = insertRow(table, 1);
@@ -2365,17 +2429,15 @@ function sctForm() {
 		width: 'resolve'
 	});
 
-	cell = insertAddButton(row, "sctInsert()", 1);
+	cell = insertAddButton(row, "sctInsert()", 2);
 
 	/* Add the existing sct entries */
 	tr = document.getElementById("sctTable").rows[0];
 	var ncells = tr.cells.length;
 	var count = 2;
-
 	for (i in subjectClassTeacher) {
 		currSCT = subjectClassTeacher[i];
-		var row = insertRow(table, count);
-
+		var row = insertRow(table, count)
 		insertTextColumn(row, "sctCenter_" + count, currSCT["sctId"]);
 
 		insertTextColumn(row, "sctBatch_" + count,
@@ -2383,14 +2445,17 @@ function sctForm() {
 
 		insertTextColumn(row, "sctSubject_" + count,
 				search(subject, "subjectId", currSCT["subjectId"])["subjectName"]);
-
-		insertTextColumn(row, "sctSubject_" + count,
+		insertTextColumn(row, "sctTeacher_" + count,
 				search(teacher, "teacherId", currSCT["teacherId"])["teacherName"]);
-
+		/*insertInputBox(row, "text", "sctTeacher_" + count, "32",
+					"Teacher Name", search(teacher, "teacherId", currSCT["teacherId"])["teacherName"]);*/
+		insertUpdateButton(row, "sctUpdateButton_" + count,
+							"sctUpdate(" + count +")");
 		insertDeleteButton(row, "sctDeleteButton_" + count,
 							"sctDelete(" + count + ")");
 		count++;
 	}
+	c = 0;
 }
 function sctInsert() {
 	var classId, subjectId, teacheId, sctId;
@@ -2433,61 +2498,129 @@ function sctInsert() {
 			teacherId + "&classId=" + classId + "&snapshotId=" + currentSnapshotId);
 
 }
-
+var newTeacherName;
+var oldTeacherName;
+function newSubjectClassTeacher(i){
+	var a = document.getElementById("teacher"+i);
+	newTeacherName = a.options[a.selectedIndex].text;
+	document.getElementById("sctUpdateButton_" + i).childNodes[0].nodeValue = "Confirm";
+	document.getElementById("sctDeleteButton_" + i).disabled = true;
+	document.getElementById("sctUpdateButton_" + i).disabled = false;
+}
 function sctUpdate(i) {
-	var row = i;
-	var classId, subjectId, teacheId, sctId;
-	classId = document.getElementById("sctClass_" + row).value;
-	subjectId = document.getElementById("sctSubject_" + row).value;
-	teacherId = document.getElementById("sctTeacher_" + row).value;
-	sctId = document.getElementById("sctCenter_" + row).childNodes[0].nodeValue;
+	/* Change the teacher's column to a select2 box */
+	if(document.getElementById("sctUpdateButton_" + i).childNodes[0].nodeValue == "Update") {
+		c++;
+		if(c != 1){
+			sctForm();
+			c = 1;
+		}
+		var row = i;
+		oldTeacherName = document.getElementById("sctTeacher_" + row).childNodes[0].nodeValue;
+		teacherRow = document.getElementById("sctTeacher_" + row);
+		while (teacherRow.firstChild) {
+			teacherRow.removeChild(teacherRow.firstChild);
+		}
+		var selectTag = document.createElement("select");
+		selectTag.setAttribute("id", "teacher" + row);
+		var tag = createOptionTag(-1, "", false);
+		selectTag.appendChild(tag);
+		for(k in teacher) {
+			var tag = createOptionTag(teacher[k]["teacherId"], teacher[k]["teacherName"], false);
+			selectTag.appendChild(tag);
+		}
+		selectTag.setAttribute("onchange", "newSubjectClassTeacher(" + row + ")");
+		teacherRow.appendChild(selectTag);
+		$("#teacher" + row).select2({
+			width: 'resolve'
+		});
+	}
+	else if(document.getElementById("sctUpdateButton_" + i).childNodes[0].nodeValue == "Confirm") {
+		var sure = confirm("Warning: Changing Teacher will delete all overlaps \n" +
+				  "This can not be undone. \n" +
+				  "Are you sure?");
+		if(sure != true)
+			return;
+		teacherRow = document.getElementById("sctTeacher_" + i);
+		while (teacherRow.firstChild) {
+			teacherRow.removeChild(teacherRow.firstChild);
+		}
 
-	// Check undo/redo stack for clashing subjectId || classId || teacherId
-	ret = urCheck("subjectId", subjectId, "classId", classId, "teacherId", teacherId);
-	if(ret === false)
-		return;
+		var centerTag = document.createElement("center");
+		centerTag.setAttribute("id", "teacher" + i);
+		centerTag.setAttribute("class", "formText");
+		centerTag.setAttribute("value", newTeacherName);
+		var centerText = document.createTextNode(newTeacherName);
+		centerTag.appendChild(centerText);
+		teacherRow.appendChild(centerTag);
 
-	document.getElementById("sctUpdateButton_" + row).childNodes[0].nodeValue = "Updating";
-	document.getElementById("sctDeleteButton_" + row).disabled = true;
-	document.getElementById("sctUpdateButton_" + row).disabled = true;
-	/* debug */
-	teacherShortName = search(teacher, "teacherId", teacherId)["teacherShortName"];
-	subjectShortName = search(subject, "subjectId", subjectId)["subjectShortName"];
-	classShortName= search(classTable, "classId", classId)["classShortName"];
+		document.getElementById("sctUpdateButton_" + i).childNodes[0].nodeValue = "Update";
+		document.getElementById("sctDeleteButton_" + i).disabled = false;
+		document.getElementById("sctUpdateButton_" + i).disabled = false;
 
-	row = i - 2;
-	var xhttp = new XMLHttpRequest();
-	xhttp.onreadystatechange = function () {
-		if(this.readyState == 4 && this.status == 200) {
-			//alert("sct Row " + row + "Updated");
-			response = JSON.parse(this.responseText);
-			if(response["Success"] == "True") {
-				document.getElementById("sctUpdateButton_" + i).childNodes[0].nodeValue = "Updated";
-				document.getElementById("sctDeleteButton_" + i).disabled = false;
-				document.getElementById("sctUpdateButton_" + i).disabled = false;
-				subjectClassTeacher[row]["teacherId"] = teacherId;
-				subjectClassTeacher[row]["subjectId"] = subjectId;
-				subjectClassTeacher[row]["classId"] = classId;
-				fillTable2(true);
-				sctForm();
-			}
-			else {
-				document.getElementById("sctUpdateButton_" + i).childNodes[0].nodeValue = "Update";
-				alert("sctId = " + sctId + ": Update Failed for Teacher: " + teacherShortName
-								+ " Subject: " + subjectShortName + + " class: " + classShortName
-									+ "\nError:\n" + response["Error"]);
-				document.getElementById("sctDeleteButton_" + i).disabled = false;
-				document.getElementById("sctUpdateButton_" + i).disabled = false;
-				sctForm();
+		var classId, subjectId, teacherId, sctId;
+		className = document.getElementById("sctBatch_" + i).childNodes[0].nodeValue;
+		subjectName = document.getElementById("sctSubject_" + i).childNodes[0].nodeValue;
+		sctId = document.getElementById("sctCenter_" + i).childNodes[0].nodeValue;
+		oldTeacherId = search(teacher, "teacherName", oldTeacherName)["teacherId"];
+		newTeacherId = search(teacher, "teacherName", newTeacherName)["teacherId"];
+		classId = search(classTable, "className", className)["classId"];
+		subjectId = search(subject, "subjectName", subjectName)["subjectId"];
+		// Check undo/redo stack for clashing subjectId || classId || teacherId
+		ret = urCheck("subjectId", subjectId, "classId", classId, "teacherId", oldTeacherId);
+		if(ret === false)
+			return;
+
+		row = i - 2;
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function () {
+			if(this.readyState == 4 && this.status == 200) {
+				response = JSON.parse(this.responseText);
+				if(response["Success"] == "True") {
+					document.getElementById("sctUpdateButton_" + i).childNodes[0].nodeValue = "Update";
+					document.getElementById("sctDeleteButton_" + i).disabled = false;
+					document.getElementById("sctUpdateButton_" + i).disabled = false;
+					subjectClassTeacher[row]["teacherId"] = newTeacherId;
+					subjectClassTeacher[row]["subjectId"] = subjectId;
+					subjectClassTeacher[row]["classId"] = classId;
+					row = searchMultipleRows (timeTable, "teacherId", oldTeacherId, "classId", classId,
+								"subjectId", subjectId, "snapshotId", currentSnapshotId);
+					var j;
+					for(k in row) {
+						j = searchIndex(timeTable, "teacherId", oldTeacherId, "classId", classId,
+								"subjectId", subjectId, "snapshotId", currentSnapshotId,
+								"slotNo", row[k]["slotNo"], "day", row[k]["day"]);
+						currSubject = search(subject, "subjectId", subjectId);
+						if(teacherBusyInThisSlot(row[k]["day"], row[k]["slotNo"], currSubject, newTeacherId, 0)) {
+							timeTable.splice(j, 1);
+						}
+						else{
+							timeTable[j]["teacherId"] = newTeacherId;
+						}
+					}
+					fillTable2(true);
+					sctForm();
+				}
+				else {
+					document.getElementById("sctUpdateButton_" + i).childNodes[0].nodeValue = "Update";
+						alert("sctId = " + sctId + ": Update Failed for Teacher: " + oldTeacherName
+							+ " Subject: " + subjectName + " class: " + className
+									+ "\nError:\n" + response["Error"]
+										+"\nsearching teacherId of " + newTeacherName
+											+ " returns " + teacherId
+												+" Problem with database values");
+					document.getElementById("sctDeleteButton_" + i).disabled = false;
+					document.getElementById("sctUpdateButton_" + i).disabled = false;
+					sctForm();
+				}
 			}
 		}
-	}
-	xhttp.open("POST", "timetable.php", false); // asynchronous
-	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("reqType=sctUpdate&subjectId=" + subjectId + "&teacherId=" +
-			teacherId + "&classId=" + classId + "&sctId=" + sctId +
+		xhttp.open("POST", "timetable.php", false); // asynchronous
+		xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+		xhttp.send("reqType=sctUpdate&subjectId=" + subjectId + "&newTeacherId=" +
+			newTeacherId + "&oldTeacherId=" + oldTeacherId + "&classId=" + classId + "&sctId=" + sctId +
 			"&snapshotId=" + currentSnapshotId);
-
+	}
 }
 function sctDelete(i) {
 	var row = i;
