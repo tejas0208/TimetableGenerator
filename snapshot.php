@@ -26,7 +26,6 @@
  * are likely to be wrong, as they were just computed at user end. Take care
  * of that.
  */
-
 function rollback() {
 	global $CFG;
 	$res = sqlUpdate("ROLLBACK;");
@@ -253,6 +252,7 @@ function saveSnapshot() {
 }
 global $newIDs;
 function cloneAllTables($currentSnapshotId, $newSnapshotId) {
+	global $CFG;	
 	/* Stage 1: Tables without any foreign key except snapshotId */
 	$tableNames = array(//"dept", "config", "snapshot",
 					"teacher",
@@ -270,10 +270,9 @@ function cloneAllTables($currentSnapshotId, $newSnapshotId) {
 
 		/* Get Names of columns for each table. This is to avoid per table code */
 		$columnNamesQuery = " SELECT `COLUMN_NAME`  FROM `INFORMATION_SCHEMA`.`COLUMNS`  WHERE ".
-							"`TABLE_SCHEMA`='timeTable'      AND `TABLE_NAME`='$currTableName';";
+							"`TABLE_SCHEMA`='".$CFG->db_database."'      AND `TABLE_NAME`='$currTableName';";
 		$allColumnNames = sqlGetAllRows($columnNamesQuery);
 		ttlog("clone: got column Names: ". json_encode($allColumnNames));
-
 		/* Make list of column names for INSERT query */
 		$columnNames = "";
 		$nColumns = count($allColumnNames);
@@ -511,10 +510,8 @@ function cloneAllTables($currentSnapshotId, $newSnapshotId) {
 		if($result === false)
 			return false;
 	}
-
 	return true;
 }
-
 function saveNewSnapshot() {
 	header("Content-Type: application/JSON: charset=UTF-8");
 
