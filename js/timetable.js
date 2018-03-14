@@ -120,12 +120,13 @@ function urCheckIterator(stack, args) {
 					if(option === true) {
 						undoStack = createStack();
 						redoStack = createStack();
+						return true;
 					}
-					return option;
+					return false;
 				}
 		}
 	}
-	return false;
+	return true;
 }
 
 // check stack for violations
@@ -133,7 +134,9 @@ function urCheckIterator(stack, args) {
 function urCheck() {
 	var option_1 = urCheckIterator(undoStack.arr, arguments);
 	var option_2 = urCheckIterator(redoStack.arr, arguments);
-	return option_1 || option_2;
+	if (option_1 === false || option_2 === false)
+		return false;
+	return true;
 }
 
 function urInsertEntry(top) {
