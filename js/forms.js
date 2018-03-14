@@ -2216,6 +2216,12 @@ function sbtUpdate(i) {
 		}
 		var row = i;
 		oldTeacherName = document.getElementById("sbtTeacher_" + row).childNodes[0].nodeValue;
+		sbtId = document.getElementById("sbtCenter_" + row).childNodes[0].nodeValue;
+		osbtList = searchMultipleRows(overlappingSBT, "sbtId1", sbtId);
+		if(osbtList.length > 0) {
+			alert("Update on entries with overlapping batches is not upported yet");
+			return;
+		}
 		teacherRow = document.getElementById("sbtTeacher_" + row);
 		while (teacherRow.firstChild) {
 			teacherRow.removeChild(teacherRow.firstChild);
@@ -2501,7 +2507,7 @@ function sctInsert() {
 var newTeacherName;
 var oldTeacherName;
 function newSubjectClassTeacher(i){
-	var a = document.getElementById("teacher"+i);
+	var a = document.getElementById("sctTeacherId_" + i);
 	newTeacherName = a.options[a.selectedIndex].text;
 	document.getElementById("sctUpdateButton_" + i).childNodes[0].nodeValue = "Confirm";
 	document.getElementById("sctDeleteButton_" + i).disabled = true;
@@ -2522,7 +2528,7 @@ function sctUpdate(i) {
 			teacherRow.removeChild(teacherRow.firstChild);
 		}
 		var selectTag = document.createElement("select");
-		selectTag.setAttribute("id", "teacher" + row);
+		selectTag.setAttribute("id", "sctTeacherId_" + row);
 		var tag = createOptionTag(-1, "", false);
 		selectTag.appendChild(tag);
 		for(k in teacher) {
@@ -2531,7 +2537,7 @@ function sctUpdate(i) {
 		}
 		selectTag.setAttribute("onchange", "newSubjectClassTeacher(" + row + ")");
 		teacherRow.appendChild(selectTag);
-		$("#teacher" + row).select2({
+		$("#sctTeacherId_" + row).select2({
 			width: 'resolve'
 		});
 	}
@@ -2547,7 +2553,7 @@ function sctUpdate(i) {
 		}
 
 		var centerTag = document.createElement("center");
-		centerTag.setAttribute("id", "teacher" + i);
+		centerTag.setAttribute("id", "sctTeacherId_" + i);
 		centerTag.setAttribute("class", "formText");
 		centerTag.setAttribute("value", newTeacherName);
 		var centerText = document.createTextNode(newTeacherName);
