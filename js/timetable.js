@@ -2080,10 +2080,11 @@ function roomBusyOnRoomPageInThisSlot(i, j, currSubject) {
 
 function teacherBusyInThisSlot(i, j, currSubject, teacherId, logOrNot) {
 	currTeacher = search(teacher, "teacherId", teacherId);
-
+	var s;
 	for(var n = 0; n < currSubject["eachSlot"]; n++) {
-		var nEntriesForTeacher = search(timeTable, "day", i, "slotNo", j + n,
-			 "teacherId", teacherId, "snapshotId", currentSnapshotId);
+		s = Number(j) + n;
+		var nEntriesForTeacher = search(timeTable, "day", i, "slotNo", s, "teacherId",
+				teacherId, "snapshotId", currentSnapshotId);
 		if(nEntriesForTeacher != -1) {
 			if(logOrNot == 1)
 				disabledSubjectAdd(disabledSubjects, currSubject["subjectShortName"],
@@ -2093,6 +2094,7 @@ function teacherBusyInThisSlot(i, j, currSubject, teacherId, logOrNot) {
 	}
 	return false;
 }
+
 function classBusyInThisSlot(i, j, currSubject, classId, logOrNot) {
 	if(currSubject["batches"] == "0") {
 		/* Skip subject because already a theory lecture in that slot
