@@ -676,17 +676,38 @@ function sbtDelete() {
 	return successMessage();
 }
 function sbtUpdate() {
+
 	global $CFG;
 	header("Content-Type: application/JSON: charset=UTF-8");
 
-	$teacherId = getArgument("teacherId");
+	$oldTeacherId = getArgument("oldTeacherId");
+	$newTeacherId = getArgument("newTeacherId");
 	$subjectId = getArgument("subjectId");
 	$batchId = getArgument("batchId");
 	$sbtId = getArgument("sbtId");
 	$snapshotId = getArgument("snapshotId");
-	ttlog("sbtUpdate(): arguments: ".json_encode($_POST));
 
-	$query = "UPDATE subjectBatchTeacher SET teacherId = $teacherId, ".
+	$selectQuery = "select t1.day, t1.slotNo from timeTable t1 join timeTable t2 on".
+			" t1.day = t2.day and t1.slotNo = t2.slotNo where t1.teacherId = \"$oldTeacherId\"".
+			" and t2.teacherId = \"$newTeacherId\" and t1.snapshotId = \"$snapshotId\"".
+			" and t2.snapshotId = \"$snapshotId\" and t1.batchId = \"$batchId\" and t1.subjectId = \"$subjectId\"";
+
+	$selectResult = sqlGetAllRows($selectQuery);
+	//ttlog("sbtUpdate(): $selectQuery Result: " . json_encode($selectResult));
+	for($x = 0; $x < count($selectResult); $x++) {
+		$day = $selectResult[$x]["day"];
+		$slotNo =  $selectResult[$x]["slotNo"];
+		$deleteQuery = "delete from timeTable where day = \"$day\" and slotNo = \"$slotNo\"".
+				" and teacherId = \"$oldTeacherId\" and snapshotId = \"$snapshotId\"";
+		$deleteResult = sqlUpdate($deleteQuery);
+		ttlog("sbtUpdate(): $deleteQuery Result: $deleteResult");
+	}
+	$updateQuery = "Update timeTable set teacherId = \"$newTeacherId\" where teacherId = \"$oldTeacherId\"".
+			" and snapshotId = \"$snapshotId\" and batchId = \"$batchId\" and subjectId = \"$subjectId\"";
+	$updateResult = sqlUpdate($updateQuery);
+	ttlog("sbtUpdate(): $updateQuery Result: $updateResult");
+
+	$query = "UPDATE subjectBatchTeacher SET teacherId = $newTeacherId, ".
 			  "subjectId = $subjectId, batchId = $batchId".
 			 " WHERE sbtId = $sbtId AND snapshotId = $snapshotId";
 
@@ -770,15 +791,37 @@ function sctUpdate() {
 	global $CFG;
 	header("Content-Type: application/JSON: charset=UTF-8");
 
-	$teacherId = getArgument("teacherId");
+	$oldTeacherId = getArgument("oldTeacherId");
+	$newTeacherId = getArgument("newTeacherId");
 	$subjectId = getArgument("subjectId");
 	$classId = getArgument("classId");
 	$sctId = getArgument("sctId");
 	$snapshotId = getArgument("snapshotId");
 
-	$query = "UPDATE subjectClassTeacher SET teacherId = $teacherId, ".
-			  "subjectId = $subjectId, classId = $classId".
-			 " WHERE sctId = $sctId AND snapshotId = $snapshotId";
+	$selectQuery = "select t1.day, t1.slotNo from timeTable t1 join timeTable t2 on ".
+			"t1.day = t2.day and t1.slotNo = t2.slotNo where t1.teacherId = \"$oldTeacherId\"".
+			" and t2.teacherId = \"$newTeacherId\" and t1.snapshotId = \"$snapshotId\"".
+			" and t2.snapshotId = \"$snapshotId\" and t1.classId = \"$classId\" and t1.subjectId = \"$subjectId\"";
+
+	$selectResult = sqlGetAllRows($selectQuery);
+	ttlog("sctUpdate(): $selectQuery Result: " . json_encode($selectResult));
+	for($x = 0; $x < count($selectResult); $x++) {
+		$day = $selectResult[$x]["day"];
+		$slotNo =  $selectResult[$x]["slotNo"];
+		$deleteQuery = "delete from timeTable where day = \"$day\" and slotNo = \"$slotNo\"".
+				" and teacherId = \"$oldTeacherId\" and snapshotId = \"$snapshotId\"";
+		$deleteResult = sqlUpdate($deleteQuery);
+		ttlog("sctUpdate(): $deleteQuery Result: $deleteResult");
+	}
+
+	$updateQuery = "Update timeTable set teacherId = \"$newTeacherId\"".
+			" where teacherId = \"$oldTeacherId\" and snapshotId = \"$snapshotId\"".
+			" and classId = \"$classId\" and subjectId = \"$subjectId\"";
+	$updateResult = sqlUpdate($updateQuery);
+	ttlog("sctUpdate(): $updateQuery Result: $updateResult");
+	$query = "UPDATE subjectClassTeacher SET teacherId = \"$newTeacherId\", ".
+			  "subjectId = \"$subjectId\", classId = \"$classId\"".
+			 " WHERE sctId = \"$sctId\" AND snapshotId = \"$snapshotId\"";
 
 	$result = sqlUpdate($query);
 	ttlog("sctUpdate(): $query Result: $result");
