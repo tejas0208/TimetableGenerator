@@ -254,6 +254,7 @@ function makeTrackerList() {
 			index = searchIndex(tracker, "subjectId", curr["subjectId"],
 						"batchId", curr["batchId"], "classId", curr["classId"]);
 			if(index == -1) {
+				alert("ERROR. See Console Log for more details. Your Data May be corrupt");
 				console.log("ERROR: index -1 in searchIndex i = . " + i + " curr = " +
 						JSON.stringify(curr) + "Tracker: " + JSON.stringify(
 							search(tracker, "batchId", curr["batchId"])) + JSON.stringify(
@@ -272,12 +273,14 @@ function makeTrackerList() {
 			index = searchIndex(tracker, "subjectId", curr["subjectId"],
 						"classId", curr["classId"]);
 			if(index == -1) {
+				alert("ERROR. See Console Log for more details. Your Data May be corrupt");
 				console.log("ERROR: index -1 in searchIndex i = . " + i + " curr = " +
 						JSON.stringify(curr) + "Tracker: " + JSON.stringify(tracker));
 			}
 			eachSlot = tracker[index]["eachSlot"];
 			tracker[index]["done"] += (1.0/eachSlot);
 		} else {
+			alert("ERROR. See Console Log for more details. Your Data May be corrupt");
 			console.log("ERROR: should not come here in makeTrackerList");
 			continue;
 		}
@@ -1077,7 +1080,7 @@ function getDeptConfigSnapshot() {
 	database = JSON.parse(xhttp.responseText);
 	dept = database.dept;
 	if(typeof dept == "undefined") {
-		console.log("Table: dept not found. Check your Error Logs");
+		alert("ERROR: Could not fetch 'dept' table. See Console Log for more details.");
 		console.log("In getDeptConfigSnapshot() -> Table: dept not found.");
 		return false;
 	}
@@ -1116,7 +1119,7 @@ function getDeptConfigSnapshot() {
 		getDeptConfigSnapshot();
 	}
 	if(typeof snapshot == "undefined") {
-		console.log("Table: snapshot not found. Check your Error Logs");
+		alert("ERROR: Could not fetch 'snapshot' table. See Console Log for more details.");
 		console.log("In getDeptConfigSnapshot() -> Table: snapshot not found.");
 		return false;
 	}
@@ -1136,7 +1139,8 @@ function getDataTables() {/*Loads data from server asynchronously*/
 	database = JSON.parse(xhttp.responseText);
 	teacher = database.teacher;
 	if(typeof teacher == "undefined") {
-		console.log("Table: teacher not found. Check your Error Logs");
+		alert("ERROR: Could not fetch 'teacher' table. See Console Log for more details.");
+		console.log("Table: teacher not found. Check your Error Logs on server");
 		console.log("In getDataTablesTable() -> : teacher not found. Check your Error Logs");
 		return false;
 	}
@@ -1152,7 +1156,8 @@ function getDataTables() {/*Loads data from server asynchronously*/
 
 	classTable = database.class;
 	if(typeof classTable == "undefined") {
-		console.log("Table: class not found. Check your Error Logs");
+		alert("ERROR: Could not fetch 'class' table. See Console Log for more details.");
+		console.log("Table: 'class' not found. Check your Error Logs on server");
 		console.log("In getDataTables() -> Table: class not found.");
 		return false;
 	}
@@ -1168,7 +1173,8 @@ function getDataTables() {/*Loads data from server asynchronously*/
 
 	batch = database.batch;
 	if(typeof batch == "undefined") {
-		console.log("Table: batch not found. Check your Error Logs");
+		alert("ERROR: Could not fetch 'batch' table. See Console Log for more details.");
+		console.log("Table: batch not found. Check your Error Logs on server");
 		console.log("In getDataTables() -> Table: batch not found.");
 		return false;
 	}
@@ -1184,14 +1190,16 @@ function getDataTables() {/*Loads data from server asynchronously*/
 
 	batchCanOverlap = database.batchCanOverlap;
 	if(typeof batchCanOverlap == "undefined") {
-		console.log("Table: batchCanOverlap not found. Check your Error Logs");
+		alert("ERROR: Could not fetch 'batchCanOverlap' table. See Console Log for more details.");
+		console.log("Table: batchCanOverlap not found. Check your Error Logs on server");
 		console.log("In getDataTables() -> Table: batchCanOverlap not found.");
 		return false;
 	}
 
 	room = database.room;
 	if(typeof room == "undefined") {
-		console.log("Table: room not found. Check your Error Logs");
+		alert("ERROR: Could not fetch 'room' table. See Console Log for more details.");
+		console.log("Table: room not found. Check your Error Logs on server");
 		console.log("In getDataTables() -> Table: room not found.");
 		return false;
 	}
@@ -1207,14 +1215,16 @@ function getDataTables() {/*Loads data from server asynchronously*/
 
 	batchClass = database.batchClass;
 	if(typeof batchClass == "undefined") {
-		console.log("Table: batchClass not found. Check your Error Logs");
+		alert("ERROR: Could not fetch 'batchClass' table. See Console Log for more details.");
+		console.log("Table: batchClass not found. Check your Error Logs on server");
 		console.log("In get DataTables() -> Table: batchClass not found.");
 		return false;
 	}
 
 	subject = database.subject;
 	if(typeof subject == "undefined") {
-		console.log("Table: subject not found. Check your Error Logs");
+		alert("ERROR: Could not fetch 'subject' table. See Console Log for more details.");
+		console.log("Table: subject not found. Check your Error Logs on server");
 		console.log("In getDataTables() -> Table: subject not found.");
 		return false;
 	}
@@ -1230,14 +1240,16 @@ function getDataTables() {/*Loads data from server asynchronously*/
 
 	subjectBatchTeacher = database.subjectBatchTeacher; // subjectBatch
 	if(typeof subjectBatchTeacher == "undefined") {
-		console.log("Table: subjectBatchTeacher not found. Check your Error Logs");
+		alert("ERROR: Could not fetch 'subjectBatchTeacher' table. See Console Log for more details.");
+		console.log("Table: subjectBatchTeacher not found. Check your Error Logs on server.");
 		console.log("In getDataTables() -> Table: subjectBatchTeacher not found.");
 		return false;
 	}
 
 	subjectClassTeacher = database.subjectClassTeacher;
 	if(typeof subjectClassTeacher == "undefined") {
-		console.log("Table: subjectClassTeacher not found. Check your Error Logs");
+		alert("ERROR: Could not fetch 'subjectClassTeacher' table. See Console Log for more details.");
+		console.log("Table: subjectBatchTeacher not found. Check your Error Logs on server.");
 		console.log("In getDataTables() -> Table: subjectClassTeacher not found.");
 		return false;
 	}
@@ -1436,6 +1448,7 @@ function createSubjectRoomEntry(subjectId, roomId) {
 function makeTimeTableEntry(day, slotNo, roomId, classId, subjectId,
 		teacherId, batchId, currentSnapshotId, isFixed, eachSlot) {
 	if(classId == null && batchId == null) {
+		alert("ERROR. See Console Log for more details. Your Data May be corrupt");
 		console.log("ERROR: makeTimeTableEntry: classId is null");
 	}
 	for(var i = 0; i < eachSlot; i++) {
@@ -1573,6 +1586,7 @@ function getEligibleBatches(i, j, k, subjectRow) {
 	else if(type == "room") {
 		sbtlist = searchMultipleRows(subjectBatchTeacher, "subjectId", subjectRow["subjectId"]);
 	} else {
+		alert("ERROR. See Console Log for more details. Your Data May be corrupt");
 		console.log("ERROR: getEligibleBatches: type = " + type + ". Should not come here");
 	}
 	var eachSlot = parseInt(subjectRow["eachSlot"]);
@@ -1735,6 +1749,7 @@ function classSelected(selecttag) {
 		roomSelect.innerHTML = getEligibleRoom(parseInt(iid), parseInt(jid), parseInt(kid),
 								 capacity, subjectRow, roomFound);/*room option*/
 	} else {
+		alert("ERROR. See Console Log for more details. Your Data May be corrupt");
 		console.log("ERROR: classSelected wrong type");
 	}
 }
@@ -1771,7 +1786,7 @@ function getEligibleClass(i, j, k, subjectRow) {
 		classlist.push(search(classTable, "classId", classId));
 	}
 	if(classlist.length == 0) {
-		console.log("ERROR: getEligibleClass: No eligible class found");
+		console.log("WARNING: getEligibleClass: No eligible class found");
 		fillTable2(false);
 		return  "";
 	}
@@ -1853,6 +1868,7 @@ function batchSelected(selecttag) {
 			return;
 			break;
 		default:
+			alert("ERROR. See Console Log for more details. Your Data May be corrupt");
 			console.log("ERROR: batchSelected: should not come here in default");
 			break;
 	}
@@ -2047,6 +2063,7 @@ function subjectSelected(selecttag) {
 			}
 			break;
 		default:
+			alert("ERROR. See Console Log for more details. Your Data May be corrupt");
 			console.log("ERROR: subjectSelected: should not have come here.");
 			break;
 		}
@@ -2097,7 +2114,8 @@ function allEntriesAlreadyDoneForSubject(currSubject, searchOn, searchId,
 		return true;
 	}
 	if(lenExistingEntries > maxEntriesForSubject) {
-		alert("ERROR: More than max possible entries for subject: " + currSubject["subjectShortName"]);
+		alert("ERROR. See Console Log for more details. Your Data May be corrupt");
+		console.log("ERROR: More than max possible entries for subject: " + currSubject["subjectShortName"]);
 		return true;
 	}
 	return false;
@@ -2145,6 +2163,7 @@ function classBusyInThisSlot(i, j, currSubject, classId, logOrNot) {
  		 * only if the slot had no entry?
 		 */
 		if(classId == "undefined") {
+			alert("ERROR. See Console Log for more details. Your Data May be corrupt");
 			console.log("classBusyInThisSlot ERROR: classId undefined subject: " +
 					currSubject["subjectShortName"]);
 		}
@@ -2177,6 +2196,7 @@ function BatchBusyInThisSlot(i, j, currSubject, classId, batchId, logOrNot) {
 	if(typeof classId == "undefined")
 		classId = search(batchClass, "batchId", batchId) ["classId"];
 	if(batchId == "undefined") {
+		alert("ERROR. See Console Log for more details. Your Data May be corrupt");
 		console.log("BatchBusyInThisSlot ERROR: batchId undefined subject: " +
 				currSubject["subjectShortName"]);
 	}
@@ -2381,6 +2401,7 @@ function getEligibleSubjects(i, j, k) {
 			sbtlist = searchMultipleRows(subjectBatchTeacher, "batchId", supportObject["batchId"]);
 			break;
 		default:
+			alert("ERROR. See Console Log for more details. Your Data May be corrupt");
 			console.log("ERROR: getEligibleSubjects: default: shouldn't come here");
 			break;
 	}
@@ -2586,6 +2607,7 @@ function deleteEntry(Span) {
 
 			timeTable.splice(index, 1);/*Delete entry from table*/
 		} else {
+			alert("ERROR. See Console Log for more details. Your Data May be corrupt");
 			console.log("ERROR: Deleting TT Entry: Couldn't find index");
 		}
 	}
@@ -2875,20 +2897,20 @@ function fillTable2(createNewTable) {
 					if(slotRows[k]["isFixed"] == "1") {
 						var position = getPosition(i, j, slotRows[k], 1);
 						if(position == null) {
-							alert("Error in filltable. Check Error logs");
+							alert("ERROR. See Console Log for more details. Your Data May be corrupt");
 							console.log("ERROR: i: " + i + "slot " + j + "k = " + k + " fixed slot. got position null");
 							continue;
 						}
 						subjectHasBatches = "0";
 						var slottable = document.getElementById("slottable" + makeIdFromIJK(i, j, position));
 						if(slottable == null) {
-							alert("Error in filltable. Check Error logs");
+							alert("ERROR. See Console Log for more details. Your Data May be corrupt");
 							console.log("ERROR. i: " + i + "slot " + j + "k = " + k + " got slottabble  null. ERROR");
 							continue;
 						}
 						var label = search(fixedEntry, "ttId", slotRows[k]["ttId"])["fixedText"];
 						if(typeof label == "undefined"){
-							alert("Error in filltable. Check Error logs");
+							alert("ERROR. See Console Log for more details. Your Data May be corrupt");
 							console.log("ERROR. i: " + i + "slot " + j + "k = " + k + " got fixedText null. ERROR");
 							label = "LUNCH";
 						}
@@ -2898,7 +2920,7 @@ function fillTable2(createNewTable) {
 							batchName = search(batch, "batchId",slotRows[k]["batchId"])["batchName"];
 							subjectHasBatches = "1";
 							if(typeof batchName == "undefined") {
-								alert("Error in filltable. Check Error logs");
+								alert("ERROR. See Console Log for more details. Your Data May be corrupt");
 								console.log("ERROR. i: " + i + "slot " + j + "k = " + k + " got batchName undefined. ERROR");
 								batchName = "";
 							}
@@ -2954,7 +2976,7 @@ function fillTable2(createNewTable) {
 						continue;
 					var slottable = document.getElementById("slottable" + makeIdFromIJK(i,  j, position));
 					if(slottable == null) {
-						alert("Error in filltable. Check Error logs");
+						alert("ERROR. See Console Log for more details. Your Data May be corrupt");
 						console.log("ERROR. i: " + i + "slot " + j + "k = " + k + " position = " + position + " got slottabble  null. ERROR");
 						continue;
 					}
@@ -3064,7 +3086,7 @@ function fillTable2(createNewTable) {
 				var k = getPosition(i, j, null, 1);
 				slottable = document.getElementById("slottable" + makeIdFromIJK(i, j, k));
 				if(slottable == null) {
-					alert("Error in filltable. Check Error logs");
+					alert("ERROR. See Console Log for more details. Your Data May be corrupt");
 					console.log("ERROR: slottable null, i = " + i + " j = " + j + " k = " + k);
 					continue;
 				}
