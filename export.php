@@ -253,6 +253,279 @@ function generate_timetable_worksheet($currTableName, $searchParam, $sheetCount,
 	$objPHPExcel->getActiveSheet()->getCell($col.$row)->setValue(count($allrows2));
 	$objPHPExcel->getActiveSheet()->getStyle($col.$row)->applyFromArray($styleArray);
 }
+function generate_workload_worksheet($sheetCount,$allrows2,$deptName,$currentSnapshotName) {
+	global $objPHPExcel;
+	if($sheetCount == 0)
+		$sheetName = "Subject_Load";
+	else
+		$sheetName = "Teacher_Load";
+	$myWorkSheet = new PHPExcel_Worksheet($objPHPExcel, $sheetName);
+	$objPHPExcel->addSheet($myWorkSheet, $sheetCount);
+	$objPHPExcel->setActiveSheetIndex($sheetCount);
+	$objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
+	$objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_PageSetup::PAPERSIZE_A4);
+	$objPHPExcel->getActiveSheet()->getPageMargins()->setTop(0.5);
+	$objPHPExcel->getActiveSheet()->getPageMargins()->setRight(0.3);
+	$objPHPExcel->getActiveSheet()->getPageMargins()->setLeft(0.3);
+	$objPHPExcel->getActiveSheet()->getPageMargins()->setBottom(0.5);
+	$cols = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
+			'AA','AB','AC','AD','AE','AF','AG','AH','AI','AJ','AK','AL','AM','AN','AO','AP','AQ','AR','AS','AT',
+			'AU','AV','AW','AX','AY','AZ','BA','BB','BC','BD','BE','BF','BG','BH','BI','BJ','BK','BL','BM','BN',
+			'BO','BP','BQ','BR','BS','BT','BU','BV','BW','BX','BY','BZ','CA','CB','CC','CD','CE','CF','CG','CH',
+			'CI','CJ','CK','CL','CM','CN','CO','CP','CQ','CR','CS','CT','CU','CV','CW','CX','CY','CZ');
+	$text = array("College of Engineering, Pune", $deptName, $sheetName." For Snapshot : $currentSnapshotName");
+	if($sheetCount == 0){
+		for($x = 0; $x < count($text); $x++) {
+			$xx = $x + 1;
+			$objRichText = new PHPExcel_RichText();
+			$currText = $objRichText->createTextRun($text[$x]);
+			$currText->getFont()->setBold(true);
+			$currText->getFont()->setSize(16);
+			$currText->getFont()->setColor( new PHPExcel_Style_Color(PHPExcel_Style_Color::COLOR_DARKGREEN ) );
+			$objPHPExcel->getActiveSheet()->getCell('A'.$xx)->setValue($objRichText);
+			$objPHPExcel->getActiveSheet()->getRowDimension($xx)->setRowHeight(18);
+			$objPHPExcel->getActiveSheet()->mergeCells("A$xx:G$xx");
+			$objPHPExcel->getActiveSheet()->getStyle('A'.$xx)->getAlignment()->
+									setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+		}
+		$rowshift = count($text) + 3;
+		$colshift = 1;
+		$styleArray = array(
+		 'borders' => array(
+			'top' => array(
+				'style' => PHPExcel_Style_Border::BORDER_THIN,
+			 ),
+			'bottom' => array(
+				'style' => PHPExcel_Style_Border::BORDER_THIN,
+			 ),
+			'left' => array(
+				'style' => PHPExcel_Style_Border::BORDER_THIN,
+			 ),
+			'right' => array(
+				'style' => PHPExcel_Style_Border::BORDER_THIN,
+			 ),
+		 ),
+		);
+		$objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(15);
+		$objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(15);
+		$objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(15);
+		$objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(15);
+		$objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(15);
+		$cols2 = array("Subject", "Class/Batch", "Teacher", "Semester", "Load");
+		$colsdb = array("subjectShortName","Class_Batch","teacherShortName","semester","load1");
+		for($k = 0; $k < count($cols2); $k++) {
+			$colname = $cols2[$k];
+			$objRichText = new PHPExcel_RichText();
+			$currText = $objRichText->createTextRun($colname);
+			$currText->getFont()->setBold(true);
+			$currText->getFont()->setSize(13);
+			$currText->getFont()->setColor( new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_BLACK) );
+			$objPHPExcel->getActiveSheet()->getCell($cols[$k+$colshift].$rowshift)->setValue($objRichText);
+			$objPHPExcel->getActiveSheet()->getStyle($cols[$k+$colshift].$rowshift)->getAlignment()->
+									setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			$objPHPExcel->getActiveSheet()->getStyle($cols[$k+$colshift].$rowshift)->getAlignment()->
+									setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+			$objPHPExcel->getActiveSheet()->getStyle($cols[$k+$colshift].$rowshift)->applyFromArray($styleArray);
+		}
+		$rowshift++;
+		for($col = 0; $col <= 4; $col++)
+			$widths[$col] = 10.5;
+		for($row1 = 0; $row1 < count($allrows2); $row1++) {
+			for($col1 = 0; $col1 < count($colsdb); $col1++) {
+				$row = $row1 - 1 + $rowshift;
+				$col = $cols[$col1 + $colshift];
+				$colname = $colsdb[$col1];
+				$text = $allrows2[$row1][$colname];
+				$objRichText = new PHPExcel_RichText();
+				$currText = $objRichText->createTextRun($text);
+				$currText->getFont()->setBold(true);
+				$currText->getFont()->setSize(10);
+				$currText->getFont()->setColor( new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_BLACK) );
+				$objPHPExcel->getActiveSheet()->getCell($cols[$col1+$colshift].$rowshift)->setValue($objRichText);
+				$objPHPExcel->getActiveSheet()->getStyle($cols[$col1+$colshift].$rowshift)->getAlignment()->
+										setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+				$objPHPExcel->getActiveSheet()->getStyle($cols[$col1+$colshift].$rowshift)->getAlignment()->
+										setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+				$objPHPExcel->getActiveSheet()->getStyle($cols[$col1+$colshift].$rowshift)->applyFromArray($styleArray);
+			}
+			$rowshift++;
+		}
+	}
+	else{
+		for($x = 0; $x < count($text); $x++) {
+			$xx = $x + 1;
+			$objRichText = new PHPExcel_RichText();
+			$currText = $objRichText->createTextRun($text[$x]);
+			$currText->getFont()->setBold(true);
+			$currText->getFont()->setSize(16);
+			$currText->getFont()->setColor( new PHPExcel_Style_Color(PHPExcel_Style_Color::COLOR_DARKGREEN ) );
+			$objPHPExcel->getActiveSheet()->getCell('A'.$xx)->setValue($objRichText);
+			$objPHPExcel->getActiveSheet()->getRowDimension($xx)->setRowHeight(18);
+			$objPHPExcel->getActiveSheet()->mergeCells("A$xx:P$xx");
+			$objPHPExcel->getActiveSheet()->getStyle('A'.$xx)->getAlignment()->
+									setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+		}
+		$rowshift = count($text) + 3;
+		$colshift = 0;
+		$styleArray = array(
+		 'borders' => array(
+			'top' => array(
+				'style' => PHPExcel_Style_Border::BORDER_THIN,
+			 ),
+			'bottom' => array(
+				'style' => PHPExcel_Style_Border::BORDER_THIN,
+			 ),
+			'left' => array(
+				'style' => PHPExcel_Style_Border::BORDER_THIN,
+			 ),
+			'right' => array(
+				'style' => PHPExcel_Style_Border::BORDER_THIN,
+			 ),
+		 ),
+		);
+		$abbrevations = "Sub -> Subject, C/B -> Class/Batch, Sem -> Semester, L -> Load, TL -> Total Load";
+		$objRichText = new PHPExcel_RichText();
+		$xx++;
+		$currText = $objRichText->createTextRun($abbrevations);
+		$currText->getFont()->setBold(true);
+		$currText->getFont()->setSize(13);
+		$currText->getFont()->setColor( new PHPExcel_Style_Color(PHPExcel_Style_Color::COLOR_BLACK ) );
+		$objPHPExcel->getActiveSheet()->getCell('A'.$xx)->setValue($objRichText);
+		$objPHPExcel->getActiveSheet()->getRowDimension($xx)->setRowHeight(18);
+		$objPHPExcel->getActiveSheet()->mergeCells("A$xx:P$xx");
+		$objPHPExcel->getActiveSheet()->getStyle('A'.$xx)->getAlignment()->
+								setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+		$rowshift++;
+		$cols2 = array("Teacher", "Sub", "C/B", "Sem", "L", "TL");
+		$colsdb = array("teacherShortName","subjectShortName","Class_Batch","semester","load1");
+		$count = 1;
+		$max = $count;
+		for($row1 = 0; $row1 < count($allrows2); $row1++) {
+			$colname = $colsdb[0];
+			if(strcmp($allrows2[$row1][$colname],$allrows2[$row1 + 1][$colname]) === 0){
+				$count++;
+			}
+			else{
+				if($count > $max)
+					$max = $count;
+				$count = 1;
+			}
+		}
+		$text = $cols2[0];
+		$objRichText = new PHPExcel_RichText();
+		$currText = $objRichText->createTextRun($text);
+		$currText->getFont()->setBold(true);
+		$currText->getFont()->setSize(13);
+		$currText->getFont()->setColor( new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_BLACK) );
+		$objPHPExcel->getActiveSheet()->getCell($cols[$colshift].$rowshift)->setValue($objRichText);
+		$objPHPExcel->getActiveSheet()->getStyle($cols[$colshift].$rowshift)->getAlignment()->
+								setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+		$objPHPExcel->getActiveSheet()->getStyle($cols[$colshift].$rowshift)->getAlignment()->
+								setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+		$objPHPExcel->getActiveSheet()->getStyle($cols[$colshift].$rowshift)->applyFromArray($styleArray);
+		$count = 0;
+		for($col1 = 1; $col1 <= $max; $col1++){
+			for($i = 1; $i < count($cols2)-1; $i++){
+				$count++;
+				$text = $cols2[$i].$col1o
+				$objRichText = new PHPExcel_RichText();
+				$currText = $objRichText->createTextRun($text);
+				$currText->getFont()->setBold(true);
+				$currText->getFont()->setSize(13);
+				$currText->getFont()->setColor( new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_BLACK) );
+				$objPHPExcel->getActiveSheet()->getCell($cols[$count+$colshift].$rowshift)->
+									setValue($objRichText);
+				$objPHPExcel->getActiveSheet()->getStyle($cols[$count+$colshift].$rowshift)->getAlignment()->
+									setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+				$objPHPExcel->getActiveSheet()->getStyle($cols[$count+$colshift].$rowshift)->getAlignment()->
+									setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+				$objPHPExcel->getActiveSheet()->getStyle($cols[$count+$colshift].$rowshift)->
+									applyFromArray($styleArray);
+			}
+		}
+		$count++;
+		$text = $cols2[5];
+		$objRichText = new PHPExcel_RichText();
+		$currText = $objRichText->createTextRun($text);
+		$currText->getFont()->setBold(true);
+		$currText->getFont()->setSize(13);
+		$currText->getFont()->setColor( new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_BLACK) );
+		$objPHPExcel->getActiveSheet()->getCell($cols[$count+$colshift].$rowshift)->
+								setValue($objRichText);
+		$objPHPExcel->getActiveSheet()->getStyle($cols[$count+$colshift].$rowshift)->getAlignment()->
+								setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+		$objPHPExcel->getActiveSheet()->getStyle($cols[$count+$colshift].$rowshift)->getAlignment()->
+								setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+		$objPHPExcel->getActiveSheet()->getStyle($cols[$count+$colshift].$rowshift)->
+								applyFromArray($styleArray);
+		$rowshift++;
+		for($row1 = 0; $row1 < count($allrows2); $row1++) {
+			$row = $row1 - 1 + $rowshift;
+			$colname = $colsdb[0];
+			$text = $allrows2[$row1][$colname];
+			$objRichText = new PHPExcel_RichText();
+			$currText = $objRichText->createTextRun($text);
+			$currText->getFont()->setBold(true);
+			$currText->getFont()->setSize(8);
+			$currText->getFont()->setColor( new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_BLACK) );
+			$objPHPExcel->getActiveSheet()->getCell($cols[$colshift].$rowshift)->setValue($objRichText);
+			$objPHPExcel->getActiveSheet()->getStyle($cols[$colshift].$rowshift)->getAlignment()->
+									setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			$objPHPExcel->getActiveSheet()->getStyle($cols[$colshift].$rowshift)->getAlignment()->
+									setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+			$objPHPExcel->getActiveSheet()->getStyle($cols[$colshift].$rowshift)->applyFromArray($styleArray);
+			$colshift++;
+			$col4 = 0;
+			$load = 0;
+			for($col1 = 0; $col1 < $max; $col1++) {
+				for($col3 = 1; $col3 < count($colsdb); $col3++) {
+					$row = $row1 - 1 + $rowshift;
+					$col = $cols[$col1 + $colshift];
+					$colname = $colsdb[$col3];
+					$text = $allrows2[$row1][$colname];
+					$objRichText = new PHPExcel_RichText();
+					$currText = $objRichText->createTextRun($text);
+					$currText->getFont()->setBold(true);
+					$currText->getFont()->setSize(8);
+					$currText->getFont()->setColor( new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_BLACK) );
+					$objPHPExcel->getActiveSheet()->getCell($cols[$col4+$colshift].$rowshift)->setValue($objRichText);
+					$objPHPExcel->getActiveSheet()->getStyle($cols[$col4+$colshift].$rowshift)->getAlignment()->
+										setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+					$objPHPExcel->getActiveSheet()->getStyle($cols[$col4+$colshift].$rowshift)->getAlignment()->
+										setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+					$objPHPExcel->getActiveSheet()->getStyle($cols[$col4+$colshift].$rowshift)->
+										applyFromArray($styleArray);
+					if($colname == "load1"){
+						$load = $load + $text;
+					}
+					$col4++;
+				}
+				$x = $row1 + 1;
+				if(strcmp($allrows2[$row1]["teacherShortName"],$allrows2[$x]["teacherShortName"]) === 0){
+					$row1++;
+				}
+				else{
+					$colshift = 0;
+					break;
+				}
+			}
+			$text = $load;
+			$objRichText = new PHPExcel_RichText();
+			$currText = $objRichText->createTextRun($text);
+			$currText->getFont()->setBold(true);
+			$currText->getFont()->setSize(8);
+			$currText->getFont()->setColor( new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_BLACK) );
+			$objPHPExcel->getActiveSheet()->getCell($cols[$count+$colshift].$rowshift)->setValue($objRichText);
+			$objPHPExcel->getActiveSheet()->getStyle($cols[$count+$colshift].$rowshift)->getAlignment()->
+									setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			$objPHPExcel->getActiveSheet()->getStyle($cols[$count+$colshift].$rowshift)->getAlignment()->
+									setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+			$objPHPExcel->getActiveSheet()->getStyle($cols[$count+$colshift].$rowshift)->
+									applyFromArray($styleArray);
+			$rowshift++;
+		}
+	}
+}
 function generate_timetable_spreadsheet() {
 	$tableNames = array("class", "classShortName", "teacher", "teacherShortName", 
 				"room", "roomShortName", "batch", "batchName");
@@ -330,6 +603,51 @@ function generate_current_timetable_spreadsheet() {
 
 	generate_timetable_worksheet($currTableName, $searchParam, $sheetCount,
 				$allrows2, $nSlots, $dayBegin, $slotDuration, $deptName);
+}
+function generate_workload_spreadsheet(){
+	$query = "SELECT * from config WHERE configId = 1";
+	$allrows = sqlGetAllRows($query);
+	$currentSnapshotName = getArgument("snapshotName");
+	$currentSnapshotId = getArgument("snapshotId");
+
+	$sheetCount = 0;
+
+	$deptQuery = "SELECT deptName from dept d, config c, snapshot s ".
+				"where s.configId = c.configId and c.deptId = d.deptId".
+				" AND s.snapshotId = $currentSnapshotId";
+	$deptQueryRes = sqlGetOneRow($deptQuery);
+	$deptName = $deptQueryRes[0]["deptName"];
+	$query = "SELECT a.subjectShortName, a.classShortName as Class_Batch, a.teacherShortName, c.semester, (s.eachSlot*s.nSlots) as load1". 					" from ((subjectClassTeacherReadable a".
+				" JOIN class c ON a.classShortName = c.classShortName)".
+				" JOIN subject s ON a.subjectShortName = s.subjectShortName)".
+				" where c.snapshotId = $currentSnapshotId and a.snapshotName = \"$currentSnapshotName\"".
+				" and  s.snapshotId = $currentSnapshotId".
+		" UNION".
+		" SELECT a.subjectShortName, a.batchName as Class_Batch, a.teacherShortName, c.semester, (s.eachSlot*s.nSlots) as load1".
+				" from subjectBatchTeacherReadable a, class c, batchClass bc, batch b, subject s".
+				" where a.batchName = b.batchName and b.batchId = bc.batchId and bc.classId = c.classId".
+				" and c.snapshotId = $currentSnapshotId and a.snapshotName = \"$currentSnapshotName\"".
+				" and b.snapshotId = $currentSnapshotId and bc.snapshotId = $currentSnapshotId".
+				" and s.snapshotId = $currentSnapshotId and a.subjectShortName = s.subjectShortName".
+				" ORDER by subjectShortName ASC, Class_Batch ASC";
+	$allrows2 = sqlGetAllRows($query);
+	generate_workload_worksheet($sheetCount,$allrows2,$deptName,$currentSnapshotName);
+	$sheetCount++;
+	$query = "SELECT a.teacherShortName, a.subjectShortName, a.classShortName as Class_Batch, c.semester, (s.eachSlot*s.nSlots) as load1". 					" from ((subjectClassTeacherReadable a".
+				" JOIN class c ON a.classShortName = c.classShortName)".
+				" JOIN subject s ON a.subjectShortName = s.subjectShortName)".
+				" where c.snapshotId = $currentSnapshotId and a.snapshotName = \"$currentSnapshotName\"".
+				" and  s.snapshotId = $currentSnapshotId".
+		" UNION".
+		" SELECT a.teacherShortName, a.subjectShortName, a.batchName as Class_Batch, c.semester, (s.eachSlot*s.nSlots) as load1".
+				" from subjectBatchTeacherReadable a, class c, batchClass bc, batch b, subject s".
+				" where a.batchName = b.batchName and b.batchId = bc.batchId and bc.classId = c.classId".
+				" and c.snapshotId = $currentSnapshotId and a.snapshotName = \"$currentSnapshotName\"".
+				" and b.snapshotId = $currentSnapshotId and bc.snapshotId = $currentSnapshotId".
+				" and s.snapshotId = $currentSnapshotId and a.subjectShortName = s.subjectShortName".
+				" ORDER by teacherShortName ASC, subjectShortName ASC, Class_Batch ASC";
+	$allrows2 = sqlGetAllRows($query);
+	generate_workload_worksheet($sheetCount,$allrows2,$deptName,$currentSnapshotName);
 }
 function generate_data_worksheet($currTableName, $sheetCount, $nameOrId) {
 	global $objPHPExcel;
@@ -509,6 +827,21 @@ function exportCurrentXLSX() {
 
 	generate_current_timetable_spreadsheet();
 	$savefilename = $option."_timetable.EXT";
+	$filename = saveFile($savefilename);
+	return $filename;
+}
+function exportWorkloadXLSX(){
+	global $objPHPExcel;
+	$objPHPExcel = new PHPExcel();
+	$objPHPExcel->getProperties()->setCreator("Abhijit A.M.")
+						->setLastModifiedBy("Abhijit A. M.")
+						->setTitle("Timetable for COEP")
+						->setSubject("Subject for Timetable")
+						->setDescription("This is description of timetable")
+						->setKeywords("timetable generated");
+
+	generate_workload_spreadsheet();
+	$savefilename = "workload.EXT";
 	$filename = saveFile($savefilename);
 	return $filename;
 }
