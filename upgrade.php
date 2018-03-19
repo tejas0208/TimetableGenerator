@@ -37,11 +37,6 @@ else{
 	}
 	//else no update is performed
 	else {
-		echo "<script>";
-		echo "alert('The software in your system is later version of that '.
-					'in the code, Please roll back to your version or the '.
-					'code might not work properly. Your version is ".$ver."');";
-		echo "</script>";
 	}
 }
 ?>
