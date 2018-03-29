@@ -78,15 +78,19 @@
 			<form action="timetable.php" method="POST">
 			Export/Import <br>
 			<select name="type" class= "select-menu" id="export-menu" display="none">
-				<option value = "" selected></option>
+				<option id = "selectEmpty" value = "selectEmpty" selected></option>
 				<option value = "Excelx" onclick='jsExport("exportXLSX")'>Timetable as Excelx</option>
 				<option value = "SQL" onclick='jsSQLExport("timetable")'>Database as SQL</option>
 				<option value = "DExcelx" onclick='jsExport("exportConfigXLSX")'>Configuration as Excelx</option>
 				<option value = "zip" onclick='jsExport("exportCSV")'>Timetable as CSV</option>
 				<option value = "pdfsingle" onclick='jsExport1("exportPDFsingle")'>Current Timetable as PDF</option>
 				<option value = "pdf" onclick='jsExport("exportPDF")'>Timetable as PDF</option>
-				<option value = "Excelx" onclick='alert("not supported")'>Import Timetable as Excelx</option>
-				<option value = "DExcelx" onclick='alert("not supported")'>Import Configuration as Excelx</option>
+				<option value = "Excelx" onclick='alert("not supported");
+										setSelectedIndex(document.getElementById("export-menu"),
+										"selectEmpty");'>Import Timetable as Excelx</option>
+				<option value = "DExcelx" onclick='alert("not supported");
+										setSelectedIndex(document.getElementById("export-menu"),
+										"selectEmpty");'>Import Configuration as Excelx</option>
 				<option value = "CExcelx" onclick='jsExport("exportCurrentXLSX")'>Current timetable as Excelx</option>
 				<option value = "BExcelx" onclick='jsExport("exportWorkloadXLSX")'>Workload as Excelx</option>
 			</select>
