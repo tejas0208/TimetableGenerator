@@ -427,7 +427,7 @@ function generate_workload_worksheet($sheetCount,$allrows2,$deptName,$currentSna
 		for($col1 = 1; $col1 <= $max; $col1++){
 			for($i = 1; $i < count($cols2)-1; $i++){
 				$count++;
-				$text = $cols2[$i].$col1o
+				$text = $cols2[$i].$col1;
 				$objRichText = new PHPExcel_RichText();
 				$currText = $objRichText->createTextRun($text);
 				$currText->getFont()->setBold(true);
