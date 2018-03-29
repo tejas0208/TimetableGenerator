@@ -77,22 +77,20 @@
 		<div class = "selection-menu">
 			<form action="timetable.php" method="POST">
 			Export/Import <br>
-			<select name="type" class= "select-menu" id="export-menu" display="none">
+			<select name="type" class= "select-menu" id="export-menu" display="none"  onchange="exportImportHelper(this.value)">
 				<option id = "selectEmpty" value = "selectEmpty" selected></option>
-				<option value = "Excelx" onclick='jsExport("exportXLSX")'>Timetable as Excelx</option>
-				<option value = "SQL" onclick='jsSQLExport("timetable")'>Database as SQL</option>
-				<option value = "DExcelx" onclick='jsExport("exportConfigXLSX")'>Configuration as Excelx</option>
-				<option value = "zip" onclick='jsExport("exportCSV")'>Timetable as CSV</option>
-				<option value = "pdfsingle" onclick='jsExport1("exportPDFsingle")'>Current Timetable as PDF</option>
-				<option value = "pdf" onclick='jsExport("exportPDF")'>Timetable as PDF</option>
-				<option value = "ExcelxImport" onclick='alert("not supported");
-										setSelectedIndex(document.getElementById("export-menu"),
-										"selectEmpty");'>Import Timetable as Excelx</option>
-				<option value = "DExcelxImport" onclick='alert("not supported");
-										setSelectedIndex(document.getElementById("export-menu"),
-										"selectEmpty");'>Import Configuration as Excelx</option>
-				<option value = "CExcelx" onclick='jsExport("exportCurrentXLSX")'>Current timetable as Excelx</option>
-				<option value = "BExcelx" onclick='jsExport("exportWorkloadXLSX")'>Workload as Excelx</option>
+				<option value = "jsExport.exportXLSX">Timetable as Excelx</option>
+				<option value = "jsSQLExport.timetable">Database as SQL</option>
+				<option value = "jsExport.exportConfigXLSX">Configuration as Excelx</option>
+				<option value = "jsExport.exportCSV" >Timetable as CSV</option>
+				<option value = "jsExport1.exportPDFsingle">Current Timetable as PDF</option>
+				<option value = "jsExport.exportPDF">Timetable as PDF</option>
+				<option value = "jsExportNotSupported.Importing Timetable as xlsx"
+								>Import Timetable as Excelx</option>
+				<option value = "jsExportNotSupported.Importing Configuration as xlsx"
+										>Import Configuration as Excelx</option>
+				<option value = "jsExport.exportCurrentXLSX">Current timetable as Excelx</option>
+				<option value = "jsExport.exportWorkloadXLSX">Workload as Excelx</option>
 			</select>
 			</form>
 		</div>

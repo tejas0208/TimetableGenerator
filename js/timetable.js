@@ -216,6 +216,12 @@ var colors = [];
 colorAdded = 0;
 var checked = 0;
 
+function exportImportHelper(args) {
+	args = args.split('.');
+	//console.log(args);   --For testing
+	window[args[0]](args[1]);
+}
+
 function makeTrackerList() {
 	tracker = [];
 	for (i in subjectClassTeacher) {
@@ -3887,6 +3893,10 @@ function jsExport1(expType) {
 	xhttp.send("reqType=" + expType + "&snapshotName=" + currentSnapshotName +
 			"&snapshotId=" + currentSnapshotId + "&viewtype=" + type + "&viewId=" + currTableId);
 
+}
+function jsExportNotSupported(arg) {
+	alert(arg + ": Not supported yet");
+	setSelectedIndex(document.getElementById("export-menu"),"selectEmpty");
 }
 /**
  * function wait():
