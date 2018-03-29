@@ -3591,6 +3591,15 @@ function makeIdFromIJK(i, j, k) {
 function makeIJKFromId(id) {
 	return id.split("_").splice(1);
 }
+function setSelectedIndex(s, valsearch) {
+	for(var i = 0; i < s.options.length; i++){
+		if(s.options[i].value == valsearch) {
+			s.options[i].selected = true;
+			break;
+		}
+	}
+	return;
+}
 function jsSQLExport(type) {
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function () {
@@ -3620,6 +3629,7 @@ function jsSQLExport(type) {
 	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	xhttp.send("reqType=exportSQL&snapshotName=" + currentSnapshotName+ "&type=" +
 				type + "&snapshotId=" + currentSnapshotId);
+	setSelectedIndex(document.getElementById("export-menu"),"selectEmpty");
 
 }
 function jsExport(type) {
@@ -3631,6 +3641,7 @@ function jsExport(type) {
 
 		else{
 			alert("please select any timetable");
+			setSelectedIndex(document.getElementById("export-menu"),"selectEmpty");
 			return;
 		}
 	}
@@ -3677,6 +3688,7 @@ function jsExport(type) {
 		xhttp.send("reqType=" + type + "&snapshotName=" + currentSnapshotName +
 			"&snapshotId=" + currentSnapshotId);
 	}
+	setSelectedIndex(document.getElementById("export-menu"),"selectEmpty");
 
 }
 function shortcutEscButton() {
