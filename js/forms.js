@@ -245,6 +245,10 @@ function insertUpdateButton(row, id, onClickFunction) {
 	button.name = id;
 	var textNode = document.createTextNode("Update");
 	button.appendChild(textNode);
+	if(currentFormName != "inputSCTForm" && currentFormName != "inputSBTForm") {
+		button.disabled = true;
+		button.onclick = function() {updateDefault(this.id);};
+	}
 	button.setAttribute("onclick", onClickFunction);
 	button.setAttribute("id", id);
 }
@@ -288,6 +292,10 @@ function insertInputBox(row, type, id, size, placeholder, value, title, minValue
 		inputTag.setAttribute("min", minValue);	
 	}
 	cell.appendChild(inputTag);
+	inputTag.onchange = function() {enableUpdateButton(this.id);};
+   	inputTag.onkeypress = function() {enableUpdateButton(this.id);};
+   	inputTag.onpaste    = function() {enableUpdateButton(this.id);};
+   	inputTag.oninput    = function() {enableUpdateButton(this.id);};
 }
 function insertRow(table, count) {
 	row = table.insertRow(count);
@@ -906,6 +914,9 @@ function batchRoomForm() {
 			selectTag.appendChild(tag);
 		}
 		cell.appendChild(selectTag);
+		var id = "batch_" + count;
+		updateDefault(id);
+		selectTag.onchange = function() {enableUpdateButton(this.id);};
 
 		var cell = insertCell(row);
 		cell.setAttribute("align","center");
@@ -921,6 +932,9 @@ function batchRoomForm() {
 			selectTag.appendChild(tag);
 		}
 		cell.appendChild(selectTag);
+		var id = "room_" + count;
+		updateDefault(id);
+		selectTag.onchange = function() {enableUpdateButton(this.id);};
 
 		insertUpdateButton(row, "batchRoomUpdateButton_" + count,
 							"batchRoomUpdate(" + count + ")");
@@ -1370,6 +1384,9 @@ function classRoomForm() {
 		}
 		cell.appendChild(selectTag);
 		//$("#class_"+i).select2();
+		var id = "class_" + count;
+		updateDefault(id);
+		selectTag.onchange = function() {enableUpdateButton(this.id);};
 
 		var cell = insertCell(row);
 		cell.setAttribute("align","center");
@@ -1386,6 +1403,9 @@ function classRoomForm() {
 		}
 		cell.appendChild(selectTag);
 		//$("#room_"+i).select2();
+		var id = "room_" + count;
+		updateDefault(id);
+		selectTag.onchange = function() {enableUpdateButton(this.id);};
 
 		insertUpdateButton(row, "classRoomUpdateButton_" + count,
 							"classRoomUpdate(" + count + ")");
@@ -3209,6 +3229,9 @@ function subjectRoomForm() {
 		}
 		cell.appendChild(selectTag);
 		//$("#subject_"+i).select2();
+		var id = "subject_" + count;
+		updateDefault(id);
+		selectTag.onchange = function() {enableUpdateButton(this.id);};
 
 		var cell = insertCell(row);
 		cell.setAttribute("align","center");
@@ -3225,6 +3248,9 @@ function subjectRoomForm() {
 		}
 		cell.appendChild(selectTag);
 		//$("#room_"+i).select2();
+		var id = "room_" + count;
+		updateDefault(id);
+		selectTag.onchange = function() {enableUpdateButton(this.id);};
 
 		insertUpdateButton(row, "subjectRoomUpdateButton_" + count,
 							"subjectRoomUpdate(" + count + ")");
@@ -3363,6 +3389,35 @@ function subjectRoomDelete(i) {
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhttp.send("reqType=subjectRoomDelete&srId=" + srId + "&snapshotId=" + currentSnapshotId);
 }
+
+function enableUpdateButton(id) {
+	count = id.substring(id.indexOf("_")+1);
+	var x = document.getElementById(id);
+	var z = 0;
+	if(x.defaultValue != x.value) {
+		if(currentFormName == "inputClassForm")
+			document.getElementById("cUpdateButton_" + count).disabled = false;
+		else if(currentFormName == "inputTeacherForm")
+			document.getElementById("tUpdateButton_" + count).disabled = false;
+		else if(currentFormName == "inputSubjectForm")
+			document.getElementById("sUpdateButton_" + count).disabled = false;
+		else if(currentFormName == "inputRoomForm")
+			document.getElementById("rUpdateButton_" + count).disabled = false;
+		else if(currentFormName == "inputSubjectRoomForm")
+			document.getElementById("subjectRoomUpdateButton_" + count).disabled = false;
+		else if(currentFormName == "inputClassRoomForm")
+			document.getElementById("classRoomUpdateButton_" + count).disabled = false;
+		else if(currentFormName == "inputBatchRoomForm")
+			document.getElementById("batchRoomUpdateButton_" + count).disabled = false;
+		
+	}	
+}
+
+function updateDefault(id) {
+	var x = document.getElementById(id);
+	x.defaultValue = x.value;
+}
+
 function teacherForm() {
 	formOpen("inputTeacherForm");
 	/* ---- Adding Header Row -----------------------*/
@@ -3429,6 +3484,9 @@ function teacherForm() {
 			selectTag.appendChild(tag);
 		}
 		cell.appendChild(selectTag);
+		id = "dept_" + count;
+		updateDefault(id);
+		selectTag.onchange = function() {enableUpdateButton(this.id);};
 
 		insertUpdateButton(row, "tUpdateButton_" + count,
 							"teacherUpdate(" + count + ")");
