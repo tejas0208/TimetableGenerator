@@ -298,8 +298,12 @@ function insertRow(table, count) {
 function highlightRowAfterAdd(formType) {
 	var rows = formType.getElementsByTagName('tr');
 	for (var i = 0; i < rows.length; i++) {
+		if(formType.getAttribute('id') == "inputBatchForm" && rows[i].getAttribute('id') == 3) {
+			rows[i].setAttribute("style", "background-color : green");
+			continue;
+		}
 		if (((formType.getAttribute('id') != "inputBatchCanOverlapForm") &&
-			(rows[i].getAttribute('id') == 2))
+			(rows[i].getAttribute('id') == 2) && formType.getAttribute('id') != "inputBatchForm")
 			||
 			((rows[i].getAttribute('id') == 3) &&
 			(formType.getAttribute('id') == "inputoverlappingSBTForm"))
