@@ -332,9 +332,10 @@ function batchForm() {
 	formOpen("inputBatchForm");
 
 	/* ---- Adding Header Row -----------------------*/
-	var table = insertHeaderRow("batchTable", "Id", "Name", "Strength", "Class", "1");
+	var table = insertHeaderRow("batchTable","  ","Id", "Name", "Strength", "Class", "1");
 	/* ---- Adding "Add Batch Row" -----------------------*/
 	row = insertRow(table, 1);
+	insertTextColumn(row, "", " ")
 	insertTextColumn(row, "", "New");//currBatchRoom["brId"]);
 	insertInputBox(row, "text", "batchNameAdd", "32", "Enter Batch Name", "", "Batch Name (Short)");
 	insertInputBox(row, "number", "batchCountAdd", "3", "Strength", "", "Batch Strength", "1");
@@ -345,6 +346,7 @@ function batchForm() {
 	/* ---- Adding Search Box -----------*/
 	var searchrow = insertRow(table, 2);
 	insertTextColumn(searchrow, "blankID", "");
+	insertTextColumn(searchrow, "blankspace", " ");
 	insertInputBox(searchrow, "text", "myInput", 32, "Filter List: Type text here", "", "Batch Name (Short)");
 	searchrow.addEventListener("keyup", rowSearch);
 
@@ -355,6 +357,8 @@ function batchForm() {
 	for (i in batch) {
 		currBatch = batch[i];
 		var row = insertRow(table, count);
+		
+		insertInputBox(row, "checkbox", "bfCheckBox" + count, "2", "", "", "", "");
 
 		insertTextColumn(row, "bfCenter_" + count, currBatch["batchId"]);
 
@@ -584,14 +588,19 @@ function batchUpdate(i) {
 }
 function batchDelete(i) {
 	var row = i;
-	var batchName, batchCount;
+	var batchName;
+	var batchId;
+	var formType = document.getElementById("inputBatchForm");
+	highlightRowWhenDelete(formType, row);
 	var sure = confirm("Warning: Deleting Batch will delete all related " +
-						  "subject-teacher mappings, timetable entries, etc.\n" +
-						  "This can not be undone. \n" +
-						  "Are you sure?");
-	if(sure != true)
-		return;
-	batchName = document.getElementById("batchName_" + row).value;
+					  "subject-teacher mappings, timetable entries, etc.\n" +
+					  "This can not be undone. \n" +
+					  "Are you sure?");
+	if(sure != true) {
+		unhighlightRowWhenDeleteCancel(formType, row);
+		return -1;
+	}
+	//batchName = document.getElementById("batchName_" + row).value;
 	batchId = document.getElementById("bfCenter_" + row).childNodes[0].nodeValue;
 
 	// Check undo/redo stack for clashing batchId
@@ -670,10 +679,11 @@ function batchCanOverlapForm() {
 	formOpen("inputBatchCanOverlapForm");
 
 	/* ---- Adding Header Row -----------------------*/
-	var table = insertHeaderRow("batchCanOverlapTable", "SN", "Select Batches Which Can Overlap", 1);
+	var table = insertHeaderRow("batchCanOverlapTable","  ", "SN", "Select Batches Which Can Overlap", 1);
 
 	/* ---- Adding "Add Batch Row" -----------------------*/
 	row = insertRow(table, 1);
+	insertTextColumn(row, "", " ");
 	insertTextColumn(row, "", "New");//currBatchRoom["brId"]);
 
 	selectTag = insertSelectTag(row, "batchCanOverlapAdd", batch, "batchId", "batchName");
@@ -738,6 +748,7 @@ function batchCanOverlapForm() {
 		}
 		//alert("currText = " + currText);
 		var row = insertRow(table, count);
+		insertInputBox(row, "checkbox", "bcoCheckBox" + count, "2", "", "", "", "");
 		insertTextColumn(row, "center1_" + count, count - 1);
 		insertTextColumn(row, "center1_" + count, currText);
 
@@ -749,9 +760,13 @@ function batchCanOverlapForm() {
 }
 function batchCanOverlapDelete(i) {
 	var row = i - 2;
+	var formType = document.getElementById("inputBatchCanOverlapForm");
+	highlightRowWhenDelete(formType, row + 2);
 	var sure = confirm("Warning: Are you sure?");
-	if(sure != true)
-		return;
+	if(sure != true) {
+		unhighlightRowWhenDeleteCancel(formType, row + 2);
+		return -1;
+	}
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function () {
 		if(this.readyState == 4 && this.status == 200) {
@@ -842,10 +857,11 @@ function batchCanOverlapInsert() {
 function batchRoomForm() {
 	formOpen("inputBatchRoomForm");
 	/* ---- Adding Header Row -----------------------*/
-	var table = insertHeaderRow("batchRoomTable", "ID", "Batch", "Room", 2);
+	var table = insertHeaderRow("batchRoomTable","  ", "ID", "Batch", "Room", 2);
 
 	/* ---- Adding "Add batchRoom Row" -----------------------*/
 	row = insertRow(table, 1);
+	insertTextColumn(row, "", " ");
 	insertTextColumn(row, "", "New");//currBatchRoom["brId"]);
 
 	selectTag = insertSelectTag(row, "brBatchAdd", batch, "batchId", "batchName");
@@ -869,7 +885,9 @@ function batchRoomForm() {
 	for (i in batchRoom) {
 		currBatchRoom = batchRoom[i];
 		var row = insertRow(table, count);
-
+		
+		insertInputBox(row, "checkbox", "brCheckBox" + count, "2", "", "", "", ""); 		
+		
 		insertTextColumn(row, "brCenter_" + count, currBatchRoom["brId"]);
 
 		var cell = insertCell(row);
@@ -1005,11 +1023,15 @@ function batchRoomUpdate(i) {
 }
 function batchRoomDelete(i) {
 	var row = i;
-	var batchId, roomId,  brId;
+	var brId;
+	var formType = document.getElementById("inputBatchRoomForm");
+	highlightRowWhenDelete(formType, row);
 	var sure = confirm("This will delete all related timetable entries also\n"
-					+ "This can not be undone. \nAre you sure?");
-	if(sure != true)
-		return;
+				+ "This can not be undone. \nAre you sure?");
+	if(sure != true) {
+		unhighlightRowWhenDeleteCancel(formType, row);
+		return -1;
+	}
 	brId = document.getElementById("brCenter_" + row).childNodes[0].nodeValue;
 	document.getElementById("batchRoomDeleteButton_" + row).childNodes[0].nodeValue = "Deleting";
 	document.getElementById("batchRoomDeleteButton_" + row).disabled = true;
@@ -1032,7 +1054,7 @@ function batchRoomDelete(i) {
 			}
 		}
 	}
-	xhttp.open("POST", "timetable.php", true); // asynchronous
+	xhttp.open("POST", "timetable.php", true); // synchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhttp.send("reqType=batchRoomDelete&brId=" + brId + "&snapshotId=" + currentSnapshotId);
 }
@@ -1040,10 +1062,11 @@ function classForm() {
 	formOpen("inputClassForm");
 
 	/* ---- Adding Header Row -----------------------*/
-	var table = insertHeaderRow("classTable", "SN", "Name", "Short Name", "Semester", "Strength", 2);
+	var table = insertHeaderRow("classTable","  ", "SN", "Name", "Short Name", "Semester", "Strength", 2);
 
 	/* ---- Adding "Add Class Row" -----------------------*/
 	row = insertRow(table, 1);
+	insertTextColumn(row, "", " ");
 	insertTextColumn(row, "", "New");//currBatchRoom["brId"]);
 	insertInputBox(row, "text", "classNameAdd", "32", "Enter Class Name", "","Class Name");
 	insertInputBox(row, "text", "classShortNameAdd", "8", "Enter Short Name", "", "Class ShortName");
@@ -1059,6 +1082,8 @@ function classForm() {
 	for (i in classTable) {
 		currClass = classTable[i];
 		var row = insertRow(table, count);
+		
+		insertInputBox(row, "checkbox", "cCheckBox" + count, "2", "", "", "", ""); 
 
 		insertTextColumn(row, "cCenter_" + count, currClass["classId"]);
 
@@ -1217,14 +1242,19 @@ function classUpdate(i) {
 }
 function classDelete(i) {
 	var row = i;
-	var className, classShortName, semester, classCount;
+	var classShortName;
+	var classId;
+	var formType = document.getElementById("inputClassForm");
+	highlightRowWhenDelete(formType, row);
 	var sure = confirm("Warning: Deleting Class will delete all related " +
-				  "subject-teacher mappings, timetable entries, etc.\n" +
-				  "This can not be undone. \n" +
-				  "Are you sure?");
-	if(sure != true)
-		return;
-	classShortName = document.getElementById("classShortName_" + row).value;
+			  "subject-teacher mappings, timetable entries, etc.\n" +
+			  "This can not be undone. \n" +
+			  "Are you sure?");
+	if(sure != true) {
+		unhighlightRowWhenDeleteCancel(formType, row);
+		return -1;
+		}
+	//classShortName = document.getElementById("classShortName_" + row).value;
 	classId = document.getElementById("cCenter_" + row).childNodes[0].nodeValue;
 
 	// Check undo/redo stack for clashing classId
@@ -1290,10 +1320,11 @@ function classDelete(i) {
 function classRoomForm() {
 	formOpen("inputClassRoomForm");
 	/* ---- Adding Header Row -----------------------*/
-	var table = insertHeaderRow("classRoomTable", "ID", "Class", "Room", 2);
+	var table = insertHeaderRow("classRoomTable","  ", "ID", "Class", "Room", 2);
 
 	/* ---- Adding "Add classRoom Row" -----------------------*/
 	row = insertRow(table, 1);
+	insertTextColumn(row, "", " ");
 	insertTextColumn(row, "", "New");//currBatchRoom["brId"]);
 
 	selectTag = insertSelectTag(row, "crClassAdd", classTable,"classId", "classShortName");
@@ -1317,6 +1348,8 @@ function classRoomForm() {
 	for (i in classRoom) {
 		currClassRoom = classRoom[i];
 		var row = insertRow(table, count);
+
+		insertInputBox(row, "checkbox", "crfCheckBox" + count, "2", "", "", "", ""); 
 
 		insertTextColumn(row, "crfCenter_" + count, currClassRoom["crId"]);
 
@@ -1465,11 +1498,15 @@ function classRoomUpdate(i) {
 }
 function classRoomDelete(i) {
 	var row = i;
-	var classId, roomId,  crId;
+	var crId;
+	var formType = document.getElementById("inputClassRoomForm");
+	highlightRowWhenDelete(formType, row);
 	var sure = confirm("This will delete all related timetable entries also\n"
-					+ "This can not be undone. \nAre you sure?");
-	if(sure != true)
-		return;
+				+ "This can not be undone. \nAre you sure?");
+	if(sure != true) {
+		unhighlightRowWhenDeleteCancel(formType, row);
+		return -1;
+	}
 	crId = document.getElementById("crfCenter_" + row).childNodes[0].nodeValue;
 	document.getElementById("classRoomDeleteButton_" + row).childNodes[0].nodeValue = "Deleting";
 	document.getElementById("classRoomDeleteButton_" + row).disabled = true;
@@ -1724,11 +1761,12 @@ function overlappingSBTForm() {
 	formOpen("inputoverlappingSBTForm");
 
 	/* ---- Adding Header Row -----------------------*/
-	var table = insertHeaderRow("overlappingSBTTable", "ID", "Sub-Batch-Teacher1",
+	var table = insertHeaderRow("overlappingSBTTable", "  ","ID", "Sub-Batch-Teacher1",
 						"Sub-Batch-Teacher2", 2);
 
 	/* ---- Adding "Add overlappingSBT Row" -----------------------*/
 	row = insertRow(table, 1);
+	insertTextColumn(row, "", " ");
 	insertTextColumn(row, "", "New");//currBatchRoom["brId"]);
 
 	var cell = insertCell(row);
@@ -1778,6 +1816,7 @@ function overlappingSBTForm() {
 	for (i in overlappingSBT) {
 		currOverlappingSBT = overlappingSBT[i];
 		var row = insertRow(table, count);
+		insertInputBox(row, "checkbox", "osbtCheckBox" + count, "2", "", "", "", ""); 
 
 		insertTextColumn(row, "osbtCenter_" + count, currOverlappingSBT["osbtId"]);
 
@@ -1913,14 +1952,39 @@ function overlappingSBTInsert() {
 
 function overlappingSBTDelete(i) {
 	var row = i;
+	var a, j = 0;
+	var b = new Array();
+	var temp = overlappingSBT.slice();
 	var osbtId;
-	var sure = confirm("This will delete all related timetable entries also\n"
-					+ "This can not be undone. \nAre you sure?");
-	if(sure != true)
-		return;
+	var formType = document.getElementById("inputoverlappingSBTForm");
 	osbtId = document.getElementById("osbtCenter_" + row).childNodes[0].nodeValue;
-	sbtId1 = search(overlappingSBT, "osbtId", osbtId)["sbtId1"];
-	sbtId2 = search(overlappingSBT, "osbtId", osbtId)["sbtId2"];
+	var sbtId1 = search(overlappingSBT, "osbtId", osbtId)["sbtId1"];
+	var sbtId2 = search(overlappingSBT, "osbtId", osbtId)["sbtId2"];
+	for(a in temp) {
+		if(temp[a]["sbtId1"] == sbtId1 ||
+			temp[a]["sbtId2"] == sbtId1 ||
+			temp[a]["sbtId1"] == sbtId2 ||
+			temp[a]["sbtId2"] == sbtId2)  {
+			var y = parseInt(a);
+			b[j] = y + 2;
+			j++;
+		}
+	}
+	
+	// for highlighting the required rows
+	
+	for(j = 0;j < b.length;j++) {
+		highlightRowWhenDelete(formType,b[j]);	
+	}
+	var sure = confirm("This will delete all related timetable entries also\n"
+				+ "This can not be undone. \nAre you sure?");
+	if(sure != true) {
+		for(j = 0;j < b.length;j++) {
+			unhighlightRowWhenDeleteCancel(formType,b[j]);	
+		}
+		return -1;
+	}
+	
 	document.getElementById("overlappingSBTDeleteButton_" + row).childNodes[0].nodeValue = "Deleting";
 	document.getElementById("overlappingSBTDeleteButton_" + row).disabled = true;
 	var xhttp = new XMLHttpRequest();
@@ -1928,7 +1992,7 @@ function overlappingSBTDelete(i) {
 		if(this.readyState == 4 && this.status == 200) {
 			response = JSON.parse(this.responseText);
 			if(response["Success"] == "True") {
-				document.getElementById("overlappingSBTDeleteButton_" + row).value = "Delete"
+				document.getElementById("overlappingSBTDeleteButton_" + row).value = "Delete";
 				deleted = true;
 				while(deleted) {
 					deleted = false;
@@ -1962,10 +2026,11 @@ function roomForm() {
 	formOpen("inputRoomForm");
 
 	/* ---- Adding Header Row -----------------------*/
-	var table = insertHeaderRow("roomTable", "ID", "Name", "Short Name", "Strength", 2);
+	var table = insertHeaderRow("roomTable", "  ", "ID", "Name", "Short Name", "Strength", 2);
 
 	/* ---- Adding "Add Room Row" -----------------------*/
 	row = insertRow(table, 1);
+	insertTextColumn(row, "", " ");
 	insertTextColumn(row, "", "New");//currBatchRoom["brId"]);
 	insertInputBox(row, "text", "roomNameAdd", "32", "Enter Room Name", "", "Room Name");
 	insertInputBox(row, "text", "roomShortNameAdd", "8", "Enter Short Name", "", "Room ShortName");
@@ -1980,6 +2045,8 @@ function roomForm() {
 	for (i in room) {
 		currRoom = room[i];
 		var row = insertRow(table, count);
+		
+		insertInputBox(row, "checkbox", "rCheckBox" + count, "2", "", "", "", ""); 
 
 		insertTextColumn(row, "rCenter_" + count, currRoom["roomId"]);
 
@@ -2125,14 +2192,19 @@ function roomUpdate(i) {
 }
 function roomDelete(i) {
 	var row = i;
-	var roomName, roomShortName, roomCount;
+	var roomShortName;
+	var roomId;
+	var formType = document.getElementById("inputRoomForm");
+	highlightRowWhenDelete(formType, row);
 	var sure = confirm("Warning: Deleting Room will delete all related " +
-				  "subject-teacher mappings, timetable entries, etc.\n" +
-				  "This can not be undone. \n" +
-				  "Are you sure?");
-	if(sure != true)
-		return;
-	roomShortName = document.getElementById("roomShortName_" + row).value;
+			  "subject-teacher mappings, timetable entries, etc.\n" +
+			  "This can not be undone. \n" +
+			  "Are you sure?");
+	if(sure != true) {
+		unhighlightRowWhenDeleteCancel(formType, row);
+		return -1;
+	}
+	//roomShortName = document.getElementById("roomShortName_" + row).value;
 	roomId = document.getElementById("rCenter_" + row).childNodes[0].nodeValue;
 
 	// Check undo/redo stack for clashing roomId
@@ -2223,10 +2295,11 @@ function sbtForm() {
 	formOpen("inputSBTForm");
 
 	/* ---- Adding Header Row -----------------------*/
-	var table = insertHeaderRow("sbtTable", "ID", "Batch", "Subject", "Teacher", 2);
+	var table = insertHeaderRow("sbtTable","  ", "ID", "Batch", "Subject", "Teacher", 2);
 
 	/* ---- Adding "Add sbt Row" -----------------------*/
 	row = insertRow(table, 1);
+	insertTextColumn(row, "", " ");
 	insertTextColumn(row, "", "New");//currBatchRoom["brId"]);
 
 	insertSelectTag(row, "batchAdd", batch, "batchId", "batchName");
@@ -2269,6 +2342,8 @@ function sbtForm() {
 	for (i in subjectBatchTeacher) {
 		currSBT = subjectBatchTeacher[i];
 		var row = insertRow(table, count);
+
+		insertInputBox(row, "checkbox", "sbtCheckBox" + count, "2", "", "", "", ""); 
 
 		insertTextColumn(row, "sbtCenter_" + count, currSBT["sbtId"]);
 
@@ -2457,10 +2532,15 @@ function sbtUpdate(i) {
 function sbtDelete(i) {
 	var row = i;
 	var batchId, subjectId, teacheId, sbtId;
+	var sbtRow;
+	var formType = document.getElementById("inputSBTForm");
+	highlightRowWhenDelete(formType, row);
 	var sure = confirm("This will delete all related timetable entries also\n"
-					+ "This can not be undone. \nAre you sure?");
-	if(sure != true)
-		return;
+				+ "This can not be undone. \nAre you sure?");
+	if(sure != true) {
+		unhighlightRowWhenDeleteCancel(formType, row);
+		return -1;
+	}
 	sbtId = document.getElementById("sbtCenter_" + row).childNodes[0].nodeValue;
 	sbtRow =  search(subjectBatchTeacher, "sbtId", sbtId);
 	subjectId = sbtRow["subjectId"];
@@ -2499,7 +2579,7 @@ function sbtDelete(i) {
 			}
 		}
 	}
-	xhttp.open("POST", "timetable.php", true); // asynchronous
+	xhttp.open("POST", "timetable.php", true); // synchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhttp.send("reqType=sbtDelete&sbtId=" + sbtId + "&snapshotId=" + currentSnapshotId
 				+ "&subjectId=" + subjectId + "&batchId=" + batchId + "&teacherId=" + teacherId);
@@ -2530,10 +2610,11 @@ function sctForm() {
 	}
 	formOpen("inputSCTForm");
 	/* ---- Adding Header Row -----------------------*/
-	var table = insertHeaderRow("sctTable", "ID", "Class", "Subject", "Teacher", 2);
+	var table = insertHeaderRow("sctTable","  ", "ID", "Class", "Subject", "Teacher", 2);
 
 	/* ---- Adding "Add sct Row" -----------------------*/
 	row = insertRow(table, 1);
+	insertTextColumn(row, "", " ");
 	insertTextColumn(row, "", "New");//currBatchRoom["brId"]);
 
 	insertSelectTag(row, "classAdd", classTable, "classId", "className");
@@ -2574,7 +2655,11 @@ function sctForm() {
 	var count = 2;
 	for (i in subjectClassTeacher) {
 		currSCT = subjectClassTeacher[i];
-		var row = insertRow(table, count)
+
+		var row = insertRow(table, count);
+	
+		insertInputBox(row, "checkbox", "sctCheckBox" + count, "2", "", "", "", "");
+
 		insertTextColumn(row, "sctCenter_" + count, currSCT["sctId"]);
 
 		insertTextColumn(row, "sctBatch_" + count,
@@ -2764,10 +2849,15 @@ function sctUpdate(i) {
 function sctDelete(i) {
 	var row = i;
 	var classId, subjectId, teacheId, sctId;
+	var sctRow;
+	var formType = document.getElementById("inputSCTForm");
+	highlightRowWhenDelete(formType, row);
 	var sure = confirm("This will delete all related timetable entries also\n"
-					+ "This can not be undone. \nAre you sure?");
-	if(sure != true)
-		return;
+				+ "This can not be undone. \nAre you sure?");
+	if(sure != true) {
+		unhighlightRowWhenDeleteCancel(formType, row);
+		return -1;
+	}
 	sctId = document.getElementById("sctCenter_" + row).childNodes[0].nodeValue;
 	sctRow =  search(subjectClassTeacher, "sctId", sctId);
 	subjectId = sctRow["subjectId"];
@@ -2808,10 +2898,11 @@ function sctDelete(i) {
 function subjectForm() {
 	formOpen("inputSubjectForm");
 	/* ---- Adding Header Row -----------------------*/
-	var table = insertHeaderRow("subjectTable", "ID", "Name", "Short Name", "Each Entry #Slots",
+	var table = insertHeaderRow("subjectTable", "  ", "ID", "Name", "Short Name", "Each Entry #Slots",
 				"#Entries", "Batches?", 2);
 	/* ---- Adding "Add Subject Row" -----------------------*/
 	row = insertRow(table, 1);
+	insertTextColumn(row, "", " ");
 	insertTextColumn(row, "", "New");//currBatchRoom["brId"]);
 	insertInputBox(row, "text", "subjectNameAdd", "32", "Enter Subject Name", "", "Subject Name");
 	insertInputBox(row, "text", "subjectShortNameAdd", "8", "Enter Short Name", "", "Subject ShortName");
@@ -2830,6 +2921,8 @@ function subjectForm() {
 	for (i in subject) {
 		currSubject = subject[i];
 		var row = insertRow(table, count);
+		
+		insertInputBox(row, "checkbox", "sCheckBox" + count, "2", "", "", "", ""); 		
 
 		insertTextColumn(row, "sCenter_" + count, currSubject["subjectId"]);
 
@@ -3015,13 +3108,18 @@ function subjectUpdate(i) {
 }
 function subjectDelete(i) {
 	var row = i;
-	var subjectName, subjectShortName, eachSlot, nSlots, batches;
+	var subjectShortName;
+	var subjectId;
+	var formType = document.getElementById("inputSubjectForm");
+	highlightRowWhenDelete(formType, row);
 	var sure = confirm("Warning: Deleting Subject will delete all related " +
 						  "subject-teacher mappings, timetable entries, etc.\n" +
 						  "This can not be undone. \n" +
 						  "Are you sure?");
-	if(sure != true)
-		return;
+	if(sure != true) {
+		unhighlightRowWhenDeleteCancel(formType, row);
+		return -1;
+	}
 	subjectId = document.getElementById("sCenter_" + row).childNodes[0].nodeValue;
 	//subjectShortName = document.getElementById("subjectShortName_" + row).value;
 
@@ -3054,14 +3152,16 @@ function subjectDelete(i) {
 	xhttp.open("POST", "timetable.php", true); // asynchronous
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhttp.send("reqType=subjectDelete&subjectId=" + subjectId + "&snapshotId=" + currentSnapshotId);
+	//console.log(subjectId);
 }
 function subjectRoomForm() {
 	formOpen("inputSubjectRoomForm");
 	/* ---- Adding Header Row -----------------------*/
-	var table = insertHeaderRow("subjectRoomTable", "ID", "Subject", "Room", 2);
+	var table = insertHeaderRow("subjectRoomTable","  ", "ID", "Subject", "Room", 2);
 
 	/* ---- Adding "Add subjectRoom Row" -----------------------*/
 	row = insertRow(table, 1);
+	insertTextColumn(row, "", " ");
 	insertTextColumn(row, "", "New");//currBatchRoom["brId"]);
 
 	insertSelectTag(row, "srSubjectAdd", subject,"subjectId", "subjectName");
@@ -3085,6 +3185,8 @@ function subjectRoomForm() {
 	for (i in subjectRoom) {
 		currSubjectRoom = subjectRoom[i];
 		var row = insertRow(table, count);
+
+		insertInputBox(row, "checkbox", "srCheckBox" + count, "2", "", "", "", "");
 
 		insertTextColumn(row, "srCenter_" + count, currSubjectRoom["srId"]);
 
@@ -3220,11 +3322,15 @@ function subjectRoomUpdate(i) {
 }
 function subjectRoomDelete(i) {
 	var row = i;
-	var subjectId, roomId,  srId;
+	var srId;
+	var formType = document.getElementById("inputSubjectRoomForm");
+	highlightRowWhenDelete(formType, row);
 	var sure = confirm("This will delete all related timetable entries also\n"
-					+ "This can not be undone. \nAre you sure?");
-	if(sure != true)
-		return;
+				+ "This can not be undone. \nAre you sure?");
+	if(sure != true) {
+		unhighlightRowWhenDeleteCancel(formType, row);
+		return -1;
+	}
 	srId = document.getElementById("srCenter_" + row).childNodes[0].nodeValue;
 	document.getElementById("subjectRoomDeleteButton_" + row).childNodes[0].nodeValue = "Deleting";
 	document.getElementById("subjectRoomDeleteButton_" + row).disabled = true;
@@ -3254,10 +3360,12 @@ function subjectRoomDelete(i) {
 function teacherForm() {
 	formOpen("inputTeacherForm");
 	/* ---- Adding Header Row -----------------------*/
-	var table = insertHeaderRowTeacher("teacherTable", "ID", "Full Name", "Short Name",
+
+	var table = insertHeaderRow("teacherTable","  ","ID", "Full Name", "Short Name",
 					"Min Hrs", "Max Hrs", "Dept", 2);
 	/* ---- Adding "Add Teacher Row" -----------------------*/
 	row = insertRow(table, 1);
+	insertTextColumn(row, "", " ");
 	insertTextColumn(row, "", "New");//currBatchRoom["brId"]);
 	insertInputBox(row, "text", "teacherNameAdd", "32", "Enter Teacher Name", "", "Teacher's Name");
 	insertInputBox(row, "text", "teacherShortNameAdd", "8", "Enter Short Name", "", "Teacher's Short Name");
@@ -3288,6 +3396,8 @@ function teacherForm() {
 	for (i in teacher) {
 		currTeacher = teacher[i];
 		var row = insertRow(table, count);
+
+		insertInputBox(row, "checkbox", "tCheckBox" + count, "2", "", "", "", ""); 
 
 		insertTextColumn(row, "tCenter_" + count, currTeacher["teacherId"]);
 
@@ -3546,14 +3656,18 @@ function teacherUpdate(i) {
 }
 function teacherDelete(i) {
 	var row = i;
-	var teacherName, teacherShortName, minHrs, maxHrs, dept;
+	var teacherShortName;
+	var teacherId;
+	var formType = document.getElementById("inputTeacherForm");
+	highlightRowWhenDelete(formType, row)
 	var sure = confirm("Warning: Deleting teacher will delete all related " +
-				  "subject-teacher mappings, timetable entries, etc.\n" +
-				  "This can not be undone. \n" +
-				  "Are you sure?");
-	if(sure != true)
-		return;
-	teacherShortName = document.getElementById("teacherShortName_" + row).value;
+			  "subject-teacher mappings, timetable entries, etc.\n" +
+			  "This can not be undone. \n" +
+			  "Are you sure?");
+	if(sure != true) {
+		unhighlightRowWhenDeleteCancel(formType, row);
+		return -1;
+	}
 	teacherId = document.getElementById("tCenter_" + row).childNodes[0].nodeValue;
 
 	// Check undo/redo stack for clashing teacherId
@@ -3653,6 +3767,886 @@ function teacherDelete(i) {
 	xhttp.send("reqType=teacherDelete&teacherId=" + teacherId + "&snapshotId=" + currentSnapshotId);
 }
 
+function deleteSelectedFromsubjectTable() {
+	var i, j, k, p, r, idx, x;
+	var del = new Array();
+	var del2 = new Array();
+	var formType = document.getElementById("inputSubjectForm");
+	for(i = 2, j = 0; i < subject.length+2; i++) {
+		var c = document.getElementById("sCheckBox" + i);
+		if(c.checked) {
+			highlightRowWhenDelete(formType, i);
+			idx = subject[i-2]['subjectId'];
+			console.log(idx);
+			del2[j] = i;
+			del[j] = idx;
+			j++;
+		}
+	}
+	var sure = confirm("Warning: Deleting Subject will delete all related " +
+							  "subject-teacher mappings, timetable entries, etc.\n" +
+							  "This can not be undone. \n" +
+							  "Are you sure?");
+	if(sure != true) {
+		for(k = 0; k < j; k++) {
+			unhighlightRowWhenDeleteCancel(formType, del2[k]);
+		}
+		return -1;
+	}
+	for(k = 0; k < j;k++) {
+		row = del2[k];
+		document.getElementById("sDeleteButton_" + row).childNodes[0].nodeValue = "Deleting";
+		document.getElementById("sDeleteButton_" + row).disabled = true;
+		document.getElementById("sUpdateButton_" + row).disabled = true;
+	}
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function () {
+		if(this.readyState == 4 && this.status == 200) {
+			var response = JSON.parse(this.responseText);
+			if(response["Success"] == "True") {
+				for(k = 0,p = 0; k < j;k++,p++) {
+					row = del2[k] - p;
+					document.getElementById("sDeleteButton_" + row).value = "Delete"
+					subject.splice(row - 2, 1);
+				}
+				fillTable2(true);
+				subjectForm();
+			} else {
+				for(k = 0,p = 0; k < j;k++,p++) {
+					row = del2[k] - p;
+					alert("Subject " + subjectShortName + ": Deletion Failed.\nError:\n" + response["Error"]);
+					document.getElementById("sDeleteButton_" + row).value = "Delete"
+					document.getElementById("sUpdateButton_" + row).disabled = false;
+					document.getElementById("sDeleteButton_" + row).childNodes[0].nodeValue = "Can't Delete";
+				}
+			}
+		}
+	}
+			
+	var sub = { arr : del };
+	sub = JSON.stringify(sub);
+	xhttp.open("POST", "timetable.php", true); // asynchronous
+	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	xhttp.send("reqType=mSubjectDelete&subjectId=" + sub + "&snapshotId=" + currentSnapshotId);	
+}
+
+function deleteSelectedFromclassTable() {
+	var i, j, k, p, r,idx;
+	var del = new Array();
+	var del2 = new Array();
+	var formType = document.getElementById("inputClassForm");
+	for(i = 2, j = 0; i < classTable.length+2; i++) {
+		var c = document.getElementById("cCheckBox" + i);
+		if(c.checked) {
+			idx = classTable[i-2]['classId'];
+			del2[j] = idx;
+			console.log(idx); 
+			highlightRowWhenDelete(formType, i);
+			del[j] = i;
+			j++;
+		}
+	}
+	var sure = confirm("Warning: Deleting Subject will delete all related " +
+							  "subject-teacher mappings, timetable entries, etc.\n" +
+							  "This can not be undone. \n" +
+							  "Are you sure?");
+	if(sure != true) {
+		for(k = 0; k < j; k++) {
+			unhighlightRowWhenDeleteCancel(formType, del[k]);
+		}
+		return -1;
+	}
+	for(k = 0; k < j; k++) {
+		row = del[k];
+		document.getElementById("cDeleteButton_" + row).childNodes[0].nodeValue = "Deleting";
+		document.getElementById("cDeleteButton_" + row).disabled = true;
+		document.getElementById("cUpdateButton_" + row).disabled = true;
+	}
+
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function () {
+		if(this.readyState == 4 && this.status == 200) {
+			response = JSON.parse(this.responseText);
+			if(response["Success"] == "True") {
+				for(k = 0,p = 0; k < j;k++,p++) {
+					row = del[k] - p;
+					document.getElementById("cDeleteButton_" + row).value = "Delete"
+					classTable.splice(row - 2, 1);
+					loadSelectMenus();
+				}
+				fillTable2(true);
+				classForm();
+			} else {
+				for(k = 0,p = 0; k < j;k++,p++) {
+					row = del[k] - p;
+					alert("Class " + classShortName + ": Deletion Failed.\nError:\n" + response["Error"]);
+					document.getElementById("cDeleteButton_" + row).value = "Delete"
+					document.getElementById("cUpdateButton_" + row).disabled = false;
+					document.getElementById("cDeleteButton_" + row).childNodes[0].nodeValue = "Can't Delete";
+				}
+			}
+		}
+	}
+	var cls = { arr : del2 };
+	cls = JSON.stringify(cls);
+	xhttp.open("POST", "timetable.php", true); // asynchronous
+	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	xhttp.send("reqType=mClassDelete&classId=" + cls + "&snapshotId=" + currentSnapshotId);
+
+										
+}
+
+function deleteSelectedFromteacherTable() {
+	var i, j, k, p, r,idx,row;
+	var del = new Array();
+	var del2 = new Array();
+	var formType = document.getElementById("inputTeacherForm");
+	for(i = 2, j = 0; i < teacher.length+2; i++) {
+		var c = document.getElementById("tCheckBox" + i);
+		if(c.checked) {
+			idx = teacher[i-2]['teacherId'];
+			del2[j] = idx;
+			console.log(idx);
+			highlightRowWhenDelete(formType, i);
+			del[j] = i;
+			j++;
+		}
+	}
+	var sure = confirm("Warning: Deleting Subject will delete all related " +
+							  "subject-teacher mappings, timetable entries, etc.\n" +
+							  "This can not be undone. \n" +
+							  "Are you sure?");
+	if(sure != true) {
+		for(k = 0; k < j; k++) {
+			unhighlightRowWhenDeleteCancel(formType, del[k]);
+		}
+		return -1;
+	}
+	for(k = 0; k < j; k++) {
+		row = del[k];
+		document.getElementById("tDeleteButton_" + row).childNodes[0].nodeValue = "Deleting";
+		document.getElementById("tDeleteButton_" + row).disabled = true;
+		document.getElementById("tUpdateButton_" + row).disabled = true;		
+	}
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function () {
+		if(this.readyState == 4 && this.status == 200) {
+			response = JSON.parse(this.responseText);
+			if(response["Success"] == "True") {
+				for(k = 0, p = 0; k < j; k++, p++) {
+					row = del[k] - p;
+					document.getElementById("tDeleteButton_" + row).value = "Delete"
+					teacher.splice(row - 2, 1);
+					loadSelectMenus();
+				}
+				fillTable2(true);
+				teacherForm();
+			} else {
+				for(k = 0,p = 0; k < j;k++,p++) {
+					row = del[k] - p;
+					alert("Teacher " + teacherShortName + ": Deletion Failed.\nError:\n" + response["Error"]);
+					document.getElementById("tDeleteButton_" + row).value = "Delete"
+					document.getElementById("tUpdateButton_" + row).disabled = false;
+					document.getElementById("tDeleteButton_" + row).childNodes[0].nodeValue = "Can't Delete";
+				}
+			}
+		}
+	}
+	var tec = { arr : del2 };
+	tec = JSON.stringify(tec);
+	xhttp.open("POST", "timetable.php", true); // asynchronous
+	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	xhttp.send("reqType=mTeacherDelete&teacherId=" + tec + "&snapshotId=" + currentSnapshotId);
+										
+}
+
+function deleteSelectedFrombatchTable() {
+	var i, j, k, p, r, idx, row;
+	var del = new Array();
+	var del2 = new Array();
+	var formType = document.getElementById("inputBatchForm");
+	for(i = 3, j = 0; i < batch.length+2; i++) {
+		var c = document.getElementById("bfCheckBox" + i);
+		if(c.checked) {
+			idx = batch[i-3]['batchId'];
+			del2[j] = idx;
+			console.log(idx);
+			highlightRowWhenDelete(formType, i);
+			del[j] = i;
+			j++;
+		}
+	}
+	var sure = confirm("Warning: Deleting Subject will delete all related " +
+							  "subject-teacher mappings, timetable entries, etc.\n" +
+							  "This can not be undone. \n" +
+							  "Are you sure?");
+	if(sure != true) {
+		for(k = 0; k < j; k++) {
+			unhighlightRowWhenDeleteCancel(formType, del[k]);
+		}
+		return -1;
+	}
+	for(k = 0; k < j; k++) {
+		row = del[k];
+		document.getElementById("bDeleteButton_" + row).childNodes[0].nodeValue = "Deleting";
+		document.getElementById("bDeleteButton_" + row).disabled = true;	
+	}
+	
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function () {
+		if(this.readyState == 4 && this.status == 200) {
+			response = JSON.parse(this.responseText);
+			if(response["Success"] == "True") {
+				for(k = 0, p = 0; k < j; k++, p++) {
+					row = del[k] - p;
+					document.getElementById("bDeleteButton_" + row).value = "Delete"
+					batch.splice(row - 3, 1);
+					loadSelectMenus();
+				}
+				fillTable2(true);
+				batchForm();
+			} else {
+				for(k = 0,p = 0; k < j;k++,p++) {
+					row = del[k]- p;
+					alert("Batch " + batchName + ": Deletion Failed.\nError:\n" + response["Error"]);
+					document.getElementById("bDeleteButton_" + row).value = "Delete"
+					//document.getElementById("bUpdateButton_" + row).disabled = false;
+					document.getElementById("bDeleteButton_" + row).childNodes[0].nodeValue = "Can't Delete";
+				}
+			}
+		}
+	}
+	var bat = { arr : del2 };
+	bat = JSON.stringify(bat);
+	xhttp.open("POST", "timetable.php", true); // asynchronous
+	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	xhttp.send("reqType=mBatchDelete&batchId=" + bat + "&snapshotId=" + currentSnapshotId);	
+											
+}
+
+function deleteSelectedFromroomTable() {
+	var i, j, k, p, r,row,idx;
+	var del = new Array();
+	var del2 = new Array();
+	var formType = document.getElementById("inputRoomForm");
+	for(i = 2, j = 0; i < room.length+2; i++) {
+		var c = document.getElementById("rCheckBox" + i);
+		if(c.checked) {
+			idx = room[i-2]['roomId'];
+			del2[j] = idx;
+			console.log(idx);
+			highlightRowWhenDelete(formType, i);
+			del[j] = i;
+			j++;
+		}
+	}
+	var sure = confirm("Warning: Deleting Subject will delete all related " +
+							  "subject-teacher mappings, timetable entries, etc.\n" +
+							  "This can not be undone. \n" +
+							  "Are you sure?");
+	if(sure != true) {
+		for(k = 0; k < j; k++) {
+			unhighlightRowWhenDeleteCancel(formType, del[k]);
+		}
+		return -1;
+	}
+	for(k = 0, p = 0; k < j; k++, p++) {
+		row = del[k];
+		document.getElementById("rDeleteButton_" + row).childNodes[0].nodeValue = "Deleting";
+		document.getElementById("rDeleteButton_" + row).disabled = true;
+		document.getElementById("rUpdateButton_" + row).disabled = true;	
+	}
+	
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function () {
+		if(this.readyState == 4 && this.status == 200) {
+			response = JSON.parse(this.responseText);
+			if(response["Success"] == "True") {
+				for(k = 0, p = 0; k < j; k++, p++) {
+				row = del[k] - p;
+				document.getElementById("rDeleteButton_" + row).value = "Delete"
+				room.splice(row - 2, 1);
+				}
+				loadSelectMenus();
+				fillTable2(true);
+				roomForm();
+			} else {
+				for(k = 0,p = 0; k < j;k++,p++) {
+					row = del[k] - p;
+					alert("Room " + roomShortName + ": Deletion Failed.\nError:\n" + response["Error"]);
+					document.getElementById("rDeleteButton_" + row).value = "Delete"
+					document.getElementById("rUpdateButton_" + row).disabled = false;
+					document.getElementById("rDeleteButton_" + row).childNodes[0].nodeValue = "Can't Delete";
+				}
+			}
+		}
+	}
+	var rom = { arr : del2 };
+	rom = JSON.stringify(rom);
+	xhttp.open("POST", "timetable.php", true); // asynchronous
+	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	xhttp.send("reqType=mRoomDelete&roomId=" + rom + "&snapshotId=" + currentSnapshotId);
+												
+}
+
+function deleteSelectedFrombatchRoomTable() {
+	var i, j, k, p, r, idx, row;
+	var del = new Array();
+	var del2 = new Array();
+	var formType = document.getElementById("inputBatchRoomForm");
+	for(i = 2, j = 0; i < batchRoom.length+2; i++) {
+		var c = document.getElementById("brCheckBox" + i);
+		if(c.checked) {
+			idx = batchRoom[i-2]['brId'];
+			del2[j] = idx;
+			console.log(idx);
+			highlightRowWhenDelete(formType, i);
+			del[j] = i;
+			j++;
+		}
+	}
+	var sure = confirm("Warning: Deleting Subject will delete all related " +
+							  "subject-teacher mappings, timetable entries, etc.\n" +
+							  "This can not be undone. \n" +
+							  "Are you sure?");
+	if(sure != true) {
+		for(k = 0; k < j; k++) {
+			unhighlightRowWhenDeleteCancel(formType, del[k]);
+		}
+		return -1;
+	}
+	for(k = 0; k < j; k++) {
+		row = del[k];
+		document.getElementById("batchRoomDeleteButton_" + row).childNodes[0].nodeValue = "Deleting";
+		document.getElementById("batchRoomDeleteButton_" + row).disabled = true;
+		document.getElementById("batchRoomUpdateButton_" + row).disabled = true;		
+	}
+	
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function () {
+		if(this.readyState == 4 && this.status == 200) {
+			response = JSON.parse(this.responseText);
+			if(response["Success"] == "True") {
+				for(k = 0, p = 0; k < j; k++, p++) {
+					row = del[k] - p;
+					document.getElementById("batchRoomDeleteButton_" + row).value = "Delete"
+					batchRoom.splice(row - 2, 1);
+				}
+				fillTable2(true);
+				batchRoomForm();
+			} else {
+				for(k = 0,p = 0; k < j;k++,p++) {
+					row = del[k] - p;
+					alert("batchRoom " + brId + ": Deletion Failed.\nError:\n" + response["Error"]);
+					document.getElementById("batchRoomDeleteButton_" + row).value = "Delete"
+					document.getElementById("batchRoomUpdateButton_" + row).disabled = false;
+					document.getElementById("batchRoomDeleteButton_" + row).childNodes[0].nodeValue = "Can't Delete";
+				}
+			}
+		}
+	}
+	var brt = { arr : del2 };
+	brt = JSON.stringify(brt);
+	xhttp.open("POST", "timetable.php", true); // asynchronous
+	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	xhttp.send("reqType=mBatchRoomDelete&brId=" + brt + "&snapshotId=" + currentSnapshotId);		
+											
+}
+
+function deleteSelectedFromclassRoomTable() {
+	var i, j, k, p, r, idx, row;
+	var del2 = new Array();
+	var del = new Array();
+	var formType = document.getElementById("inputClassRoomForm");
+	for(i = 2, j = 0; i < classRoom.length+2; i++) {
+		var c = document.getElementById("crfCheckBox" + i);
+		if(c.checked) {
+			idx = classRoom[i-2]['crId'];
+			del2[j] = idx;
+			console.log(idx);
+			highlightRowWhenDelete(formType, i);
+			del[j] = i;
+			j++;
+		}
+	}
+	var sure = confirm("Warning: Deleting Subject will delete all related " +
+							  "subject-teacher mappings, timetable entries, etc.\n" +
+							  "This can not be undone. \n" +
+							  "Are you sure?");
+	if(sure != true) {
+		for(k = 0; k < j; k++) {
+			unhighlightRowWhenDeleteCancel(formType, del[k]);
+		}
+		return -1;
+	}
+	for(k = 0; k < j; k++) {
+		row = del[k];
+		document.getElementById("classRoomDeleteButton_" + row).childNodes[0].nodeValue = "Deleting";
+		document.getElementById("classRoomDeleteButton_" + row).disabled = true;
+		document.getElementById("classRoomUpdateButton_" + row).disabled = true;		
+	}
+	
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function () {
+		if(this.readyState == 4 && this.status == 200) {
+			response = JSON.parse(this.responseText);
+			if(response["Success"] == "True") {
+				for(k = 0, p = 0; k < j; k++, p++) {
+					row = del[k] - p;
+					document.getElementById("classRoomDeleteButton_" + row).value = "Delete"
+					classRoom.splice(row - 2, 1);
+				}
+				fillTable2(true);
+				classRoomForm();
+			} else {
+				for(k = 0,p = 0; k < j;k++,p++) {
+					row = del[k] - p;
+					alert("classRoom " + crId + ": Deletion Failed.\nError:\n" + response["Error"]);
+					document.getElementById("classRoomDeleteButton_" + row).value = "Delete"
+					document.getElementById("classRoomUpdateButton_" + row).disabled = false;
+					document.getElementById("classRoomDeleteButton_" +
+							row).childNodes[0].nodeValue = "Can't Delete";
+				}
+			}
+		}
+	}
+	var crt = { arr : del2 };
+	crt = JSON.stringify(crt);
+	xhttp.open("POST", "timetable.php", true); // asynchronous
+	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	xhttp.send("reqType=mClassRoomDelete&crId=" + crt + "&snapshotId=" + currentSnapshotId);		
+										
+}
+
+function deleteSelectedFromsubjectRoomTable() {
+	var i, j, k, p, r;
+	var del = new Array();
+	var del2 = new Array();
+	var formType = document.getElementById("inputSubjectRoomForm");
+	for(i = 2, j = 0; i < subjectRoom.length+2; i++) {
+		var c = document.getElementById("srCheckBox" + i);
+		if(c.checked) {
+			idx = subjectRoom[i-2]['srId'];
+			del2[j] = idx;
+			console.log(idx);
+			highlightRowWhenDelete(formType, i);
+			del[j] = i;
+			j++;
+		}
+	}
+	
+	var sure = confirm("Warning: Deleting Subject will delete all related " +
+							  "subject-teacher mappings, timetable entries, etc.\n" +
+							  "This can not be undone. \n" +
+							  "Are you sure?");
+	if(sure != true) {
+		for(k = 0; k < j; k++) {
+			unhighlightRowWhenDeleteCancel(formType, del[k]);
+		}
+		return -1;
+	}
+	
+	for(k = 0; k < j; k++) {
+		row = del[k];		
+		document.getElementById("subjectRoomDeleteButton_" + row).childNodes[0].nodeValue = "Deleting";
+		document.getElementById("subjectRoomDeleteButton_" + row).disabled = true;
+		document.getElementById("subjectRoomUpdateButton_" + row).disabled = true;
+	}
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function () {
+		if(this.readyState == 4 && this.status == 200) {
+			response = JSON.parse(this.responseText);
+			if(response["Success"] == "True") {
+				for(k = 0, p = 0; k < j; k++, p++) {
+					row = del[k] - p;
+					document.getElementById("subjectRoomDeleteButton_" + row).value = "Delete"
+					subjectRoom.splice(row - 2, 1);
+				}
+				fillTable2(true);
+				subjectRoomForm();
+			} else {
+				for(k = 0,p = 0; k < j;k++,p++) {
+					row = del[k] - p;
+					alert("subjectRoom " + srId + ": Deletion Failed.\nError:\n" + response["Error"]);
+					document.getElementById("subjectRoomDeleteButton_" + row).value = "Delete"
+					document.getElementById("subjectRoomUpdateButton_" + row).disabled = false;
+					document.getElementById("subjectRoomDeleteButton_" + row).childNodes[0].nodeValue = "Can't 																Delete";
+				}
+			}
+		}
+	}
+	var srt = { arr : del2 };
+	srt = JSON.stringify(srt);
+	xhttp.open("POST", "timetable.php", true); // asynchronous
+	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	xhttp.send("reqType=mSubjectRoomDelete&srId=" + srt + "&snapshotId=" + currentSnapshotId);
+											
+}
+
+function deleteSelectedFromsbtTable() {
+	var i, j, k, p, r;
+	var sbtId,sbtRow,subjectId,batchId,teacherId;
+	var del = new Array();
+	var del2 = new Array();
+	var srdel = new Array();
+	var sdel = new Array();
+	var bdel = new Array();
+	var tdel = new Array();
+	var formType = document.getElementById("inputSBTForm");
+	for(i = 2, j = 0; i < subjectBatchTeacher.length+2; i++) {
+		var c = document.getElementById("sbtCheckBox" + i);
+		if(c.checked) {
+			sbtId = subjectBatchTeacher[i - 2]['sbtId'];
+			del2[j] = sbtId;
+			sbtRow =  search(subjectBatchTeacher, "sbtId", sbtId);
+			srdel[j] = sbtRow;
+			subjectId = sbtRow["subjectId"];
+			sdel[j] = subjectId;
+			batchId = sbtRow["batchId"];
+			bdel[j] = batchId;
+			teacherId = sbtRow["teacherId"];
+			tdel[j] = teacherId;
+			highlightRowWhenDelete(formType, i);
+			del[j] = i;
+			j++;
+		}
+	}
+	
+	var sure = confirm("Warning: Deleting Subject will delete all related " +
+							  "subject-teacher mappings, timetable entries, etc.\n" +
+							  "This can not be undone. \n" +
+							  "Are you sure?");
+	if(sure != true) {
+		for(k = 0; k < j; k++) {
+			unhighlightRowWhenDeleteCancel(formType, del[k]);
+		}
+		return -1;
+	}
+	
+	for(k = 0; k < j; k++) {
+		row = del[k];
+		document.getElementById("sbtDeleteButton_" + row).childNodes[0].nodeValue = "Deleting";
+		document.getElementById("sbtDeleteButton_" + row).disabled = true;
+	}
+	
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function () {
+		if(this.readyState == 4 && this.status == 200) {
+			response = JSON.parse(this.responseText);
+			if(response["Success"] == "True") {
+				for(k = 0, p = 0; k < j; k++, p++) {
+					row = del[k] - p;
+					sbtId = del2[k];
+					document.getElementById("sbtDeleteButton_" + row).value = "Delete"
+					subjectBatchTeacher.splice(row - 2, 1);
+					getTimetable(currentSnapshotName);
+					for(var x = 0; x < overlappingSBT.length; x++) {
+						if(overlappingSBT[x]["sbtId1"] == sbtId ||
+							overlappingSBT[x]["sbtId2"] == sbtId)  {
+							overlappingSBT.splice(x--, 1);
+						}
+					}
+				}
+				fillTable2(true);
+				sbtForm();
+			} else {
+				for(k = 0,p = 0; k < j;k++,p++) {
+					row = del[k] - p;
+					alert("sbt " + sbtId + ": Deletion Failed.\nError:\n" + response["Error"]);
+					document.getElementById("sbtDeleteButton_" + row).value = "Delete"
+					document.getElementById("sbtDeleteButton_" + row).childNodes[0].nodeValue = "Can't Delete";
+					document.getElementById("sbtDeleteButton_" + row).disabled = false;
+				}
+			}
+		}
+	}
+	var sbt = { arr : del2 };
+	sbt = JSON.stringify(sbt);
+	var sub = { arr : sdel };
+	sub = JSON.stringify(sub);
+	var bat = { arr : bdel };
+	bat = JSON.stringify(bat);
+	var tec = { arr : tdel };
+	tec = JSON.stringify(tec);
+	xhttp.open("POST", "timetable.php", true); // asynchronous
+	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	xhttp.send("reqType=mSbtDelete&sbtId=" + sbt + "&snapshotId=" + currentSnapshotId
+				+ "&subjectId=" + sub + "&batchId=" + bat + "&teacherId=" + tec);
+	
+											
+}
+
+function deleteSelectedFromsctTable() {
+	var i, j, k, p, r;
+	var classId, subjectId, teacheId, sctId;
+	var sctRow;
+	var del = new Array();
+	var del2 = new Array();
+	var srdel = new Array();
+	var sdel = new Array();
+	var cdel = new Array();
+	var tdel = new Array();
+	var formType = document.getElementById("inputSCTForm");
+	for(i = 2, j = 0; i < subjectClassTeacher.length+2; i++) {
+		var c = document.getElementById("sctCheckBox" + i);
+		if(c.checked) {
+			sctId = subjectClassTeacher[i - 2]['sctId'];
+			del2[j] = sctId;
+			sctRow =  search(subjectClassTeacher, "sctId", sctId);
+			srdel[j] = sctRow;
+			subjectId = sctRow["subjectId"];
+			sdel[j] = subjectId;
+			classId = sctRow["classId"];
+			cdel[j] = classId;
+			teacherId = sctRow["teacherId"];
+			tdel[j] = teacherId;
+			highlightRowWhenDelete(formType, i);
+			del[j] = i;
+			j++;
+		}
+	}
+	
+	var sure = confirm("Warning: Deleting Subject will delete all related " +
+							  "subject-teacher mappings, timetable entries, etc.\n" +
+							  "This can not be undone. \n" +
+							  "Are you sure?");
+	if(sure != true) {
+		for(k = 0; k < j; k++) {
+			unhighlightRowWhenDeleteCancel(formType, del[k]);
+		}
+		return -1;
+	}
+	
+	for(k = 0; k < j; k++) {
+		row = del[k];
+		document.getElementById("sctDeleteButton_" + row).childNodes[0].nodeValue = "Deleting";
+		document.getElementById("sctDeleteButton_" + row).disabled = true;
+	}
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function () {
+		if(this.readyState == 4 && this.status == 200) {
+			response = JSON.parse(this.responseText);
+			if(response["Success"] == "True") {
+				for(k = 0, p = 0; k < j; k++, p++) {
+					row = del[k] - p;
+					document.getElementById("sctDeleteButton_" + row).value = "Delete"
+					subjectClassTeacher.splice(row - 2, 1);
+					getTimetable(currentSnapshotName);
+				}
+				fillTable2(true);
+				sctForm();
+			} else {
+				for(k = 0, p = 0; k < j; k++, p++) {
+					row = del[k] - p;
+					alert("sct " + sctId + ": Deletion Failed.\nError:\n" + response["Error"]);
+					document.getElementById("sctDeleteButton_" + row).value = "Delete"
+					document.getElementById("sctDeleteButton_" + row).disabled = false;
+					document.getElementById("sctDeleteButton_" + row).childNodes[0].nodeValue = "Can't Delete";
+				}
+			}
+		}
+	}
+	
+	var sct = { arr : del2 };
+	sct = JSON.stringify(sct);
+	var sub = { arr : sdel };
+	sub = JSON.stringify(sub);
+	var cls = { arr : cdel };
+	cls = JSON.stringify(cls);
+	var tec = { arr : tdel };
+	tec = JSON.stringify(tec);
+	xhttp.open("POST", "timetable.php", true); // asynchronous
+	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	xhttp.send("reqType=mSctDelete&sctId=" + sct + "&snapshotId=" + currentSnapshotId + "&subjectId=" +
+				sub + "&teacherId=" + tec + "&classId=" + cls);
+
+	
+											
+}
+
+
+function deleteSelectedFrombatchCanOverlapTable() {
+	var i, j, k, p, r;
+	var del = new Array();
+	var bco = new Array();
+	var formType = document.getElementById("inputBatchCanOverlapForm");
+	for(i = 2, j = 0; i < overlaps.length+2; i++) {
+		var c = document.getElementById("bcoCheckBox" + i);
+		if(c.checked) {
+			highlightRowWhenDelete(formType, i);
+			del[j] = i;
+			j++;
+		}
+	}
+	
+	var sure = confirm("Warning: Deleting Subject will delete all related " +
+							  "subject-teacher mappings, timetable entries, etc.\n" +
+							  "This can not be undone. \n" +
+							  "Are you sure?");
+	if(sure != true) {
+		for(k = 0; k < j; k++) {
+			unhighlightRowWhenDeleteCancel(formType, del[k]);
+		}
+		return -1;
+	}
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function () {
+		if(this.readyState == 4 && this.status == 200) {
+			//alert(this.responseText);
+			response = JSON.parse(this.responseText);
+			if(response["Success"] == "True") {
+				for(k = 0, p = 0; k < j; k++, p++) {
+					row = del[k] - p;
+					//console.log(row);
+					document.getElementById("batchCanOverlapDeleteButton_" + row).value = "Delete"
+					overlaps.splice(row - 2, 1);
+					}
+					batchCanOverlap = getOneTable("batchCanOverlap", false).batchCanOverlap;
+					fillTable2(true);
+					batchCanOverlapForm();
+			} else {
+				for(k = 0, p = 0; k < j; k++, p++) {
+					row = del[k] - p;
+					alert("BatchCanOverlap " + JSON.stringify(overlaps[row]) +
+						": Deletion Failed.\nError:\n" + response["Error"]);
+					document.getElementById("batchCanOverlapDeleteButton_" + row).value = "Delete"
+					document.getElementById("batchCanOverlapUpdateButton_" + row).disabled = false;
+					document.getElementById("batchCanOverlapDeleteButton_" +
+							row).childNodes[0].nodeValue = "Can't Delete";
+				}
+			}
+		}
+	}
+	k = 0;
+	
+	for(i = 0 ; i < del.length;i++) {
+		bco[i] = overlaps[del[k] - 2];
+		k++ 
+	}
+	bco = {arr:bco};
+	bco = JSON.stringify(bco);
+	xhttp.open("POST", "timetable.php", true); // asynchronous
+	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	//alert("Asking to delete " + JSON.stringify(overlaps[row]));
+	xhttp.send("reqType=mBatchCanOverlapDelete&batches=" + bco + "&snapshotId=" + currentSnapshotId);
+											
+}
+
+function deleteSelectedFromoverlappingSBTTable() {
+	var i, j, k, p, r, x, z = 0, a, idx;
+	var b = new Array();
+	var del = new Array();
+	var del2 = new Array();
+	var sb1 = new Array();
+	var sb2 = new Array();
+	var temp = overlappingSBT.slice();
+	var formType = document.getElementById("inputoverlappingSBTForm");
+	for(i = 2, j = 0; i < overlappingSBT.length+2; i++) {
+		var c = document.getElementById("osbtCheckBox" + i);
+		if(c.checked) {
+			idx = overlappingSBT[i-2]['osbtId'];
+			sbtId1 = search(overlappingSBT, "osbtId", idx)["sbtId1"];
+			sb1[j] = sbtId1;
+			sbtId2 = search(overlappingSBT, "osbtId", idx)["sbtId2"];
+			sb2[j] = sbtId2;
+			del[j] = idx;
+			del2[j] = i;
+			j++;
+			for(a in temp) {
+				if(temp[a]["sbtId1"] == sbtId1 ||
+				temp[a]["sbtId2"] == sbtId1 ||
+				temp[a]["sbtId1"] == sbtId2 ||
+				temp[a]["sbtId2"] == sbtId2)  {
+				var y = parseInt(a);
+				b[z] = y + 2;
+				z++;
+				}
+			}
+		}
+	}
+	// for highlighting Selected rows
+	for(z = 0;z < b.length;z++) {
+		highlightRowWhenDelete(formType, b[z]);
+		
+	}
+		
+	var sure = confirm("Warning: Deleting Subject will delete all related " +
+							  "subject-teacher mappings, timetable entries, etc.\n" +
+							  "This can not be undone. \n" +
+							  "Are you sure?");
+	if(sure != true) {
+		for(z = 0;z < b.length;z++) {
+			unhighlightRowWhenDeleteCancel(formType, b[z]);
+		}
+		return -1;
+	}	
+	for(k = 0; k < j; k++) {
+		row = b[k];
+		document.getElementById("overlappingSBTDeleteButton_" + row).childNodes[0].nodeValue = "Deleting";
+		document.getElementById("overlappingSBTDeleteButton_" + row).disabled = true;
+	}
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function () {
+		if(this.readyState == 4 && this.status == 200) {
+			response = JSON.parse(this.responseText);
+			if(response["Success"] == "True") {
+				for(k = 0, p = 0; k < j; k++, p++) {
+					row = del2[k];
+					sbtId1 = sb1[k];
+					sbtId2 = sb2[k];
+					document.getElementById("overlappingSBTDeleteButton_" + row).value = "Delete";
+					deleted = true;
+					while(deleted) {
+						deleted = false;
+						for(x in overlappingSBT) {
+							if(overlappingSBT[x]["sbtId1"] == sbtId1 ||
+								overlappingSBT[x]["sbtId2"] == sbtId1 ||
+								overlappingSBT[x]["sbtId1"] == sbtId2 ||
+								overlappingSBT[x]["sbtId2"] == sbtId2)  {
+									overlappingSBT.splice(x, 1);
+									deleted = true;
+							}
+						}
+					}
+				}
+				fillTable2(true);
+				overlappingSBTForm();
+			} else {
+				for(k = 0, p = 0; k < j; k++, p++) {
+					row = del2[k];
+					alert("overlappingSBT " + osbtId + ": Deletion Failed.\nError:\n" + response["Error"]);
+					document.getElementById("overlappingSBTDeleteButton_" +
+							row).value = "Delete"
+					document.getElementById("overlappingSBTDeleteButton_" +
+							row).childNodes[0].nodeValue = "Can't Delete";
+				}
+			}
+		}
+	}
+	var osbt = { arr : del };
+	osbt = JSON.stringify(osbt);
+	var sbt1 = { arr : sb1 };
+	sbt1 = JSON.stringify(sbt1);
+	var sbt2 = { arr : sb2 };
+	sbt2 = JSON.stringify(sbt2);
+	xhttp.open("POST", "timetable.php", true); // synchronous
+	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	xhttp.send("reqType=mOverlappingSBTDelete&osbtId=" + osbt + "&snapshotId=" + currentSnapshotId + "&sbtId1=" + sbt1 + 					"&sbtId2=" + sbt2);
+											
+}
+
+function highlightRowWhenDelete(formType, i) {
+	var rows = formType.getElementsByTagName('tr');
+	rows[i+1].setAttribute("style", "background-color : red");
+}
+
+
+function unhighlightRowWhenDeleteCancel(formType, i) {
+	var rows = formType.getElementsByTagName('tr');
+	rows[i+1].setAttribute("style", "background-color : inherit;");
+
+}
+
 function snapshotForm() {
 	formOpen("inputSnapshotForm");
 
@@ -3727,3 +4721,4 @@ function snapshotDelete(i) {
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhttp.send("reqType=snapshotDelete&snapshotId=" + snapshotId);
 }
+
