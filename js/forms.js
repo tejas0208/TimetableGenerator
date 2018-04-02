@@ -3435,11 +3435,9 @@ function teacherForm() {
 	rowcount = count;
 }
 function getDeptId(deptShortName) {
-	count = 0;
 	for (i in dept) {
 		if(dept[i]["deptShortName"] == deptShortName)
-			return count;
-		count++;
+			return dept[i]["deptId"];
 	}
 	return -1;
 }
