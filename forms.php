@@ -108,7 +108,7 @@ function teacherInsert() {
 	ttlog("teacherInsert(): $query Result: $result");
 
 	if($result === false) {
-		ttlog("teacherInsert(): resString: ".$resString);
+		ttlog("teacherInsert(): resString: ".failMessage());
 		return failMessage();
 	}
 
