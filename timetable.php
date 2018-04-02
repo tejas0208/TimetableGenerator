@@ -74,19 +74,19 @@ switch($reqType) {
 	case "saveSnapshot":
 	case "saveNewSnapshot":
 	case "getOneTable":
-	case "teacherUpdate": case "teacherDelete": case "teacherInsert":
-	case "subjectUpdate": case "subjectDelete": case "subjectInsert":
-	case "classUpdate": case "classDelete": case "classInsert":
-	case "batchUpdate": case "batchDelete": case "batchInsert":
+	case "teacherUpdate": case "teacherDelete": case "teacherInsert": case "mTeacherDelete":
+	case "subjectUpdate": case "subjectDelete": case "subjectInsert": case "mSubjectDelete":
+	case "classUpdate": case "classDelete": case "classInsert": case "mClassDelete":
+	case "batchUpdate": case "batchDelete": case "batchInsert": case "mBatchDelete":
 	case "batchClassUpdate":
-	case "sctDelete": case "sctInsert": case "sctUpdate":
-	case "sbtDelete": case "sbtInsert": case "sbtUpdate":
-	case "roomDelete": case "roomInsert": case "roomUpdate":
-	case "batchCanOverlapDelete": case "batchCanOverlapInsert":
-	case "classRoomDelete": case "classRoomInsert": case "classRoomUpdate":
-	case "batchRoomDelete": case "batchRoomInsert": case "batchRoomUpdate":
-	case "subjectRoomDelete": case "subjectRoomInsert": case "subjectRoomUpdate":
-	case "overlappingSBTDelete": case "overlappingSBTInsert": case "overlappingSBTUpdate":
+	case "sctDelete": case "sctInsert": case "sctUpdate": case "mSctDelete":
+	case "sbtDelete": case "sbtInsert": case "sbtUpdate":  case "mSbtDelete" :
+	case "roomDelete": case "roomInsert": case "roomUpdate": case "mRoomDelete":
+	case "batchCanOverlapDelete": case "batchCanOverlapInsert": case "mBatchCanOverlapDelete":
+	case "classRoomDelete": case "classRoomInsert": case "classRoomUpdate": case "mClassRoomDelete":
+	case "batchRoomDelete": case "batchRoomInsert": case "batchRoomUpdate": case "mBatchRoomDelete":
+	case "subjectRoomDelete": case "subjectRoomInsert": case "subjectRoomUpdate": case "mSubjectRoomDelete" :
+	case "overlappingSBTDelete": case "overlappingSBTInsert": case "overlappingSBTUpdate": case "mOverlappingSBTDelete":
 	case "configDelete": case "configInsert": case "configUpdate": case "snapshotDelete":
 	case "exportSQL":
 		/* call the function which has same name as reqType */

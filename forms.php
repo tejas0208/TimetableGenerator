@@ -51,7 +51,8 @@ function generateInputForms() {
 			"<table class=\"inputFormTitleTable\"> <tr>
 					<td class=\"inputFormTitle\"> ".$formsList[$i][1].
 					"</td>
-					<td class=\"backbtn\">  <a href=\"javascript:void(0)\"
+					<td> <button onclick = deleteSelectedFrom".$formsList[$i][2]."() >Delete Selected</button> </td>
+					<td class=\"closebtn\">  <a href=\"javascript:void(0)\"
 							onclick='formClose(\"".$formsList[$i][0]."\")'>
 							<-- Back </a>
 					</td>
@@ -1272,4 +1273,381 @@ function overlappingSBTUpdate() {
 		return successMessage();
 	}
 }
+
+
+function mSubjectDelete() {
+	global $CFG;
+	header("Content-Type: application/JSON: charset=UTF-8");
+	$sub = json_decode($_POST["subjectId"]);
+	$arr = $sub->arr;
+	$len = sizeof($arr);
+	for($i = 0; $i < $len; $i++) {
+
+		$subjectId = $arr[$i];
+		$snapshotId = getArgument("snapshotId");
+
+		$query = "DELETE FROM subject WHERE subjectId = \"$subjectId\" AND snapshotId = $snapshotId;";
+
+		$result = sqlUpdate($query);
+		ttlog("subjectDelete(): $query Result: ".json_encode($result));
+
+		if($result === false) {
+			ttlog("subjectDelete(): resString: ".failMessage());
+			return failMessage();
+		}
+		
+	}
+		return successMessage();
+}
+
+function mClassDelete() {
+	global $CFG;
+	header("Content-Type: application/JSON: charset=UTF-8");
+	
+	$cls = json_decode($_POST["classId"]);
+	$arr = $cls->arr;
+	$len = sizeof($arr);
+	for($i = 0; $i < $len; $i++) {
+
+		$classId = $arr[$i];
+		$snapshotId = getArgument("snapshotId");
+
+		$query = "DELETE FROM class WHERE classId = \"$classId\" AND snapshotId = $snapshotId;";
+
+		$result = sqlUpdate($query);
+		ttlog("classDelete(): $query Result :".json_encode($result));
+
+		if($result === false) {
+			ttlog("classDelete(): resString: ".failMessage());
+			return failMessage();
+		}
+		ttlog("classDelete(): resString: ".successMessage());
+	}
+	return successMessage();
+}
+
+function mTeacherDelete() {
+	global $CFG;
+	header("Content-Type: application/JSON: charset=UTF-8");
+	
+	$tec = json_decode($_POST["teacherId"]);
+	$arr = $tec->arr;
+	$len = sizeof($arr);
+	for($i = 0; $i < $len; $i++) {
+	
+		$teacherId = $arr[$i];
+		$snapshotId = getArgument("snapshotId");
+
+		$query = "DELETE FROM teacher WHERE teacherId = \"$teacherId\" AND snapshotId = $snapshotId;";
+
+		$result = sqlUpdate($query);
+		ttlog("teacherDelete(): $query Result: $result");
+
+		if($result === false) {
+			ttlog("teacherDelete(): resString: ".failMessage());
+			return failMessage();
+		}
+		ttlog("teacherDelete(): resString: ".successMessage());
+	}
+	return successMessage();;
+}
+
+function mBatchDelete() {
+	global $CFG;
+	header("Content-Type: application/JSON: charset=UTF-8");
+	
+	$bat = json_decode($_POST["batchId"]);
+	$arr = $bat->arr;
+	$len = sizeof($arr);
+	for($i = 0; $i < $len; $i++) {
+
+		$batchId = $arr[$i];
+		$snapshotId = getArgument("snapshotId");
+
+		$query = "DELETE FROM batch WHERE batchId = \"$batchId\" AND snapshotId = $snapshotId;";
+
+		$result = sqlUpdate($query);
+		ttlog("batchDelete(): $query Result: ".json_encode($result));
+
+		if($result === false) {
+			ttlog("batchDelete(): resString: ".failMessage());
+			return failMessage();
+		}
+		ttlog("batchDelete(): resString: ".successMessage());
+	}
+	return successMessage();
+
+}
+
+function mRoomDelete() {
+	global $CFG;
+	header("Content-Type: application/JSON: charset=UTF-8");
+	
+	$rom = json_decode($_POST["roomId"]);
+	$arr = $rom->arr;
+	$len = sizeof($arr);
+	for($i = 0; $i < $len; $i++) {	
+	
+		$roomId = $arr[$i];
+		$snapshotId = getArgument("snapshotId");
+
+		$query = "DELETE FROM room WHERE roomId = \"$roomId\" AND snapshotId = $snapshotId;";
+
+		$result = sqlUpdate($query);
+		ttlog("roomDelete(): $query Result :".json_encode($result));
+
+		if($result === false) {
+			ttlog("roomDelete(): resString: ".failMessage());
+			return failMessage();
+		}
+		ttlog("roomDelete(): resString: ".successMessage());
+	}
+	return successMessage();
+}
+
+function mBatchRoomDelete() {
+	global $CFG;
+	header("Content-Type: application/JSON: charset=UTF-8");
+	
+	$brt = json_decode($_POST["brId"]);
+	$arr = $brt->arr;
+	$len = sizeof($arr);
+	for($i = 0; $i < $len; $i++) {
+
+		$brId = $arr[$i];
+		$snapshotId = getArgument("snapshotId");
+
+		$query = "DELETE FROM batchRoom WHERE brId = $brId AND snapshotId = $snapshotId;";
+
+		$result = sqlUpdate($query);
+		ttlog("batchRoomDelete(): $query : Result :".json_encode($result));
+
+		if($result === false) {
+			ttlog("batchRoomDelete(): resString: ".failMessage());
+			return failMessage();
+		}
+		ttlog("batchRoomDelete(): resString: ".successMessage());
+	}
+	return successMessage();
+}
+
+function mClassRoomDelete() {
+	global $CFG;
+	header("Content-Type: application/JSON: charset=UTF-8");
+	
+	$crt = json_decode($_POST["crId"]);
+	$arr = $crt->arr;
+	$len = sizeof($arr);
+	for($i = 0; $i < $len; $i++) {
+
+		$crId = $arr[$i];
+		$snapshotId = getArgument("snapshotId");
+
+		$query = "DELETE FROM classRoom WHERE crId = $crId AND snapshotId = $snapshotId;";
+
+		$result = sqlUpdate($query);
+		ttlog("classRoomDelete(): $query Result :".json_encode($result));
+
+		if($result === false) {
+			ttlog("classRoomDelete(): resString: ".failMessage());
+			return failMessage();
+		}
+		ttlog("classRoomDelete(): resString: ".successMessage());
+	}
+	return successMessage();
+}
+
+function mSubjectRoomDelete() {
+	global $CFG;
+	header("Content-Type: application/JSON: charset=UTF-8");
+	
+	$srt = json_decode($_POST["srId"]);
+	$arr = $srt->arr;
+	$len = sizeof($arr);
+	for($i = 0; $i < $len; $i++) {
+
+		$srId = $arr[$i];
+		$snapshotId = getArgument("snapshotId");
+
+		$query = "DELETE FROM subjectRoom WHERE srId = $srId AND snapshotId = $snapshotId;";
+
+		$result = sqlUpdate($query);
+		ttlog("subjectRoomDelete(): $query Result :".json_encode($result));
+
+		if($result === false) {
+			ttlog("subjectRoomDelete(): resString: ".failMessage());
+			return failMessage();
+		}
+		ttlog("subjectRoomDelete(): resString: ".successMessage());
+	}
+	return successMessage();
+}
+
+function mSbtDelete() {
+	global $CFG;
+	header("Content-Type: application/JSON: charset=UTF-8");
+	
+	$sbt = json_decode($_POST["sbtId"]);
+	$arr = $sbt->arr;
+	$len = sizeof($arr);
+	
+	$sub = json_decode($_POST["subjectId"]);
+	$sarr = $sub->arr;
+	
+	$bat = json_decode($_POST["batchId"]);
+	$barr = $bat->arr;
+	
+	$tec = json_decode($_POST["teacherId"]);
+	$tarr = $tec->arr;
+	
+	for($i = 0; $i < $len; $i++) {
+		$teacherId = $tarr[$i];
+		$subjectId = $sarr[$i];
+		$batchId = $barr[$i];
+		$sbtId = $arr[$i];
+		$snapshotId = getArgument("snapshotId");
+
+		$query = "DELETE FROM subjectBatchTeacher WHERE sbtId = $sbtId AND snapshotId = $snapshotId;";
+		$delTTQuery = "DELETE FROM timeTable WHERE subjectId = $subjectId AND teacherId = $teacherId ".
+						" and batchId = $batchId AND snapshotId = $snapshotId;";
+
+		$result = sqlUpdate($query);
+		ttlog("sbtDelete(): $query Result: $result");
+
+		if($result === false) {
+			ttlog("sbtDelete(): resString: ".failMessage());
+			return failMessage();
+		}
+		$result = sqlUpdate($delTTQuery);
+		ttlog("sbtDelete: $delTTQuery Result: $result");
+		if($result === false) {
+			ttlog("sbtDelete(): resString: ".failMessage());
+			return failMessage();
+		}
+		ttlog("sbtDelete(): resString: ".successMessage());
+	}
+	return successMessage();
+}
+
+function mSctDelete() {
+	global $CFG;
+	header("Content-Type: application/JSON: charset=UTF-8");
+	
+	$sct = json_decode($_POST["sctId"]);
+	$arr = $sct->arr;
+	$len = sizeof($arr);
+	
+	$sub = json_decode($_POST["subjectId"]);
+	$sarr = $sub->arr;
+	
+	$cls = json_decode($_POST["classId"]);
+	$carr = $cls->arr;
+	
+	$tec = json_decode($_POST["teacherId"]);
+	$tarr = $tec->arr;
+	
+	for($i = 0; $i < $len; $i++) {
+		$teacherId = $tarr[$i];
+		$subjectId = $sarr[$i];
+		$classId = $carr[$i];
+		$sctId = $arr[$i];
+		$snapshotId = getArgument("snapshotId");
+
+		$query = "DELETE FROM subjectClassTeacher WHERE sctId = $sctId AND snapshotId = $snapshotId; ";
+		$delTTQuery = "DELETE FROM timeTable WHERE subjectId = $subjectId AND teacherId = $teacherId ".
+							" and classId = $classId AND snapshotId = $snapshotId;";
+
+		$result = sqlUpdate($query);
+		ttlog("sctDelete(): $query Result: $result");
+
+		if($result === false) {
+			ttlog("sctDelete(): resString: ".failMessage());
+			return failMessage();
+		}
+		$result = sqlUpdate($delTTQuery);
+		ttlog("sctDelete(): $delTTQuery Result: $result");
+		if($result === false) {
+			ttlog("sctDelete(): resString: ".failMessage());
+			return failMessage();
+		}
+		ttlog("sctDelete(): resString: ".successMessage());
+	}
+	return successMessage();
+}
+
+function mBatchCanOverlapDelete() {
+
+	global $CFG;
+	header("Content-Type: application/JSON: charset=UTF-8");
+	
+	$bco = json_decode($_POST["batches"]);
+	$arr = $bco->arr;
+	$len = sizeof($arr);
+	
+	for($j = 0; $j < $len; $j++) {
+		$snapshotId = getArgument("snapshotId");
+		$batches = $arr[$j];
+
+		$query = "DELETE FROM batchCanOverlap WHERE  snapshotId = $snapshotId AND ";
+		$query .= " batchId = ".$batches[0]." OR batchOverlapId = ".$batches[0]." ";
+		for($i = 1; $i < count($batches); $i++) { // 0 special case, to match the "OR" in query
+				$query .= "OR batchId = ".$batches[$i]." OR batchOverlapId = ".$batches[$i]." ";
+		}
+		$query .= ";";
+		ttlog("batchCanOverlapDelete: Created Query: ".$query);
+
+		$result = sqlUpdate($query);
+		ttlog("batchCanOverlapDelete: $query Result: ".json_encode($result));
+
+		if($result === false) {
+			ttlog("batchCanOverlapDelete(): resString: ".failMessage());
+			return failMessage();
+		}
+		ttlog("batchCanOverlapDelete(): resString: ".successMessage());
+	}
+	return successMessage();
+
+}
+
+function mOverlappingSBTDelete() {
+
+	global $CFG;
+	header("Content-Type: application/JSON: charset=UTF-8");
+	
+	$osbt = json_decode($_POST["osbtId"]);
+	$arr = $osbt->arr;
+	$len = sizeof($arr);
+	
+	$sbt1 = json_decode($_POST["sbtId1"]);
+	$sb1arr = $sbt1->arr;
+	
+	$sbt2 = json_decode($_POST["sbtId2"]);
+	$sb2arr = $sbt2->arr;
+	
+	for($j = 0; $j < $len; $j++) {
+		$sbtId1 = $sb1arr[$j];
+		$sbtId2 = $sb2arr[$j];
+		$osbtId = $arr[$j];
+		$snapshotId = getArgument("snapshotId");
+		
+		
+
+		$selectQuery = "SELECT * from overlappingSBT WHERE osbtId = $osbtId and snapshotId = $snapshotId;";
+
+		$query = "DELETE FROM overlappingSBT WHERE sbtId1 = $sbtId1 OR sbtId2 = $sbtId2 " .
+				" OR sbtId2 = $sbtId1 OR sbtId1 = $sbtId2 ".
+				" AND snapshotId = $snapshotId;";
+				
+		ttlog("overlappingSBTDelete(): Query: ".$query);				
+
+		$result = sqlUpdate($query);
+		
+	}
+	ttlog("batchCanOverlapDelete(): resString: ".successMessage());
+	return successMessage(); 
+	
+}	
+
+
+
 ?>
