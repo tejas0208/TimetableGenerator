@@ -85,10 +85,10 @@
 				<option value = "zip" onclick='jsExport("exportCSV")'>Timetable as CSV</option>
 				<option value = "pdfsingle" onclick='jsExport1("exportPDFsingle")'>Current Timetable as PDF</option>
 				<option value = "pdf" onclick='jsExport("exportPDF")'>Timetable as PDF</option>
-				<option value = "Excelx" onclick='alert("not supported");
+				<option value = "ExcelxImport" onclick='alert("not supported");
 										setSelectedIndex(document.getElementById("export-menu"),
 										"selectEmpty");'>Import Timetable as Excelx</option>
-				<option value = "DExcelx" onclick='alert("not supported");
+				<option value = "DExcelxImport" onclick='alert("not supported");
 										setSelectedIndex(document.getElementById("export-menu"),
 										"selectEmpty");'>Import Configuration as Excelx</option>
 				<option value = "CExcelx" onclick='jsExport("exportCurrentXLSX")'>Current timetable as Excelx</option>
@@ -96,6 +96,41 @@
 			</select>
 			</form>
 		</div>
+		<script>
+				$('#export-menu').keyup(function(event) {
+					if(event.which==13) {
+						var text = $(this).val();
+						if(text == "Excelx") {
+							jsExport("exportXLSX");
+						}
+						if(text == "SQL") {
+							jsSQLExport("timetable");
+						}
+						if(text == "DExcelx") {
+							jsExport("exportConfigXLSX");
+						}
+						if(text == "zip") {
+							jsExport("exportCSV");
+						}
+						if(text == "pdf") {
+							jsExport("exportPDF");
+						}
+						if(text == "ExcelxImport") {
+							alert("not supported");
+						}
+						if(text == "DExcelxImport") {
+							alert("not supported");
+						}
+						if(text == "CExcelx") {
+							jsExport("exportCurrentXLSX");
+						}
+						if(text == "BExcelx") {
+							jsExport("exportWorkloadXLSX");
+						}
+					}
+
+				});
+			</script>
 		<div class="selection-menu" id="clear-snapshot" display="none">
 			<input type=button id="clearAll" value="Clear All" onclick="clearAll(true)">
 		</div>
