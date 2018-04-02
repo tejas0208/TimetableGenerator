@@ -570,7 +570,6 @@ function showTrackerList() {
 		completion = 0;
 	document.getElementById("completionTag").innerHTML = "Done: " + completion.toFixed(1) + "%";
 	trackerElem = document.getElementById("tracker");
-    trackerElem.style.height = (trackerElem.scrollHeight)+"px";
 }
 
 function debugPrint(tableName, row) {
