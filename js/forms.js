@@ -2251,8 +2251,10 @@ function roomDelete(i) {
 						search(dept, "deptId", currentDeptId)["deptName"] + "</h2>";
 					}
 				}
-				else
+				else {
+					loadNewSnapshot();
 					fillTable2(true);
+				}
 				roomForm();
 			} else {
 				alert("Room " + roomShortName + ": Deletion Failed.");
