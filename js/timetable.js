@@ -903,25 +903,11 @@ function searchIndex(table) {/*Searches and return the row, Otherwise returns -1
  * TODO: Return null if nothing found. That makes more sense.
  */
 function search(table) {
-	var i;
-	if(typeof table == "undefined" || table.length == 0) {
+	// call function searchIndex() with arguments recieved to this function    
+	var i = searchIndex.apply(null, arguments);
+	if(i == -1)
 		return -1;
-	}
-	for(i in table){
-		var found = true;
-		for(var j = 1; j < arguments.length; j++) {
-			if(table[i][arguments[j]] != arguments[j + 1]) {
-				found = false;
-				break;
-			}
-			j++;
-		}
-		if(found == true) {
-			return table[i];
-		}
-	}
-	return -1;
-
+    return table[i];
 }
 /* Searches and return the row(many rows in form of array),
  * Otherwise returns -1
