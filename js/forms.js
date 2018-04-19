@@ -315,7 +315,10 @@ function highlightRowAfterAdd(formType) {
 			||
 			((rows[i].getAttribute('id') == 3) &&
 			(formType.getAttribute('id') == "inputoverlappingSBTForm"))
-			) {
+			) {	if(((formType.getAttribute('id') == "inputBatchForm") || (formType.getAttribute('id') == "inputClassForm") 					|| (formType.getAttribute('id') == "inputSubjectForm") || (formType.getAttribute('id') == "inputRoomForm") 					|| (formType.getAttribute('id') == "inputTeacherForm") || (formType.getAttribute('id') == 					"inputConfigForm"))) {
+					rows[i + 1].setAttribute("style", "background-color : green");
+					break;
+				}
 				rows[i].setAttribute("style", "background-color : green");
         }
         if(formType.getAttribute('id') == "inputBatchCanOverlapForm" &&
@@ -347,7 +350,7 @@ function batchForm() {
 	var table = insertHeaderRow("batchTable","  ","Id", "Name", "Strength", "Class", "1");
 	/* ---- Adding "Add Batch Row" -----------------------*/
 	row = insertRow(table, 1);
-	insertTextColumn(row, "", " ")
+	insertTextColumn(row, "", " ");
 	insertTextColumn(row, "", "New");//currBatchRoom["brId"]);
 	insertInputBox(row, "text", "batchNameAdd", "32", "Enter Batch Name", "", "Batch Name (Short)");
 	insertInputBox(row, "number", "batchCountAdd", "3", "Strength", "", "Batch Strength", "1");
@@ -357,10 +360,10 @@ function batchForm() {
 
 	/* ---- Adding Search Box -----------*/
 	var searchrow = insertRow(table, 2);
+	insertTextColumn(searchrow, "", " ");	
 	insertTextColumn(searchrow, "blankID", "");
-	insertTextColumn(searchrow, "blankspace", " ");
-	insertInputBox(searchrow, "text", "myInput", 32, "Filter List: Type text here", "", "Batch Name (Short)");
-	searchrow.addEventListener("keyup", rowSearch);
+	insertInputBox(searchrow, "text", "myInput1", 32, "Search for batchnames..", "", "Batch Name (Short)");
+	searchrow.addEventListener("keyup", function() {Searchrow("batchTable", "batchName_", "myInput1")});
 
 	/* Add the existing batch entries */
 	tr = document.getElementById("batchTable").rows[0];
@@ -404,25 +407,6 @@ function batchForm() {
 		count++;
 	}
 	rowcount = count;
-}
-function rowSearch() {
-	var input, filter, table, tr, td, i;
-	input = document.getElementById("myInput");
-	filter = input.value.toUpperCase();
-	table = document.getElementById("batchTable");
-	tr = table.getElementsByTagName("tr");
-
-	// Loop through all table rows, and hide those who don't match the search query
-	for (i = 3; i < tr.length; i++) {
-		cellValue = document.getElementById("batchName_" + i).value.toUpperCase();
-		if (cellValue) {
-			if (cellValue.indexOf(filter) > -1) {
-				tr[i].style.display = "";
-			} else {
-				tr[i].style.display = "none";
-			}
-		}
-	}
 }
 function batchInsert() {
 	var batchName, batchCount;
@@ -566,7 +550,7 @@ function batchUpdate(i) {
 	if(ret === false)
 		return;
 
-	row = i - 2;
+	row = i - 3;
 	//var batchOrigName = batch[row]["batchName"];
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function () {
@@ -1091,11 +1075,18 @@ function classForm() {
 	insertInputBox(row, "number", "semesterAdd", "3", "Semester", "", "Semester", "1");
 	insertInputBox(row, "number", "classCountAdd", "3", "Strength", "", "Strength: No. of Students", "1");
 	cell = insertAddButton(row, "classInsert()", 2);
+	
+	/* ---- Adding Search Box ----------- */
+	var searchrow = insertRow(table, 2);
+	insertTextColumn(searchrow, "", " ");	
+	insertTextColumn(searchrow, "blankID", "");
+	insertInputBox(searchrow, "text", "myInput2", 32, "Search for class names..", "", "Class Name");
+	searchrow.addEventListener("keyup", function() {Searchrow("classTable", "className_", "myInput2")});
 
 	/* Add the existing class entries */
 	tr = document.getElementById("classTable").rows[0];
 	var ncells = tr.cells.length;
-	var count = 2;
+	var count = 3;
 
 	for (i in classTable) {
 		currClass = classTable[i];
@@ -1221,7 +1212,7 @@ function classUpdate(i) {
 	document.getElementById("cDeleteButton_" + row).disabled = true;
 	document.getElementById("cUpdateButton_" + row).disabled = true;
 
-	row = i - 2;
+	row = i - 3;
 	var classOrigShortName = classTable[row]["classShortName"];
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function () {
@@ -1289,7 +1280,7 @@ function classDelete(i) {
 			response = JSON.parse(this.responseText);
 			if(response["Success"] == "True") {
 				document.getElementById("cDeleteButton_" + row).value = "Delete";
-				classTable.splice(row - 2, 1);
+				classTable.splice(row - 3, 1);
 				if(type == "class") {
 					var index2 = document.getElementById("class-menu").selectedIndex;
 					var classname = document.getElementById("class-menu").options[index2].text;
@@ -1587,11 +1578,18 @@ function configForm() {
 	insertSelectTag(row, "inchargeAdd", [[1]], "0", "0");
 
 	cell = insertAddButton(row, "configInsert()", 1);
+	
+	/* ---- Adding Search Box -----------*/
+	var searchrow = insertRow(table, 2);	
+	insertTextColumn(searchrow, "blankID", "");
+	insertInputBox(searchrow, "text", "myInput7", 32, "Search for names..", "", "Configuration Name");
+	searchrow.addEventListener("keyup", function() {Searchrow("configTable", "configName_", "myInput7")});
 
 	/* Add the existing config entries */
 	tr = document.getElementById("configTable").rows[0];
 	var ncells = tr.cells.length;
-
+	var count = 3;
+	
 	for (i in config) {
 		currConfig = config[i];
 		JSON.stringify(currConfig);
@@ -1708,7 +1706,7 @@ function configUpdate(i) {
 	//Converting minutes to seconds
 	slotDuration = slotDuration * 60;
 
-	row = i - 2;
+	row = i - 3;
 	var configOrigName = config[row]["configName"];
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function () {
@@ -1765,7 +1763,7 @@ function configDelete(i) {
 			if(response["Success"] == "True") {
 				document.getElementById("configDeleteButton_" + row).value = "Delete";
 				//We have displayed new entry row at last(i - 1)
-				config.splice(i - 1, 1);
+				config.splice(i - 3, 1);
 				fillTable2(true);
 				configForm();
 			} else {
@@ -2060,11 +2058,18 @@ function roomForm() {
 	insertInputBox(row, "text", "roomShortNameAdd", "8", "Enter Short Name", "", "Room ShortName");
 	insertInputBox(row, "number", "roomCountAdd", "3", "Room Size", "", "Room Size", "1");
 	cell = insertAddButton(row, "roomInsert()", 2);
+	
+	/* ---- Adding Search Box -----------*/
+	var searchrow = insertRow(table, 2);
+	insertTextColumn(searchrow, "", " ");	
+	insertTextColumn(searchrow, "blankID", "");
+	insertInputBox(searchrow, "text", "myInput3", 32, "Search for room names..", "", "Room Name");
+	searchrow.addEventListener("keyup", function() {Searchrow("roomTable", "roomName_", "myInput3")});
 
 	/* Add the existing room entries */
 	tr = document.getElementById("roomTable").rows[0];
 	var ncells = tr.cells.length;
-	var count = 2;
+	var count = 3;
 
 	for (i in room) {
 		currRoom = room[i];
@@ -2179,7 +2184,7 @@ function roomUpdate(i) {
 	document.getElementById("rDeleteButton_" + row).disabled = true;
 	document.getElementById("rUpdateButton_" + row).disabled = true;
 
-	row = i - 2;
+	row = i - 3;
 	//var roomOrigShortName = room[row]["roomShortName"];
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function () {
@@ -2245,7 +2250,7 @@ function roomDelete(i) {
 			response = JSON.parse(this.responseText);
 			if(response["Success"] == "True") {
 				document.getElementById("rDeleteButton_" + row).value = "Delete";
-				room.splice(row - 2, 1);
+				room.splice(row - 3, 1);
 				if(type == "room") {
 					var index2 = document.getElementById("room-menu").selectedIndex;
 					var roomname = document.getElementById("room-menu").options[index2].text;
@@ -2938,11 +2943,18 @@ function subjectForm() {
 	insertSelectTag(row, "batchesAdd", [["Yes"], ["No"]], "0", "0");
 
 	cell = insertAddButton(row, "subjectInsert()", 2);
+	
+	/* ---- Adding Search Box -----------*/
+	var searchrow = insertRow(table, 2);
+	insertTextColumn(searchrow, "", " ");	
+	insertTextColumn(searchrow, "blankID", "");
+	insertInputBox(searchrow, "text", "myInput4", 32, "Search for subject names..", "", "Subject Name");
+	searchrow.addEventListener("keyup", function() {Searchrow("subjectTable", "subjectName_", "myInput4")});
 
 	/* Add the existing subject entries */
 	tr = document.getElementById("subjectTable").rows[0];
 	var ncells = tr.cells.length;
-	var count = 2;
+	var count = 3;
 
 	for (i in subject) {
 		currSubject = subject[i];
@@ -3096,7 +3108,7 @@ function subjectUpdate(i) {
 	document.getElementById("sDeleteButton_" + row).disabled = true;
 	document.getElementById("sUpdateButton_" + row).disabled = true;
 
-	row = i - 2;
+	row = i - 3;
 	//var subjectOrigShortName = subject[row]["subjectShortName"];
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function () {
@@ -3163,7 +3175,7 @@ function subjectDelete(i) {
 			response = JSON.parse(this.responseText);
 			if(response["Success"] == "True") {
 				document.getElementById("sDeleteButton_" + row).value = "Delete"
-				subject.splice(i - 2, 1);
+				subject.splice(i - 3, 1);
 				fillTable2(true);
 				subjectForm();
 			} else {
@@ -3448,11 +3460,18 @@ function teacherForm() {
 	cell.appendChild(selectTag);
 
 	cell = insertAddButton(row, "teacherInsert()", 2);
+	
+	/* ---- Adding Search Box -----------*/
+	var searchrow = insertRow(table, 2);
+	insertTextColumn(searchrow, "", " ");	
+	insertTextColumn(searchrow, "blankID ", "");
+	insertInputBox(searchrow, "text", "myInput5", 32, "Search for teacher names..", "", "Teacher's Name");
+	searchrow.addEventListener("keyup", function() {Searchrow("teacherTable", "teacherName_", "myInput5")});
 
 	/* Add the existing teacher entries */
 	tr = document.getElementById("teacherTable").rows[0];
 	var ncells = tr.cells.length;
-	var count = 2;
+	var count = 3;
 
 	for (i in teacher) {
 		currTeacher = teacher[i];
@@ -3495,6 +3514,26 @@ function teacherForm() {
 		count++;
 	}
 	rowcount = count;
+}
+function Searchrow (x, y, z) {
+  // Declare variables
+  var input, filter, table, tr, td, 
+  input = document.getElementById(z);
+  filter = input.value.toUpperCase();
+  table = document.getElementById(x);
+  tr = table.getElementsByTagName("tr");
+  // Loop through all table rows, and hide those who don't match the search query
+  for (i = 3; i < tr.length; i++) {
+    cellValue = document.getElementById(y + i).value.toUpperCase();
+    if (cellValue) {
+       
+      if (cellValue.indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
 }
 function getDeptId(deptShortName) {
 	for (i in dept) {
@@ -3676,7 +3715,7 @@ function teacherUpdate(i) {
 	document.getElementById("tDeleteButton_" + row).disabled = true;
 	document.getElementById("tUpdateButton_" + row).disabled = true;
 
-	row = i - 2;
+	row = i - 3;
 	//var teacherOrigShortName = teacher[row]["teacherShortName"];
 	var deptId = getDeptId(dept);
 	var xhttp = new XMLHttpRequest();
@@ -3746,7 +3785,7 @@ function teacherDelete(i) {
 			response = JSON.parse(this.responseText);
 			if(response["Success"] == "True") {
 				document.getElementById("tDeleteButton_" + row).value = "Delete";
-				teacher.splice(row - 2, 1);
+				teacher.splice(row - 3, 1);
 				timeTableList = [];
 				sctList = [];
 				sbtList = [];
@@ -3834,11 +3873,11 @@ function deleteSelectedFromsubjectTable() {
 	var del = new Array();
 	var del2 = new Array();
 	var formType = document.getElementById("inputSubjectForm");
-	for(i = 2, j = 0; i < subject.length+2; i++) {
+	for(i = 3, j = 0; i < subject.length+2; i++) {
 		var c = document.getElementById("sCheckBox" + i);
 		if(c.checked) {
 			highlightRowWhenDelete(formType, i);
-			idx = subject[i-2]['subjectId'];
+			idx = subject[i-3]['subjectId'];
 			console.log(idx);
 			del2[j] = i;
 			del[j] = idx;
@@ -3869,7 +3908,7 @@ function deleteSelectedFromsubjectTable() {
 				for(k = 0,p = 0; k < j;k++,p++) {
 					row = del2[k] - p;
 					document.getElementById("sDeleteButton_" + row).value = "Delete"
-					subject.splice(row - 2, 1);
+					subject.splice(row - 3, 1);
 				}
 				fillTable2(true);
 				subjectForm();
@@ -3897,10 +3936,10 @@ function deleteSelectedFromclassTable() {
 	var del = new Array();
 	var del2 = new Array();
 	var formType = document.getElementById("inputClassForm");
-	for(i = 2, j = 0; i < classTable.length+2; i++) {
+	for(i = 3, j = 0; i < classTable.length+2; i++) {
 		var c = document.getElementById("cCheckBox" + i);
 		if(c.checked) {
-			idx = classTable[i-2]['classId'];
+			idx = classTable[i-3]['classId'];
 			del2[j] = idx;
 			console.log(idx); 
 			highlightRowWhenDelete(formType, i);
@@ -3933,7 +3972,7 @@ function deleteSelectedFromclassTable() {
 				for(k = 0,p = 0; k < j;k++,p++) {
 					row = del[k] - p;
 					document.getElementById("cDeleteButton_" + row).value = "Delete"
-					classTable.splice(row - 2, 1);
+					classTable.splice(row - 3, 1);
 					loadSelectMenus();
 				}
 				fillTable2(true);
@@ -3963,10 +4002,10 @@ function deleteSelectedFromteacherTable() {
 	var del = new Array();
 	var del2 = new Array();
 	var formType = document.getElementById("inputTeacherForm");
-	for(i = 2, j = 0; i < teacher.length+2; i++) {
+	for(i = 3, j = 0; i < teacher.length+2; i++) {
 		var c = document.getElementById("tCheckBox" + i);
 		if(c.checked) {
-			idx = teacher[i-2]['teacherId'];
+			idx = teacher[i-3]['teacherId'];
 			del2[j] = idx;
 			console.log(idx);
 			highlightRowWhenDelete(formType, i);
@@ -3998,7 +4037,7 @@ function deleteSelectedFromteacherTable() {
 				for(k = 0, p = 0; k < j; k++, p++) {
 					row = del[k] - p;
 					document.getElementById("tDeleteButton_" + row).value = "Delete"
-					teacher.splice(row - 2, 1);
+					teacher.splice(row - 3, 1);
 					loadSelectMenus();
 				}
 				fillTable2(true);
@@ -4091,10 +4130,10 @@ function deleteSelectedFromroomTable() {
 	var del = new Array();
 	var del2 = new Array();
 	var formType = document.getElementById("inputRoomForm");
-	for(i = 2, j = 0; i < room.length+2; i++) {
+	for(i = 3, j = 0; i < room.length+2; i++) {
 		var c = document.getElementById("rCheckBox" + i);
 		if(c.checked) {
-			idx = room[i-2]['roomId'];
+			idx = room[i-3]['roomId'];
 			del2[j] = idx;
 			console.log(idx);
 			highlightRowWhenDelete(formType, i);
@@ -4127,7 +4166,7 @@ function deleteSelectedFromroomTable() {
 				for(k = 0, p = 0; k < j; k++, p++) {
 				row = del[k] - p;
 				document.getElementById("rDeleteButton_" + row).value = "Delete"
-				room.splice(row - 2, 1);
+				room.splice(row - 3, 1);
 				}
 				loadSelectMenus();
 				fillTable2(true);
