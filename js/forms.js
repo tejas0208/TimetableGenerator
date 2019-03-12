@@ -86,8 +86,23 @@ function insertHeaderRow(tableName) {
 	for(var j = 1; j < arguments.length - 1; j++) {
 		var th = document.createElement("th");
 		tr.appendChild(th);
+		var div1 = document.createElement("label");
 		var tc = document.createTextNode(arguments[j]);
-		th.appendChild(tc);
+		div1.appendChild(tc);
+		th.appendChild(div1);
+		if(j != 1){
+			columnName = arguments[j];
+			var i = document.createElement("span");
+			i.setAttribute("class", "up-down-arrow");
+			addEl(i,tableName,columnName,j-2,1);
+			/*Due to closure problem of listener function, need to call another
+			function to add eventListener(passing the last value of i).*/
+			div1.appendChild(i);
+			var i = document.createElement("span");
+			i.setAttribute("class", "minbutton");
+			addEl(i, tableName,columnName, j-2, -1);
+			div1.appendChild(i);
+		}
 	}
 
 	th = document.createElement("th");
@@ -98,58 +113,234 @@ function insertHeaderRow(tableName) {
 	th.appendChild(tc);
 	return table;
 }
-var sortTeachersOnFullName = 1, sortTeachersOnShortName = 1, sortTeachersOnMinHrs = 1, sortTeachersOnMaxHrs = 1;
-function sortTeacherOnFullName() {
-	teacher.sort(function(a, b) {
-		var x = a.teacherName.toLowerCase();
-		var y = b.teacherName.toLowerCase();
-		if(x < y)
-			return ((sortTeachersOnFullName == 1? 1 : -1) * (-1));
-		if(x > y)
-			return ((sortTeachersOnFullName == 1? 1 : -1) * (1));
-		return 0;
-	});
-	sortTeachersOnFullName = 1 - sortTeachersOnFullName;
-	teacherForm();
+function addEl(i,tableName,columnName,jindex,sortFlag){
+	i.addEventListener("click", function(){sortAsc(tableName, columnName, jindex,
+	sortFlag);});
 }
-function sortTeacherOnShortName() {
-	teacher.sort(function(a, b) {
-		var x = a.teacherShortName.toLowerCase();
-		var y = b.teacherShortName.toLowerCase();
-		if(x < y)
-			return ((sortTeachersOnShortName == 1? 1 : -1) * (-1));
-		if(x > y)
-			return ((sortTeachersOnShortName == 1? 1 : -1) * (1));
-		return 0;
-	});
-	sortTeachersOnShortName = 1 - sortTeachersOnShortName;
-	teacherForm();
+function sortAsc(tableName,columnName,jindex,sortFlag){
+	if(tableName == "teacherTable" || tableName == "roomTable" ||tableName ==
+"subjectTable" ||tableName == "classTable"){
+		if(tableName == "classTable")
+			tb = "classTable";
+		else
+			tb = tableName.split("Table")[0];
+		sortTb = this[tb];	//reference to teacher,room,subject.
+		sortTb.sort(function(a, b){
+			var x,y;
+			var var1 = parseInt(a[Object.keys(a)[jindex]]);
+			var var2 = parseInt(b[Object.keys(b)[jindex]]);
+			if(!isNaN(var1) && !isNaN(var2)){
+				x = var1;
+				y = var2;
+			}
+			else{
+				x = a[Object.keys(a)[jindex]].toLowerCase();
+				//accessing key values using index number.
+				y = b[Object.keys(b)[jindex]].toLowerCase();
+			}
+			if(x < y)
+				//return ((sortTeachersOnFullName == 1? 1 : -1) * (-1));
+				return -1*sortFlag;
+			if(x > y)
+				//return ((sortTeachersOnFullName == 1? 1 : -1) * (1));
+				return 1*sortFlag;
+			return 0;
+		});
+		if(tableName == "classTable")
+			tb = "class";
+		strhere = tb+"Form";
+		tocall = this[strhere];
+		tocall();
+	}
+	else{
+		if(tableName == "sbtTable")
+			tb = "subjectBatchTeacher";
+		else if(tableName == "sctTable")
+			tb = "subjectClassTeacher";
+		else
+			tb = tableName.split("Table")[0];
+			sortAllTables(tb, jindex, sortFlag);
+	}
 }
-function sortTeacherOnMinHrs() {
-	teacher.sort(function(a, b) {
-		var x = parseInt(a.minHrs);
-		var y = parseInt(b.minHrs);
+function sortID(tbname, jindex, sortFlag){
+	tableName = this[tbname];
+	tableName.sort(function(a,b){
+		var x = parseInt(a[Object.keys(a)[jindex]]);
+		var y = parseInt(b[Object.keys(b)[jindex]]);
 		if(x < y)
-			return ((sortTeachersOnMinHrs == 1? 1 : -1) * (-1));
+			return -1*sortFlag;
 		if(x > y)
-			return ((sortTeachersOnMinHrs == 1? 1 : -1) * (1));
+			return 1*sortFlag;
 		return 0;
 	});
-	sortTeachersOnMinHrs = 1 - sortTeachersOnMinHrs;
-	teacherForm();
 }
-function sortTeacherOnMaxHrs() {
-	teacher.sort(function(a, b) {
-		var x = parseInt(a.maxHrs);
-		var y = parseInt(b.maxHrs);
+function sortStr(tbname, jindex, sortFlag){
+	tableName = this[tbname];
+	tableName.sort(function(a,b){
+		var x =a[Object.keys(a)[jindex]].toLowerCase();
+		var y =b[Object.keys(b)[jindex]].toLowerCase();
 		if(x < y)
-			return ((sortTeachersOnMaxHrs == 1? 1 : -1) * (-1));
+			return -1*sortFlag;
 		if(x > y)
-			return ((sortTeachersOnMaxHrs == 1? 1 : -1) * (1));
+			return 1*sortFlag;
 		return 0;
 	});
-	sortTeachersOnMaxHrs = 1 - sortTeachersOnMaxHrs;
-	teacherForm();
+}
+function sortAttributeWise(tbname, jindex, sortFlag, search_table, req_attr,
+sort_attr){
+	tableName = this[tbname];
+	tableName.sort(function(a,b){
+		var x = search(search_table, req_attr, a[req_attr])[sort_attr].toLowerCase();
+		var y = search(search_table, req_attr, b[req_attr])[sort_attr].toLowerCase();
+		if(x < y)
+			return -1*sortFlag;
+		if(x > y)
+			return 1*sortFlag;
+		return 0;
+	});
+}
+function sortAllTables(tb, jindex, sortFlag){
+	switch(tb){
+		case "subjectClassTeacher":
+			switch(jindex){
+				case 0:sortID("subjectClassTeacher", jindex, sortFlag);break;
+				case 1:sortAttributeWise("subjectClassTeacher", jindex, sortFlag,
+				classTable, "classId","className");break;
+				case 2:sortAttributeWise("subjectClassTeacher", jindex, sortFlag,
+				subject, "subjectId", "subjectName");break;
+				case 3:sortAttributeWise("subjectClassTeacher", jindex, sortFlag, teacher,
+				"teacherId", "teacherName");break;
+			}
+			sctForm();
+		break;
+		case "subjectBatchTeacher":
+			switch(jindex){
+				case 0:sortID("subjectBatchTeacher", jindex, sortFlag);
+					break;
+				case 1:sortAttributeWise("subjectBatchTeacher", jindex, sortFlag, batch,
+				"batchId", "batchName");break;
+				case 2:sortAttributeWise("subjectBatchTeacher", jindex, sortFlag, subject,
+				"subjectId", "subjectName");break;
+				case 3:sortAttributeWise("subjectBatchTeacher", jindex, sortFlag, teacher,
+				"teacherId", "teacherName");break;
+			}
+			sbtForm();
+			break;
+		case "batch":sortBatch(jindex, sortFlag);break;
+		case "batchCanOverlap":
+			switch(jindex){
+				case 0 :callForFirstTime = 0;
+					sortID("batchCanOverlapArr",jindex,sortFlag);
+					break;
+				case 1 :callForFirstTime = 0;
+					sortStr("batchCanOverlapArr",jindex,sortFlag);
+					break;
+			}
+			batchCanOverlapForm();
+			break;
+		case "overlappingSBT":
+			switch(jindex){
+				case 0:	callForFirstTime2 = 0;
+					sortID("overlappingSbtArr",jindex,sortFlag);
+					break;
+				case 1: callForFirstTime2 = 0;
+					sortStr("overlappingSbtArr",jindex,sortFlag);
+					break;
+				case 2: callForFirstTime2 = 0;
+					sortStr("overlappingSbtArr",jindex,sortFlag);
+					break;
+			}
+			 overlappingSBTForm();
+			 break;
+		case "classRoom":
+			switch(jindex){
+				case 0:sortID("classRoom",jindex,sortFlag);break;
+				case 1:sortAttributeWise("classRoom", jindex, sortFlag, classTable,
+				"classId", "classShortName");break;
+				case 2:sortAttributeWise("classRoom", jindex, sortFlag, room, "roomId",
+				"roomName");break;
+			}
+			classRoomForm();
+			break;
+		case "batchRoom":
+			switch(jindex){
+				case 0:sortID("batchRoom", jindex, sortFlag);break;
+				case 1:sortAttributeWise("batchRoom", jindex, sortFlag, batch, "batchId",
+				"batchName");break;
+				case 2:sortAttributeWise("batchRoom", jindex, sortFlag, room, "roomId",
+				"roomShortName");break;
+			}
+			batchRoomForm();
+			break;
+		case "subjectRoom":
+			switch(jindex){
+				case 0:sortID("subjectRoom", jindex, sortFlag);break;
+				case 1:sortAttributeWise("subjectRoom", jindex, sortFlag, subject,
+				"subjectId", "subjectName");break;
+				case 2:sortAttributeWise("subjectRoom", jindex, sortFlag, room,
+				"roomId", "roomShortName");break;
+			}
+			subjectRoomForm();
+			break;
+		case "config":
+			switch(jindex){
+				case 0:sortStr("config", 1, sortFlag);break;
+				case 1:(function(){
+					config.sort(function(a, b){
+						var x = a[Object.keys(a)[2]];
+						var y = b[Object.keys(b)[2]];
+						var dt1 = new Date('1970/01/01 ' + x);
+						var dt2 = new Date('1970/01/01 ' + y);
+						return (dt1-dt2)*sortFlag;
+					})
+				})();
+					break;
+				case 2:sortID("config", jindex+1, sortFlag);break;
+				case 3:sortID("config", jindex+1, sortFlag);break;
+				case 4:sortAttributeWise("config", jindex+1, sortFlag, dept,
+				"deptId", "deptShortName");break;
+			}
+			configForm();
+			break;
+	}
+}
+ function sortBatch(jindex, sortFlag){
+	if(jindex == 3){
+		batch.sort(function(a, b){
+			currBatchId = search(batch,  "batchName",  a["batchName"])["batchId"];
+			currBatchClassId = search(batchClass,  "batchId",  currBatchId)["classId"];
+			x = search(classTable, "classId", currBatchClassId)["classShortName"];
+			currBatchId = search(batch, "batchName", b["batchName"])["batchId"];
+			currBatchClassId = search(batchClass, "batchId", currBatchId)["classId"];
+			y = search(classTable, "classId", currBatchClassId)["classShortName"];
+			if(x < y)
+				return -1*sortFlag;
+			if(x > y)
+				return 1*sortFlag;
+			return 0;
+		});
+	}
+	else{
+		batch.sort(function(a, b){
+			var x, y;
+			var var1 = parseInt(a[Object.keys(a)[jindex]]);
+			var var2 = parseInt(b[Object.keys(b)[jindex]]);
+			if(!isNaN(var1) && !isNaN(var2)){
+				x = var1;
+				y = var2;
+			}
+			else{
+				x = a[Object.keys(a)[jindex]].toLowerCase();
+				y = b[Object.keys(b)[jindex]].toLowerCase();
+			}
+			if(x < y)
+				return -1*sortFlag;
+			if(x > y)
+				return 1*sortFlag;
+			return 0;
+		});
+	}
+	batchForm();
 }
 function insertHeaderRowTeacher(tableName) {
 	var table = document.getElementById(tableName);
@@ -360,6 +551,7 @@ function batchForm() {
 	insertInputBox(searchrow, "text", "myInput1", 32, "Search for batchnames..", "", "Batch Name (Short)");
 	searchrow.addEventListener("keyup", function() {Searchrow("batchTable", "batchName_", "myInput1")});
 
+	searchrow.setAttribute("class","noMod");
 	/* Add the existing batch entries */
 	tr = document.getElementById("batchTable").rows[0];
 	var ncells = tr.cells.length;
@@ -665,39 +857,10 @@ function findInArray(overlaps, id) {
 	}
 	return -1;
 }
-
-function batchCanOverlapForm() {
-	formOpen("inputBatchCanOverlapForm");
-
-	/* ---- Adding Header Row -----------------------*/
-	var table = insertHeaderRow("batchCanOverlapTable","  ", "SN", "Select Batches Which Can Overlap", 1);
-
-	/* ---- Adding "Add Batch Row" -----------------------*/
-	row = insertRow(table, 1);
-	insertTextColumn(row, "", " ");
-	insertTextColumn(row, "", "New");//currBatchRoom["brId"]);
-
-	selectTag = insertSelectTag(row, "batchCanOverlapAdd", batch, "batchId", "batchName");
-	selectTag.setAttribute("id","batchCanOverlapAdd");
-	selectTag.setAttribute("multiple","multiple");
-	selectTag.setAttribute("width", "100%");
-	/* Remove the -1 entry */
-	document.getElementById("batchCanOverlapAdd").removeChild(
-		document.getElementById("batchCanOverlapAdd")[0]);
-	$("#batchCanOverlapAdd").select2({
-		tokenSeparators: [','],
-		width: '90%',
-	});
-	$("#batchCanOverlapAdd").on("change", filterBatchCanOverlapSelect); 
-	
-	cell = insertAddButton(row, "batchCanOverlapInsert()", 1);
-	/* Add the existing batch entries */
-	tr = document.getElementById("batchCanOverlapTable").rows[0];
-	var ncells = tr.cells.length;
-	//var count = 2;
-	/* This code assumes that we can ALWAYS find mutually exclusive,
-	 * sets of overlapping batches from batchCanOverlap table
-	 */
+batchCanOverlapArr = [];
+var callForFirstTime = 1;
+function fillBatchCanOverlapArr(){
+	/*forming overlaps array*/
 	var count = -1;
 	overlaps = [];
 	for (i in batchCanOverlap) {
@@ -715,33 +878,68 @@ function batchCanOverlapForm() {
 			else
 				;//already exists
 		else if(index1 != -1) {
-			//alert("Pushing " + b2 + "at index " + index1);
+			//alert("index1 = " + index1 + " index2 = " + index2);
 			overlaps[index1].push(curr["batchOverlapId"]);
 		}
 		else if	(index2 != -1) {
-			//alert("Pushing " + b1 + "at index " + index2);
+			//alert("index1 = " + index1 + " index2 = " + index2);
 			overlaps[index2].push(curr["batchId"]);
 		}
-		else { // both indices -1, so entry didnt exist
-			//alert("Pushing " + b1 + " and " + b2 + " at index " + (count + 1));
+		else {
 			overlaps[++count] = [];
 			overlaps[count].push(curr["batchId"]);
 			overlaps[count].push(curr["batchOverlapId"]);
 		}
 	}
-
+	/*need to form an array*/
 	count = 2;
 	for(i = 0; i < overlaps.length; i++) {
+		batchCanOverlapArr[i] = {};
 		curr = overlaps[i];
 		currText = "";
 		for(j = 0; j < overlaps[i].length; j++) {
 			currText += search(batch, "batchId", overlaps[i][j])["batchName"] + ",";
 		}
 		//alert("currText = " + currText);
+		batchCanOverlapArr[i]['SN'] = count - 1;
+		batchCanOverlapArr[i]['OverlapsAllowed'] = currText;
+		count++;
+	}
+}
+function batchCanOverlapForm() {
+	if(callForFirstTime == 1)
+		fillBatchCanOverlapArr();
+	formOpen("inputBatchCanOverlapForm");
+	/* ---- Adding Header Row -----------------------*/
+	var table = insertHeaderRow("batchCanOverlapTable","  ", "SN", "Select Batches Which Can Overlap", 1);
+	/* ---- Adding "Add Batch Row" -----------------------*/
+	row = insertRow(table, 1);
+	insertTextColumn(row, "", " ");
+	insertTextColumn(row, "", "New");//currBatchRoom["brId"]);
+	selectTag = insertSelectTag(row, "batchCanOverlapAdd", batch, "batchId", "batchName");
+	selectTag.setAttribute("id","batchCanOverlapAdd");
+	selectTag.setAttribute("multiple","multiple");
+	selectTag.setAttribute("width", "100%");
+	/* Remove the -1 entry */
+	document.getElementById("batchCanOverlapAdd").removeChild(
+		document.getElementById("batchCanOverlapAdd")[0]);
+	$("#batchCanOverlapAdd").select2({
+		tokenSeparators: [','],
+		width: '90%',
+	});
+	$("#batchCanOverlapAdd").on("change", filterBatchCanOverlapSelect);
+	cell = insertAddButton(row, "batchCanOverlapInsert()", 1);
+	/* Add the existing batch entries */
+	tr = document.getElementById("batchCanOverlapTable").rows[0];
+	var ncells = tr.cells.length;//4
+	//alert(overlaps[0]); gives as output all the batch id(1,2,3,4) that overlaps with each other.
+	count = 2;
+	for(i = 0; i < batchCanOverlapArr.length; i++) {
+		curr = batchCanOverlapArr[i];
 		var row = insertRow(table, count);
 		insertInputBox(row, "checkbox", "bcoCheckBox" + count, "2", "", "", "", "");
-		insertTextColumn(row, "center1_" + count, count - 1);
-		insertTextColumn(row, "center1_" + count, currText);
+		insertTextColumn(row, "center1_" + count,curr['SN']);
+		insertTextColumn(row, "center1_" + count, curr['OverlapsAllowed']);
 
 		insertDeleteButton(row, "batchCanOverlapDeleteButton_" + count,
 							"batchCanOverlapDelete(" + count + ")");
@@ -749,6 +947,7 @@ function batchCanOverlapForm() {
 
 	}
 }
+/*Want to make an array that consist of batchCanOverlapForm*/
 function batchCanOverlapDelete(i) {
 	var row = i - 2;
 	var formType = document.getElementById("inputBatchCanOverlapForm");
@@ -876,9 +1075,9 @@ function batchRoomForm() {
 	for (i in batchRoom) {
 		currBatchRoom = batchRoom[i];
 		var row = insertRow(table, count);
-		
-		insertInputBox(row, "checkbox", "brCheckBox" + count, "2", "", "", "", ""); 		
-		
+
+		insertInputBox(row, "checkbox", "brCheckBox" + count, "2", "", "", "", "");
+
 		insertTextColumn(row, "brCenter_" + count, currBatchRoom["brId"]);
 
 		var cell = insertCell(row);
@@ -1070,7 +1269,7 @@ function classForm() {
 	insertInputBox(row, "number", "semesterAdd", "3", "Semester", "", "Semester", "1");
 	insertInputBox(row, "number", "classCountAdd", "3", "Strength", "", "Strength: No. of Students", "1");
 	cell = insertAddButton(row, "classInsert()", 2);
-	
+
 	/* ---- Adding Search Box ----------- */
 	var searchrow = insertRow(table, 2);
 	insertTextColumn(searchrow, "", " ");	
@@ -1078,6 +1277,7 @@ function classForm() {
 	insertInputBox(searchrow, "text", "myInput2", 32, "Search for class names..", "", "Class Name");
 	searchrow.addEventListener("keyup", function() {Searchrow("classTable", "className_", "myInput2")});
 
+	searchrow.setAttribute("class","noMod");
 	/* Add the existing class entries */
 	tr = document.getElementById("classTable").rows[0];
 	var ncells = tr.cells.length;
@@ -1086,8 +1286,8 @@ function classForm() {
 	for (i in classTable) {
 		currClass = classTable[i];
 		var row = insertRow(table, count);
-		
-		insertInputBox(row, "checkbox", "cCheckBox" + count, "2", "", "", "", ""); 
+
+		insertInputBox(row, "checkbox", "cCheckBox" + count, "2", "", "", "", "");
 
 		insertTextColumn(row, "cCenter_" + count, currClass["classId"]);
 
@@ -1116,7 +1316,7 @@ function classInsert() {
 	classShortName = document.getElementById("classShortNameAdd");
 	semester = document.getElementById("semesterAdd");
 	classCount = document.getElementById("classCountAdd");
-	
+
 	//Checking Parameter
 	if(checkParameterValidity(className, classShortName, 
 		semester, classCount) == false ) {
@@ -1126,7 +1326,7 @@ function classInsert() {
 				classShortName.value) == false) {
 		return;	
 	}
-	
+
 	className = className.value;
 	if(!validateAlNumFields(className, "Class Name"))
 		return;
@@ -1173,12 +1373,12 @@ function classUpdate(i) {
 	var row = i;
 	var className, classShortName, semester, classCount;
 	classId = document.getElementById("cCenter_" + row).childNodes[0].nodeValue;
-	
+
 	className = document.getElementById("className_" + row);
 	classShortName = document.getElementById("classShortName_" + row);
 	semester = document.getElementById("semester_" + row);
 	classCount = document.getElementById("classCount_" + row);
-	
+
 	//Checking Parameter
 	if(checkParameterValidity(className, classShortName, 
 		semester, classCount) == false ) {
@@ -1188,7 +1388,7 @@ function classUpdate(i) {
 				classShortName.value, "classId", classId) == false) {
 		return;	
 	}
-	
+
 	className = className.value;
 	if(!validateAlNumFields(className, "Class Name"))
 		return;
@@ -1580,6 +1780,7 @@ function configForm() {
 	insertInputBox(searchrow, "text", "myInput7", 32, "Search for names..", "", "Configuration Name");
 	searchrow.addEventListener("keyup", function() {Searchrow("configTable", "configName_", "myInput7")});
 
+	searchrow.setAttribute("class","noMod");
 	/* Add the existing config entries */
 	tr = document.getElementById("configTable").rows[0];
 	var ncells = tr.cells.length;
@@ -1774,9 +1975,43 @@ function configDelete(i) {
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhttp.send("reqType=configDelete&configId=" + configId);
 }
+/*Global variables declared*/
+overlappingSbtArr = [];
+callForFirstTime2 = 1;
+function fillOverlappingSBTArr(){
+	var count = 2;
+	var index = 0;
+	for (i in overlappingSBT) {
+		currOverlappingSBT = overlappingSBT[i];
+		overlappingSbtArr[index] = {};
+		overlappingSbtArr[index]['osbtId'] = currOverlappingSBT["osbtId"];
+		k = currOverlappingSBT["sbtId1"];
+		currSBT = search(subjectBatchTeacher, "sbtId", k);
+		var subjectShortName = search(subject, "subjectId", currSBT["subjectId"])["subjectShortName"];
+		var batchName = search(batch, "batchId", currSBT["batchId"])["batchName"];
+		var teacherShortName = search(teacher, "teacherId", currSBT["teacherId"])["teacherShortName"];
+		if(typeof teacherShortName == "undefined")
+			teacherShortName = "Not Defined";
+		var sbtString = "" + subjectShortName + " : " + batchName + " : " + teacherShortName;
+		overlappingSbtArr[index]['sbt1'] = sbtString;
+		k = currOverlappingSBT["sbtId2"];
+		currSBT = search(subjectBatchTeacher, "sbtId", k);
+		var subjectShortName = search(subject, "subjectId", currSBT["subjectId"])["subjectShortName"];
+		var batchName = search(batch, "batchId", currSBT["batchId"])["batchName"];
+		var teacherShortName = search(teacher, "teacherId", currSBT["teacherId"])["teacherShortName"];
+		if(typeof teacherShortName == "undefined")
+			teacherShortName = "Not Defined";
+		var sbtString = "" + subjectShortName + " : " + batchName + " : " + teacherShortName;
+		overlappingSbtArr[index]['sbt2'] = sbtString;
+		count++;
+		index++;
+	}
+}
 function overlappingSBTForm() {
 	formOpen("inputoverlappingSBTForm");
 
+	if(callForFirstTime2 == 1)
+		fillOverlappingSBTArr();
 	/* ---- Adding Header Row -----------------------*/
 	var table = insertHeaderRow("overlappingSBTTable", "  ","ID", "Sub-Batch-Teacher1",
 						"Sub-Batch-Teacher2", 2);
@@ -1830,42 +2065,20 @@ function overlappingSBTForm() {
 	var ncells = tr.cells.length;
 	var count = 2;
 
-	for (i in overlappingSBT) {
-		currOverlappingSBT = overlappingSBT[i];
+	for (i=0;i<overlappingSbtArr.length;i++) {
 		var row = insertRow(table, count);
 		insertInputBox(row, "checkbox", "osbtCheckBox" + count, "2", "", "", "", ""); 
-
-		insertTextColumn(row, "osbtCenter_" + count, currOverlappingSBT["osbtId"]);
-
-		k = currOverlappingSBT["sbtId1"];
-		currSBT = search(subjectBatchTeacher, "sbtId", k);
+		insertTextColumn(row, "osbtCenter_" + count, overlappingSbtArr[i]['osbtId']);
 		var cell = insertCell(row);
 		var centerTag = document.createElement("center");
 		centerTag.setAttribute("id", "sbtId1_" + count);
-		var subjectShortName = search(subject, "subjectId", currSBT["subjectId"])["subjectShortName"];
-		var batchName = search(batch, "batchId", currSBT["batchId"])["batchName"];
-		var teacherShortName = search(teacher, "teacherId", currSBT["teacherId"])["teacherShortName"];
-		if(typeof teacherShortName == "undefined")
-			teacherShortName = "Not Defined";
-		var sbtString = "" + subjectShortName + " : " + batchName + " : " + teacherShortName;
-		var centerText = document.createTextNode(sbtString);
+		var centerText = document.createTextNode(overlappingSbtArr[i]['sbt1']);
 		centerTag.appendChild(centerText);
 		cell.appendChild(centerTag);
-		//$("#batch_" + i).select2();
-
-
-		k = currOverlappingSBT["sbtId2"];
-		currSBT = search(subjectBatchTeacher, "sbtId", k);
 		var cell = insertCell(row);
 		var centerTag = document.createElement("center");
 		centerTag.setAttribute("id", "sbtId2_" + count);
-		var subjectShortName = search(subject, "subjectId", currSBT["subjectId"])["subjectShortName"];
-		var batchName = search(batch, "batchId", currSBT["batchId"])["batchName"];
-		var teacherShortName = search(teacher, "teacherId", currSBT["teacherId"])["teacherShortName"];
-		if(typeof teacherShortName == "undefined")
-			teacherShortName = "Not Defined";
-		var sbtString = "" + subjectShortName + " : " + batchName + " : " + teacherShortName;
-		var centerText = document.createTextNode(sbtString);
+		var centerText = document.createTextNode(overlappingSbtArr[i]['sbt2']);
 		centerTag.appendChild(centerText);
 		cell.appendChild(centerTag);
 
@@ -2061,6 +2274,7 @@ function roomForm() {
 	insertInputBox(searchrow, "text", "myInput3", 32, "Search for room names..", "", "Room Name");
 	searchrow.addEventListener("keyup", function() {Searchrow("roomTable", "roomName_", "myInput3")});
 
+	searchrow.setAttribute("class","noMod");
 	/* Add the existing room entries */
 	tr = document.getElementById("roomTable").rows[0];
 	var ncells = tr.cells.length;
@@ -2946,6 +3160,7 @@ function subjectForm() {
 	insertInputBox(searchrow, "text", "myInput4", 32, "Search for subject names..", "", "Subject Name");
 	searchrow.addEventListener("keyup", function() {Searchrow("subjectTable", "subjectName_", "myInput4")});
 
+	searchrow.setAttribute("class","noMod");
 	/* Add the existing subject entries */
 	tr = document.getElementById("subjectTable").rows[0];
 	var ncells = tr.cells.length;
@@ -3463,6 +3678,7 @@ function teacherForm() {
 	insertInputBox(searchrow, "text", "myInput5", 32, "Search for teacher names..", "", "Teacher's Name");
 	searchrow.addEventListener("keyup", function() {Searchrow("teacherTable", "teacherName_", "myInput5")});
 
+	searchrow.setAttribute("class","noMod");
 	/* Add the existing teacher entries */
 	tr = document.getElementById("teacherTable").rows[0];
 	var ncells = tr.cells.length;
@@ -3517,16 +3733,19 @@ function Searchrow (x, y, z) {
   filter = input.value.toUpperCase();
   table = document.getElementById(x);
   tr = table.getElementsByTagName("tr");
-  // Loop through all table rows, and hide those who don't match the search query
+  //Loop through all table rows, and hide those who don't match the search query
   for (i = 3; i < tr.length; i++) {
     cellValue = document.getElementById(y + i).value.toUpperCase();
     if (cellValue) {
-       
-      if (cellValue.indexOf(filter) > -1) {
-        tr[i].style.display = "";
-      } else {
-        tr[i].style.display = "none";
-      }
+	if (cellValue.indexOf(filter) > -1){
+		tr[i].style.display = "";
+	}
+	else{
+		if(tr[i].className == "noMod")
+			;
+		else
+			tr[i].style.display = "none";
+	}
     }
   }
 }

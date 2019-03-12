@@ -356,10 +356,40 @@ select.disablelook {
 .headerRow th {
 	text-align: center;
 	padding: 3px;
+	white-space: nowrap;
 }
 .formText {
 	font: 15px Tahoma bold;
 	color: black;
+}
+.up-down-arrow {
+	position: absolute;
+	width: 0;
+	height: 0;
+	border-left: 5px solid transparent;
+	border-right: 5px solid transparent;
+	border-bottom: 5px solid white;
+	display: inline-block;
+}
+.up-down-arrow:hover{
+	cursor: pointer;
+	border-left: 5px solid transparent;
+	border-right: 5px solid transparent;
+	border-bottom: 5px solid #F0F0F0;
+}
+.minbutton:hover{
+	cursor: pointer;
+	border-left: 5px solid transparent;
+	border-right: 5px solid transparent;
+	border-top: 5px solid #F0F0F0;
+}
+.minbutton {
+	width: 0;
+	height: 0;
+	border-left: 5px solid transparent;
+	border-right: 5px solid transparent;
+	border-top: 5px solid white;
+	display: inline-block;
 }
 /*-----------------------------------------------------------------------/
 /* Misc */
