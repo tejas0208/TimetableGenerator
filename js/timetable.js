@@ -3910,7 +3910,7 @@ function wait(ms){
 }
 function checkInstallation() {
 	var xhttp = new XMLHttpRequest();
-	xhttp.open("POST", "install.php", false);
+	xhttp.open("POST", "installer/toggle.php", false);
 	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	xhttp.send("reqType=checkInstallation");
 	$("#checkMessage").hide();
@@ -3925,7 +3925,7 @@ function checkInstallation() {
 		$("#checkMessage").html("<h1>Installation incomplete, redirecting to install.php</h1>");
 		$("#checkMessage").show();
 		var currLocation = window.location.href;
-		window.location.replace("install.php");
+		window.location.replace("installer/install.php");
 		/* Dead code */
 		return false;
 	}

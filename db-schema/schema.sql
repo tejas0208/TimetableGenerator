@@ -1,5 +1,3 @@
-USE timeTable;
-
 CREATE TABLE dept 
 (
 deptId	int  AUTO_INCREMENT PRIMARY KEY COMMENT 'Department Id',
