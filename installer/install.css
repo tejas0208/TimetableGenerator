@@ -1,0 +1,35 @@
+body{
+	background-color:#3498db;
+	margin:20px;
+}
+.container{
+	background-color:white;
+	margin:auto;
+	width:80%;
+}
+.form-group.required .control-label:after{
+	content:" *";
+	color:red;
+}
+h2{
+	padding-left:10px;
+}
+.column {
+	float: left;
+	padding: 10px;
+}
+.left {
+	padding-left:20px;
+	width: 30%;
+}
+.right {
+	padding-top:60px;
+	padding-left:20px;
+	padding-right:20px;
+	width: 70%;
+}
+.row{
+	min-height:600px;
+}
+
+

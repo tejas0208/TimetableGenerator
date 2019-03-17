@@ -67,7 +67,7 @@ function sqlGetAllRows($query) {
 	if($result === false)  {
 		ttlog("sqlGetAllRows: Query $query returned false");
 		$CFG->last_query = $query;
-		die("Query $query returned false");
+		return false;
 	}
 	$allrows = array();
 	$allrows = $result->fetch_all(MYSQLI_ASSOC);

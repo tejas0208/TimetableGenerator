@@ -1,0 +1,28 @@
+<h2>Default Configuration</h2><br><br>
+<p>Please create the first configuration before proceeding</p><br>
+<div class="table-responsive">
+	<table class="table table-sm table-bordered table-striped">
+		<thead>
+			<tr>
+				<th scope="col">Config Name</th>
+				<th scope="col">Day Begins</th>
+				<th scope="col">Slot Duration(Mins)</th>
+				<th scope="col">No of Slots Per Day</th>
+				<th scope="col">Dept</th>
+				<th scope="col">Owner</th>
+				<th scope="col">Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr scope="row">
+				<td><input type="text" id="configNameAdd" size="10" placeholder="Config Name" value=""></td>
+				<td><input type="time" id="dayBeginAdd" size="3" placeholder="Day Begins At" value="" pattern="^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$"></td>
+				<td><input type="number" id="slotDurationAdd" size="3" placeholder="Slot Minutes" value=""></td>
+				<td><input type="number" id="nSlotsAdd" size="3" placeholder="No of Slots Per Day" value="" title="No of Slots Per Day"></td>
+				<td id="deptId"></td>
+				<td id="inchargeId"></td>
+				<td><button onclick="configInsert()" type="button" class="btn btn-primary">Add</button></td>
+			</tr>
+		</tbody>
+	</table>
+</div>
