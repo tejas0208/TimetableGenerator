@@ -33,6 +33,27 @@ global $objPHPExcel;
 function count_new_lines($text) {
 	return 1;
 }
+function countTotalLoad_excel($allrows2) {
+	$total = count($allrows2);
+	for($i = 0; $i < count($allrows2); $i++) {
+		for($j = $i + 1; $j < count($allrows2); $j++) {
+			$one = $allrows2[$i];
+			$two = $allrows2[$j];
+			if($one["day"] == $two["day"] && $one["slotNo"] == $two["slotNo"])
+				$total--;
+		}
+	}
+	return $total;
+}
+function how_many_days_are_empty($allrows2){
+	$count = 0;
+	for ($day=1; $day < 7; $day++) {
+		if (this_day_entries($allrows2,$day) == 0) {
+			$count++;
+		}
+	}
+	return $count;
+}
 function find($allrows, $day, $slotNo) {
 	$result = array();
 	$i = 0;
@@ -43,11 +64,39 @@ function find($allrows, $day, $slotNo) {
 	}
 	return $result;
 }
+function this_day_entries($allRows,$day){
+	$result = 0;
+	for ($i=0; $i <count($allRows); $i++) {
+		if($allRows[$i]["day"] == $day)
+			$result++;
+	}
+	return $result;
+}
+$width = 9.5;
+function maxofSlotsperday($allRows,$day,$nSlots){
+	$count = 0;
+	$result = array_fill(0, $nSlots+1, 0);	//intialize the array with size = nslots with all value is 0
+	for ($i=0; $i < count($allRows); $i++) {
+		if($allRows[$i]["day"] == $day){
+			$currSlot = $allRows[$i]["slotNo"];
+			$result[$currSlot] = $result[$currSlot] + 1;
+		}
+	}
+	return max($result);
+}
+function this_slot_week_entry($allRows,$slotNo){
+	$count = 0;
+	for ($i=0; $i <count($allRows); $i++) {
+		if ($allRows[$i]['slotNo'] == $slotNo) {
+			$count++;
+		}
+	}
+	return $count;
+}
 /* Generates one worksheet for teacher=teacherShortName, class=classShortName, etc. */
 function generate_timetable_worksheet($currTableName, $searchParam, $sheetCount,
 		$allrows2, $nSlots, $dayBegin, $slotDuration, $deptName) {
 	global $objPHPExcel;
-	#ttlog("generate_timetable_worksheet: $currTableName $searchParam $sheetCount $nSlots");
 	global $objPHPExcel;
 	$myWorkSheet = new PHPExcel_Worksheet($objPHPExcel, $currTableName."_".$searchParam);
 	$objPHPExcel->addSheet($myWorkSheet, $sheetCount);
@@ -73,24 +122,23 @@ function generate_timetable_worksheet($currTableName, $searchParam, $sheetCount,
 			$objPHPExcel->getActiveSheet()->getStyle('A'.$xx)->getAlignment()->
 										setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 	}
-
 	$rowshift = count($text) + 1;
 	$colshift = 1;
 	$styleArray = array(
-	 'borders' => array(
-		'top' => array(
-			'style' => PHPExcel_Style_Border::BORDER_THIN,
-		 ),
-		'bottom' => array(
-			'style' => PHPExcel_Style_Border::BORDER_THIN,
-		 ),
-		'left' => array(
-			'style' => PHPExcel_Style_Border::BORDER_THIN,
-		 ),
-		'right' => array(
-			'style' => PHPExcel_Style_Border::BORDER_THIN,
-		 ),
-	 ),
+		'borders' => array(
+			'top' => array(
+				'style' => PHPExcel_Style_Border::BORDER_THIN,
+			),
+			'bottom' => array(
+				'style' => PHPExcel_Style_Border::BORDER_THIN,
+			),
+			'left' => array(
+				'style' => PHPExcel_Style_Border::BORDER_THIN,
+			),
+			'right' => array(
+				'style' => PHPExcel_Style_Border::BORDER_THIN,
+			),
+		),
 	);
 	$currSlotTime = strtotime($dayBegin);
 	$currSlotTimeFormatted = date("H:i", $currSlotTime);
@@ -104,7 +152,7 @@ function generate_timetable_worksheet($currTableName, $searchParam, $sheetCount,
 		$currSlotTime += $slotDuration;
 		$currSlotTimeFormatted = date("H:i", $currSlotTime);
 		$currText->getFont()->setBold(true);
-		$currText->getFont()->setSize(13);
+		$currText->getFont()->setSize(10);
 		$currText->getFont()->setColor( new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_BLACK) );
 		$objPHPExcel->getActiveSheet()->getCell($cols[$k+$colshift].$rowshift)->setValue($objRichText);
 		$objPHPExcel->getActiveSheet()->getStyle($cols[$k+$colshift].$rowshift)->getAlignment()->
@@ -115,14 +163,26 @@ function generate_timetable_worksheet($currTableName, $searchParam, $sheetCount,
 	}
 	$rowshift++;
 	$days = array("Mon", "Tue", "Wed", "Thu", "Fri", "Sat");
+	$mmm = 0;
+	$z=0;
+	$m=0;
 	for($k = 0; $k < count($days); $k++){ # print row labels
 		$dayname = $days[$k];
 		$objRichText = new PHPExcel_RichText();
 		$currText = $objRichText->createTextRun($dayname);
 		$currText->getFont()->setBold(true);
-		$currText->getFont()->setSize(13);
+		$currText->getFont()->setSize(9);
 		$currText->getFont()->setColor( new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_BLACK));
-		$z = $k + $rowshift;
+		$z = $k + $rowshift+$mmm;
+		$m = $z+maxofSlotsperday($allrows2,$k+1,$nSlots)-1;
+		if (maxofSlotsperday($allrows2,$k+1,$nSlots)!=0) {
+			$mmm=$mmm-1+maxofSlotsperday($allrows2,$k+1,$nSlots);
+		}
+		if($m > $z)
+			$objPHPExcel->getActiveSheet()->mergeCells("A$z:A$m");
+		else {
+			$objPHPExcel->getActiveSheet()->mergeCells("A$z:A$z");
+		}
 		$objPHPExcel->getActiveSheet()->getCell('A'.$z)->setValue($objRichText);
 		$objPHPExcel->getActiveSheet()->getStyle('A'.$z)->getAlignment()->
 										setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
@@ -135,122 +195,286 @@ function generate_timetable_worksheet($currTableName, $searchParam, $sheetCount,
 	# this will require creating each cell content as it appears inn $allrows2, and if you encounter again the same
 	# cell, then appending to it. There is no way to append to a cell while preserving the formatting using PHPExcel,
 	# so taking this long route of finding all $allrows for each possible cell(days*nSlots)
-	for($col = 0; $col <= $nSlots - 1; $col++)
-		$widths[$col] = 6.5;
+	//for($col = 0; $col <= $nSlots - 1; $col++)
+	//	$widths[$col] = 6.5;
+	$flag1=0;
 	for($day = 1; $day <= 6; $day++) {
+		//$flag = 0;
+		$no_use=0;
+		$maxdayenty = maxofSlotsperday($allrows2,$day,$nSlots);
 		for($slotNo = 0; $slotNo < $nSlots; $slotNo++) {
-			$row = $day - 1 + $rowshift; # day counts start with 1, not 0
+			$flag1 = 0;
+			$row = $no_use + $rowshift; # day counts start with 1, not 0
 			$col = $cols[$slotNo + $colshift]; # cols count start with 1
-
 			$thisSlotEntries = find($allrows2, $day, $slotNo);
 			$objRichText = new PHPExcel_RichText();
-
 			$nEntries = count($thisSlotEntries);
+			if(this_slot_week_entry($allrows2,$slotNo) == 0 /*&& $day == 1*/){
+				$objPHPExcel->getActiveSheet()->getColumnDimension($col)->setWidth(5.09);
+				$flag1 = 1;
+			}
+			$row_tmp = $row;
+			$col_tmp = $col;
+			if($currTableName != "class" ) {
+					$popo = 0;
+					for($d = 0; $d < $nEntries; $d++) {
+						$objRichText = new PHPExcel_RichText();
+						$currEntry = $thisSlotEntries[$d];
+						if($nEntries == 1){
+							$sh = $row + $maxdayenty-1;
+							if ($sh > $row) {
+								// code...
+								$objPHPExcel->getActiveSheet()->mergeCells("$col$row:$col$sh");
+							}
+						}
+						if ($nEntries == 2 && $maxdayenty == 4) {
+							$sh = $row_tmp + 1;
+							$objPHPExcel->getActiveSheet()->mergeCells("$col_tmp$row_tmp:$col_tmp$sh");
+							$popo = 1;
+						}
 
-			if($currTableName != "class" || $nEntries <= 1) {
+
+						if($currEntry["isFixed"] == "1") {
+							$fixedTextQuery = "SELECT * from fixedEntry where ttId=".$currEntry["ttId"];
+							$fixedTextRow = sqlGetOneRow($fixedTextQuery);
+							$fixedText = $fixedTextRow[0]["fixedText"];
+							$currText = $objRichText->createTextRun($fixedText."\n");
+							$currText->getFont()->setBold(true);
+							$currText->getFont()->setSize(6);
+							$currText->getFont()->setColor(
+								new PHPExcel_Style_Color(PHPExcel_Style_Color::COLOR_BLACK));
+						}
+						if($currEntry["batchName"] != NULL && $currTableName != "batch") {
+							if ($currTableName == "room" ) {
+								$currText = $objRichText->createTextRun($currEntry["batchName"]);
+							}else
+								$currText = $objRichText->createTextRun($currEntry["batchName"]."\n");
+							$currText->getFont()->setBold(true);
+							$currText->getFont()->setSize(6);
+							$currText->getFont()->setColor(
+								new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKGREEN));
+						}
+						if($currTableName != "class" && $currTableName != "batch" && $currTableName !="teacher" && $currEntry["batchName"] != "NULL" && $currTableName != "teacher" && $currTableName != "room") {
+							$currText = $objRichText->createTextRun($currEntry["classShortName"]." ");
+							$currText->getFont()->setBold(true);
+							$currText->getFont()->setSize(6);
+							$currText->getFont()->setColor(
+								new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKGREEN));
+						}
+						if($currTableName != "subject") {
+							if (strlen($currEntry["subjectShortName"]) > 6 && $currTableName!= "teacher")
+								$currText = $objRichText->createTextRun("\n".$currEntry["subjectShortName"]."\n");
+							else
+								$currText = $objRichText->createTextRun($currEntry["subjectShortName"]."\n");
+							$currText->getFont()->setBold(true);
+							$currText->getFont()->setSize(6);
+							$currText->getFont()->setColor(
+								new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKRED) );
+						}
+						if($currTableName != "teacher" && $currTableName != "room") {
+							$currText = $objRichText->createTextRun($currEntry["teacherShortName"]."\n");
+							$currText->getFont()->setBold(true);
+							$currText->getFont()->setSize(6);
+							$currText->getFont()->setColor(
+								new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKBLUE) );
+						}
+						if($currTableName != "room") {
+							if ($currTableName == "teacher") {
+								$currText = $objRichText->createTextRun($currEntry["roomShortName"]);
+							}else
+								$currText = $objRichText->createTextRun($currEntry["roomShortName"]."\n");
+							$currText->getFont()->setBold(true);
+							$currText->getFont()->setSize(6);
+							$currText->getFont()->setColor(
+								new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKYELLOW) );
+						}
+						$objPHPExcel->getActiveSheet()->getCell($col.$row_tmp)->setValue($objRichText);
+						$width = 9.5;//16.70;
+						if (this_day_entries($allrows2,$day) == 0) {
+							$height = 10;
+							$this_much_days = how_many_days_are_empty($allrows2);
+							if ($this_much_days == 2) {
+								$height = 37;
+							}if ($this_much_days >= 3) {
+								$height = 43;
+							}
+						}else if ($maxdayenty == 1) {
+							$height = 24;
+						}
+						else if($currTableName == "teacher") {
+							$height = 35;
+						}else if($currTableName == "class"){
+							$height = 21;
+						}else if($currTableName == "room") {
+							if (strpos($currEntry["roomShortName"],'AC') === false ) {
+								$height = 33;
+							}else {
+								$height = 21;
+							}
+						}
+						$objPHPExcel->getActiveSheet()->getRowDimension($row_tmp)->setRowHeight($height);
+						if($flag1 != 1)
+						$objPHPExcel->getActiveSheet()->getColumnDimension($col)->setWidth($width);
+						$objPHPExcel->getActiveSheet()->getStyle($col.$row_tmp)->getAlignment()->
+						setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+						$objPHPExcel->getActiveSheet()->getStyle($col.$row_tmp)->getAlignment()->
+						setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+
+						$objPHPExcel->getActiveSheet()->getStyle($col.$row_tmp)->applyFromArray($styleArray);
+
+						if (!$popo) {
+							$row_tmp++;
+						}else{
+							$row_tmp +=2;
+						}
+					}
+			}
+			else {
+				$popo = 0;
 				for($d = 0; $d < $nEntries; $d++) {
-					$currEntry = $thisSlotEntries[$d];	
+					$objRichText = new PHPExcel_RichText();
+					$currEntry = $thisSlotEntries[$d];
+					//ttlog("generate_timetable_worksheet: currEntry = ".json_encode($currEntry));
+					if ($day == 1) {
+						//ttlog(json_encode($currEntry));
+					}
+					if($nEntries == 1){
+						$sh = $row + $maxdayenty-1;
+						$objPHPExcel->getActiveSheet()->mergeCells("$col$row:$col$sh");
+					}
+					if ($nEntries == 2 && $maxdayenty == 4) {
+						$sh = $row_tmp + 1;
+						$objPHPExcel->getActiveSheet()->mergeCells("$col_tmp$row_tmp:$col_tmp$sh");
+						$popo = 1;
+					}
+
+					//text part to enter in each entry
 					if($currEntry["isFixed"] == "1") {
 						$fixedTextQuery = "SELECT * from fixedEntry where ttId=".$currEntry["ttId"];
 						$fixedTextRow = sqlGetOneRow($fixedTextQuery);
 						$fixedText = $fixedTextRow[0]["fixedText"];
 						$currText = $objRichText->createTextRun($fixedText."\n");
 						$currText->getFont()->setBold(true);
-						$currText->getFont()->setSize(10);
-						$currText->getFont()->setColor( new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_BLACK) );
-						continue;
-					}
-					if($currEntry["batchName"] != "NULL" && $currTableName != "batch") {
-						$currText = $objRichText->createTextRun($currEntry["batchName"]."\n");
-						$currText->getFont()->setBold(true);
-						$currText->getFont()->setSize(10);
-						$currText->getFont()->setColor( new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKGREEN ) );
-					}
-					if($currTableName != "class" && $currTableName != "batch" && $currEntry["batchName"] != "NULL") {
-						$currText = $objRichText->createTextRun($currEntry["classShortName"]."\n");
-						$currText->getFont()->setBold(true);
-						$currText->getFont()->setSize(10);
-						$currText->getFont()->setColor( new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKGREEN ) );
-					}
-					if($currTableName != "subject") {
-						$currText = $objRichText->createTextRun($currEntry["subjectShortName"]."\n");
-						$currText->getFont()->setBold(true);
-						$currText->getFont()->setSize(10);
-						$currText->getFont()->setColor( new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKRED) );
-					}
-					if($currTableName != "teacher") {
-						$currText = $objRichText->createTextRun($currEntry["teacherShortName"]."\n");
-						$currText->getFont()->setBold(true);
-						$currText->getFont()->setSize(10);
-						$currText->getFont()->setColor( new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKBLUE) );
-					}
-					if($currTableName != "room") {
-						$currText = $objRichText->createTextRun($currEntry["roomShortName"]."\n");
-						$currText->getFont()->setBold(true);
-						$currText->getFont()->setSize(10);
-						$currText->getFont()->setColor( new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKYELLOW) );
-					}
-				}
-				/* Check if there was no row-col with bigger width for same col */
-				if($nEntries == 0 & $widths[$slotNo] < 8.35) {
-					$width = 6.5;
-					$widths[$slotNo] = 6.5;
-				}
-				if($widths[$slotNo] < 16.70) {
-					$width = 8.35;
-					$widths[$slotNo] = 8.35;
-				} else {
-					$width = 16.70;
-					$widths[$slotNo] = 16.70;
-				}
-			}
-			else { /* nEntries > 1 for table = "class" */
-				for($d = 0; $d < $nEntries; $d++) {
-					$currEntry = $thisSlotEntries[$d];
-					$currText = $objRichText->createTextRun($currEntry["roomShortName"]."\n");
-					$currText->getFont()->setBold(true);
-					$currText->getFont()->setSize(10);
-					$currText->getFont()->setColor( new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKYELLOW) );
-					$currText = $objRichText->createTextRun($currEntry["subjectShortName"]."(");
-					$currText->getFont()->setBold(true);
-					$currText->getFont()->setSize(10);
-					$currText->getFont()->setColor( new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKRED) );
-					$currText = $objRichText->createTextRun($currEntry["batchName"]."),");
-					$currText->getFont()->setBold(true);
-					$currText->getFont()->setSize(10);
-					$currText->getFont()->setColor( new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKGREEN ) );
-					$currText = $objRichText->createTextRun($currEntry["teacherShortName"]."\n");
-					$currText->getFont()->setBold(true);
-					$currText->getFont()->setSize(10);
-					$currText->getFont()->setColor( new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKBLUE) );
-				}
-				$width = 16.70;
-				$widths[$slotNo] = 16.70;
-			}
-			$objPHPExcel->getActiveSheet()->getCell($col.$row)->setValue($objRichText);
-			/* 1 Point is 0.35 mm, 0 is hidden row, max value is 409*/
-			if($nEntries > 1)
-				$height = (34.27 * $nEntries) / 2;# * count($thisSlotEntries);#12.75 * count($thisSlotEntries);
-			else
-				$height = 68.55;# * count($thisSlotEntries);#12.75 * count($thisSlotEntries);
-			$objPHPExcel->getActiveSheet()->getRowDimension($row)->setRowHeight($height);
-			#$width = 12.75;
-			#ttlog("export: $currTableName $searchParam $day $slotNo width = $width");
-			$objPHPExcel->getActiveSheet()->getColumnDimension($col)->setWidth($width);
-			$objPHPExcel->getActiveSheet()->getStyle($col.$row)->getAlignment()->
-									setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-			$objPHPExcel->getActiveSheet()->getStyle($col.$row)->getAlignment()->
-									setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+						$currText->getFont()->setSize(8);
+						$currText->getFont()->setColor(
+							new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_BLACK) );
+						$objPHPExcel->getActiveSheet()->getCell($col.$row_tmp)->setValue($objRichText);
 
-			$objPHPExcel->getActiveSheet()->getStyle($col.$row)->applyFromArray($styleArray);
+						break;
+					}if ($nEntries == 1) {
+						$currText = $objRichText->createTextRun($currEntry["roomShortName"]."\n");
+					}
+					else
+						$currText = $objRichText->createTextRun($currEntry["roomShortName"]." ");
+					$currText->getFont()->setBold(true);
+					$currText->getFont()->setSize(6);
+					$currText->getFont()->setColor(
+						new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKYELLOW) );
+					$currText = $objRichText->createTextRun($currEntry["subjectShortName"]."\n");
+					$currText->getFont()->setBold(true);
+					$currText->getFont()->setSize(6);
+					$currText->getFont()->setColor(
+						new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKRED) );
+					if ($currEntry["batchName"] != NULL) {
+						// code...
+						$currText = $objRichText->createTextRun("(".$currEntry["batchName"].")");
+						$currText->getFont()->setBold(true);
+						$currText->getFont()->setSize(6);
+						$currText->getFont()->setColor(
+							new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKGREEN ) );
+					}
+					$objPHPExcel->getActiveSheet()->getCell($col.$row_tmp)->setValue($objRichText);
+					$width = 9.5;//16.70;
+					if (this_day_entries($allrows2,$day) == 0) {
+						$height = 10;
+						$this_much_days = how_many_days_are_empty($allrows2);
+						if ($this_much_days == 2) {
+							$height = 37;
+						}if ($this_much_days >= 3) {
+							$height = 43;
+						}
+					}else if ($maxdayenty == 1) {
+						$height = 24;
+					}
+					else if($currTableName == "teacher") {
+						$height = 35;
+					}else if($currTableName == "class"){
+						$height = 21;
+					}else if($currTableName == "room") {
+						if (strpos($currEntry["roomShortName"],'AC') === false ) {
+							$height = 33;
+						}else {
+							$height = 21;
+						}
+					}
+					$objPHPExcel->getActiveSheet()->getRowDimension($row_tmp)->setRowHeight($height);
+					if($flag1 != 1)
+						$objPHPExcel->getActiveSheet()->getColumnDimension($col)->setWidth($width);
+					$objPHPExcel->getActiveSheet()->getStyle($col.$row_tmp)->getAlignment()->
+											setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+					$objPHPExcel->getActiveSheet()->getStyle($col.$row_tmp)->getAlignment()->
+											setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+
+					$objPHPExcel->getActiveSheet()->getStyle($col.$row_tmp)->applyFromArray($styleArray);
+
+					if (!$popo) {
+						$row_tmp++;
+					}else{
+						$row_tmp +=2;
+					}
+
+				}
+				$width = 9.5;//16.70;
+			}
+			$width = 9.5;
+			if (this_day_entries($allrows2,$day) == 0) {
+				$height = 10;
+				$this_much_days = how_many_days_are_empty($allrows2);
+				if ($this_much_days == 2) {
+					$height = 37;
+				}if ($this_much_days >= 3) {
+					$height = 43;
+				}
+			}else if ($maxdayenty == 1) {
+				$height = 30;
+			}
+			else if($currTableName == "teacher") {
+				$height = 35;
+			}else if($currTableName == "class"){
+				$height = 21;
+			}else if($currTableName == "room") {
+				/*if (strpos($currEntry["roomShortName"],'AC') === false ) {
+					$height = 33;
+					ttlog("$height"."\n");
+				}else { */ 
+					$height = 21;
+				//}
+			}
+			for ($row_tmp=$row; $row_tmp <= $row+$maxdayenty; $row_tmp++) {
+				$objPHPExcel->getActiveSheet()->getRowDimension($row_tmp)->setRowHeight($height);
+				if($flag1 != 1)
+					$objPHPExcel->getActiveSheet()->getColumnDimension($col)->setWidth($width);
+				$objPHPExcel->getActiveSheet()->getStyle($col.$row_tmp)->getAlignment()->
+				setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+				$objPHPExcel->getActiveSheet()->getStyle($col.$row_tmp)->getAlignment()->
+				setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+
+				$objPHPExcel->getActiveSheet()->getStyle($col.$row_tmp)->applyFromArray($styleArray);
+			}
+
+		}
+		if ($maxdayenty !=0) {
+			$rowshift += $maxdayenty;
+		}else {
+			$rowshift++;
 		}
 	}
-	$row = $row + 2;
+	$row = $row+2;
 	$col = 'E';
 	$objPHPExcel->getActiveSheet()->getCell($col.$row)->setValue("Total Hours");
 	$objPHPExcel->getActiveSheet()->getStyle($col.$row)->applyFromArray($styleArray);
 	$col = 'F';
-	$objPHPExcel->getActiveSheet()->getCell($col.$row)->setValue(count($allrows2));
+	$objPHPExcel->getActiveSheet()->getCell($col.$row)->setValue(countTotalLoad_excel($allrows2));
 	$objPHPExcel->getActiveSheet()->getStyle($col.$row)->applyFromArray($styleArray);
 }
 function generate_workload_worksheet($sheetCount,$allrows2,$deptName,$currentSnapshotName) {
@@ -411,7 +635,7 @@ function generate_workload_worksheet($sheetCount,$allrows2,$deptName,$currentSna
 				if($count > $max)
 					$max = $count;
 				$count = 1;
-			}		
+			}
 		}
 		$text = $cols2[0];
 		$objRichText = new PHPExcel_RichText();
@@ -504,7 +728,7 @@ function generate_workload_worksheet($sheetCount,$allrows2,$deptName,$currentSna
 				}
 				$x = $row1 + 1;
 				if(strcmp($allrows2[$row1]["teacherShortName"],$allrows2[$x]["teacherShortName"]) === 0){
-					$row1++;	
+					$row1++;
 				}
 				else{
 					$colshift = 0;
@@ -666,7 +890,7 @@ function generate_workload_worksheet($sheetCount,$allrows2,$deptName,$currentSna
 				$col4++;
 				$x = $row1 + 1;
 				if(strcmp($allrows2[$row1]["teacherShortName"],$allrows2[$x]["teacherShortName"]) === 0){
-					$row1++;		
+					$row1++;
 				}
 				else{
 					$colshift = 0;
@@ -688,11 +912,13 @@ function generate_workload_worksheet($sheetCount,$allrows2,$deptName,$currentSna
 									applyFromArray($styleArray);
 			$rowshift++;
 		}
-	}		
+	}
 }
 function generate_timetable_spreadsheet() {
-	$tableNames = array("class", "classShortName", "teacher", "teacherShortName", 
-				"room", "roomShortName", "batch", "batchName");
+	//$tableNames = array("class", "classShortName", "teacher", "teacherShortName",
+		//		"room", "roomShortName", "batch", "batchName");
+	$tableNames = array("class", "classShortName", "teacher", "teacherShortName",
+				"room", "roomShortName") ;
 	$query = "SELECT * from config WHERE configId = 1";
 	$allrows = sqlGetAllRows($query);
 	$currentSnapshotName = getArgument("snapshotName");
@@ -730,6 +956,17 @@ function generate_timetable_spreadsheet() {
 			# print information about subject shortcut names, subject-teacher mapping
 
 			$sheetCount++;
+			if($currTableName == "class")
+				classlegendPage($sheetCount,"classShortName", $searchParam);
+			else if($currTableName == "teacher")
+				teacherlegendPage($sheetCount,"teacherShortName", $searchParam);
+			else if($currTableName == "room")
+				roomlegendPage($sheetCount,"roomShortName", $searchParam);
+			else if($currTableName == "batch")
+				batchlegendPage($sheetCount,"batchShortName", $searchParam);
+
+			$sheetCount++;
+			ttlog("generate_timetable_spreadsheet: generated $currTableName $searchParam worksheet");
 		}
 	}
 }
@@ -767,6 +1004,17 @@ function generate_current_timetable_spreadsheet() {
 
 	generate_timetable_worksheet($currTableName, $searchParam, $sheetCount,
 				$allrows2, $nSlots, $dayBegin, $slotDuration, $deptName);
+	$sheetCount++;
+	if($currTableName == "class")
+		classlegendPage($sheetCount,"classShortName", $searchParam);
+	else if($currTableName == "teacher")
+		teacherlegendPage($sheetCount,"teacherShortName", $searchParam);
+	else if($currTableName == "room")
+		roomlegendPage($sheetCount,"roomShortName", $searchParam);
+	else if($currTableName == "batch")
+		batchlegendPage($sheetCount,"batchShortName", $searchParam);
+
+
 }
 function generate_workload_spreadsheet(){
 	$query = "SELECT * from config WHERE configId = 1";
@@ -781,7 +1029,8 @@ function generate_workload_spreadsheet(){
 				" AND s.snapshotId = $currentSnapshotId";
 	$deptQueryRes = sqlGetOneRow($deptQuery);
 	$deptName = $deptQueryRes[0]["deptName"];
-	$query = "SELECT a.subjectShortName, a.classShortName as Class_Batch, a.teacherShortName, c.semester, (s.eachSlot*s.nSlots) as load1". 					" from ((subjectClassTeacherReadable a".
+	$query = "SELECT a.subjectShortName, a.classShortName as Class_Batch, a.teacherShortName, c.semester, (s.eachSlot*s.nSlots) as load1".
+				" from ((subjectClassTeacherReadable a".
 				" JOIN class c ON a.classShortName = c.classShortName)".
 				" JOIN subject s ON a.subjectShortName = s.subjectShortName)".
 				" where c.snapshotId = $currentSnapshotId and a.snapshotName = \"$currentSnapshotName\"".
@@ -797,7 +1046,8 @@ function generate_workload_spreadsheet(){
 	$allrows2 = sqlGetAllRows($query);
 	generate_workload_worksheet($sheetCount,$allrows2,$deptName,$currentSnapshotName);
 	$sheetCount++;
-	$query = "SELECT a.teacherShortName, a.subjectShortName, a.classShortName as Class_Batch, c.semester, (s.eachSlot*s.nSlots) as load1". 					" from ((subjectClassTeacherReadable a".
+	$query = "SELECT a.teacherShortName, a.subjectShortName, a.classShortName as Class_Batch,c.semester, (s.eachSlot*s.nSlots) as load1".
+				" from ((subjectClassTeacherReadable a".
 				" JOIN class c ON a.classShortName = c.classShortName)".
 				" JOIN subject s ON a.subjectShortName = s.subjectShortName)".
 				" where c.snapshotId = $currentSnapshotId and a.snapshotName = \"$currentSnapshotName\"".
@@ -946,6 +1196,7 @@ function saveFile($savefilename) {
 	}
 	$objPHPWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $format);
 	$filename = str_replace('EXT', $extension, $savefilename);
+	$filename = sys_get_temp_dir()."/".$filename;
 	$objPHPWriter->save($filename); #str_extension('php',$extension, basename(__FILE__)));
 	#ttlog("export: Saving file $filename");
 	return $filename;
@@ -1029,7 +1280,7 @@ function exportCSV() {
 	$tableNames = array(
 		"teacherReadable", "name",
 			["teacherShortName", "teacherName", "minHrs", "maxHrs", "deptShortName"],
-		"room", "id", ["roomShortName", "roomName", "roomCount"], 
+		"room", "id", ["roomShortName", "roomName", "roomCount"],
 		"subject", "id", ["subjectShortName", "subjectName", "eachSlot", "nSlots", "batches"],
 		"class", "id", ["classShortName", "className", "classCount"],
 		"batch","id", ["batchName", "batchCount"],
@@ -1071,6 +1322,120 @@ function exportCSV() {
 
 	return $filename;
 }
+function classlegendPage( $sheetCount,$currParam, $searchParam) {
+	global $objPHPExcel;
+	$objWorkSheet = $objPHPExcel->createSheet($sheetCount); //Setting index when creating
+	$objWorkSheet->setTitle("Legend Page".$searchParam);
+	$currentSnapshotId = getArgument("snapshotId");
+	$currentSnapshotName = getArgument("snapshotName");
+	$currTableName = getArgument("tableName");
+	$objPHPExcel->setActiveSheetIndex($sheetCount);
+	$objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
+	$objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_PageSetup::PAPERSIZE_A4);
+	$objPHPExcel->getActiveSheet()->getPageSetup()->setFitToPage(true);
+	$objPHPExcel->getActiveSheet()->getPageSetup()->setFitToWidth(1);
+	$objPHPExcel->getActiveSheet()->getPageSetup()->setFitToHeight(0);
+	$styleArray = array(
+		'borders' => array(
+			'allborders' => array(
+					'style' => PHPExcel_Style_Border::BORDER_THIN
+				)
+		)
+	);
+	$query = "select distinct(A.roomShortName), roomName from (select distinct(roomShortName) ".
+	" from timeTableReadable where roomShortName is not null and ".
+	" snapshotName = 'default' and classShortName = \"$searchParam\") as A ".
+	" inner join room on room.roomShortName = A.roomShortName";
+	$allrows2 = sqlGetAllRows($query);
+	$objWorkSheet->setCellValue('A1',"Room Short Name");
+	$objWorkSheet->setCellValue('B1',"Room Name");
+	for($i=0; $i < count($allrows2); $i++){
+			$objWorkSheet->setCellValue(("A".($i+2)),$allrows2[$i]['roomShortName']);
+			$objWorkSheet->setCellValue(("B".($i+2)),$allrows2[$i]['roomName']);
+	}
+	$objPHPExcel->getActiveSheet()->getStyle("A1:B".($i+1))->getFont()->setSize(8)->setColor(
+		new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKYELLOW) );
+	$objPHPExcel->getActiveSheet()->getStyle("A1:B".($i+1))->applyFromArray($styleArray);
+
+
+
+	$query = "select distinct(A.subjectShortName), subjectName from (select distinct(subjectShortName) ".
+	" from timeTableReadable where subjectShortName is not null and ".
+	" snapshotName = \"$currentSnapshotName\" and classShortName = \"$searchParam\") as A inner ".
+	" join subject on subject.subjectShortName = A.subjectShortName";
+	$allrows2 = sqlGetAllRows($query);
+	$objWorkSheet->setCellValue('G1',"Subject Short Name");
+	$objWorkSheet->setCellValue('H1',"Subject Name");
+	for($i=0; $i < count($allrows2); $i++){
+			$objWorkSheet->setCellValue(("G".($i+2)),$allrows2[$i]['subjectShortName']);
+			$objWorkSheet->setCellValue(("H".($i+2)),$allrows2[$i]['subjectName']);
+	}
+	$objPHPExcel->getActiveSheet()->getStyle("G1:H".($i+1))->applyFromArray($styleArray);
+	$objPHPExcel->getActiveSheet()->getStyle("G1:G".($i+1))->getFont()->setSize(8)->setColor(
+		new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKRED) );
+	$objPHPExcel->getActiveSheet()->getStyle("H1:H".($i+1))->getFont()->setSize(8)->setColor(
+		new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKYELLOW) );
+	$objWorkSheet->setCellValue('D1',"Subject Short Name: Batch Names");
+	$objWorkSheet->setCellValue('E1',"Teacher Name");
+	$l = 2;
+	$query = "select distinct(T.teacherShortName), teacherName from (select distinct(teacherShortName)".
+	" from timeTableReadable where snapshotName = \"$currentSnapshotName\" and classShortName = \"$searchParam\" and ".
+	" teacherShortName is not null) as T inner join teacher on teacher.teacherShortName = T.teacherShortName";
+	$teacherShortName = sqlGetAllRows($query);
+	for($i=0; $i < count($teacherShortName); $i++){
+		$name = $teacherShortName[$i]['teacherShortName'];
+			$query = "select DISTINCT subjectShortName from timeTableReadable where ".
+			" snapshotName = \"$currentSnapshotName\" and classShortName = \"$searchParam\" and".
+			" teacherShortName = \"$name\" and teacherShortName is not null and subjectShortName is not null";
+			$subjectShortName = sqlGetAllRows($query);
+
+			for($k=0; $k < count($subjectShortName); $k++){
+				$subject = $subjectShortName[$k]['subjectShortName'];
+				$query = "select DISTINCT batchName from timeTableReadable where ".
+				" snapshotName = \"$currentSnapshotName\" and classShortName = \"$searchParam\" and ".
+				" teacherShortName = \"$name\" and subjectShortName = \"$subject\" and batchName is not null";
+				$batchName = sqlGetAllRows($query);
+				$str = "";
+				for($m = 0; $m < count($batchName); $m++){
+					$str .= $batchName[$m]['batchName'];
+					if($m+1 < count($batchName)){
+						$str .= ", ";
+					}
+				}
+				if(strlen($str) == 0 ){
+					$objWorkSheet->setCellValue(("D".($l)), $subject);
+
+				}
+				else{
+					$str = $subjectShortName[$k]['subjectShortName'].": ".$str;
+					$objWorkSheet->setCellValue(("D".($l)), $str);
+				}
+				$objWorkSheet->setCellValue(("E".($l)), $teacherShortName[$i]['teacherName']);
+				$l++;
+			}
+
+	}
+	foreach(range('A','H') as $columnID) {
+		$objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+			->setAutoSize(true);
+	}
+	$objPHPExcel->getActiveSheet()->getStyle( "A1:H50")
+                            ->getAlignment( )
+                            ->setHorizontal( PHPExcel_Style_Alignment::HORIZONTAL_CENTER )
+                            ->setVertical( PHPExcel_Style_Alignment::VERTICAL_CENTER )
+                    ;
+	//$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('H')->setAutoSize(true);
+	$objPHPExcel->getActiveSheet()->getStyle("D1:E".($l-1))->applyFromArray($styleArray);
+
+	$objPHPExcel->getActiveSheet()->getStyle("D1:D".($l+1))->getFont()->setSize(8)->setColor(
+		new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKRED) );
+	$objPHPExcel->getActiveSheet()->getStyle("E1:E".($l+1))->getFont()->setSize(8)->setColor(
+		new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKBLUE) );
+	$objPHPExcel->getActiveSheet()->getStyle("A1:H1")->getFont()->setBold(true)->setName('Verdana')->setSize(10);
+	return 0;
+}
+
+
 /* Credit: http://php.net/manual/en/class.ziparchive.php */
 class HZip
 {
@@ -1120,4 +1485,255 @@ class HZip
     $z->close();
   }
 }
+function batchlegendPage( $sheetCount,$currParam, $searchParam){
+	global $objPHPExcel;
+	$objWorkSheet = $objPHPExcel->createSheet($sheetCount); //Setting index when creating
+	$objWorkSheet->setTitle("Legend Page".$searchParam);
+	$currentSnapshotId = getArgument("snapshotId");
+	$currentSnapshotName = getArgument("snapshotName");
+	$currTableName = getArgument("tableName");
+	$objPHPExcel->setActiveSheetIndex($sheetCount);
+	$objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
+	$objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_PageSetup::PAPERSIZE_A4);
+	$objPHPExcel->getActiveSheet()->getPageSetup()->setFitToPage(true);
+	$objPHPExcel->getActiveSheet()->getPageSetup()->setFitToWidth(1);
+	$objPHPExcel->getActiveSheet()->getPageSetup()->setFitToHeight(0);
+	$styleArray = array(
+		'borders' => array(
+			'allborders' => array(
+					'style' => PHPExcel_Style_Border::BORDER_THIN
+				)
+		)
+	);
+	$query = "select distinct(A.roomShortName), roomName from (select distinct(roomShortName) from timeTableReadable ".
+	" where roomShortName is not null and snapshotName = 'default' and batchName = \"$searchParam\") as ".
+	" A inner join room on room.roomShortName = A.roomShortName";
+	$allrows2 = sqlGetAllRows($query);
+	$objWorkSheet->setCellValue('A1',"Room Short Name");
+	$objWorkSheet->setCellValue('B1',"Room Name");
+	for($i=0; $i < count($allrows2); $i++){
+			$objWorkSheet->setCellValue(("A".($i+2)),$allrows2[$i]['roomShortName']);
+			$objWorkSheet->setCellValue(("B".($i+2)),$allrows2[$i]['roomName']);
+	}
+	$objPHPExcel->getActiveSheet()->getStyle("A1:B".($i+1))->getFont()->setSize(8)->setColor(
+		new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKYELLOW) );
+	$objPHPExcel->getActiveSheet()->getStyle("A1:B".($i+1))->applyFromArray($styleArray);
+	$query = "select classShortName from batchClassReadable where batchName = \"$searchParam\"";
+	$className = sqlGetAllRows($query);
+	$className = $className[0]['classShortName'];
 
+
+	$query = "select distinct(A.subjectShortName), subjectName from (select distinct(subjectShortName) ".
+	" from timeTableReadable where subjectShortName is not null and ".
+	" snapshotName = \"$currentSnapshotName\" and (batchName = \"$searchParam\" or batchName is null) ".
+	" and classShortName = \"$className\") as A inner join subject on subject.subjectShortName = A.subjectShortName";
+	$allrows2 = sqlGetAllRows($query);
+	$objWorkSheet->setCellValue('G1',"Subject Short Name");
+	$objWorkSheet->setCellValue('H1',"Subject Name");
+	for($i=0; $i < count($allrows2); $i++){
+			$objWorkSheet->setCellValue(("G".($i+2)),$allrows2[$i]['subjectShortName']);
+			$objWorkSheet->setCellValue(("H".($i+2)),$allrows2[$i]['subjectName']);
+	}
+	$objPHPExcel->getActiveSheet()->getStyle("G1:H".($i+1))->applyFromArray($styleArray);
+	$objPHPExcel->getActiveSheet()->getStyle("G1:G".($i+1))->getFont()->setSize(8)->setColor(
+		new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKRED) );
+	$objPHPExcel->getActiveSheet()->getStyle("H1:H".($i+1))->getFont()->setSize(8)->setColor(
+		new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKYELLOW) );
+	$objWorkSheet->setCellValue('D1',"Subject Short Name");
+	$objWorkSheet->setCellValue('E1',"Teacher Name");
+	$l = 2;
+
+
+	$query = "select distinct(T.teacherShortName), teacherName from (select distinct(teacherShortName) ".
+	" from timeTableReadable where snapshotName = \"$currentSnapshotName\" and teacherShortName ".
+	" is not NULL and (batchName = \"$searchParam\" or batchName is null) and classShortName = \"$className\") ".
+	" as T inner join teacher on teacher.teacherShortName = T.teacherShortName";
+	$teacherShortName = sqlGetAllRows($query);
+	for($i=0; $i < count($teacherShortName); $i++){
+		$name = $teacherShortName[$i]['teacherShortName'];
+			$query = "select DISTINCT subjectShortName from timeTableReadable where ".
+			" snapshotName = \"$currentSnapshotName\" and teacherShortName = \"$name\" and ".
+			" teacherShortName is not null and subjectShortName is not null and (batchName = \"$searchParam\" or ".
+			" batchName is null) and classShortName = \"$className\" ";
+			$subjectShortName = sqlGetAllRows($query);
+
+			for($k=0; $k < count($subjectShortName); $k++){
+				$subject = $subjectShortName[$k]['subjectShortName'];
+				$objWorkSheet->setCellValue(("D".($l)), $subject);
+				$objWorkSheet->setCellValue(("E".($l)), $teacherShortName[$i]['teacherName']);
+				$l++;
+			}
+
+	}
+	foreach(range('A','H') as $columnID) {
+		$objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+			->setAutoSize(true);
+	}
+	$objPHPExcel->getActiveSheet()->getStyle( "A1:H50")
+                            ->getAlignment( )
+                            ->setHorizontal( PHPExcel_Style_Alignment::HORIZONTAL_CENTER )
+                            ->setVertical( PHPExcel_Style_Alignment::VERTICAL_CENTER )
+                    ;
+	//$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('H')->setAutoSize(true);
+	$objPHPExcel->getActiveSheet()->getStyle("D1:E".($l-1))->applyFromArray($styleArray);
+
+	$objPHPExcel->getActiveSheet()->getStyle("D1:D".($l+1))->getFont()->setSize(8)->setColor(
+		new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKRED) );
+	$objPHPExcel->getActiveSheet()->getStyle("E1:E".($l+1))->getFont()->setSize(8)->setColor(
+		new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKBLUE) );
+	$objPHPExcel->getActiveSheet()->getStyle("A1:H1")->getFont()->setBold(true)->setName('Verdana')->setSize(10);
+	return 0;
+}
+function roomlegendPage( $sheetCount,$currParam, $searchParam){
+	global $objPHPExcel;
+	$objWorkSheet = $objPHPExcel->createSheet($sheetCount); //Setting index when creating
+	$objWorkSheet->setTitle("Legend Page".$searchParam);
+	$currentSnapshotId = getArgument("snapshotId");
+	$currentSnapshotName = getArgument("snapshotName");
+	$currTableName = getArgument("tableName");
+	$objPHPExcel->setActiveSheetIndex($sheetCount);
+	$objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
+	$objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_PageSetup::PAPERSIZE_A4);
+	$objPHPExcel->getActiveSheet()->getPageSetup()->setFitToPage(true);
+	$objPHPExcel->getActiveSheet()->getPageSetup()->setFitToWidth(1);
+	$objPHPExcel->getActiveSheet()->getPageSetup()->setFitToHeight(0);
+	$styleArray = array(
+		'borders' => array(
+			'allborders' => array(
+					'style' => PHPExcel_Style_Border::BORDER_THIN
+				)
+		)
+	);
+
+	$query = "select distinct(A.subjectShortName), subjectName from (select distinct(subjectShortName) from ".
+	" timeTableReadable where subjectShortName is not null and snapshotName = \"$currentSnapshotName\" and ".
+	" roomShortName = \"$searchParam\") as A inner join subject on subject.subjectShortName = A.subjectShortName";
+	$allrows2 = sqlGetAllRows($query);
+	$objWorkSheet->setCellValue('A1',"Subject Short Name");
+	$objWorkSheet->setCellValue('B1',"Subject Name");
+	for($i=0; $i < count($allrows2); $i++){
+			$objWorkSheet->setCellValue(("A".($i+2)),$allrows2[$i]['subjectShortName']);
+			$objWorkSheet->setCellValue(("B".($i+2)),$allrows2[$i]['subjectName']);
+	}
+	$objPHPExcel->getActiveSheet()->getStyle("A1:B".($i+1))->applyFromArray($styleArray);
+	$objPHPExcel->getActiveSheet()->getStyle("A1:A".($i+1))->getFont()->setSize(8)->setColor(
+		new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKRED) );
+	$objPHPExcel->getActiveSheet()->getStyle("B1:B".($i+1))->getFont()->setSize(8)->setColor(
+		new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKYELLOW) );
+	$objWorkSheet->setCellValue('D1',"Subject Short Name: Batch Names");
+	$objWorkSheet->setCellValue('E1',"Teacher Name");
+	$l = 2;
+	$query = "select distinct(T.teacherShortName), teacherName from (select distinct(teacherShortName) from ".
+	" timeTableReadable where snapshotName = \"$currentSnapshotName\" and roomShortName = \"$searchParam\" and ".
+	" teacherShortName is not null) as T inner join teacher on teacher.teacherShortName = T.teacherShortName";
+	$teacherShortName = sqlGetAllRows($query);
+	for($i=0; $i < count($teacherShortName); $i++){
+		$name = $teacherShortName[$i]['teacherShortName'];
+			$query = "select DISTINCT subjectShortName from timeTableReadable where ".
+			" snapshotName = \"$currentSnapshotName\" and roomShortName = \"$searchParam\" and ".
+			" teacherShortName = \"$name\" and teacherShortName is not null and subjectShortName is not null";
+			$subjectShortName = sqlGetAllRows($query);
+
+			for($k=0; $k < count($subjectShortName); $k++){
+				$subject = $subjectShortName[$k]['subjectShortName'];
+				$query = "select DISTINCT batchName from timeTableReadable where ".
+				" snapshotName = \"$currentSnapshotName\" and roomShortName = \"$searchParam\" and ".
+				" teacherShortName = \"$name\" and subjectShortName = \"$subject\" and batchName is not null";
+				$batchName = sqlGetAllRows($query);
+				$str = "";
+				for($m = 0; $m < count($batchName); $m++){
+					$str .= $batchName[$m]['batchName'];
+					if($m+1 < count($batchName)){
+						$str .= ", ";
+					}
+				}
+				if(strlen($str) == 0 ){
+					$objWorkSheet->setCellValue(("D".($l)), $subject);
+
+				}
+				else{
+					$str = $subjectShortName[$k]['subjectShortName'].": ".$str;
+					$objWorkSheet->setCellValue(("D".($l)), $str);
+				}
+				$objWorkSheet->setCellValue(("E".($l)), $teacherShortName[$i]['teacherName']);
+				$l++;
+			}
+
+	}
+	foreach(range('A','H') as $columnID) {
+		$objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+			->setAutoSize(true);
+	}
+	$objPHPExcel->getActiveSheet()->getStyle( "A1:E50")
+                            ->getAlignment( )
+                            ->setHorizontal( PHPExcel_Style_Alignment::HORIZONTAL_CENTER )
+                            ->setVertical( PHPExcel_Style_Alignment::VERTICAL_CENTER )
+                    ;
+	//$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('H')->setAutoSize(true);
+	$objPHPExcel->getActiveSheet()->getStyle("D1:E".($l-1))->applyFromArray($styleArray);
+
+	$objPHPExcel->getActiveSheet()->getStyle("D1:D".($l+1))->getFont()->setSize(8)->setColor(
+		new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKRED) );
+	$objPHPExcel->getActiveSheet()->getStyle("E1:E".($l+1))->getFont()->setSize(8)->setColor(
+		new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKBLUE) );
+	$objPHPExcel->getActiveSheet()->getStyle("A1:E1")->getFont()->setBold(true)->setName('Verdana')->setSize(10);
+}
+function teacherlegendPage( $sheetCount,$currParam, $searchParam){
+	global $objPHPExcel;
+	$objWorkSheet = $objPHPExcel->createSheet($sheetCount); //Setting index when creating
+	$objWorkSheet->setTitle("Legend Page".$searchParam);
+	$currentSnapshotId = getArgument("snapshotId");
+	$currentSnapshotName = getArgument("snapshotName");
+	$currTableName = getArgument("tableName");
+	$objPHPExcel->setActiveSheetIndex($sheetCount);
+	$objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
+	$objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_PageSetup::PAPERSIZE_A4);
+	$objPHPExcel->getActiveSheet()->getPageSetup()->setFitToPage(true);
+	$objPHPExcel->getActiveSheet()->getPageSetup()->setFitToWidth(1);
+	$objPHPExcel->getActiveSheet()->getPageSetup()->setFitToHeight(0);
+	$styleArray = array(
+		'borders' => array(
+			'allborders' => array(
+					'style' => PHPExcel_Style_Border::BORDER_THIN
+				)
+		)
+	);
+	$query = "select distinct(A.roomShortName), roomName from (select distinct(roomShortName) ".
+	" from timeTableReadable where roomShortName is not null and snapshotName = 'default' and ".
+	" teacherShortName = '$searchParam') as A inner join room on room.roomShortName = A.roomShortName";
+	$allrows2 = sqlGetAllRows($query);
+	$objWorkSheet->setCellValue('A1',"Room short name");
+	$objWorkSheet->setCellValue('B1',"Room name");
+	for($i=0; $i < count($allrows2); $i++){
+			$objWorkSheet->setCellValue(("A".($i+2)),$allrows2[$i]['roomShortName']);
+			$objWorkSheet->setCellValue(("B".($i+2)),$allrows2[$i]['roomName']);
+	}
+	$objPHPExcel->getActiveSheet()->getStyle("A1:B".($i+1))->getFont()->setSize(8)->setColor(
+		new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKYELLOW) );
+	$objPHPExcel->getActiveSheet()->getStyle("A1:B".($i+1))->applyFromArray($styleArray);
+	$query = "select distinct(A.subjectShortName), subjectName from (select distinct(subjectShortName) ".
+	" from timeTableReadable where subjectShortName is not null and snapshotName = \"$currentSnapshotName\" and ".
+	" teacherShortName = \"$searchParam\") as A inner join subject on subject.subjectShortName = A.subjectShortName";
+	$allrows2 = sqlGetAllRows($query);
+	$objWorkSheet->setCellValue('D1',"Subject Short Name");
+	$objWorkSheet->setCellValue('E1',"Subject Name");
+	for($i=0; $i < count($allrows2); $i++){
+			$objWorkSheet->setCellValue(("D".($i+2)),$allrows2[$i]['subjectShortName']);
+			$objWorkSheet->setCellValue(("E".($i+2)),$allrows2[$i]['subjectName']);
+	}
+	$objPHPExcel->getActiveSheet()->getStyle("D1:E".($i+1))->applyFromArray($styleArray);
+	$objPHPExcel->getActiveSheet()->getStyle("D1:E".($i+1))->getFont()->setSize(8)->setColor(
+		new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKRED) );
+	$objPHPExcel->getActiveSheet()->getStyle("D1:D".($i+1))->getFont()->setSize(8)->setColor(
+		new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKYELLOW) );
+	foreach(range('A','H') as $columnID) {
+		$objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+			->setAutoSize(true);
+	}
+	$objPHPExcel->getActiveSheet()->getStyle( "A1:E50")
+                            ->getAlignment( )
+                            ->setHorizontal( PHPExcel_Style_Alignment::HORIZONTAL_CENTER )
+                            ->setVertical( PHPExcel_Style_Alignment::VERTICAL_CENTER )
+                    ;
+	$objPHPExcel->getActiveSheet()->getStyle("A1:E1")->getFont()->setBold(true)->setName('Verdana')->setSize(10);
+}
