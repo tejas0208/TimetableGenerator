@@ -44,7 +44,7 @@ function printRow($rowData, $table, $rowspan, $searchParam) { // $rowspan is row
 				else
 					$virtualRowspan = 1;
 				$filledRows[$j] += $virtualRowspan;
-				$style .= "font-size:10; paddingY:0.4";
+				$style .= "font-size:8.5; paddingY:0.4";
 				for($k = 0;$k < count($rowData[$j][$count[$j]]);$k++) {
 					$table->easyCell($rowData[$j][$count[$j]][$k]['str'],$rowData[$j][$count[$j]][$k]['style']."rowspan:".$virtualRowspan.";".$style);
 				}
@@ -112,7 +112,7 @@ style of a string contains fontColor of string, colspan for the entry(for overla
 $cellData;
 function generate_timetable_pdf($currTableName, $searchParam, $allrows2, $nSlots, $dayBegin,
 		$slotDuration, $deptName) {
-	$pdf = new exFPDF('L', 'mm', 'A3');
+	$pdf = new exFPDF('L', 'mm', 'A4');
 	$pdf->setTitle("Timetable for COEP");
 	$pdf->setSubject("Subject for Timetable");
 	$pdf->setKeywords("timetable generated");
@@ -121,22 +121,32 @@ function generate_timetable_pdf($currTableName, $searchParam, $allrows2, $nSlots
 	$pdf->AddPage(); //page for timetable
 	$pdf->setMargins(5, 5, 5);
 	$pdf->SetAutoPageBreak(false, 5);
-	$pdf->SetFont('helvetica','B',16);
-	$pdf->setTextColor(34, 139, 34);
-	$pdf->setY(5);
-
-	$pdf->Cell(0, 6, "College of Engineering Pune", 0, 1, 'C');
-	$pdf->SetFont('helvetica','',16);
-	//$pdf->Cell(0, 6, "Dept of Comp Engg and IT", 0, 1, 'C');
-	$pdf->Cell(0, 6, $deptName, 0, 1, 'C');
-	$pdf->SetFont('helvetica','BU',16);
-	$pdf->Cell(0, 6, "Timetable For $currTableName: $searchParam", 0, 1, 'C');
-
-	$days = array("Mon", "Tue", "Wed", "Thu", "Fri");
+	$pdf->SetFont('helvetica','B',14);
 	$batchColor = '#0000cd'; //medium blue
 	$roomColor = '#228b22'; //forest green
 	$classColor = '#ff00ff';//magenta
 	$subjectColor = '#ff0000';//red
+	$pdf->setY(5);
+	$table = new easyTable($pdf, "{40,40}", 'align:L; font-size:12; font-family:helvetica; border:1; border-width:0.4;');
+	$table->easyCell("Batch Name", "font-color:$batchColor; align:C;");
+	$table->easyCell("Room Name", "font-color:$roomColor; align:C;");
+	$table->printRow();
+	$table->endTable(-8);
+	$table = new easyTable($pdf, "{40,40}", 'align:R; font-size:12; font-family:helvetica; border:1; border-width:0.4;');
+	$table->easyCell("Class Name", "font-color:$classColor; align:C;");
+	$table->easyCell("Subject Name", "font-color:$subjectColor; align:C;");
+	$table->printRow();
+	$table->endTable(-10);
+	$pdf->setTextColor(34, 139, 34);
+	$pdf->Cell(0, 6, "College of Engineering Pune", 0, 1, 'C');
+	//$pdf->Cell(0, 6, "Dept of Comp Engg and IT", 0, 1, 'C');
+	$pdf->SetFont('helvetica','',14);
+	$pdf->Cell(0, 6, $deptName, 0, 1, 'C');
+	$pdf->SetFont('helvetica','BU',14);
+	$pdf->Cell(0, 6, "Timetable For $currTableName: $searchParam", 0, 1, 'C');
+
+	$days = array("Mon", "Tue", "Wed", "Thu", "Fri");
+
 	$colWidth = array_fill(0, $nSlots, -1);//array to store widths of every column in timetable
 	$rowSpan = array();
 	$tableData = array();// all entries are stored in $tableData to determine the width of a column
@@ -350,7 +360,7 @@ function generate_timetable_pdf($currTableName, $searchParam, $allrows2, $nSlots
 	}
 	$width .= '}';
 	/* Main timeTable */
-	$table = new easyTable($pdf, $width, 'align:L; font-style:B; font-size:13;
+	$table = new easyTable($pdf, $width, 'align:L; font-style:B; font-size:10;
 		font-family:helvetica; border:1; border-color:#000000; border-width:0.4; width:'.$pdf->GetPageWidth().';');
 
 	$table->easyCell('');
@@ -366,16 +376,6 @@ function generate_timetable_pdf($currTableName, $searchParam, $allrows2, $nSlots
 	for($i = 0;$i < count($tableData);$i++)
 		printRow($tableData[$i], $table, $rowSpan[$i], $searchParam);
 	$table->endTable(0);
-	/*Add color legend*/
-	$pdf->ln();
-	$table = new easyTable($pdf, 5, 'align:C; font-size:13; font-family:helvetica; border:1; border-width:0.4;');
-	$table->easyCell("Color Legend ->", "border:1; align:C;");
-	$table->easyCell("Batch Name", "font-color:$batchColor; align:C;");
-	$table->easyCell("Room Name", "font-color:$roomColor; align:C;");
-	$table->easyCell("Class Name", "font-color:$classColor; align:C;");
-	$table->easyCell("Subject Name", "font-color:$subjectColor; align:C;");
-	$table->printRow();
-	$table->endTable(0);
 
 	/*on teacher paga add hrs/week */
 	if($currTableName == "teacher") {
@@ -388,20 +388,21 @@ function generate_timetable_pdf($currTableName, $searchParam, $allrows2, $nSlots
 		$table->endTable(0);
 	}
 	/* see next page message*/
-	$pdf->SetFont('helvetica','',12);
+/*	$pdf->SetFont('helvetica','',12);
 	$pdf->SetY(-15);
 	$pdf->setTextColor(0, 0, 0);
-	$pdf->Cell(0, 5, 'Please see the legend on the next page for details of acronyms', 0, 0, 'C');
+	$pdf->Cell(0, 5, 'Please see the legend on the next page for details of acronyms', 0, 0, 'C');*/
 
 	/*Add Page No*/
+	$pdf->setTextColor(0, 0, 0);
 	$pdf->ln();
-	$pdf->SetY(-10);
-	$pdf->SetFont('helvetica','',12);
-	$pdf->Cell(0,5,'Page '.$pdf->PageNo(),0,0,'C');
+	$pdf->SetY(-6);
+	$pdf->SetFont('helvetica','',10);
+	$pdf->Cell(0,5,'Page '.$pdf->PageNo().' of 2',0,0,'C');
 
 	$align = array('align:L{LC}; ', '', 'align:R; ');
 	$i = 0;
-	$styleCell = 'font-size:10;';
+	$styleCell = 'font-size:9;';
 	$tableWidth = $pdf->GetPageWidth() / 3 - 10;
 	switch($currTableName) {
 		case "teacher":
@@ -429,15 +430,15 @@ function generate_timetable_pdf($currTableName, $searchParam, $allrows2, $nSlots
 	if($data != 0)
 		$y = createTable($pdf, $data, '{'. 0.33 * $tableWidth .','. 0.67 * $tableWidth .'}', 2, $align[$i++], $styleCell, $y);
 	if($pdf->PageNo() == 2) {//if lenged page exists
-		$pdf->SetY(-30);
+		$pdf->SetY(-15);
 		$pdf->SetFont('helvetica','B',14);
 		$pdf->setTextColor(0, 0, 0);
-		$pdf->Cell($pdf->GetPageWidth() / 2, 10, "Timetable Incharge", 0, 0, 'C');
-		$pdf->Cell($pdf->GetPageWidth() / 2, 10, "Head of Department", 0, 0, 'C');
+		$pdf->Cell($pdf->GetPageWidth() / 2 - 10, 10, "Timetable Incharge", 0, 0, 'C');
+		$pdf->Cell($pdf->GetPageWidth() / 2 + 10, 10, "Head of Department", 0, 0, 'C');
 
-		$pdf->SetFont('helvetica','',12);
-		$pdf->SetY(-10);
-		$pdf->Cell(0,6,'Page '.$pdf->PageNo(),0,0,'C');
+		$pdf->SetFont('helvetica','',10);
+		$pdf->SetY(-6);
+		$pdf->Cell(0,6,'Page '.$pdf->PageNo().' of 2',0,0,'C');
 	}
 		$pdf->output('F', sys_get_temp_dir().$GLOBALS['path'].$currTableName."_".$searchParam.".pdf");
 	
@@ -447,16 +448,16 @@ function createTable($pdf, $data, $width, $pageNo, $styleTable = '', $styleCell 
 	if($pdf->PageNo() != $pageNo) {
 		$pdf->AddPage(); #legend page
 		$pdf->setMargins(5, 10, 5);
-		$pdf->SetFont('helvetica','B',16);
+		$pdf->SetFont('helvetica','B',14);
 		$pdf->SetX(15);
 		$pdf->Cell(0, 8, "Legend Page", 0, 1, 'C');
-		$pdf->SetFont('helvetica','B',13);
+		$pdf->SetFont('helvetica','B',11);
 		$y=$pdf->GetY();
 	}
 	else
 		$pdf->SetY($y);
 
-	$table = new easyTable($pdf, $width, $styleTable.'width:90; font-style:B; font-size:13;
+	$table = new easyTable($pdf, $width, $styleTable.'width:90; font-style:B; font-size:12;
 				font-family:helvetica; border:1; border-color:#000000; border-width:0.4');
 	for($i = 0;$i < count($data[0]);$i++)
 		$table->easyCell($data[0][$i], 'align:C; valign:M; font-color:#006400 font-size:14');
