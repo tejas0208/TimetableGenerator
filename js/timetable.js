@@ -483,6 +483,277 @@ function addOSBTRowToTrackerShow(trackerRow) {
 		trackerStr += "</tr>";
 	}
 }
+var warnStr = "";
+function warnings() {
+	warnStr = "<table class=\"warntable\" border = 1>";
+	warnStr += "<tr class=\"warnrow\">";
+	warnStr += "<th class=\"warncol\"> Day </th><th class=\"warncol\">Details</th></tr>";
+	lunchCheck = [];
+	daySpan = 8;
+	globalCount = 0;
+	globalBreakLimit = 10;
+	//-----------------------------------CLASS--------------------------
+	if (type == "class"){
+		currClassId = search(classTable, "classShortName", currTableId)["classId"];
+		sctCheck = [];
+		breakCheck = [];
+		flag = [];
+		for(i = 0; i < timeTable.length; i++) {
+			curr = timeTable[i];
+			if(curr["classId"] != currClassId)
+				continue;
+			if((curr["batchId"] == null) && (curr["isFixed"] == 0)){
+				if(breakCheck[curr["day"]] == null)
+					breakCheck[curr["day"]] = [];
+				breakCheck[curr["day"]][curr["slotNo"]] = 1;
+			}
+			if(curr["isFixed"] != 1){
+				if (sctCheck[curr["day"]] != null){
+					if (sctCheck[curr["day"]].indexOf(curr["subjectId"]) < 0)
+						sctCheck[curr["day"]].push(curr["subjectId"]);
+					else{
+						if (curr["batchId"] == null) {
+							flag[curr["day"]] = curr["subjectId"];
+						}
+					}
+				}
+				else {
+					sctCheck[curr["day"]] = [];
+					sctCheck[curr["day"]].push(curr["subjectId"]);
+				}
+				continue;
+			}
+			lunchCheck[curr["day"]] = 1;
+		}
+		for(i = 1; i < lunchCheck.length; i++) {
+			if (lunchCheck[i])
+				lunchCheck[i] = null;
+			else
+				lunchCheck[i] = 1;
+		}
+		Print(lunchCheck, "<td class=\"warncol\">No Lunch Break</td></tr>");
+		for (i = 0; i < flag.length; i++){
+			if(flag[i] != null){
+				if(i == 1)
+					warnStr += "<td class=\"warncol\">Monday</td>";
+				else if(i == 2)
+					warnStr += "<td class=\"warncol\">Tuesday</td>";
+				else if(i == 3)
+					warnStr += "<td class=\"warncol\">Wednesday</td>";
+				else if(i == 4)
+					warnStr += "<td class=\"warncol\">Thursday</td>";
+				else if(i == 5)
+					warnStr += "<td class=\"warncol\">Friday</td>";
+				warnStr += "<td class=\"warncol\">More than 1 lectures of "+search(subject, "subjectId", flag[i])["subjectName"]+"</td></tr>";
+			}
+		}
+		flag = [];
+		for(i = 1; i < breakCheck.length; i++){
+			if (breakCheck[i] != null) {
+				count = 0;
+				largest = 0;
+				indexOfFirstLec = breakCheck[i].indexOf(1);
+				for(j = indexOfFirstLec; j < breakCheck[i].length; j++){
+					if(breakCheck[i][j] == null)
+						count++;
+					else{
+						globalCount += count;
+						if (count > largest) {
+							largest = count;
+							flag[i] = largest;
+						}
+						count = 0;
+					}
+				}
+			}
+		}
+		for (i = 0; i < flag.length; i++){
+			if(flag[i] != null){
+				if(i == 1)
+					warnStr += "<td class=\"warncol\">Monday</td>";
+				else if(i == 2)
+					warnStr += "<td class=\"warncol\">Tuesday</td>";
+				else if(i == 3)
+					warnStr += "<td class=\"warncol\">Wednesday</td>";
+				else if(i == 4)
+					warnStr += "<td class=\"warncol\">Thursday</td>";
+				else if(i == 5)
+					warnStr += "<td class=\"warncol\">Friday</td>";
+				warnStr += "<td class=\"warncol\">Duration of Largest break is "+flag[i]+" hours</td></tr>";
+			}
+		}
+		flag =[];
+		for(i = 0; i < breakCheck.length; i++){
+			if (breakCheck[i] != null){
+				count = 0;
+				for(j = 0; j < breakCheck[i].length; j++) {
+					if(breakCheck[i][j] != null){
+						count++;
+						if (count > daySpan)
+							flag[i] = 1;
+					}
+				}
+			}
+		}
+		Print(flag, "<td class=\"warncol\">Day span is greater than 8</td></tr>");
+		if(globalCount >= globalBreakLimit)
+		warnStr += "<td class=\"warncol\"></td><td>Total hours of breaks is "+ globalCount +" hours</td></tr>";
+	}
+	//----------------------------BATCH------------------------
+	else if (type == "batch"){
+		currBatchId = search(batch, "batchName", currTableId)["batchId"];
+		currClassId = search(batchClass, "batchId", currBatchId)["classId"];
+		breakCheck = [];
+		for(i = 0; i < timeTable.length; i++) {
+			curr = timeTable[i];
+			if(curr["classId"] != currClassId)
+				continue;
+			if(((curr["batchId"] == null) && (curr["isFixed"] == 0)) || (curr["batchId"] == currBatchId)){
+				if(breakCheck[curr["day"]] == null)
+					breakCheck[curr["day"]] = [];
+				breakCheck[curr["day"]][curr["slotNo"]] = 1;
+			}
+			if(curr["isFixed"] != 1)
+				continue;
+			lunchCheck[curr["day"]] = 1;
+		}
+		flag = [];
+		for(i = 1; i < breakCheck.length; i++){
+			if (breakCheck[i] != null) {
+				count = 0;
+				largest = 0;
+				indexOfFirstLec = breakCheck[i].indexOf(1);
+				for(j = indexOfFirstLec; j < breakCheck[i].length; j++){
+					if(breakCheck[i][j] == null)
+						count++;
+					else{
+						globalCount += count;
+						if (count > largest) {
+							largest = count;
+							flag[i] = largest;
+						}
+						count = 0;
+					}
+				}
+			}
+		}
+		for(i = 0; i < 6; i++) {
+			if (i == 0)
+				continue;
+			if (lunchCheck[i])
+				lunchCheck[i] = null;
+			else
+				lunchCheck[i] = 1;
+		}
+		Print(lunchCheck, "<td class=\"warncol\">No Lunch Break</td></tr>");
+		for (i = 0; i < flag.length; i++){
+			if(flag[i] != null){
+				if(i == 1)
+					warnStr += "<td class=\"warncol\">Monday</td>";
+				else if(i == 2)
+					warnStr += "<td class=\"warncol\">Tuesday</td>";
+				else if(i == 3)
+					warnStr += "<td class=\"warncol\">Wednesday</td>";
+				else if(i == 4)
+					warnStr += "<td class=\"warncol\">Thursday</td>";
+				else if(i == 5)
+					warnStr += "<td class=\"warncol\">Friday</td>";
+				warnStr += "<td class=\"warncol\">Duration of Largest break is "+flag[i]+" hours</td></tr>";
+			}
+		}
+		flag =[];
+		for(i = 0; i < breakCheck.length; i++){
+			if (breakCheck[i] != null){
+				count = 0;
+				for(j = 0; j < breakCheck[i].length; j++) {
+					if(breakCheck[i][j] != null){
+						count++;
+						if (count > daySpan)
+							flag[i] = 1;
+					}
+				}
+			}
+		}
+		Print(flag, "<td class=\"warncol\">Day span is greater than 8</td></tr>");
+		if(globalCount >= globalBreakLimit)
+		warnStr += "<td class=\"warncol\"></td><td>Total hours of breaks is "+ globalCount +" hours</td></tr>";
+	}
+	//------------------------------TEACHER------------------------
+	else if (type = "teacher"){
+		currTeacher = search(teacher, "teacherShortName", currTableId);
+		currTeacherId = currTeacher["teacherId"];
+		currTeacherMinHrs = currTeacher["minHrs"];
+		currTeacherMaxHrs = currTeacher["maxHrs"];
+		hours = [];
+		for(i = 0; i < timeTable.length; i++) {
+			curr = timeTable[i];
+			if(curr["teacherId"] != currTeacherId)
+				continue;
+			if(hours[curr["day"]] == null)
+				hours[curr["day"]] = [];
+			hours[curr["day"]][curr["slotNo"]] = 1;
+		}
+		flag = [];
+		for(i = 0; i < hours.length; i++){
+			if (hours[i] != null){
+				count = 0;
+				for(j = 0; j < hours[i].length; j++) {
+					if(hours[i][j] != null){
+						count++;
+						if (count >= 3)
+							flag[i] = 1;
+					}
+					else {
+						globalCount += count;
+						count = 0;
+					}
+				}
+				globalCount += count;
+			}
+		}
+		Print(flag, "<td class=\"warncol\">More than 2 continuous hours of Teaching</td></tr>");
+		flag =[];
+		for(i = 0; i < hours.length; i++){
+			if (hours[i] != null){
+				count = 0;
+				for(j = 0; j < hours[i].length; j++) {
+					if(hours[i][j] != null){
+						count++;
+						if (count > daySpan)
+							flag[i] = 1;
+					}
+				}
+			}
+		}
+		Print(flag, "<td class=\"warncol\">Day span is greater than 8</td></tr>");
+		if(globalCount < currTeacherMinHrs)
+			warnStr += "<td class=\"warncol\"></td><td>Teacher is teaching for less than minimum teaching hours</td></tr>";
+		if(globalCount > currTeacherMaxHrs)
+			warnStr += "<td class=\"warncol\"></td><td>Teacher is teaching for more than maximum teaching hours</td></tr>";
+	}
+
+	warnStr += "</table>";
+	document.getElementById("warnDiv").innerHTML = warnStr;
+}
+
+function Print(arr, x) {
+	for (i = 0; i < arr.length; i++){
+			if(arr[i] != null){
+				if(i == 1)
+					warnStr += "<td class=\"warncol\">Monday</td>";
+				else if(i == 2)
+					warnStr += "<td class=\"warncol\">Tuesday</td>";
+				else if(i == 3)
+					warnStr += "<td class=\"warncol\">Wednesday</td>";
+				else if(i == 4)
+					warnStr += "<td class=\"warncol\">Thursday</td>";
+				else if(i == 5)
+					warnStr += "<td class=\"warncol\">Friday</td>";
+				warnStr += x;
+			}
+		}
+}
+
 function showTrackerList() {
 	trackerStr = "<table class=\"trackertable\">";
 	trackerStr += "<tr class=\"trackerrow\">";
@@ -3253,6 +3524,7 @@ function fillTable2(createNewTable) {
 		$(".animate" + i).hide();
 	}
 	showTrackerList();
+	warnings();
 	width1 = 0.7 * window.width / NoOfSlots;
 	width2 = window.width = width1;
 	$(".cell").width(width1);
