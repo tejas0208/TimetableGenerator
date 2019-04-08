@@ -25,6 +25,14 @@
 	<div  id="title" align="center">
 		<h2>TimeTable</h2>
 	</div>
+	<script>
+	document.addEventListener('keyup', function(e) {
+		if (e.keyCode == 27) {
+			$('#config').prop('checked', false);
+			$('#trackme').prop('checked', false);
+		}
+	});
+	</script>
 </header>
 
 <div class="modal-container">

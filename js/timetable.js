@@ -80,6 +80,54 @@ var roomSizeDelta = 10;
 var printSub = "Sub^", printBatch = "Batch^<br>Class^", printTeacher = "Teacher^", printDone = "Done^";
 
 var doingUndo = false;
+function openTeacherConfig(){
+	$('#trackme').prop('checked', false);
+	document.getElementById("tracker").addEventListener("click",teacherForm());
+	$('#config').prop('checked', true);
+	document.addEventListener('keyup', function(e) {
+		if (e.keyCode == 27) {
+			$('#config').prop('checked', false);
+			$('#trackme').prop('checked', true);
+			document.addEventListener('keyup', function(e) {
+				if (e.keyCode == 27) {
+					$('#trackme').prop('checked', false);
+				}
+			})
+		}
+	});
+}
+function openSubjectConfig(){
+	$('#trackme').prop('checked', false);
+	document.getElementById("tracker").addEventListener("click",subjectForm());
+	$('#config').prop('checked', true);
+	document.addEventListener('keyup', function(e) {
+		if (e.keyCode == 27) {
+			$('#config').prop('checked', false);
+			$('#trackme').prop('checked', true);
+			document.addEventListener('keyup', function(e) {
+				if (e.keyCode == 27) {
+					$('#trackme').prop('checked', false);
+				}
+			});
+	   }
+	});
+}
+function openBatchConfig(){
+	$('#trackme').prop('checked', false);
+	document.getElementById("tracker").addEventListener("click",batchForm());
+	$('#config').prop('checked', true);
+	document.addEventListener('keyup', function(e) {
+		if (e.keyCode == 27) {
+			$('#config').prop('checked', false);
+			$('#trackme').prop('checked', true);
+			document.addEventListener('keyup', function(e) {
+				if (e.keyCode == 27) {
+					$('#trackme').prop('checked', false);
+				}
+			});
+	   }
+	});
+}
 
 // Each stack object consists of
 // option 0 -> insert : 1 -> delete
@@ -461,17 +509,20 @@ function showTrackerList() {
 				if(curr["classId"] != currClassId)
 					continue;
 				trackerStr += "<tr class=\"trackerrow\">";
-				trackerStr += "<td class=\"trackercol\">";
+				trackerStr += "<td class=\"trackercol\"><a href=\"javascript:void(0) \
+								\" style=\"color:green\" onclick=\"openSubjectConfig()\"/>";
 				trackerStr += search(subject, "subjectId", curr["subjectId"])["subjectShortName"];
 				trackerStr += "</td>";
-				trackerStr += "<td class=\"trackercol\">";
+				trackerStr += "<td class=\"trackercol\"><a href=\"javascript:void(0) \
+								\" style=\"color:green\" onclick=\"openBatchConfig()\"/>";
 				if(curr["batchId"] != "") {
 					trackerStr += search(batch, "batchId", curr["batchId"])["batchName"];
 				} else {
 					trackerStr += search(classTable, "classId", curr["classId"])["classShortName"];
 				}
 				trackerStr += "</td>";
-				trackerStr += "<td class=\"trackercol\">";
+				trackerStr += "<td class=\"trackercol\"><a href=\"javascript:void(0)\
+								\" style=\"color:green\" onclick=\"openTeacherConfig();\"/>";
 				trackerStr += search(teacher, "teacherId", curr["teacherId"])["teacherShortName"];
 				trackerStr += "</td>";
 				trackerStr += "<td class=\"trackercol\">";
@@ -490,13 +541,16 @@ function showTrackerList() {
 				if(curr["batchId"] != currBatchId)
 					continue;
 				trackerStr += "<tr class=\"trackerrow\">";
-				trackerStr += "<td class=\"trackercol\">";
+				trackerStr += "<td class=\"trackercol\"><a href=\"javascript:void(0) \
+								\" style=\"color:green\" onclick=\"openSubjectConfig()\"/>";
 				trackerStr += search(subject, "subjectId", curr["subjectId"])["subjectShortName"];
 				trackerStr += "</td>";
-				trackerStr += "<td class=\"trackercol\">";
+				trackerStr += "<td class=\"trackercol\"><a href=\"javascript:void(0) \
+								\" style=\"color:green\"/>";
 				trackerStr +=  currTableId;
 				trackerStr += "</td>";
-				trackerStr += "<td class=\"trackercol\">";
+				trackerStr += "<td class=\"trackercol\"><a href=\"javascript:void(0) \" style=\
+								\"color:green\" onclick=\"openTeacherConfig()\"/>";
 				trackerStr += search(teacher, "teacherId", curr["teacherId"])["teacherShortName"];
 				trackerStr += "</td>";
 				trackerStr += "<td class=\"trackercol\">";
@@ -515,10 +569,12 @@ function showTrackerList() {
 				if(curr["teacherId"] != currTeacherId)
 					continue;
 				trackerStr += "<tr class=\"trackerrow\">";
-				trackerStr += "<td class=\"trackercol\">";
+				trackerStr += "<td class=\"trackercol\"><a href=\"javascript:void(0) \
+								\" style=\"color:green\" onclick=\"openSubjectConfig()\"/>";
 				trackerStr += search(subject, "subjectId", curr["subjectId"])["subjectShortName"];
 				trackerStr += "</td>";
-				trackerStr += "<td class=\"trackercol\">";
+				trackerStr += "<td class=\"trackercol\"><a href=\"javascript:void(0) \
+								\" style=\"color:green\" onclick=\"openBatchConfig()\"/>";
 				if(curr["batchId"] != "") {
 					trackerStr += search(batch, "batchId", curr["batchId"])["batchName"];
 				} else {
@@ -542,17 +598,20 @@ function showTrackerList() {
 			for(i = 0; i < tracker.length; i++) {
 				curr = tracker[i];
 				trackerStr += "<tr class=\"trackerrow\">";
-				trackerStr += "<td class=\"trackercol\">";
+				trackerStr += "<td class=\"trackercol\"><a href=\"javascript:void(0) \
+								\" style=\"color:green\" onclick=\"openSubjectConfig()\"/>";
 				trackerStr += search(subject, "subjectId", curr["subjectId"])["subjectShortName"];
 				trackerStr += "</td>";
-				trackerStr += "<td class=\"trackercol\">";
+				trackerStr += "<td class=\"trackercol\"><a href=\"javascript:void(0) \
+								\" style=\"color:green\" onclick=\"openBatchConfig()\"/>";
 				if(curr["batchId"] != "") {
 					trackerStr += search(batch, "batchId", curr["batchId"])["batchName"];
 				} else {
 					trackerStr += search(classTable, "classId", curr["classId"])["classShortName"];
 				}
 				trackerStr += "</td>";
-				trackerStr += "<td class=\"trackercol\">";
+				trackerStr += "<td class=\"trackercol\"><a href=\"javascript:void(0) \
+								\" style=\"color:green\" onclick=\"openTeacherConfig()\"/>";
 				trackerStr += search(teacher, "teacherId", tracker[i]["teacherId"])["teacherShortName"];;
 				trackerStr += "</td>";
 				trackerStr += "<td class=\"trackercol\">";
@@ -3289,6 +3348,7 @@ function fillColour() {
 function classChange(createNewTable){
 	var index = document.getElementById("class-menu").selectedIndex; /*Setting the select tag*/
 	if(index === 0) {
+		$('#config').prop('checked', true);
 		document.getElementById("class-menu").selectedIndex = "-1";
 		classForm();
 		selectoption();
@@ -3314,6 +3374,7 @@ function classChange(createNewTable){
 function snapshotChange() {
 	var index = document.getElementById("fetch-snapshot-menu").selectedIndex;
 	if(index === 0) {
+		$('#config').prop('checked', true);
 		document.getElementById("fetch-snapshot-menu").selectedIndex = "-1";
 		snapshotForm();
 		selectoption();
@@ -3341,6 +3402,7 @@ function roomChange(createNewTable){
 	document.getElementById("batch-menu").selectedIndex = "-1";
 	var index = document.getElementById("room-menu").selectedIndex; /*Setting the select tag*/
 	if(index === 0) {
+		$('#config').prop('checked', true);
 		document.getElementById("room-menu").selectedIndex = "-1";
 		roomForm();
 		selectoption();
@@ -3366,6 +3428,7 @@ function batchChange(createNewTable){
 	document.getElementById("class-menu").selectedIndex = "-1";
 	var index = document.getElementById("batch-menu").selectedIndex; /*Setting the select tag*/
 	if(index === 0) {
+		$('#config').prop('checked', true);
 		document.getElementById("batch-menu").selectedIndex = "-1";
 		batchForm();
 		selectoption();
@@ -3390,6 +3453,7 @@ function batchChange(createNewTable){
 function teacherChange(createNewTable){
 	var index = document.getElementById("teacher-menu").selectedIndex; /*Setting the select tag*/
 	if(index === 0) {
+		$('#config').prop('checked', true);
 		document.getElementById("teacher-menu").selectedIndex = "-1";
 		teacherForm();
 		selectoption();
